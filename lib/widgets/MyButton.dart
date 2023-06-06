@@ -6,6 +6,7 @@ import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 class MyButton extends StatefulWidget {
   final double height;
   final double? width;
+  final double? fontSize;
   final Callback? onPressed;
   final VoidCallback? onLongPress;
   final ValueChanged<bool>? onHover;
@@ -24,6 +25,7 @@ class MyButton extends StatefulWidget {
   const MyButton(
       {super.key,
       this.height = 35,
+      this.fontSize = 13,
       this.width,
       this.onPressed,
       this.onLongPress,
@@ -66,28 +68,31 @@ class _MyButtonState extends State<MyButton> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     Color c = widget.color ?? theme.primaryColor;
-    return ElevatedButton(
-      onPressed: _onTap,
-      onLongPress: widget.onLongPress,
-      onFocusChange: widget.onFocusChange,
-      autofocus: widget.autofocus,
-      focusNode: widget.focusNode,
-      statesController: widget.statesController,
-      onHover: widget.onHover,
-      style: ButtonStyle(
-        fixedSize: MaterialStatePropertyAll(Size.fromHeight(widget.height)),
-        shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-        padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 8)),
-        shadowColor: const MaterialStatePropertyAll(Colors.transparent),
-        backgroundColor: MaterialStatePropertyAll(c.withOpacity(widget.fade ? 0.3 : 1)),
-        foregroundColor: MaterialStatePropertyAll(widget.fade ? c : Colors.white),
+    return SizedBox(
+      height: widget.height,
+      child: ElevatedButton(
+        onPressed: _onTap,
+        onLongPress: widget.onLongPress,
+        onFocusChange: widget.onFocusChange,
+        autofocus: widget.autofocus,
+        focusNode: widget.focusNode,
+        statesController: widget.statesController,
+        onHover: widget.onHover,
+        style: ButtonStyle(
+          fixedSize: MaterialStatePropertyAll(Size.fromHeight(widget.height)),
+          shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
+          padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 8)),
+          shadowColor: const MaterialStatePropertyAll(Colors.transparent),
+          backgroundColor: MaterialStatePropertyAll(c.withOpacity(widget.fade ? 0.3 : 1)),
+          foregroundColor: MaterialStatePropertyAll(widget.fade ? c : Colors.white),
+        ),
+        child: _loading && widget.showLoading
+            ? SpinKitThreeBounce(
+                color: widget.fade ? c : Colors.white,
+                size: 18,
+              )
+            : widget.child ?? Text(widget.label,style: TextStyle(fontSize: widget.fontSize),),
       ),
-      child: _loading && widget.showLoading
-          ? SpinKitThreeBounce(
-              color: widget.fade ? c : Colors.white,
-              size: 18,
-            )
-          : widget.child ?? Text(widget.label),
     );
   }
 }

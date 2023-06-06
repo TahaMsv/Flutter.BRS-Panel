@@ -30,8 +30,6 @@ class AddFlightController extends MainController {
           onPop: () {
             SuccessHandler.handle(ServerSuccess(code: 1, msg: "Done\nFlight ${flight!.flightNumber} Added Successfully"));
           });
-
-
     });
     return flight;
   }
@@ -55,6 +53,12 @@ class AddFlightController extends MainController {
         addFlightState.setState();
       }
     });
+  }
+
+  @override
+  void onInit() {
+
+    super.onInit();
   }
 
   void setSTA() {

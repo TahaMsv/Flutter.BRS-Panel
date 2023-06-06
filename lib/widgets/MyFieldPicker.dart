@@ -81,7 +81,7 @@ class MyFieldPicker<T> extends StatelessWidget {
               clearButtonProps: ClearButtonProps(
                 padding: EdgeInsets.zero,
                 isVisible: showClearButton,
-                icon: Icon(locked ? ArtemisIcons.lock : Icons.clear, size: 15),
+                icon: Icon(locked ? Icons.lock : Icons.clear, size: 15),
               ),
               dropdownButtonProps: const DropdownButtonProps(isVisible: false, iconSize: 20),
               dropdownBuilder: (_, item) {

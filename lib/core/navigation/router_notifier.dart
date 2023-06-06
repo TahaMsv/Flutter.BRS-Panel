@@ -1,3 +1,4 @@
+import 'package:brs_panel/screens/flight_details/flight_details_view.dart';
 import 'package:brs_panel/screens/flights/flights_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -92,8 +93,17 @@ class RouterNotifier extends AutoDisposeAsyncNotifier<void> implements Listenabl
               // controller: RouteNames.home.controller,
                 name: RouteNames.addFlight.name,
                 path: RouteNames.addFlight.path,
+
                 pageBuilder: (context, state) {
                   return NoTransitionPage<void>(key: state.pageKey, child: const AddFlightView());
+                },
+
+            ),
+            MyRoute(
+                name: RouteNames.flightDetails.name,
+                path: RouteNames.flightDetails.path,
+                pageBuilder: (context, state) {
+                  return NoTransitionPage<void>(key: state.pageKey, child: const FlightDetailsView());
                 },
 
             ),

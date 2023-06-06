@@ -3,6 +3,7 @@ class AssetImages {
   AssetImages._();
   static const assetsAddress = 'assets/images/';
   static const logo ="${assetsAddress}logo.png";
+  static const loginBG ="${assetsAddress}login_bg.jpg";
 }
 
 

@@ -54,4 +54,10 @@ class BasicClass {
   static Position? getPositionByID(int id) {
     return systemSetting.positions.firstWhereOrNull((e)=>e.id==id);
   }
+  static Airport? getAirportByCode(String code) {
+    return systemSetting.airportList.firstWhereOrNull((e)=>e.code==code);
+  }
+  static Airline? getAirlineByCode(String code) {
+    return systemSetting.airlineList.firstWhereOrNull((e)=>e.al==code);
+  }
 }

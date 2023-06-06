@@ -9,6 +9,7 @@ enum RouteNames {
   airports,
   users,
   addFlight,
+  flightDetails,
   checkin,
   board,
 
@@ -19,8 +20,8 @@ extension RouteNamesDetails on RouteNames {
     switch (this) {
       case RouteNames.addFlight:
         return 'addFlight';
-      case RouteNames.checkin:
-        return 'checkin';
+      case RouteNames.flightDetails:
+        return 'details';
       case RouteNames.board:
         return 'board';
       case RouteNames.login:

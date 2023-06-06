@@ -1,5 +1,7 @@
+import 'package:brs_panel/core/constants/assest.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../core/constants/ui.dart';
@@ -15,13 +17,15 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-        backgroundColor: MyColors.lightIshBlue,
-        body: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            LoginPanel(),
-          ],
+    return Scaffold(
+        body: Container(
+          decoration: BoxDecoration(image: DecorationImage(image: Image.asset(AssetImages.loginBG).image, fit: BoxFit.fill),),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              LoginPanel(),
+            ],
+          ),
         ));
   }
 }

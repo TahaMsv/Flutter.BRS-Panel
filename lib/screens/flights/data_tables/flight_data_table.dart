@@ -14,11 +14,12 @@ import '../flights_controller.dart';
 
 enum FlightDataTableColumn {
   flight,
+  status,
   route,
   time,
   aircraft,
   register,
-  status,
+
   actions,
 }
 
@@ -26,17 +27,17 @@ extension FlightDataTableColumnDetails on FlightDataTableColumn {
   double get width {
     switch (this) {
       case FlightDataTableColumn.flight:
-        return 0.2;
+        return 0.15;
+      case FlightDataTableColumn.status:
+        return 0.29;
       case FlightDataTableColumn.route:
-        return 0.07;
+        return 0.12;
       case FlightDataTableColumn.time:
-        return 0.07;
+        return 0.12;
       case FlightDataTableColumn.aircraft:
-        return 0.07;
+        return 0.12;
       case FlightDataTableColumn.register:
         return 0.1;
-      case FlightDataTableColumn.status:
-        return 0.39;
       case FlightDataTableColumn.actions:
         return 0.1;
     }
@@ -54,11 +55,12 @@ class FlightDataSource extends DataGridSource {
           (e) => DataGridRow(
             cells: [
               DataGridCell<String>(columnName: FlightDataTableColumn.flight.name, value: e.flightNumber),
+              DataGridCell<int>(columnName: FlightDataTableColumn.status.name, value: 1),
               DataGridCell<String>(columnName: FlightDataTableColumn.route.name, value: e.fromCity),
               DataGridCell<String>(columnName: FlightDataTableColumn.time.name, value: e.std),
               DataGridCell<String>(columnName: FlightDataTableColumn.aircraft.name, value: e.aircraftCode),
               DataGridCell<String>(columnName: FlightDataTableColumn.register.name, value: e.registration),
-              DataGridCell<int>(columnName: FlightDataTableColumn.status.name, value: 1),
+
               DataGridCell<String>(columnName: FlightDataTableColumn.actions.name, value: ''),
             ],
           ),
@@ -155,6 +157,13 @@ class FlightDataSource extends DataGridSource {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              MyButton(
+                height: 30,
+                // fontSize: 12,
+                label: "Details",fade: true,onPressed: (){
+                flightsController.goDetails(f);
+              },),
+              const SizedBox(width: 12),
               DotButton(
                 icon: Icons.more_vert,
                 onPressed: () {

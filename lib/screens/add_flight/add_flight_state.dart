@@ -1,10 +1,11 @@
 import 'package:brs_panel/core/classes/user_class.dart';
+import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:brs_panel/screens/add_flight/usecases/add_flight_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-final addFlightProvider = ChangeNotifierProvider<AddFlightState>((_) => AddFlightState());
+final addFlightProvider = ChangeNotifierProvider.autoDispose<AddFlightState>((_) => AddFlightState());
 
 class AddFlightState extends ChangeNotifier {
 
@@ -16,10 +17,10 @@ class AddFlightState extends ChangeNotifier {
   TimeOfDay? std;
   TimeOfDay? sta;
   Airport? airport;
-  Airport? from;
+  Airport? from = BasicClass.getAirportByCode(BasicClass.userSetting.airport);
   Airport? to;
   TextEditingController flnbC = TextEditingController();
-  Airline? al;
+  Airline? al = BasicClass.getAirlineByCode(BasicClass.userSetting.al);
   Aircraft? aircraft;
   int? barcodeLength;
   int flightTypeID = 0;

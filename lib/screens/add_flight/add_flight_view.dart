@@ -6,6 +6,7 @@ import 'package:brs_panel/widgets/MyButton.dart';
 import 'package:brs_panel/widgets/MyDropDown.dart';
 import 'package:brs_panel/widgets/MyFieldPicker.dart';
 import 'package:brs_panel/widgets/MySegment.dart';
+import 'package:brs_panel/widgets/MySwitchButton.dart';
 import 'package:brs_panel/widgets/MyTImeField.dart';
 import 'package:brs_panel/widgets/MyTextField.dart';
 import 'package:flutter/material.dart';
@@ -87,10 +88,18 @@ class AddFlightFLNBWidget extends StatelessWidget {
     return Container(child: Consumer(
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
         AddFlightState state = ref.watch(addFlightProvider);
-        return MyTextField(
-          height: 50,
-          label: "Flight Number",
-          controller: state.flnbC,
+        return Row(
+          children: [
+            Expanded(
+              child: MyTextField(
+                height: 50,
+                label: "Flight Number",
+                controller: state.flnbC,
+              ),
+            ),
+            const SizedBox(width: 24),
+            MySwitchButton(value: false, onChange: (v){}, label: 'Is Test')
+          ],
         );
       },
     ));
@@ -208,6 +217,7 @@ class AddFlightFromWidget extends StatelessWidget {
         AddFlightState state = ref.watch(addFlightProvider);
         return MyFieldPicker<Airport>(
           hasSearch: true,
+          locked: state.flightTypeID==0,
           items: BasicClass.systemSetting.airportList,
           label: "From",
           itemToString: (e) => "${e.code} - ${e.name}",
@@ -233,6 +243,7 @@ class AddFlightToWidget extends StatelessWidget {
         AddFlightState state = ref.watch(addFlightProvider);
         return MyFieldPicker<Airport>(
           hasSearch: true,
+          locked: state.flightTypeID==1,
           items: BasicClass.systemSetting.airportList,
           label: "To",
           itemToString: (e) => "${e.code} - ${e.name}",
@@ -300,9 +311,16 @@ class AddFlightTypeWidget extends StatelessWidget {
         AddFlightState state = ref.watch(addFlightProvider);
         return MySegment<int>(
             height: 50,
-            items: [0, 1],
+            items: const [0, 1],
             itemToString: (e) => e == 0 ? "Departure" : "Arrival",
             onChange: (v) {
+              if(v==0){
+                state.from = BasicClass.getAirportByCode(BasicClass.userSetting.airport);
+                state.to =null;
+              }else{
+                state.to = BasicClass.getAirportByCode(BasicClass.userSetting.airport);
+                state.from =null;
+              }
               state.flightTypeID = v;
               state.setState();
             },

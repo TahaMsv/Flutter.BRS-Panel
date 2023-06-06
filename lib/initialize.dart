@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:artemis_utils/artemis_utils.dart';
 import 'package:brs_panel/screens/add_flight/add_flight_controller.dart';
+import 'package:brs_panel/screens/flight_details/flight_details_controller.dart';
 import 'package:brs_panel/screens/flights/flights_controller.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
@@ -55,17 +56,20 @@ initControllers() {
   HomeController homeController = HomeController();
   FlightsController flightsController = FlightsController();
   AddFlightController addFlightController = AddFlightController();
+  FlightDetailsController flightDetailsController = FlightDetailsController();
 
   getIt.registerSingleton(loginController);
   getIt.registerSingleton(homeController);
   getIt.registerSingleton(flightsController);
   getIt.registerSingleton(addFlightController);
+  getIt.registerSingleton(flightDetailsController);
 
   ns.registerControllers({
     RouteNames.login: loginController,
     RouteNames.home: homeController,
     RouteNames.flights: flightsController,
     RouteNames.addFlight: addFlightController,
+    RouteNames.flightDetails: addFlightController,
   });
 }
 

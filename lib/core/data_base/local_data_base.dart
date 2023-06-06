@@ -91,7 +91,7 @@ class LocalDataBase extends LocalDataSource {
   @override
   Future<T?> getFromTableWhere<T>(String tableName, bool Function(T e) rule) async {
     final box = Hive.isBoxOpen(tableName) ? (Hive.box<T>(tableName)) : (await Hive.openBox<T>(tableName));
-    if(box.isOpen) {
+    if(box.isOpen && box.isNotEmpty) {
       final val = box.values.last as UserDB;
       final res = box.values.last;
       // T? res  = box.values.firstWhereOrNull((element) => rule(element));

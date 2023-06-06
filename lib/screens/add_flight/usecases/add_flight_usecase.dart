@@ -60,14 +60,15 @@ class AddFlightRequest extends Request {
         "FlightDate": fromDate.format_yyyyMMdd,
         "STD": std.format_HHmm,
         "STA": sta.format_HHmm,
-        "Airport": BasicClass.userInfo.userSettings.airport,
+        "Airport": BasicClass.userSetting.airport,
         "ToCity": to.code,
         "FromCity": from.code,
         "FLNB": flnb,
         "AL": al.al,
         "Registration": aircraft?.registration,
         "BarcodeLength": barcodeLength,
-        "FlightType": flightTypeID
+        "FlightType": flightTypeID,
+        "AircraftID":aircraft?.id,
       }
     }
   };

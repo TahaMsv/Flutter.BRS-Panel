@@ -40,4 +40,8 @@ class FlightsController extends MainController {
   void goAddFlight() {
     nav.pushNamed(RouteNames.addFlight);
   }
+
+  void goDetails(Flight f) {
+    nav.pushNamed(RouteNames.flightDetails);
+  }
 }
