@@ -870,6 +870,10 @@ class Aircraft {
         "AL": al,
         "Registration": registration,
       };
+
+  bool validateSearch(String s) {
+    return s.isEmpty || "$registration $al".toLowerCase().contains(s.toLowerCase());
+  }
 }
 
 @immutable
@@ -900,6 +904,10 @@ class Airline {
         "AL": al,
         "Name": name,
       };
+
+  bool validateSearch(String s) {
+    return s.isEmpty || "$al $name".toLowerCase().contains(s.toLowerCase());
+  }
 }
 
 @immutable
@@ -931,4 +939,8 @@ class Airport {
         "Code": code,
         "Name": name,
       };
+
+  bool validateSearch(String s) {
+    return s.isEmpty || "$code $name".toLowerCase().contains(s.toLowerCase());
+  }
 }

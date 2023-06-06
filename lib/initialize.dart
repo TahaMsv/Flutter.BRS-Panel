@@ -3,6 +3,9 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:artemis_utils/artemis_utils.dart';
 import 'package:brs_panel/screens/add_flight/add_flight_controller.dart';
+import 'package:brs_panel/screens/aircrafts/aircrafts_controller.dart';
+import 'package:brs_panel/screens/airlines/airlines_controller.dart';
+import 'package:brs_panel/screens/airports/airports_controller.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_controller.dart';
 import 'package:brs_panel/screens/flights/flights_controller.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -20,6 +23,7 @@ import 'core/platform/device_info.dart';
 import 'core/platform/network_info.dart';
 import 'core/util/basic_class.dart';
 import 'core/util/config_class.dart';
+import 'screens/airline_ulds/airline_ulds_controller.dart';
 import 'screens/home/home_controller.dart';
 import 'screens/login/login_controller.dart';
 
@@ -57,12 +61,20 @@ initControllers() {
   FlightsController flightsController = FlightsController();
   AddFlightController addFlightController = AddFlightController();
   FlightDetailsController flightDetailsController = FlightDetailsController();
+  AirlinesController airlinesController = AirlinesController();
+  AirportsController airportsController = AirportsController();
+  AircraftsController aircraftsController = AircraftsController();
+  AirlineUldsController airlineUldsController = AirlineUldsController();
 
   getIt.registerSingleton(loginController);
   getIt.registerSingleton(homeController);
   getIt.registerSingleton(flightsController);
   getIt.registerSingleton(addFlightController);
   getIt.registerSingleton(flightDetailsController);
+  getIt.registerSingleton(airlinesController);
+  getIt.registerSingleton(airportsController);
+  getIt.registerSingleton(aircraftsController);
+  getIt.registerSingleton(airlineUldsController);
 
   ns.registerControllers({
     RouteNames.login: loginController,
@@ -70,6 +82,10 @@ initControllers() {
     RouteNames.flights: flightsController,
     RouteNames.addFlight: addFlightController,
     RouteNames.flightDetails: addFlightController,
+    RouteNames.airlines: airlinesController,
+    RouteNames.airports: airportsController,
+    RouteNames.aircrafts: aircraftsController,
+    RouteNames.airlineUlds: airlineUldsController,
   });
 }
 

@@ -113,13 +113,6 @@ flutter:
         - asset: assets/fonts/signika/SignikaNegative-Bold.ttf
           weight: 700
 
-objectbox:
-  # Writes objectbox-model.json and objectbox.g.dart to lib/custom (and test/custom).
-  # output_dir: custom
-  # Or optionally specify the lib and test output folder separately.
-  output_dir:
-    lib: core/data_base
-  #   test: other
 
 msix_config:
   display_name: Brs Panel

@@ -1,3 +1,7 @@
+import 'package:brs_panel/screens/aircrafts/aircrafts_view.dart';
+import 'package:brs_panel/screens/airline_ulds/airline_ulds_view.dart';
+import 'package:brs_panel/screens/airlines/airlines_view.dart';
+import 'package:brs_panel/screens/airports/airports_view.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_view.dart';
 import 'package:brs_panel/screens/flights/flights_view.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +31,7 @@ import 'route_names.dart';
 ///   3. It allows for listening to multiple providers if needed (we do have a [Ref] now!)
 class RouterNotifier extends AutoDisposeAsyncNotifier<void> implements Listenable {
   VoidCallback? routerListener;
-  bool isAuth = false;// Useful for our global redirect functio
+  bool isAuth = false; // Useful for our global redirect functio
 
   @override
   Future<void> build() async {
@@ -81,34 +85,67 @@ class RouterNotifier extends AutoDisposeAsyncNotifier<void> implements Listenabl
           },
         ),
         MyRoute(
-          // controller: RouteNames.home.controller,
-          name: RouteNames.flights.name,
-          path: RouteNames.flights.path,
-          pageBuilder: (context, state) {
-            return NoTransitionPage<void>(key: state.pageKey, child: const FlightsView());
-          },
-
-          routes: [
-            MyRoute(
-              // controller: RouteNames.home.controller,
+            // controller: RouteNames.home.controller,
+            name: RouteNames.flights.name,
+            path: RouteNames.flights.path,
+            pageBuilder: (context, state) {
+              return NoTransitionPage<void>(key: state.pageKey, child: const FlightsView());
+            },
+            routes: [
+              MyRoute(
+                // controller: RouteNames.home.controller,
                 name: RouteNames.addFlight.name,
                 path: RouteNames.addFlight.path,
 
                 pageBuilder: (context, state) {
                   return NoTransitionPage<void>(key: state.pageKey, child: const AddFlightView());
                 },
-
-            ),
-            MyRoute(
+              ),
+              MyRoute(
                 name: RouteNames.flightDetails.name,
                 path: RouteNames.flightDetails.path,
                 pageBuilder: (context, state) {
                   return NoTransitionPage<void>(key: state.pageKey, child: const FlightDetailsView());
                 },
+              ),
+            ]),
+        MyRoute(
+            // controller: RouteNames.home.controller,
+            name: RouteNames.airlines.name,
+            path: RouteNames.airlines.path,
+            pageBuilder: (context, state) {
+              // HomeController homeController = getIt<HomeController>();
+              return NoTransitionPage<void>(key: state.pageKey, child: const AirlinesView());
+            },
+            routes: [
+              MyRoute(
+                // controller: RouteNames.home.controller,
+                name: RouteNames.airlineUlds.name,
+                path: RouteNames.airlineUlds.path,
+                pageBuilder: (context, state) {
+                  // HomeController homeController = getIt<HomeController>();
+                  return NoTransitionPage<void>(key: state.pageKey, child: const AirlineUldsView());
+                },
+              )
+            ]),
+    MyRoute(
+      // controller: RouteNames.home.controller,
+      name: RouteNames.airports.name,
+      path: RouteNames.airports.path,
 
-            ),
-          ]
-        ),
+      pageBuilder: (context, state) {
+        return NoTransitionPage<void>(key: state.pageKey, child: const AirportsView());
+      },
+    ),
+    MyRoute(
+      // controller: RouteNames.home.controller,
+      name: RouteNames.aircrafts.name,
+      path: RouteNames.aircrafts.path,
+
+      pageBuilder: (context, state) {
+        return NoTransitionPage<void>(key: state.pageKey, child: const AircraftsView());
+      },
+    ),
       ];
 
   /// Adds [GoRouter]'s listener as specified by its [Listenable].
