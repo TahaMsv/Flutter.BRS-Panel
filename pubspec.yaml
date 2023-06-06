@@ -48,6 +48,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  msix: ^3.6.2
 
   flutter_lints: ^2.0.0
 
@@ -123,23 +124,19 @@ objectbox:
 msix_config:
   display_name: Brs Panel
   publisher_display_name: ABOMIS Innovations Inc.
-  identity_name: ABOMISInnovationsInc.AbomisDCS
+  identity_name: ABOMISInnovationsInc.AbomisBRSPanel
   publisher: CN=2F524553-90DB-4FE5-B917-C1F735CC041B
   msix_version: 1.0.0.0
   icons_background_color: "#ffffff"
   architecture: x64
   capabilities: "internetClient"
-
   store: false
-  #  publisher: CN=BF212345-5644-46DF-8668-012044C1B138
+  install_certificate: false
   languages: "en-us"
-#  logo_path: "LOGO PATH HERE"
-#  output_path: "OUTPUT PATH HERE"
-  output_name: Brs Panel Installer
-#  app_installer: #<-- app installer configuration
-#    publish_folder_path: "PubFolderPath"
-#    hours_between_update_checks: 0
-#    automatic_background_task: false
-#    update_blocks_activation: false
-#    show_prompt: true
-#    force_update_from_any_version: false
+  logo_path: "C:/Users/Bakhshaiesh/Desktop/Flutter.NewDCS/installers/exe_creator/dcs_icon.ico"
+  certificate_path: "C:/Users/Bakhshaiesh/Desktop/Flutter.NewDCS/installers/exe_creator/abomis_innovations_inc_.pfx"
+  certificate_password: "Tima@131313"
+  output_path: "C:/Users/Bakhshaiesh/Desktop"
+  date: "test"
+  output_name: "BRS Panel Setup"
+  add_execution_alias: true
