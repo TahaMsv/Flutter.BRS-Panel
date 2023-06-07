@@ -1,4 +1,5 @@
 import 'package:brs_panel/core/abstracts/local_data_base_abs.dart';
+import 'package:brs_panel/core/classes/flight_details_class.dart';
 
 import '../abstracts/device_info_service_abs.dart';
 import '../classes/user_class.dart';
@@ -59,5 +60,16 @@ class BasicClass {
   }
   static Airline? getAirlineByCode(String code) {
     return systemSetting.airlineList.firstWhereOrNull((e)=>e.al==code);
+  }
+  static Aircraft? getAircraftByID(int? id) {
+    return systemSetting.aircraftList.firstWhereOrNull((e)=>e.id==id);
+  }
+
+  static ClassType? getClassTypeByID(int id) {
+    return systemSetting.classTypeList.firstWhereOrNull((e)=>e.id==id);
+  }
+
+  static TagStatus? getTagStatusByID(int id) {
+    return systemSetting.statusList.firstWhereOrNull((e)=>e.id==id);
   }
 }

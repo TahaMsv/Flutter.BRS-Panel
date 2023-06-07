@@ -86,12 +86,21 @@ class _MyButtonState extends State<MyButton> {
           backgroundColor: MaterialStatePropertyAll(c.withOpacity(widget.fade ? 0.3 : 1)),
           foregroundColor: MaterialStatePropertyAll(widget.fade ? c : Colors.white),
         ),
-        child: _loading && widget.showLoading
-            ? SpinKitThreeBounce(
-                color: widget.fade ? c : Colors.white,
-                size: 18,
-              )
-            : widget.child ?? Text(widget.label,style: TextStyle(fontSize: widget.fontSize),),
+        child: IndexedStack(
+          alignment: Alignment.center,
+          index: _loading && widget.showLoading ? 0 : 1,
+          children: [
+            SpinKitThreeBounce(
+              color: widget.fade ? c : Colors.white,
+              size: 18,
+            ),
+            widget.child ??
+                Text(
+                  widget.label,
+                  style: TextStyle(fontSize: widget.fontSize),
+                )
+          ],
+        ),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:artemis_utils/artemis_utils.dart';
 import 'package:brs_panel/screens/add_flight/add_flight_controller.dart';
 import 'package:brs_panel/screens/aircrafts/aircrafts_controller.dart';
 import 'package:brs_panel/screens/airlines/airlines_controller.dart';
+import 'package:brs_panel/screens/airport_carts/airport_carts_controller.dart';
 import 'package:brs_panel/screens/airports/airports_controller.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_controller.dart';
 import 'package:brs_panel/screens/flights/flights_controller.dart';
@@ -65,6 +66,8 @@ initControllers() {
   AirportsController airportsController = AirportsController();
   AircraftsController aircraftsController = AircraftsController();
   AirlineUldsController airlineUldsController = AirlineUldsController();
+  AirportCartsController airportCartsController = AirportCartsController();
+
 
   getIt.registerSingleton(loginController);
   getIt.registerSingleton(homeController);
@@ -75,6 +78,7 @@ initControllers() {
   getIt.registerSingleton(airportsController);
   getIt.registerSingleton(aircraftsController);
   getIt.registerSingleton(airlineUldsController);
+  getIt.registerSingleton(airportCartsController);
 
   ns.registerControllers({
     RouteNames.login: loginController,
@@ -86,6 +90,7 @@ initControllers() {
     RouteNames.airports: airportsController,
     RouteNames.aircrafts: aircraftsController,
     RouteNames.airlineUlds: airlineUldsController,
+    RouteNames.airlineUlds: airportCartsController,
   });
 }
 

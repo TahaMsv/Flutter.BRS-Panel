@@ -1,5 +1,6 @@
 import 'package:artemis_ui_kit/artemis_ui_kit.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import 'new_version_class.dart';
 
@@ -78,10 +79,10 @@ class SystemSettings {
   final List<Position> positions;
   final List<Action> actions;
   final List<TagContainer> containers;
-  final List<Action> statusList;
+  final List<TagStatus> statusList;
   final List<Action> exceptionStatusList;
   final List<Action> exceptionActionList;
-  final List<ClassTypeList> classTypeList;
+  final List<ClassType> classTypeList;
   final List<HandlingSetting> handlingSetting;
   final List<HandlingAccess> handlingAccess;
   final List<Airport> airportList;
@@ -110,11 +111,11 @@ class SystemSettings {
     List<String>? barcodeTypes,
     BarcodeSetting? barcodeSetting,
     List<ErrorList>? errorList,
-    List<Action>? statusList,
+    List<TagStatus>? statusList,
     List<ZplList>? zplList,
     List<Action>? exceptionStatusList,
     List<Action>? exceptionActionList,
-    List<ClassTypeList>? classTypeList,
+    List<ClassType>? classTypeList,
     List<AirlineRouteSetting>? airlineRouteSetting,
     List<HandlingSetting>? handlingSetting,
     List<HandlingAccess>? handlingAccess,
@@ -141,10 +142,10 @@ class SystemSettings {
         positions: List<Position>.from(json["Positions"].map((x) => Position.fromJson(x))),
         actions: List<Action>.from(json["Actions"].map((x) => Action.fromJson(x))),
         containers: List<TagContainer>.from(json["Containers"].map((x) => TagContainer.fromJson(x))),
-        statusList: List<Action>.from(json["StatusList"].map((x) => Action.fromJson(x))),
+        statusList: List<TagStatus>.from(json["StatusList"].map((x) => TagStatus.fromJson(x))),
         exceptionStatusList: List<Action>.from(json["ExceptionStatusList"].map((x) => Action.fromJson(x))),
         exceptionActionList: List<Action>.from(json["ExceptionActionList"].map((x) => Action.fromJson(x))),
-        classTypeList: List<ClassTypeList>.from(json["ClassTypeList"].map((x) => ClassTypeList.fromJson(x))),
+        classTypeList: List<ClassType>.from(json["ClassTypeList"].map((x) => ClassType.fromJson(x))),
         handlingSetting: List<HandlingSetting>.from(json["HandlingSetting"].map((x) => HandlingSetting.fromJson(x))),
         handlingAccess: List<HandlingAccess>.from(json["HandlingAccess"].map((x) => HandlingAccess.fromJson(x))),
         airlineList: List<Airline>.from(json["AirlineList"].map((x) => Airline.fromJson(x))),
@@ -222,6 +223,66 @@ class Action {
       );
 
   factory Action.fromJson(Map<String, dynamic> json) => Action(
+        id: json["ID"],
+        actionTitle: json["ActionTitle"] ?? '',
+        position: json["Position"] ?? 0,
+        color: json["Color"] ?? '',
+        description: json["Description"] ?? '',
+        title: json["Title"] ?? '',
+        icon: json["Icon"] ?? '',
+      );
+
+  Map<String, dynamic> toJson() => {
+        "ID": id,
+        "ActionTitle": actionTitle,
+        "Position": position,
+        "Color": color,
+        "Description": description,
+        "Title": title,
+        "Icon": icon,
+      };
+}
+
+@immutable
+class TagStatus {
+  final int id;
+  final String actionTitle;
+  final int position;
+  final String color;
+  final String description;
+  final String title;
+  final String icon;
+
+  const TagStatus({
+    required this.id,
+    required this.actionTitle,
+    required this.position,
+    required this.color,
+    required this.description,
+    required this.title,
+    required this.icon,
+  });
+
+  TagStatus copyWith({
+    int? id,
+    String? actionTitle,
+    int? position,
+    String? color,
+    String? description,
+    String? title,
+    String? icon,
+  }) =>
+      TagStatus(
+        id: id ?? this.id,
+        actionTitle: actionTitle ?? this.actionTitle,
+        position: position ?? this.position,
+        color: color ?? this.color,
+        description: description ?? this.description,
+        title: title ?? this.title,
+        icon: icon ?? this.icon,
+      );
+
+  factory TagStatus.fromJson(Map<String, dynamic> json) => TagStatus(
         id: json["ID"],
         actionTitle: json["ActionTitle"] ?? '',
         position: json["Position"] ?? 0,
@@ -352,14 +413,14 @@ class BarcodeSetting {
 }
 
 @immutable
-class ClassTypeList {
+class ClassType {
   final int id;
   final String title;
   final String color;
   final String segregation;
   final String abbreviation;
 
-  const ClassTypeList({
+  const ClassType({
     required this.id,
     required this.title,
     required this.color,
@@ -367,14 +428,14 @@ class ClassTypeList {
     required this.abbreviation,
   });
 
-  ClassTypeList copyWith({
+  ClassType copyWith({
     int? id,
     String? title,
     String? color,
     String? segregation,
     String? abbreviation,
   }) =>
-      ClassTypeList(
+      ClassType(
         id: id ?? this.id,
         title: title ?? this.title,
         color: color ?? this.color,
@@ -382,7 +443,7 @@ class ClassTypeList {
         abbreviation: abbreviation ?? this.abbreviation,
       );
 
-  factory ClassTypeList.fromJson(Map<String, dynamic> json) => ClassTypeList(
+  factory ClassType.fromJson(Map<String, dynamic> json) => ClassType(
         id: json["ID"],
         title: json["Title"],
         color: json["Color"],
@@ -609,7 +670,8 @@ class Position {
         "Actions": List<dynamic>.from(actions.map((x) => x.toJson())),
       };
 
-  get getColor => HexColor(color);
+  Color get getColor => HexColor(color);
+  IconData? get getIcon => Icons.h_mobiledata;
 }
 
 @immutable

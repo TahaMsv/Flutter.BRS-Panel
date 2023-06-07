@@ -28,7 +28,7 @@ class FlightListRequest extends Request {
   @override
   Map<String, dynamic> toJson() => {
         "Body": {
-          "Execution": "FlightList",
+          "Execution": "FlightList2",
           "Token": token,
           "Request": {
             "Date": dateTime.format_yyyyMMdd,

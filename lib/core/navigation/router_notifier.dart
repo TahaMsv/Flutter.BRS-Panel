@@ -1,6 +1,7 @@
 import 'package:brs_panel/screens/aircrafts/aircrafts_view.dart';
 import 'package:brs_panel/screens/airline_ulds/airline_ulds_view.dart';
 import 'package:brs_panel/screens/airlines/airlines_view.dart';
+import 'package:brs_panel/screens/airport_carts/airport_carts_view.dart';
 import 'package:brs_panel/screens/airports/airports_view.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_view.dart';
 import 'package:brs_panel/screens/flights/flights_view.dart';
@@ -129,13 +130,22 @@ class RouterNotifier extends AutoDisposeAsyncNotifier<void> implements Listenabl
               )
             ]),
     MyRoute(
-      // controller: RouteNames.home.controller,
       name: RouteNames.airports.name,
       path: RouteNames.airports.path,
-
       pageBuilder: (context, state) {
         return NoTransitionPage<void>(key: state.pageKey, child: const AirportsView());
       },
+      routes: [
+        MyRoute(
+          // controller: RouteNames.home.controller,
+          name: RouteNames.airportCarts.name,
+          path: RouteNames.airportCarts.path,
+
+          pageBuilder: (context, state) {
+            return NoTransitionPage<void>(key: state.pageKey, child: const AirportCartsView());
+          },
+        ),
+      ]
     ),
     MyRoute(
       // controller: RouteNames.home.controller,

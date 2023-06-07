@@ -1,6 +1,5 @@
 import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:brs_panel/widgets/TagCountWidget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -56,10 +55,10 @@ class FlightDataSource extends DataGridSource {
             cells: [
               DataGridCell<String>(columnName: FlightDataTableColumn.flight.name, value: e.flightNumber),
               DataGridCell<int>(columnName: FlightDataTableColumn.status.name, value: 1),
-              DataGridCell<String>(columnName: FlightDataTableColumn.route.name, value: e.fromCity),
+              DataGridCell<String>(columnName: FlightDataTableColumn.route.name, value: e.from),
               DataGridCell<String>(columnName: FlightDataTableColumn.time.name, value: e.std),
-              DataGridCell<String>(columnName: FlightDataTableColumn.aircraft.name, value: e.aircraftCode),
-              DataGridCell<String>(columnName: FlightDataTableColumn.register.name, value: e.registration),
+              DataGridCell<int>(columnName: FlightDataTableColumn.aircraft.name, value: e.getAircraft?.id),
+              DataGridCell<String>(columnName: FlightDataTableColumn.register.name, value: e.getAircraft?.registration),
 
               DataGridCell<String>(columnName: FlightDataTableColumn.actions.name, value: ''),
             ],
@@ -110,7 +109,7 @@ class FlightDataSource extends DataGridSource {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           alignment: Alignment.center,
-          child: Text('${f.fromCity}-${f.toCity}'),
+          child: Text('${f.from}-${f.to}'),
         );
       }
       if (dataGridCell.columnName == FlightDataTableColumn.time.name) {
@@ -124,14 +123,14 @@ class FlightDataSource extends DataGridSource {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           alignment: Alignment.center,
-          child: Text(f.aircraftCode),
+          child: Text("${f.getAircraft?.id??'-'}"),
         );
       }
       if (dataGridCell.columnName == FlightDataTableColumn.register.name) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           alignment: Alignment.center,
-          child: Text(f.registration),
+          child: Text(f.getAircraft?.registration??'-'),
         );
       }
       if (dataGridCell.columnName == FlightDataTableColumn.status.name) {

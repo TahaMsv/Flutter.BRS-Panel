@@ -116,6 +116,8 @@ class _MyTextFieldState extends State<MyTextField> {
               obscureText: obscureText,
               // onChanged: widget.onChanged,
               decoration: InputDecoration(
+                fillColor: Colors.white,
+                filled: true,
                 hintText: widget.placeholder,
                 prefixIcon: widget.prefixIcon,
                 prefix: widget.prefix,

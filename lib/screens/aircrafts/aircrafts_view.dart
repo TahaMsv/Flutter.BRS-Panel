@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import '../../core/constants/ui.dart';
 import '../../core/util/basic_class.dart';
+import '../../initialize.dart';
 import '../../widgets/LoadingListView.dart';
+import '../../widgets/MyTextField.dart';
 import 'aircrafts_controller.dart';
 import 'aircrafts_state.dart';
 import 'data_tables/aircraft_data_table.dart';
@@ -17,8 +20,48 @@ class AircraftsView extends StatelessWidget {
     return const Scaffold(
         appBar: MyAppBar(),
         body: Column(
-          children: [AircraftListWidget()],
+          children: [
+            AircraftsPanel(),
+            AircraftListWidget()],
         ));
+  }
+}
+
+class AircraftsPanel extends ConsumerWidget {
+  static TextEditingController searchC = TextEditingController();
+
+  const AircraftsPanel({Key? key}) : super(key: key);
+  static AircraftsController myAirlinesController = getIt<AircraftsController>();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Container(
+      color: MyColors.white1,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+      child: Row(
+        children: [
+          const SizedBox(width: 12),
+          Expanded(
+              flex: 2,
+              child: MyTextField(
+                height: 35,
+                prefixIcon: const Icon(Icons.search),
+                placeholder: "Search Here...",
+                controller: searchC,
+                showClearButton: true,
+                onChanged: (v) {
+                  final s = ref.read(aircraftSearchProvider.notifier);
+                  s.state = v;
+                },
+              )),
+          const SizedBox(width: 12),
+          const Expanded(
+            flex: 5,
+            child: SizedBox(),
+          ),
+        ],
+      ),
+    );
   }
 }
 

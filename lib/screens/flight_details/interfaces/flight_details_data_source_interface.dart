@@ -1,3 +1,5 @@
+import '../usecases/flight_get_details_usecase.dart';
+
 abstract class FlightDetailsDataSourceInterface {
-  // Future<Response> ({required Request request});
+  Future<FlightGetDetailsResponse> flightGetDetails({required FlightGetDetailsRequest request});
 }

@@ -18,7 +18,7 @@ class MyAppBar extends StatefulWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(50);
+  Size get preferredSize => const Size.fromHeight(60);
 }
 
 class _MyAppBarState extends State<MyAppBar> {
@@ -33,7 +33,7 @@ class _MyAppBarState extends State<MyAppBar> {
         currentRoute ??= RouteNames.values.lastWhere((element) => router.location.contains("/${element.path}"));
         return Container(
           decoration: const BoxDecoration(color: MyColors.white1),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 0),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
           child: isSubroute
               ? DecoratedBox(
                   decoration: const BoxDecoration(
@@ -44,13 +44,14 @@ class _MyAppBarState extends State<MyAppBar> {
                     child: Row(
                       children: [
                         DotButton(
+                          size: 35,
                           icon: Icons.keyboard_arrow_left_sharp,
                           onPressed: () {
                             NavigationService ns = getIt<NavigationService>();
                             ns.pop();
                           },
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 8),
                         ...RouteNames.values
                             .where((element) => router.location.split("/").contains(element.name))
                             .map((e) => DecoratedBox(

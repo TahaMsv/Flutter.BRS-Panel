@@ -91,9 +91,10 @@ class AirlineDataSource extends DataGridSource {
               MyButton(
                 height: 30,
                 // fontSize: 12,
-                label: "ULD List",fade: true,onPressed: (){
-                airlinesController.goUlds(f);
-              },),
+                label: "ULD List", fade: true, onPressed: () async{
+                  await airlinesController.goUlds(f);
+                },
+              ),
               const SizedBox(width: 12),
               DotButton(
                 icon: Icons.more_vert,

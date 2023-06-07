@@ -1,3 +1,5 @@
+import '../usecases/airline_get_ulds_usecase.dart';
+
 abstract class AirlineUldsDataSourceInterface {
-  // Future<Response> ({required Request request});
+  Future<AirlineGetUldListResponse> airlineGetUldList({required AirlineGetUldListRequest request});
 }

@@ -1,23 +1,27 @@
 import 'package:brs_panel/core/classes/flight_class.dart';
 import 'package:brs_panel/core/constants/ui.dart';
+import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
+import '../core/classes/user_class.dart';
+
 class TagCountWidget extends StatelessWidget {
-  final Position position;
+  final PositionData position;
   final Color color;
 
-  TagCountWidget({Key? key, required this.position, this.color = MyColors.checkinGreen}) : super(key: key);
+  const TagCountWidget({Key? key, required this.position, this.color = MyColors.checkinGreen}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    Position pos = BasicClass.systemSetting.positions.firstWhere((element) => element.id==position.id);
     return Container(
       height: 30,
       padding: const EdgeInsets.only(left: 8, top: 2, bottom: 2, right: 3),
       decoration: BoxDecoration(color: color.withOpacity(0.4), borderRadius: BorderRadius.circular(15)),
       child: Row(
         children: [
-          Text(position.title,style: const TextStyle(fontSize: 12),),
+          Text(pos.title,style: const TextStyle(fontSize: 12),),
           const SizedBox(width: 12),
           ClipPath(
             clipper: CounterClipper(),

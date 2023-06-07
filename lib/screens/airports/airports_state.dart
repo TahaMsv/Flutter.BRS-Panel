@@ -14,11 +14,11 @@ class AirportsState extends ChangeNotifier {
 }
 
 
-final airportSearchProvider = StateProvider<String>((ref) => '');
+final airportsSearchProvider = StateProvider<String>((ref) => '');
 final filteredAirportListProvider = Provider<List<Airport>>((ref) {
   // final airports = ref.watch(airportListProvider);
   final airports = BasicClass.systemSetting.airportList;
-  final searchFilter = ref.watch(airportSearchProvider);
+  final searchFilter = ref.watch(airportsSearchProvider);
   return airports
       .where(
         (f) => f.validateSearch(searchFilter),

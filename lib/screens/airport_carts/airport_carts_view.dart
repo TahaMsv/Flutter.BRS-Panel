@@ -1,33 +1,36 @@
-import 'package:brs_panel/core/classes/airline_uld_class.dart';
-import 'package:brs_panel/widgets/DotButton.dart';
-import 'package:brs_panel/widgets/MyAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../../core/classes/airport_cart_class.dart';
 import '../../core/constants/ui.dart';
 import '../../core/util/basic_class.dart';
 import '../../initialize.dart';
+import '../../widgets/DotButton.dart';
+import '../../widgets/MyAppBar.dart';
 import '../../widgets/MyTextField.dart';
-import 'airline_ulds_controller.dart';
-import 'airline_ulds_state.dart';
+import 'airport_carts_controller.dart';
+import 'airport_carts_state.dart';
 
-class AirlineUldsView extends StatelessWidget {
-  const AirlineUldsView({super.key});
+class AirportCartsView extends StatelessWidget {
+  const AirportCartsView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: const MyAppBar(),
+    return const Scaffold(
+        appBar: MyAppBar(),
         body: Column(
-          children: [AirlineUldsPanel(), const AirlineUldListWidget()],
+          children: [
+            AirportCartsPanel(),
+            AirportCartListWidget(),
+          ],
         ));
   }
 }
 
-class AirlineUldsPanel extends ConsumerWidget {
+class AirportCartsPanel extends ConsumerWidget {
   static TextEditingController searchC = TextEditingController();
 
-  AirlineUldsPanel({Key? key}) : super(key: key);
-  final AirlineUldsController myAirlineUldsController = getIt<AirlineUldsController>();
+  const AirportCartsPanel({Key? key}) : super(key: key);
+  static AirportCartsController myAirportCartsController = getIt<AirportCartsController>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,7 +43,7 @@ class AirlineUldsPanel extends ConsumerWidget {
           DotButton(
             size: 35,
             onPressed: () {
-              myAirlineUldsController.addUld();
+              myAirportCartsController.addCart();
             },
             icon: Icons.add,
             color: Colors.blueAccent,
@@ -55,7 +58,7 @@ class AirlineUldsPanel extends ConsumerWidget {
                 controller: searchC,
                 showClearButton: true,
                 onChanged: (v) {
-                  final s = ref.read(uldSearchProvider.notifier);
+                  final s = ref.read(cartSearchProvider.notifier);
                   s.state = v;
                 },
               )),
@@ -70,38 +73,38 @@ class AirlineUldsPanel extends ConsumerWidget {
   }
 }
 
-class AirlineUldListWidget extends ConsumerWidget {
-  const AirlineUldListWidget({super.key});
+class AirportCartListWidget extends ConsumerWidget {
+  const AirportCartListWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final double width = MediaQuery.of(context).size.width;
-    final AirlineUldsState state = ref.watch(airlineUldsProvider);
-    final uldList = ref.watch(filteredUldListProvider);
+    final AirportCartsState state = ref.watch(airportCartsProvider);
+    final cartList = ref.watch(cartListProvider);
     return Expanded(
         child: ListView.builder(
-      itemBuilder: (c, i) => AirlineUldWidget(
+      itemBuilder: (c, i) => AirportCartWidget(
         index: i,
-        uld: uldList[i],
+        cart: cartList[i],
       ),
-      itemCount: uldList.length,
+      itemCount: cartList.length,
     ));
   }
 }
 
-class AirlineUldWidget extends StatelessWidget {
-  final AirlineUld uld;
+class AirportCartWidget extends StatelessWidget {
+  final AirportCart cart;
   final int index;
-  static AirlineUldsController myAirlineUldsController = getIt<AirlineUldsController>();
+  static AirportCartsController myAirportCartsController = getIt<AirportCartsController>();
 
-  const AirlineUldWidget({Key? key, required this.uld, required this.index}) : super(key: key);
+  const AirportCartWidget({Key? key, required this.cart, required this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      tileColor: index.isEven?MyColors.pinkishGrey:Colors.white,
-      title: Text(uld.code),
-      leading: Text(uld.type),
+      tileColor: index.isEven ? MyColors.pinkishGrey : Colors.white,
+      title: Text(cart.code),
+      leading: Text(cart.type),
     );
   }
 }

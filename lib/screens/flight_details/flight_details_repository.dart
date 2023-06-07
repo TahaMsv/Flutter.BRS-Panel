@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:brs_panel/screens/flight_details/usecases/flight_get_details_usecase.dart';
 import 'package:dartz/dartz.dart';
 import '../../core/abstracts/exception_abs.dart';
 import '../../core/abstracts/failures_abs.dart';
@@ -9,9 +10,24 @@ import 'data_sources/flight_details_local_ds.dart';
 import 'data_sources/flight_details_remote_ds.dart';
 
 class FlightDetailsRepository implements FlightDetailsRepositoryInterface {
-  final FlightDetailsRemoteDataSource flight_detailsRemoteDataSource = FlightDetailsRemoteDataSource();
-  final FlightDetailsLocalDataSource flight_detailsLocalDataSource = FlightDetailsLocalDataSource();
+  final FlightDetailsRemoteDataSource flightDetailsRemoteDataSource = FlightDetailsRemoteDataSource();
+  final FlightDetailsLocalDataSource flightDetailsLocalDataSource = FlightDetailsLocalDataSource();
   final NetworkInfo networkInfo = getIt<NetworkInfo>();
 
   FlightDetailsRepository();
+
+    @override
+      Future<Either<Failure, FlightGetDetailsResponse>> flightGetDetails(FlightGetDetailsRequest request) async {
+        try {
+          FlightGetDetailsResponse flightGetDetailsResponse;
+          if (await networkInfo.isConnected) {
+            flightGetDetailsResponse = await flightDetailsRemoteDataSource.flightGetDetails(request: request);
+          } else {
+            flightGetDetailsResponse = await flightDetailsLocalDataSource.flightGetDetails(request: request);
+          }
+          return Right(flightGetDetailsResponse);
+        } on AppException catch (e) {
+          return Left(ServerFailure.fromAppException(e));
+        }
+      }
 }
