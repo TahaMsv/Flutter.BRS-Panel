@@ -80,7 +80,7 @@ class AirportCartListWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final double width = MediaQuery.of(context).size.width;
     final AirportCartsState state = ref.watch(airportCartsProvider);
-    final cartList = ref.watch(cartListProvider);
+    final cartList = ref.watch(filteredCartListProvider);
     return Expanded(
         child: ListView.builder(
       itemBuilder: (c, i) => AirportCartWidget(

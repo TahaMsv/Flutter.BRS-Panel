@@ -20,12 +20,12 @@ final cartSearchProvider = StateProvider<String>((ref) => '');
 
 final filteredCartListProvider = Provider<List<AirportCart>>((ref){
   final carts = ref.watch(cartListProvider);
-  print("ll ${carts.length}");
+  // print("ll ${carts.length}");
 
   final searchFilter = ref.watch(cartSearchProvider);
   return carts
       .where(
-        (f) => f.validateSearch(searchFilter) || true,
+        (f) => f.validateSearch(searchFilter),
   )
       .toList();
 });
