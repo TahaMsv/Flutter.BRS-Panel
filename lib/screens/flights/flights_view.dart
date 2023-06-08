@@ -1,6 +1,8 @@
 import 'package:artemis_ui_kit/artemis_ui_kit.dart';
+import 'package:brs_panel/core/classes/user_class.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
+import 'package:brs_panel/widgets/MyDropDown.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,6 +13,7 @@ import '../../core/util/basic_class.dart';
 import '../../widgets/DotButton.dart';
 import '../../widgets/LoadingListView.dart';
 import '../../widgets/MyAnimatedSwitcher.dart';
+import '../../widgets/MyFieldPicker.dart';
 import '../../widgets/MySegment.dart';
 import '../../widgets/MyTextField.dart';
 import 'data_tables/flight_data_table.dart';
@@ -46,6 +49,7 @@ class FlightsPanel extends ConsumerWidget {
     bool showFilter = ref.watch(flightsShowFiltersProvider);
     FlightTypeFilter flightTypeFilter = ref.watch(flightTypeFilterProvider);
     return Container(
+      color: MyColors.white1,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       child: Row(
         children: [
@@ -96,18 +100,59 @@ class FlightsPanel extends ConsumerWidget {
                   );
                 },
               )),
-          const Expanded(flex: 2, child: SizedBox()),
+          const Expanded(flex: 1, child: SizedBox()),
           Expanded(
-              flex: 2,
+              flex: 5,
               child: MyAnimatedSwitcher(
-                // direction: Axis.horizontal,
-                // axisAlignment: -2,
+                padding: const EdgeInsets.symmetric(vertical: 4),
                 value: showFilter,
                 firstChild: Row(
                   children: [
+                    const SizedBox(width: 12),
+                    Expanded(
+                        flex: 2,
+                        child: Consumer(
+                          builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                            final a = ref.watch(flightAirportFilterProvider.notifier);
+                            return SizedBox(
+                              height: 35,
+                              child: MyFieldPicker<Airport>(
+                                itemToString: (a) => "${a.code} (${a.name})",
+                                label: 'Airport',
+                                items: BasicClass.systemSetting.airportList,
+                                onChange: (v) {
+                                  a.state = v;
+                                },
+                                value: a.state,
+                              ),
+                            );
+                          },
+                        )),
+                    const SizedBox(width: 12),
+                    Expanded(
+                        flex: 2,
+                        child: Consumer(
+                          builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                            final a = ref.watch(flightAirlineFilterProvider.notifier);
+                            return SizedBox(
+                              height: 35,
+                              child: MyFieldPicker<Airline>(
+                                itemToString: (a) => "${a.al} (${a.name})",
+                                label: 'Airline',
+                                items: BasicClass.systemSetting.airlineList,
+                                onChange: (v) {
+                                  a.state = v;
+                                },
+                                value: a.state,
+                              ),
+                            );
+                          },
+                        )),
+                    const SizedBox(width: 12),
                     Expanded(
                         flex: 2,
                         child: MySegment<FlightTypeFilter>(
+                          height: 35,
                           itemToString: (e) => e.toStr,
                           items: FlightTypeFilter.values,
                           onChange: (FlightTypeFilter v) {
@@ -115,10 +160,9 @@ class FlightsPanel extends ConsumerWidget {
                           },
                           value: flightTypeFilter,
                         )),
-                    const SizedBox(width: 12),
                   ],
                 ),
-                secondChild: const SizedBox(),
+                secondChild: const SizedBox(height: 35),
               )),
           const SizedBox(width: 12),
           DotButton(

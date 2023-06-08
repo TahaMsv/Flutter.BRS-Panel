@@ -30,9 +30,9 @@ class AirlineUld {
 
   factory AirlineUld.fromJson(Map<String, dynamic> json) => AirlineUld(
     id: json["ID"]??0,
-    type: json["Type"],
+    type: json["Type"]??json["ULDType"],
     code: json["Code"],
-    barcode: json["Barcode"],
+    barcode: json["Barcode"]??'',
   );
 
   Map<String, dynamic> toJson() => {

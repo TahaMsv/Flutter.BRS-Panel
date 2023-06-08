@@ -1,3 +1,4 @@
+import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:dartz/dartz.dart';
 import '../../../core/abstracts/failures_abs.dart';
 import '../../../core/abstracts/request_abs.dart';
@@ -20,14 +21,18 @@ class FlightGetDetailsUseCase extends UseCase<FlightGetDetailsResponse,FlightGet
 }
 
 class FlightGetDetailsRequest extends Request {
-  FlightGetDetailsRequest();
+  final int flightID;
+  FlightGetDetailsRequest({required this.flightID});
 
   @override
   Map<String, dynamic> toJson() =>{
     "Body": {
-      "Execution": "FlightGetDetails",
       "Token":token,
+      "Execution": "FlightDetails",
       "Request": {
+        "FlightScheduleID": flightID,
+        "Position": null,
+        "Airport": BasicClass.userSetting.airport
       }
     }
   };
@@ -44,15 +49,13 @@ class FlightGetDetailsResponse extends Response {
       : super(
           status: status,
           message: message,
-          body: {
-            "FlightDetails" : details.toJson(),
-          },
+          body: details.toJson(),
         );
 
     factory FlightGetDetailsResponse.fromResponse(Response res) => FlightGetDetailsResponse(
         status: res.status,
         message: res.message,
-        details:FlightDetails.fromJson(res.body["FlightDetails"]),
+        details:FlightDetails.fromJson(res.body),
       );
 
 }

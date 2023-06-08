@@ -79,9 +79,9 @@ class _DotButtonState extends State<DotButton> {
         child: _loading && widget.showLoading
             ? SpinKitCircle(
                 color: widget.fade ? c : Colors.white,
-                size: 20,
+                size: widget.size-5,
               )
-            : widget.child ?? Icon(widget.icon),
+            : widget.child ?? Icon(widget.icon,size: widget.size-8,),
       ),
     );
   }

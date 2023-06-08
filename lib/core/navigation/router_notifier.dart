@@ -104,27 +104,24 @@ class RouterNotifier extends AutoDisposeAsyncNotifier<void> implements Listenabl
               ),
               MyRoute(
                 name: RouteNames.flightDetails.name,
-                path: RouteNames.flightDetails.path,
+                path: '${RouteNames.flightDetails.path}/:flightID',
                 pageBuilder: (context, state) {
-                  return NoTransitionPage<void>(key: state.pageKey, child: const FlightDetailsView());
+                  final flightID = int.parse(state.pathParameters["flightID"].toString());
+                  return NoTransitionPage<void>(key: state.pageKey, child: FlightDetailsView(flightID: flightID));
                 },
               ),
             ]),
         MyRoute(
-            // controller: RouteNames.home.controller,
             name: RouteNames.airlines.name,
             path: RouteNames.airlines.path,
             pageBuilder: (context, state) {
-              // HomeController homeController = getIt<HomeController>();
               return NoTransitionPage<void>(key: state.pageKey, child: const AirlinesView());
             },
             routes: [
               MyRoute(
-                // controller: RouteNames.home.controller,
                 name: RouteNames.airlineUlds.name,
                 path: RouteNames.airlineUlds.path,
                 pageBuilder: (context, state) {
-                  // HomeController homeController = getIt<HomeController>();
                   return NoTransitionPage<void>(key: state.pageKey, child: const AirlineUldsView());
                 },
               )

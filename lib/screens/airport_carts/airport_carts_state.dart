@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../core/classes/airport_cart_class.dart';
+import '../../core/classes/user_class.dart';
 
 final airportCartsProvider = ChangeNotifierProvider<AirportCartsState>((_) => AirportCartsState());
 
@@ -9,25 +10,17 @@ class AirportCartsState extends ChangeNotifier {
   void setState() => notifyListeners();
 
   ///bool loading = false;
-
 }
-
 
 final cartListProvider = StateNotifierProvider<AirportCartListNotifier, List<AirportCart>>((ref) => AirportCartListNotifier(ref));
 
 final cartSearchProvider = StateProvider<String>((ref) => '');
+final selectedAirportProvider = StateProvider<Airport?>((ref) => null);
 
-
-final filteredCartListProvider = Provider<List<AirportCart>>((ref){
+final filteredCartListProvider = Provider<List<AirportCart>>((ref) {
   final carts = ref.watch(cartListProvider);
-  // print("ll ${carts.length}");
-
   final searchFilter = ref.watch(cartSearchProvider);
-  return carts
-      .where(
-        (f) => f.validateSearch(searchFilter),
-  )
-      .toList();
+  return carts.where((f) => f.validateSearch(searchFilter)).toList();
 });
 
 class AirportCartListNotifier extends StateNotifier<List<AirportCart>> {
@@ -43,9 +36,18 @@ class AirportCartListNotifier extends StateNotifier<List<AirportCart>> {
     state = state.where((element) => element.id != id).toList();
   }
 
-  void setAirportCarts(List<AirportCart> fl){
+  void setAirportCarts(List<AirportCart> fl) {
     print("Setting ${fl.length}");
-    state= fl;
+    state = fl;
   }
 
+  void updateCart(AirportCart u) {
+    state = state.map((e) {
+      if (e.id == u.id) {
+        return u;
+      } else {
+        return e;
+      }
+    }).toList();
+  }
 }

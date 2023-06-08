@@ -1,5 +1,6 @@
 import 'package:brs_panel/core/classes/user_class.dart';
 import 'package:brs_panel/core/navigation/route_names.dart';
+import 'package:brs_panel/screens/airport_carts/airport_carts_state.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../core/abstracts/controller_abs.dart';
@@ -17,7 +18,9 @@ class AirportsController extends MainController {
 
   Future<void> goCarts(Airport a) async {
     AirportCartsController airportCartsController = getIt<AirportCartsController>();
-    final ulds = await airportCartsController.airportGetCarts(a);
+    final ulds = await airportCartsController.airportGetCarts();
+    final selectedAirportP = ref.read(selectedAirportProvider.notifier);
+    selectedAirportP.state = a;
     if (ulds != null) {
       nav.pushNamed(RouteNames.airportCarts);
     }

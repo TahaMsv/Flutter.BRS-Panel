@@ -1,4 +1,5 @@
 import 'package:brs_panel/core/navigation/route_names.dart';
+import 'package:brs_panel/screens/flight_details/flight_details_state.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_list_usecase.dart';
 
 import '../../core/abstracts/controller_abs.dart';
@@ -14,7 +15,7 @@ class FlightsController extends MainController {
   // UseCase UseCase = UseCase(repository: Repository());
 
   @override
-  onInit(){
+  onInit() {
     flightList(DateTime.now());
   }
 
@@ -42,6 +43,8 @@ class FlightsController extends MainController {
   }
 
   void goDetails(Flight f) {
-    nav.pushNamed(RouteNames.flightDetails);
+    final sfP = ref.read(selectedFlightProvider.notifier);
+    sfP.state = f;
+    nav.pushNamed(RouteNames.flightDetails, pathParameters: {"flightID": f.id.toString()});
   }
 }

@@ -32,10 +32,8 @@ class FlightListRequest extends Request {
           "Token": token,
           "Request": {
             "Date": dateTime.format_yyyyMMdd,
-            "Airport": "KEF",
-            "AL": "OG"
-            // "Airport": BasicClass.settings.userSettings.userInfo.userSettings.airport,
-            // "AL": BasicClass.settings.userSettings.userInfo.userSettings.al,
+            "Airport": BasicClass.userSetting.airport,
+            "AL": BasicClass.userSetting.al
           }
         }
       };

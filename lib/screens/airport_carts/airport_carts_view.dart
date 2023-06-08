@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import '../../core/classes/airport_cart_class.dart';
 import '../../core/constants/ui.dart';
 import '../../core/util/basic_class.dart';
@@ -67,6 +70,12 @@ class AirportCartsPanel extends ConsumerWidget {
             flex: 5,
             child: SizedBox(),
           ),
+          DotButton(
+            icon: Icons.refresh,
+            onPressed: () {
+              myAirportCartsController.airportGetCarts();
+            },
+          ),
         ],
       ),
     );
@@ -82,12 +91,18 @@ class AirportCartListWidget extends ConsumerWidget {
     final AirportCartsState state = ref.watch(airportCartsProvider);
     final cartList = ref.watch(filteredCartListProvider);
     return Expanded(
-        child: ListView.builder(
+        child: GridView.builder(
+      padding: const EdgeInsets.all(12),
       itemBuilder: (c, i) => AirportCartWidget(
         index: i,
         cart: cartList[i],
       ),
       itemCount: cartList.length,
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: Get.width / 8,
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+      ),
     ));
   }
 }
@@ -101,10 +116,74 @@ class AirportCartWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      tileColor: index.isEven ? MyColors.pinkishGrey : Colors.white,
-      title: Text(cart.code),
-      leading: Text(cart.type),
+    return Container(
+      decoration: BoxDecoration(border: Border.all(color: MyColors.lineColor), borderRadius: BorderRadius.circular(8)),
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(margin: const EdgeInsets.all(4), padding: const EdgeInsets.all(2), decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.tealAccent), child: Text("${cart.id}")),
+          ),
+          Align(
+            alignment: Alignment.topRight,
+            child: Container(
+                margin: const EdgeInsets.all(4),
+                padding: const EdgeInsets.all(2),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    DotButton(
+                      icon: Icons.edit,
+                      size: 25,
+                      onPressed: () {
+                        myAirportCartsController.updateCart(cart);
+                      },
+                    ),
+                    const SizedBox(width: 8),
+                    DotButton(
+                      icon: Icons.delete,
+                      size: 25,
+                      onPressed: () {
+                        myAirportCartsController.deleteCart(cart);
+                      },
+                      color: Colors.red,
+                    ),
+                  ],
+                )),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  // color: Colors.orange
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                child: Text(
+                  cart.type,
+                  style: GoogleFonts.titilliumWeb(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  width: double.infinity,
+                  // height:Get.width/12,
+                  alignment: Alignment.center,
+                  child: QrImageView(data: cart.barcode),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  cart.code,
+                  style: GoogleFonts.oxygenMono(),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

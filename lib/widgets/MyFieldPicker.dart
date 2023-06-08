@@ -77,6 +77,7 @@ class MyFieldPicker<T> extends StatelessWidget {
         child: Stack(
           children: [
             DropdownSearch<T>(
+
               enabled: !locked,
               clearButtonProps: ClearButtonProps(
                 padding: EdgeInsets.zero,
@@ -118,6 +119,8 @@ class MyFieldPicker<T> extends StatelessWidget {
                   labelStyle: TextStyle(fontSize: 12, height: value == null ? 1 : 0.8),
                   labelText: label,
                   hintText: hint,
+                  filled: true,
+                  fillColor: Colors.white,
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 8,
                     vertical: 0,

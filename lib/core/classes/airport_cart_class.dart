@@ -29,9 +29,9 @@ class AirportCart {
 
   factory AirportCart.fromJson(Map<String, dynamic> json) => AirportCart(
     id: json["ID"],
-    type: json["Type"],
+    type: json["Type"]??'',
     code: json["Code"],
-    barcode: json["Barcode"],
+    barcode: json["Barcode"]??'',
   );
 
   Map<String, dynamic> toJson() => {

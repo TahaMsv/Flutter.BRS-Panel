@@ -556,6 +556,14 @@ class Flight {
     return flightType == typeFilter.index;
   }
 
+  bool validateAirline(Airline? a) {
+    return a==null || al == a.al;
+  }
+
+  bool validateAirport(Airport? a) {
+    return a==null || from == a.code;
+  }
+
   bool validateSearch(String s) {
     return s.isEmpty || "$al$flightNumber".toLowerCase().contains(s.toLowerCase());
   }

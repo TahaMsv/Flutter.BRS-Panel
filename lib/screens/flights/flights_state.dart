@@ -1,3 +1,4 @@
+import 'package:brs_panel/core/classes/user_class.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -10,25 +11,27 @@ class FlightsState extends ChangeNotifier {
   void setState() => notifyListeners();
 
   bool loadingFlights = false;
-
 }
-
 
 final flightListProvider = StateNotifierProvider<FlightListNotifier, List<Flight>>((ref) => FlightListNotifier(ref));
 
 final flightSearchProvider = StateProvider<String>((ref) => '');
 final flightDateProvider = StateProvider<DateTime>((ref) => DateTime.now());
-final flightsShowFiltersProvider = StateProvider<bool>((ref) => false);
+final flightsShowFiltersProvider = StateProvider<bool>((ref) => true);
 final flightTypeFilterProvider = StateProvider<FlightTypeFilter>((ref) => FlightTypeFilter.departure);
+final flightAirportFilterProvider = StateProvider<Airport?>((ref) => null);
+final flightAirlineFilterProvider = StateProvider<Airline?>((ref) => null);
 
-final filteredFlightListProvider = Provider<List<Flight>>((ref){
+final filteredFlightListProvider = Provider<List<Flight>>((ref) {
   final flights = ref.watch(flightListProvider);
   final typeFilter = ref.watch(flightTypeFilterProvider);
+  final alFilter = ref.watch(flightAirlineFilterProvider);
+  final apFilter = ref.watch(flightAirportFilterProvider);
   final searchFilter = ref.watch(flightSearchProvider);
   return flights
       .where(
-        (f) => f.validateType(typeFilter) && f.validateSearch(searchFilter),
-  )
+        (f) => f.validateType(typeFilter) && f.validateSearch(searchFilter) && f.validateAirline(alFilter) && f.validateAirport(apFilter),
+      )
       .toList();
 });
 
@@ -45,9 +48,7 @@ class FlightListNotifier extends StateNotifier<List<Flight>> {
     state = state.where((element) => element.id != id).toList();
   }
 
-  void setFlights(List<Flight> fl){
-    state= fl;
+  void setFlights(List<Flight> fl) {
+    state = fl;
   }
-
 }
-
