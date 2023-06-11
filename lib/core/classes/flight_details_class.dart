@@ -1,12 +1,14 @@
 import 'package:artemis_utils/artemis_utils.dart';
 import 'package:brs_panel/core/abstracts/local_data_base_abs.dart';
+import 'package:brs_panel/core/constants/assest.dart';
 import 'package:flutter/material.dart';
 
 import '../util/basic_class.dart';
 import 'user_class.dart';
 
+@immutable
 class FlightDetails {
-  FlightDetails({
+  const FlightDetails({
     required this.flightScheduleId,
     required this.tagList,
     required this.wrongTagList,
@@ -17,14 +19,14 @@ class FlightDetails {
     required this.binList,
   });
 
-  int flightScheduleId;
-  String weightUnit;
-  int baggageAverageWeight;
-  List<FlightTag> tagList;
-  List<WrongTag> wrongTagList;
-  List<TagContainer> containerList;
-  List<TransferFlight> transferFlightList;
-  List<Bin> binList;
+  final int flightScheduleId;
+  final String weightUnit;
+  final int baggageAverageWeight;
+  final List<FlightTag> tagList;
+  final List<WrongTag> wrongTagList;
+  final List<TagContainer> containerList;
+  final List<TransferFlight> transferFlightList;
+  final List<Bin> binList;
 
   factory FlightDetails.fromJson(Map<String, dynamic> json) {
     return FlightDetails(
@@ -40,10 +42,6 @@ class FlightDetails {
   }
 
   factory FlightDetails.merge(FlightDetails newFD, FlightDetails oldFD) {
-    // print("*******");
-    // print(newFD.containerList.length);
-    // print(oldFD.containerList.length);
-    // print("*******");
     return FlightDetails(
       flightScheduleId: newFD.flightScheduleId,
       baggageAverageWeight: newFD.baggageAverageWeight,
@@ -90,8 +88,9 @@ class FlightDetails {
   }
 }
 
+@immutable
 class FlightTag {
-  FlightTag({
+  const FlightTag({
     required this.tagId,
     required this.tagNumber,
     required this.currentPosition,
@@ -112,24 +111,24 @@ class FlightTag {
     this.classTypeID = 1,
   });
 
-  int tagId;
-  String tagNumber;
-  int currentPosition;
-  int currentOrder;
-  int indexInFlight;
-  int currentStatus;
-  int exceptionStatusID;
-  int classTypeID;
-  String flnb;
-  int flightScheduleId;
-  String flightDate;
-  String al;
-  String exceptionActionsStr;
-  bool isRush;
-  int deadline;
-  List<TagPosition> tagPositions;
-  List<ActionHistory> actionsHistory;
-  DcsInfo? dcsInfo;
+  final int tagId;
+  final String tagNumber;
+  final int currentPosition;
+  final int currentOrder;
+  final int indexInFlight;
+  final int currentStatus;
+  final int exceptionStatusID;
+  final int classTypeID;
+  final String flnb;
+  final int flightScheduleId;
+  final String flightDate;
+  final String al;
+  final String exceptionActionsStr;
+  final bool isRush;
+  final int deadline;
+  final List<TagPosition> tagPositions;
+  final List<ActionHistory> actionsHistory;
+  final DcsInfo? dcsInfo;
 
   factory FlightTag.fromJson(Map<String, dynamic> json) => FlightTag(
         tagId: json["TagID"],
@@ -181,8 +180,8 @@ class FlightTag {
         "ActionsHistory": List<dynamic>.from(actionsHistory.map((x) => x.toJson())),
       };
 
-  validateSearch(String searched, Position selectedPosition) {
-    return true && ("${dcsInfo?.securityCode} $tagNumber ".toLowerCase().contains(searched.toLowerCase()) || searched == "");
+  bool validateSearch(String searched, Position? selectedPosition) {
+    return (selectedPosition==null || currentPosition==selectedPosition.id) && ("${dcsInfo?.securityCode} $tagNumber ".toLowerCase().contains(searched.toLowerCase()) || searched == "");
   }
 
   List<int> get deniedPosIDs => actionsHistory.isEmpty ? [] : (actionsHistory.first.blockedPosition);
@@ -231,8 +230,9 @@ class FlightTag {
   }
 }
 
+@immutable
 class TagPosition {
-  TagPosition(
+  const TagPosition(
       {required this.sequenceNo,
       required this.indexInPosition,
       required this.indexInBin,
@@ -255,27 +255,27 @@ class TagPosition {
       this.binID,
       this.isForced = false});
 
-  int sequenceNo;
-  int indexInPosition;
-  int? indexInBin;
-  int? indexInUld;
-  int? indexInCart;
-  int positionId;
-  String airport;
-  int userId;
-  String username;
-  DateTime dateUtc;
-  String timeUtc;
-  String positionDesc;
-  String bin;
-  String? containerCode;
-  String uld;
-  String uldCode;
-  bool isForced;
-  TagContainer? container;
-  int? binID;
-  TransferFlight? transferFlight;
-  int? transferFlightID;
+  final int sequenceNo;
+  final int indexInPosition;
+  final int? indexInBin;
+  final int? indexInUld;
+  final int? indexInCart;
+  final int positionId;
+  final String airport;
+  final int userId;
+  final String username;
+  final DateTime dateUtc;
+  final String timeUtc;
+  final String positionDesc;
+  final String bin;
+  final String? containerCode;
+  final String uld;
+  final String uldCode;
+  final bool isForced;
+  final TagContainer? container;
+  final int? binID;
+  final TransferFlight? transferFlight;
+  final int? transferFlightID;
 
   TransferFlight? getTransferFlight(List<TransferFlight> tfl) {
     if (transferFlightID == null) return null;
@@ -300,7 +300,7 @@ class TagPosition {
         uldCode: json["ULDCode"],
         containerCode: json["ContainerCode"] ?? "",
         isForced: json["IsForced"] ?? false,
-        transferFlightID: json["TransferFlightID"] ?? null,
+        transferFlightID: json["TransferFlightID"],
         container: json["Container"] == null ? null : TagContainer.fromJson(json["Container"]),
         binID: json["BinID"],
         transferFlight: json["TransferFlight"] == null ? null : TransferFlight.fromJson(json["TransferFlight"]),
@@ -335,8 +335,9 @@ class TagPosition {
   }
 }
 
+@immutable
 class WrongTag {
-  WrongTag({
+  const WrongTag({
     required this.id,
     required this.positionId,
     required this.createdDate,
@@ -348,15 +349,15 @@ class WrongTag {
     required this.isForce,
   });
 
-  int id;
-  int positionId;
-  DateTime createdDate;
-  String tagNumber;
-  int indexInFlight;
-  int indexInPosition;
-  int type;
-  String description;
-  bool isForce;
+  final int id;
+  final int positionId;
+  final DateTime createdDate;
+  final String tagNumber;
+  final int indexInFlight;
+  final int indexInPosition;
+  final int type;
+  final String description;
+  final bool isForce;
 
   factory WrongTag.fromJson(Map<String, dynamic> json) => WrongTag(
         id: json["ID"],
@@ -387,8 +388,9 @@ class WrongTag {
   }
 }
 
+@immutable
 class TagContainer {
-  TagContainer({
+  const TagContainer({
     required this.id,
     required this.typeId,
     required this.positionID,
@@ -402,17 +404,17 @@ class TagContainer {
     required this.ocrPrefix,
   });
 
-  int? id;
-  int typeId;
-  int positionID;
-  int classTypeID;
-  String title;
-  String code;
-  String? barcodePrefix;
-  String dest;
-  String from;
-  List<String> ocrPrefix;
-  bool isClosed;
+  final int? id;
+  final int typeId;
+  final int positionID;
+  final int classTypeID;
+  final String title;
+  final String code;
+  final String? barcodePrefix;
+  final String dest;
+  final String from;
+  final List<String> ocrPrefix;
+  final bool isClosed;
 
   factory TagContainer.fromJson(Map<String, dynamic> json) => TagContainer(
         id: json["ID"],
@@ -447,6 +449,25 @@ class TagContainer {
       ocrPrefix: ["AKE######", "CART######"],
     );
   }
+
+  factory TagContainer.bulk(int? posId) {
+    return TagContainer(
+      id: -100,
+      typeId: 1,
+      classTypeID: 1,
+
+      positionID: posId??-1,
+      title: '',
+      code: "",
+      dest: "",
+      from: "",
+      isClosed: false,
+      barcodePrefix: "",
+      ocrPrefix: ["AKE######", "CART######"],
+    );
+  }
+
+  bool get isBulk => id==-100;
 
   String get getQr => "ConQR:$code,$typeId";
 
@@ -483,13 +504,16 @@ class TagContainer {
 
   ClassType get classType => BasicClass.getClassTypeByID(classTypeID)!;
 
+  Widget get getImg => isBulk?SizedBox(): Image.asset(isCart? AssetImages.cart:AssetImages.uld,width: 30,height: 30,);
+
   List<FlightTag> getTags(FlightDetails fd) {
     return fd.tagList.where((element) => element.tagPositions.first.container == this).toList();
   }
 }
 
+@immutable
 class TransferFlight {
-  TransferFlight({
+  const TransferFlight({
     required this.id,
     required this.flnb,
     required this.flightDate,
@@ -520,8 +544,9 @@ class TransferFlight {
       };
 }
 
+@immutable
 class Bin {
-  Bin({
+  const Bin({
     required this.id,
     required this.bin,
     required this.binNumber,
@@ -532,14 +557,14 @@ class Bin {
     required this.plannedWeight,
   });
 
-  String bin;
-  bool isDeleted;
-  String binNumber;
-  String compartment;
-  int containerType;
-  int? plannedCount;
-  int? plannedWeight;
-  int? id;
+  final String bin;
+  final bool isDeleted;
+  final String binNumber;
+  final String compartment;
+  final int containerType;
+  final int? plannedCount;
+  final int? plannedWeight;
+  final int? id;
 
   factory Bin.fromJson(Map<String, dynamic> json) => Bin(
         id: json["ID"],
@@ -569,8 +594,9 @@ class Bin {
   }
 }
 
+@immutable
 class ActionHistory {
-  ActionHistory({
+  const ActionHistory({
     required this.id,
     required this.positionId,
     required this.actionId,
@@ -581,14 +607,14 @@ class ActionHistory {
     required this.blockedPosition,
   });
 
-  int id;
-  int positionId;
-  int actionId;
-  String username;
-  int tagStatus;
-  DateTime actionDate;
-  String actionTime;
-  List<int> blockedPosition;
+  final int id;
+  final int positionId;
+  final int actionId;
+  final String username;
+  final int tagStatus;
+  final DateTime actionDate;
+  final String actionTime;
+  final List<int> blockedPosition;
 
   factory ActionHistory.fromJson(Map<String, dynamic> json) => ActionHistory(
         id: json["ID"],
@@ -613,8 +639,9 @@ class ActionHistory {
       };
 }
 
+@immutable
 class DcsInfo {
-  DcsInfo({
+  const DcsInfo({
     required this.paxId,
     required this.pnr,
     required this.paxName,
@@ -624,13 +651,13 @@ class DcsInfo {
     required this.securityCode,
   });
 
-  int paxId;
-  String pnr;
-  String paxName;
-  String dest;
-  int weight;
-  int count;
-  int securityCode;
+  final int paxId;
+  final String pnr;
+  final String paxName;
+  final String dest;
+  final int weight;
+  final int count;
+  final int securityCode;
 
   factory DcsInfo.fromJson(Map<String, dynamic> json) => DcsInfo(
         paxId: json["PaxID"],

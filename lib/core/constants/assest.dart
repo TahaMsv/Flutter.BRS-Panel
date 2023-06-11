@@ -4,6 +4,8 @@ class AssetImages {
   static const assetsAddress = 'assets/images/';
   static const logo ="${assetsAddress}logo.png";
   static const loginBG ="${assetsAddress}login_bg.jpg";
+  static const uld ="${assetsAddress}uld.png";
+  static const cart ="${assetsAddress}cart.png";
 }
 
 

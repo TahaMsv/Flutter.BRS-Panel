@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../core/classes/flight_class.dart';
+import '../../core/classes/user_class.dart';
 
 final flightDetailsProvider = ChangeNotifierProvider<FlightDetailsState>((_) => FlightDetailsState());
 
@@ -14,6 +15,13 @@ class FlightDetailsState extends ChangeNotifier {
   ///bool loading = false;
 
 }
+
+final expandedContainers = StateProvider<List<int>>((ref) => []);
+final tagSearchProvider = StateProvider<String>((ref) => "");
+final selectedPosInDetails = StateProvider<Position?>((ref) => null);
+
+
+
 final selectedFlightProvider = StateProvider<Flight?>((ref) => null);
 // final detailsProvider =StateNotifierProvider<FlightDetailsNotifier, FlightDetails?>((ref) => FlightDetailsNotifier(ref));
 // final futureFlightDetailsNotifierProvider = FutureProvider((ref)async{

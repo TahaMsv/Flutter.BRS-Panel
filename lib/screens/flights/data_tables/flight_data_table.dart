@@ -28,13 +28,13 @@ extension FlightDataTableColumnDetails on FlightDataTableColumn {
       case FlightDataTableColumn.flight:
         return 0.15;
       case FlightDataTableColumn.status:
-        return 0.29;
+        return 0.41;
       case FlightDataTableColumn.route:
-        return 0.12;
+        return 0.08;
       case FlightDataTableColumn.time:
-        return 0.12;
+        return 0.08;
       case FlightDataTableColumn.aircraft:
-        return 0.12;
+        return 0.08;
       case FlightDataTableColumn.register:
         return 0.1;
       case FlightDataTableColumn.actions:

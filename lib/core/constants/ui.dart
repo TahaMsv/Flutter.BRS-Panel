@@ -81,6 +81,11 @@ class MyColors {
   static const checkinGreen = Color.fromRGBO(72, 192, 162, 1);
   static const boardingBlue = Color.fromRGBO(77, 111, 255, 1);
   static const reserveGreen = Color.fromRGBO(176, 255, 223, 1);
+  static const containerGreen = Color(0xffe1eae6);
+  static const binGreen = Color(0xff389573);
+  static const evenRow = Color(0xfff8f8f8);
+  static const oddRow = Color(0xffffffff);
+  static const indexColor = Color(0xff3b3b3b);
 
   static const materialColor = {
     50: Color.fromRGBO(77, 111, 255, .1),

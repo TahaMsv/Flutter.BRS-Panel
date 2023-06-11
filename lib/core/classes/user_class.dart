@@ -2,6 +2,7 @@ import 'package:artemis_ui_kit/artemis_ui_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'flight_details_class.dart';
 import 'new_version_class.dart';
 
 @immutable
@@ -459,42 +460,48 @@ class ClassType {
         "Abbreviation": abbreviation,
       };
 }
-
-@immutable
-class TagContainer {
-  final int typeId;
-  final String title;
-  final String barcodePrefix;
-
-  const TagContainer({
-    required this.typeId,
-    required this.title,
-    required this.barcodePrefix,
-  });
-
-  TagContainer copyWith({
-    int? typeId,
-    String? title,
-    String? barcodePrefix,
-  }) =>
-      TagContainer(
-        typeId: typeId ?? this.typeId,
-        title: title ?? this.title,
-        barcodePrefix: barcodePrefix ?? this.barcodePrefix,
-      );
-
-  factory TagContainer.fromJson(Map<String, dynamic> json) => TagContainer(
-        typeId: json["TypeID"],
-        title: json["Title"],
-        barcodePrefix: json["BarcodePrefix"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "TypeID": typeId,
-        "Title": title,
-        "BarcodePrefix": barcodePrefix,
-      };
-}
+//
+// @immutable
+// class TagContainer {
+//   final int id;
+//   final int typeId;
+//   final String title;
+//   final String barcodePrefix;
+//
+//   const TagContainer({
+//     required this.id,
+//     required this.typeId,
+//     required this.title,
+//     required this.barcodePrefix,
+//   });
+//
+//   TagContainer copyWith({
+//     int? id,
+//     int? typeId,
+//     String? title,
+//     String? barcodePrefix,
+//   }) =>
+//       TagContainer(
+//         id: id ?? this.id,
+//         typeId: typeId ?? this.typeId,
+//         title: title ?? this.title,
+//         barcodePrefix: barcodePrefix ?? this.barcodePrefix,
+//       );
+//
+//   factory TagContainer.fromJson(Map<String, dynamic> json) => TagContainer(
+//         id: json["ID"]??1,
+//         typeId: json["TypeID"],
+//         title: json["Title"],
+//         barcodePrefix: json["BarcodePrefix"],
+//       );
+//
+//   Map<String, dynamic> toJson() => {
+//         "ID": id,
+//         "TypeID": typeId,
+//         "Title": title,
+//         "BarcodePrefix": barcodePrefix,
+//       };
+// }
 
 @immutable
 class ErrorList {

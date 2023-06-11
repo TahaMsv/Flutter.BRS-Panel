@@ -32,6 +32,7 @@ class _PieChart2State extends State<DetailsChart> {
             child: AspectRatio(
               aspectRatio: 1,
               child: PieChart(
+
                 PieChartData(
                   pieTouchData: PieTouchData(
                     touchCallback: (FlTouchEvent event, pieTouchResponse) {
@@ -48,7 +49,7 @@ class _PieChart2State extends State<DetailsChart> {
                     show: false,
                   ),
                   sectionsSpace: 0,
-                  centerSpaceRadius: 40,
+                  centerSpaceRadius: 100,
                   sections: showingSections(widget.details, widget.posList),
                 ),
               ),
@@ -71,18 +72,19 @@ class _PieChart2State extends State<DetailsChart> {
     return posList.map((e) {
       final isTouched = posList.indexOf(e) == touchedIndex;
       double value = 100 * details.tagList.where((element) => element.currentPosition == e.id).length / details.tagList.length;
-      final radius = isTouched ? 60.0 : 50.0;
+      final radius = isTouched ? 20.0 : 10.0;
       final fontSize = isTouched ? 25.0 : 14.0;
       const shadows = [Shadow(color: Colors.black, blurRadius: 0)];
       return PieChartSectionData(
         color: e.getColor,
         value: value,
-        title: '$value%',
+        title: '${value.toStringAsFixed(2)}%',
+        titlePositionPercentageOffset: -3,
         radius: radius,
         titleStyle: TextStyle(
           fontSize: fontSize,
           fontWeight: FontWeight.bold,
-          color: MyColors.lightIshBlue,
+          color: MyColors.black1.withOpacity(0.5),
           shadows: shadows,
         ),
       );
