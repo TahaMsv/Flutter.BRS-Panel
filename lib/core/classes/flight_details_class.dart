@@ -159,6 +159,8 @@ class FlightTag {
 
   String get dest => dcsInfo?.dest ?? '';
 
+  int? get getContainerID => tagPositions.first.container?.id;
+
   Map<String, dynamic> toJson() => {
         "TagID": tagId,
         "TagNumber": tagNumber,
@@ -421,7 +423,7 @@ class TagContainer {
         typeId: json["TypeID"] ?? 1,
         classTypeID: json["ClassTypeID"] ?? 1,
         positionID: json["PositionID"] ?? -1,
-        title: json["Title"],
+        title: json["Title"]??"",
         code: json["Code"] ?? "",
         dest: json["Dest"] ?? json["To"] ?? "",
         isClosed: json["IsClosed"] ?? false,
@@ -455,7 +457,6 @@ class TagContainer {
       id: -100,
       typeId: 1,
       classTypeID: 1,
-
       positionID: posId??-1,
       title: '',
       code: "",

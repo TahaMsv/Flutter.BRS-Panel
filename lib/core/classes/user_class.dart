@@ -204,6 +204,8 @@ class Action {
     required this.icon,
   });
 
+  Color get getColor => HexColor(color);
+
   Action copyWith({
     int? id,
     String? actionTitle,

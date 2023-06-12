@@ -1,9 +1,15 @@
 import 'package:brs_panel/core/navigation/route_names.dart';
+import 'package:brs_panel/initialize.dart';
+import 'package:brs_panel/screens/airline_ulds/airline_ulds_controller.dart';
+import 'package:brs_panel/screens/airlines/airlines_controller.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_state.dart';
+import 'package:brs_panel/screens/flights/dialogs/flight_container_list_dialog.dart';
+import 'package:brs_panel/screens/flights/usecases/flight_get_container_list_usecase.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_list_usecase.dart';
 
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/classes/flight_class.dart';
+import '../../core/classes/flight_details_class.dart';
 import '../../core/util/basic_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
 
@@ -45,6 +51,32 @@ class FlightsController extends MainController {
   void goDetails(Flight f) {
     final sfP = ref.read(selectedFlightProvider.notifier);
     sfP.state = f;
+    final spP = ref.read(selectedPosInDetails.notifier);
+    spP.state = BasicClass.getPositionByID(f.positions.first.id)!;
     nav.pushNamed(RouteNames.flightDetails, pathParameters: {"flightID": f.id.toString()});
+  }
+
+  Future<void> editContainers(Flight f) async {
+    final List<TagContainer>? cons = await flightGetContainerList(f);
+    AirlineUldsController alC = getIt<AirlineUldsController>();
+    // alC.airlineGetUldList();
+    // final List<TagContainer>? allCons = await flightGetContainerList(f);
+    // if(cons!=null) {
+    //   print(cons.length);
+    //   nav.dialog(FlightContainerListDialog(cons: cons));
+    // }
+
+  }
+
+  Future<List<TagContainer>?> flightGetContainerList(Flight flight) async {
+    List<TagContainer>? cons;
+    FlightGetContainerListUseCase flightGetContainerListUsecase = FlightGetContainerListUseCase();
+    FlightGetContainerListRequest flightGetContainerListRequest = FlightGetContainerListRequest(f: flight);
+    final fOrR = await flightGetContainerListUsecase(request: flightGetContainerListRequest);
+
+    fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightGetContainerList(flight)), (r) {
+      cons = r.cons;
+    });
+    return cons;
   }
 }

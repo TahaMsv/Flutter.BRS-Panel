@@ -1,6 +1,8 @@
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/platform/network_manager.dart';
 import '../interfaces/flights_data_source_interface.dart';
+import '../usecases/flight_add_remove_container_usecase.dart';
+import '../usecases/flight_get_container_list_usecase.dart';
 import '../usecases/flight_list_usecase.dart';
 import 'flights_local_ds.dart';
 
@@ -14,5 +16,17 @@ class FlightsRemoteDataSource implements FlightsDataSourceInterface {
   Future<FlightListResponse> flightList({required FlightListRequest request}) async {
     Response res = await networkManager.post(request);
     return FlightListResponse.fromResponse(res);
+  }
+
+  @override
+  Future<FlightGetContainerListResponse> flightGetContainerList({required FlightGetContainerListRequest request}) async {
+    Response res = await networkManager.post(request);
+    return FlightGetContainerListResponse.fromResponse(res);
+  }
+
+  @override
+  Future<FlightAddRemoveContainerResponse> flightAddRemoveContainer({required FlightAddRemoveContainerRequest request}) async {
+    Response res = await networkManager.post(request);
+    return FlightAddRemoveContainerResponse.fromResponse(res);
   }
 }

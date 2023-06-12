@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'package:brs_panel/screens/flights/usecases/flight_add_remove_container_usecase.dart';
+import 'package:brs_panel/screens/flights/usecases/flight_get_container_list_usecase.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_list_usecase.dart';
 
 import '../../../core/abstracts/exception_abs.dart';
@@ -19,6 +21,18 @@ class FlightsLocalDataSource implements FlightsDataSourceInterface {
   @override
   Future<FlightListResponse> flightList({required FlightListRequest request}) {
     // TODO: implement flightList
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<FlightGetContainerListResponse> flightGetContainerList({required FlightGetContainerListRequest request}) {
+    // TODO: implement flightGetContainerList
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<FlightAddRemoveContainerResponse> flightAddRemoveContainer({required FlightAddRemoveContainerRequest request}) {
+    // TODO: implement flightAddRemoveContainer
     throw UnimplementedError();
   }
 
