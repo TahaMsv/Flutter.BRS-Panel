@@ -68,15 +68,15 @@ class FlightDetailsPanel extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       child: Row(
         children: [
-          DotButton(
-            size: 35,
-            onPressed: () {
-              // myFlightsController.goAddFlight();
-            },
-            icon: Icons.add,
-            color: Colors.blueAccent,
-          ),
-          const SizedBox(width: 12),
+          // DotButton(
+          //   size: 35,
+          //   onPressed: () {
+          //     // myFlightsController.goAddFlight();
+          //   },
+          //   icon: Icons.add,
+          //   color: Colors.blueAccent,
+          // ),
+          // const SizedBox(width: 12),
           Expanded(
               flex: 1,
               child: MyTextField(
@@ -304,7 +304,7 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
                         List<FlightTag> thisConTags =
                             filteredTag.where((element) => (element.getContainerID == con.id || (element.getContainerID == null && con.isBulk)) && element.tagPositions.first.binID == bins[sectionIndex].bin.id).toList();
 
-                        if(thisConTags.length==0) return SizedBox();
+                        // if(thisConTags.isEmpty) return const SizedBox();
                         return MyExpansionTile(
                           tilePadding: EdgeInsets.zero,
                           headerTileColor: MyColors.containerGreen,
@@ -546,14 +546,19 @@ class BinSection extends ExpandableListSection<TagContainer> {
 
   @override
   List<TagContainer>? getItems() {
+    List<TagContainer> results= [];
     if (fd.tagList.any((element) => element.getContainerID == null && element.tagPositions.first.binID == bin.id)) {
-      return allCons + [TagContainer.bulk(2)];
+      results =  allCons.where((element) => element.getTags(fd).where((t) => t.tagPositions.first.binID==bin.id).isNotEmpty).toList() + [TagContainer.bulk(2)];
+    }else{
+      results = allCons.where((element) => element.getTags(fd).where((t) => t.tagPositions.first.binID==bin.id).isNotEmpty).toList();
     }
 
-    return allCons.where((e) =>e.getTags(fd).isNotEmpty && e.getTags(fd).any((element) {
-      // print(element.tagPositions.first.binID==bin.id);
-      return !e.isBulk&&  element.tagPositions.first.binID==bin.id;
-    })).toList();
+    // results =  results.where((e) =>(e.isBulk || e.getTags(fd).isNotEmpty) && e.getTags(fd).any((element) {
+    //   // print(element.tagPositions.first.binID==bin.id);
+    //   return true;
+    //   return   element.tagPositions.first.binID==bin.id;
+    // })).toList();
+    return results;
   }
 
 
@@ -574,6 +579,8 @@ class BinSection extends ExpandableListSection<TagContainer> {
   }
 
   List<TagContainer> get items {
+    return getItems()!;
+
     if (fd.tagList.any((element) => element.getContainerID == null && element.tagPositions.first.binID == bin.id)) {
       return allCons + [TagContainer.bulk(2)];
     }

@@ -428,8 +428,8 @@ import 'user_class.dart';
 @immutable
 class Flight {
   final int id;
-  final int aircraftId;
-  final dynamic returnedTagCount;
+  final int? aircraftId;
+  final int? returnedTagCount;
   final String color;
   final String al;
   final String flightNumber;

@@ -183,7 +183,7 @@ class FlightTag {
       };
 
   bool validateSearch(String searched, Position? selectedPosition) {
-    return (selectedPosition==null || currentPosition==selectedPosition.id) && ("${dcsInfo?.securityCode} $tagNumber ".toLowerCase().contains(searched.toLowerCase()) || searched == "");
+    return (selectedPosition==null || currentPosition==selectedPosition.id) && ("${dcsInfo?.securityCode??''} ${dcsInfo?.paxName??''} $tagNumber ".toLowerCase().contains(searched.toLowerCase()) || searched == "");
   }
 
   List<int> get deniedPosIDs => actionsHistory.isEmpty ? [] : (actionsHistory.first.blockedPosition);

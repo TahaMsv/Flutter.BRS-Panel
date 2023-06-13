@@ -100,14 +100,15 @@ class _PieChart2State extends State<DetailsChart> {
   List<PieChartSectionData> showingSections(FlightDetails details, List<Position> posList) {
     return posList.map((e) {
       final isTouched = posList.indexOf(e) == touchedIndex;
-      double value = 100 * details.tagList.where((element) => element.currentPosition == e.id).length / details.tagList.length;
+      // double value = 100 * details.tagList.where((element) => element.currentPosition == e.id).length / details.tagList.length;
+      double value =  details.tagList.where((element) => element.currentPosition == e.id).length *1.0;
       final radius = isTouched ? 20.0 : 10.0;
       final fontSize = isTouched ? 25.0 : 14.0;
       const shadows = [Shadow(color: Colors.black, blurRadius: 0)];
       return PieChartSectionData(
         color: e.getColor,
         value: value,
-        title: '${value.toStringAsFixed(0)}%',
+        title: value.toStringAsFixed(0),
         titlePositionPercentageOffset: -3,
         radius: radius,
         titleStyle: TextStyle(

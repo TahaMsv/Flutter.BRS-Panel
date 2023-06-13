@@ -53,23 +53,21 @@ class AirportCartsPanel extends ConsumerWidget {
           ),
           const SizedBox(width: 12),
           Expanded(
-              flex: 2,
-              child: MyTextField(
-                height: 35,
-                prefixIcon: const Icon(Icons.search),
-                placeholder: "Search Here...",
-                controller: searchC,
-                showClearButton: true,
-                onChanged: (v) {
-                  final s = ref.read(cartSearchProvider.notifier);
-                  s.state = v;
-                },
-              )),
-          const SizedBox(width: 12),
-          const Expanded(
-            flex: 5,
-            child: SizedBox(),
+            flex: 2,
+            child: MyTextField(
+              height: 35,
+              prefixIcon: const Icon(Icons.search),
+              placeholder: "Search Here...",
+              controller: searchC,
+              showClearButton: true,
+              onChanged: (v) {
+                final s = ref.read(cartSearchProvider.notifier);
+                s.state = v;
+              },
+            ),
           ),
+          const SizedBox(width: 12),
+          const Expanded(flex: 5, child: SizedBox()),
           DotButton(
             icon: Icons.refresh,
             onPressed: () {
