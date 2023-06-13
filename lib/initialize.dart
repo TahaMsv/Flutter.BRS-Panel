@@ -16,6 +16,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:network_manager/network_manager.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:window_manager/window_manager.dart';
 import 'core/data_base/classes/db_user_class.dart';
 import 'core/data_base/local_data_base.dart';
 import 'core/navigation/navigation_service.dart';
@@ -68,7 +69,6 @@ initControllers() {
   AirlineUldsController airlineUldsController = AirlineUldsController();
   AirportCartsController airportCartsController = AirportCartsController();
 
-
   getIt.registerSingleton(loginController);
   getIt.registerSingleton(homeController);
   getIt.registerSingleton(flightsController);
@@ -94,7 +94,12 @@ initControllers() {
   });
 }
 
-void initFullScreen() async {}
+void initFullScreen() async {
+  await windowManager.ensureInitialized();
+  windowManager.waitUntilReadyToShow().then((_) async {
+    await windowManager.maximize();
+  });
+}
 
 initNetworkManager([String? baseUrl]) {
   String base = baseUrl ?? BasicClass.config.baseURL;
@@ -130,7 +135,6 @@ initNetworkManager([String? baseUrl]) {
         homeController.logout();
       });
 }
-
 
 Future<void> loadConfigFile() async {
   String? directory = (await getApplicationDocumentsDirectory()).path;
