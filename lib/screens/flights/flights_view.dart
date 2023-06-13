@@ -201,6 +201,7 @@ class FlightListWidget extends ConsumerWidget {
             headerGridLinesVisibility: GridLinesVisibility.both,
             selectionMode: SelectionMode.none,
             sortingGestureType: SortingGestureType.doubleTap,
+            gridLinesVisibility: GridLinesVisibility.vertical,
             allowSorting: true,
             headerRowHeight: 35,
             source: FlightDataSource(flights: flightList),

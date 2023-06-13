@@ -4,6 +4,7 @@ import '../../../core/abstracts/failures_abs.dart';
 import '../../../core/abstracts/request_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/abstracts/usecase_abs.dart';
+import '../../../core/classes/flight_details_class.dart';
 import '../../../core/classes/user_class.dart';
 import '../airport_carts_repository.dart';
 
@@ -49,7 +50,7 @@ class AirportAddCartRequest extends Request {
 
 
 class AirportAddCartResponse extends Response {
-  final AirportCart cart;
+  final TagContainer cart;
   AirportAddCartResponse({required int status, required String message, required this.cart})
       : super(
           status: status,
@@ -60,7 +61,7 @@ class AirportAddCartResponse extends Response {
     factory AirportAddCartResponse.fromResponse(Response res) => AirportAddCartResponse(
         status: res.status,
         message: res.message,
-        cart:AirportCart.fromJson(res.body),
+        cart:TagContainer.fromJson(res.body),
       );
 
 }

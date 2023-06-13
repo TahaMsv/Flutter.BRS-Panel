@@ -12,10 +12,11 @@ import '../../../../widgets/MyButton.dart';
 
 import '../../../../core/constants/ui.dart';
 import '../../../../core/navigation/navigation_service.dart';
+import '../../../core/classes/flight_details_class.dart';
 import '../../../initialize.dart';
 
 class AddUpdateAirportCartDialog extends StatefulWidget {
-  final AirportCart? editingCart;
+  final TagContainer? editingCart;
 
   const AddUpdateAirportCartDialog({Key? key, required this.editingCart}) : super(key: key);
 
@@ -98,7 +99,7 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateAirportCartDialog>
                         });
                       }
                     }else{
-                      final updated = AirportCart(id: widget.editingCart!.id, type: "AKE", code: codeC.text, barcode: barcodeC.text);
+                      final updated = TagContainer(id: widget.editingCart!.id, typeId: 1, code: codeC.text, positionID: 1, classTypeID: 1, title: '', ocrPrefix: []);
                       final up = await myAirportCartsController.airportUpdateCart(updated);
                       if (up != null) {
                         navigationService.popDialog(onPop: (){

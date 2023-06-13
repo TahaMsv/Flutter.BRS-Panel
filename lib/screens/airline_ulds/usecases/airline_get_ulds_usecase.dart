@@ -4,6 +4,7 @@ import '../../../core/abstracts/request_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/abstracts/usecase_abs.dart';
 import '../../../core/classes/airline_uld_class.dart';
+import '../../../core/classes/flight_details_class.dart';
 import '../../../core/classes/user_class.dart';
 import '../airline_ulds_repository.dart';
 
@@ -41,7 +42,7 @@ class AirlineGetUldListRequest extends Request {
 
 
 class AirlineGetUldListResponse extends Response {
-  final List<AirlineUld> ulds;
+  final List<TagContainer> ulds;
 
   AirlineGetUldListResponse({required int status, required String message, required this.ulds})
       : super(status: status, message: message, body:ulds.map((e)=>e.toJson()).toList());
@@ -49,6 +50,6 @@ class AirlineGetUldListResponse extends Response {
   factory AirlineGetUldListResponse.fromResponse(Response res) => AirlineGetUldListResponse(
         status: res.status,
         message: res.message,
-        ulds: List<AirlineUld>.from(res.body.map((x) => AirlineUld.fromJson(x))),
+        ulds: List<TagContainer>.from(res.body.map((x) => TagContainer.fromJson(x))),
       );
 }

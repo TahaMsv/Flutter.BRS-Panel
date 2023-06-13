@@ -4,6 +4,7 @@ import '../../../core/abstracts/failures_abs.dart';
 import '../../../core/abstracts/request_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/abstracts/usecase_abs.dart';
+import '../../../core/classes/flight_details_class.dart';
 import '../../../core/classes/user_class.dart';
 import '../airport_carts_repository.dart';
 
@@ -40,7 +41,7 @@ class AirportGetCartsRequest extends Request {
 }
 
 class AirportGetCartsResponse extends Response {
-  final List<AirportCart> airportCarts;
+  final List<TagContainer> airportCarts;
 
   AirportGetCartsResponse({required int status, required String message, required this.airportCarts})
       : super(status: status, message: message, body:airportCarts.map((e)=>e.toJson()).toList());
@@ -48,6 +49,6 @@ class AirportGetCartsResponse extends Response {
   factory AirportGetCartsResponse.fromResponse(Response res) => AirportGetCartsResponse(
         status: res.status,
         message: res.message,
-        airportCarts: List<AirportCart>.from(res.body.map((x) => AirportCart.fromJson(x))),
+        airportCarts: List<TagContainer>.from(res.body.map((x) => TagContainer.fromJson(x))),
       );
 }

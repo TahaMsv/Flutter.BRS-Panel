@@ -7,18 +7,21 @@ import 'dart:math';
 import '../core/classes/user_class.dart';
 
 class TagCountWidget extends StatelessWidget {
-  final PositionData position;
+  // final PositionData position;
+  final Position position;
   final Color color;
+  final int count;
 
-  const TagCountWidget({Key? key, required this.position, this.color = MyColors.checkinGreen}) : super(key: key);
+  const TagCountWidget({Key? key, required this.position, required this.count,this.color = MyColors.checkinGreen}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Position pos = BasicClass.systemSetting.positions.firstWhere((element) => element.id==position.id);
+    final c = count==0?Colors.grey.withOpacity(0.4):color;
     return Container(
       height: 30,
       padding: const EdgeInsets.only(left: 8, top: 2, bottom: 2, right: 3),
-      decoration: BoxDecoration(color: color.withOpacity(0.4), borderRadius: BorderRadius.circular(15)),
+      decoration: BoxDecoration(color: c.withOpacity(0.4), borderRadius: BorderRadius.circular(15)),
       child: Row(
         children: [
           Text(pos.title,style: const TextStyle(fontSize: 12),),
@@ -30,8 +33,8 @@ class TagCountWidget extends StatelessWidget {
               padding: const EdgeInsets.only(left: 8,right: 4),
               alignment: Alignment.center,
               height: 24,
-              decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(0)),
-              child: Text(position.tagCount.toString(),style: const TextStyle(fontSize: 12,color: Colors.white,fontWeight: FontWeight.bold),),
+              decoration: BoxDecoration(color:c, borderRadius: BorderRadius.circular(0)),
+              child: Text(count.toString(),style: const TextStyle(fontSize: 12,color: Colors.white,fontWeight: FontWeight.bold),),
             ),
           ),
         ],

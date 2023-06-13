@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../core/classes/airport_cart_class.dart';
+import '../../core/classes/flight_details_class.dart';
 import '../../core/constants/ui.dart';
 import '../../core/util/basic_class.dart';
 import '../../initialize.dart';
@@ -106,7 +107,7 @@ class AirportCartListWidget extends ConsumerWidget {
 }
 
 class AirportCartWidget extends StatelessWidget {
-  final AirportCart cart;
+  final TagContainer cart;
   final int index;
   static AirportCartsController myAirportCartsController = getIt<AirportCartsController>();
 

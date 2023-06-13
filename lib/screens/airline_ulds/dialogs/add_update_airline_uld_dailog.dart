@@ -11,11 +11,12 @@ import '../../../../widgets/MyButton.dart';
 import '../../../../core/constants/ui.dart';
 import '../../../../core/navigation/navigation_service.dart';
 import '../../../core/abstracts/success_abs.dart';
+import '../../../core/classes/flight_details_class.dart';
 import '../../../core/util/handlers/success_handler.dart';
 import '../../../initialize.dart';
 
 class AddUpdateAirlineDialogDialog extends StatefulWidget {
-  final AirlineUld? editingUld;
+  final TagContainer? editingUld;
 
   const AddUpdateAirlineDialogDialog({Key? key, required this.editingUld}) : super(key: key);
 
@@ -98,7 +99,7 @@ class _AddUpdateAirlineDialogDialogState extends State<AddUpdateAirlineDialogDia
                         });
                       }
                     }else{
-                      final updated = AirlineUld(id: widget.editingUld!.id, type: "AKE", code: codeC.text, barcode: barcodeC.text);
+                      final updated = TagContainer(id: widget.editingUld!.id, typeId: 1, code: codeC.text, positionID: 1, classTypeID: 1, title: '', ocrPrefix: [],);
                       final up = await myAirlineUldsController.airlineUpdateUld(updated);
                       if (up != null) {
                         navigationService.popDialog(onPop: (){

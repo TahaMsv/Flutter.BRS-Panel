@@ -4,6 +4,7 @@ import '../../../core/abstracts/failures_abs.dart';
 import '../../../core/abstracts/request_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/abstracts/usecase_abs.dart';
+import '../../../core/classes/flight_details_class.dart';
 import '../../../core/classes/user_class.dart';
 import '../airline_ulds_repository.dart';
 
@@ -23,7 +24,7 @@ class AirlineUpdateUldRequest extends Request {
   final int id;
   final String al;
   final String uldCode;
-  final String uldType;
+  final int uldType;
   AirlineUpdateUldRequest({
     required this.id,
     required this.al,
@@ -52,7 +53,7 @@ class AirlineUpdateUldRequest extends Request {
 
 
 class AirlineUpdateUldResponse extends Response {
-  final AirlineUld uld;
+  final TagContainer uld;
   AirlineUpdateUldResponse({required int status, required String message, required this.uld})
       : super(
           status: status,
@@ -63,7 +64,7 @@ class AirlineUpdateUldResponse extends Response {
     factory AirlineUpdateUldResponse.fromResponse(Response res) => AirlineUpdateUldResponse(
         status: res.status,
         message: res.message,
-        uld:AirlineUld.fromJson(res.body),
+        uld:TagContainer.fromJson(res.body),
       );
 
 }

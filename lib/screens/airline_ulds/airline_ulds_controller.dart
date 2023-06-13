@@ -6,6 +6,7 @@ import 'package:brs_panel/screens/airline_ulds/usecases/airline_update_uld_useca
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/abstracts/success_abs.dart';
 import '../../core/classes/airline_uld_class.dart';
+import '../../core/classes/flight_details_class.dart';
 import '../../core/classes/user_class.dart';
 import '../../core/util/basic_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
@@ -21,10 +22,10 @@ class AirlineUldsController extends MainController {
 
   // UseCase UseCase = UseCase(repository: Repository());
 
-  Future<List<AirlineUld>?> airlineGetUldList() async {
+  Future<List<TagContainer>?> airlineGetUldList() async {
     Airline? al = ref.read(selectedAirlineProvider);
     if (al == null) return null;
-    List<AirlineUld>? ulds;
+    List<TagContainer>? ulds;
     AirlineGetUldListUseCase airlineGetUldListUsecase = AirlineGetUldListUseCase();
     AirlineGetUldListRequest airlineGetUldListRequest = AirlineGetUldListRequest(al: al);
     final fOrR = await airlineGetUldListUsecase(request: airlineGetUldListRequest);
@@ -41,8 +42,8 @@ class AirlineUldsController extends MainController {
     nav.dialog(const AddUpdateAirlineDialogDialog(editingUld: null));
   }
 
-  Future<AirlineUld?> airlineAddUld(Airline al, String code, String type) async {
-    AirlineUld? uld;
+  Future<TagContainer?> airlineAddUld(Airline al, String code, String type) async {
+    TagContainer? uld;
     AirlineAddUldUseCase airlineAddUldUsecase = AirlineAddUldUseCase();
     AirlineAddUldRequest airlineAddUldRequest = AirlineAddUldRequest(al: al.al, uldCode: code, uldType: type);
     final fOrR = await airlineAddUldUsecase(request: airlineAddUldRequest);
@@ -55,12 +56,12 @@ class AirlineUldsController extends MainController {
     return uld;
   }
 
-  Future<AirlineUld?> airlineUpdateUld(AirlineUld updating) async {
+  Future<TagContainer?> airlineUpdateUld(TagContainer updating) async {
     final selectedAirlineP = ref.read(selectedAirlineProvider);
-    AirlineUld? uld;
+    TagContainer? uld;
 
     AirlineUpdateUldUseCase airlineUpdateUldUsecase = AirlineUpdateUldUseCase();
-    AirlineUpdateUldRequest airlineUpdateUldRequest = AirlineUpdateUldRequest(id: updating.id, al: selectedAirlineP!.al, uldCode: updating.code, uldType: updating.type);
+    AirlineUpdateUldRequest airlineUpdateUldRequest = AirlineUpdateUldRequest(id: updating.id!, al: selectedAirlineP!.al, uldCode: updating.code, uldType: updating.typeId);
     final fOrR = await airlineUpdateUldUsecase(request: airlineUpdateUldRequest);
 
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => airlineUpdateUld(updating)), (r) {
@@ -71,28 +72,28 @@ class AirlineUldsController extends MainController {
     return uld;
   }
 
-  void updateUld(AirlineUld uld) {
+  void updateUld(TagContainer uld) {
     nav.dialog(AddUpdateAirlineDialogDialog(editingUld: uld));
   }
 
-  void deleteUld(AirlineUld uld)async {
+  void deleteUld(TagContainer uld)async {
     bool confirm = await ConfirmOperation.getConfirm(Operation(message: "You are Deleting Uld ${uld.code}", title: "Are You Sure", actions: ["Cancel","Confirm"],type: OperationType.warning));
     if(confirm){
       airlineDeleteUld(uld);
     }
   }
 
-  Future<bool?> airlineDeleteUld(AirlineUld uld) async {
+  Future<bool?> airlineDeleteUld(TagContainer uld) async {
     bool? status;
     final selectedAirlineP = ref.read(selectedAirlineProvider);
     AirlineDeleteUldUseCase airlineDeleteUldUsecase = AirlineDeleteUldUseCase();
-    AirlineDeleteUldRequest airlineDeleteUldRequest = AirlineDeleteUldRequest(id: uld.id, al: selectedAirlineP!.al);
+    AirlineDeleteUldRequest airlineDeleteUldRequest = AirlineDeleteUldRequest(id: uld.id!, al: selectedAirlineP!.al);
     final fOrR = await airlineDeleteUldUsecase(request: airlineDeleteUldRequest);
 
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => airlineDeleteUld(uld)), (r) {
       status = r.isSuccess;
       final uldListP = ref.read(uldListProvider.notifier);
-      uldListP.removeAirlineUld(uld.id);
+      uldListP.removeAirlineUld(uld.id!);
       SuccessHandler.handle(ServerSuccess(code: 1, msg: "Uld Deleted Successfully"));
     });
     return status;

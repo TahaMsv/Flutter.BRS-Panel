@@ -77,6 +77,7 @@ class FlightDataSource extends DataGridSource {
     final int index = rows.indexOf(row);
     final Flight f = _dataList[index];
     return DataGridRowAdapter(
+      color: index.isEven?MyColors.evenRow:MyColors.oddRow,
         cells: row.getCells().map<Widget>((dataGridCell) {
       if (dataGridCell.columnName == FlightDataTableColumn.flight.name) {
         return Row(
@@ -108,44 +109,52 @@ class FlightDataSource extends DataGridSource {
       if (dataGridCell.columnName == FlightDataTableColumn.route.name) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          alignment: Alignment.center,
+          alignment: Alignment.centerLeft,
           child: Text('${f.from}-${f.to}'),
         );
       }
       if (dataGridCell.columnName == FlightDataTableColumn.time.name) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          alignment: Alignment.center,
+          alignment: Alignment.centerLeft,
           child: Text(f.std),
         );
       }
       if (dataGridCell.columnName == FlightDataTableColumn.aircraft.name) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          alignment: Alignment.center,
+          alignment: Alignment.centerLeft,
           child: Text("${f.getAircraft?.id??'-'}"),
         );
       }
       if (dataGridCell.columnName == FlightDataTableColumn.register.name) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          alignment: Alignment.center,
+          alignment: Alignment.centerLeft,
           child: Text(f.getAircraft?.registration??'-'),
         );
       }
       if (dataGridCell.columnName == FlightDataTableColumn.status.name) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
-          alignment: Alignment.center,
+          // alignment: Alignment.center,
           child: Row(
             children: [
-              ...f.positions.map((p) {
-                final pp = BasicClass.getPositionByID(p.id);
+              ...BasicClass.systemSetting.positions.map((p) {
+                bool isActive = f.positions.map((e) => e.id).contains(p.id);
                 return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: TagCountWidget(position:p,color: pp!.getColor,)
-                  );
-              })
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: TagCountWidget(position:p,color: p.getColor,count: isActive?f.positions.firstWhere((element) => element.id==p.id).tagCount:0,)
+              );
+              }).toList(),
+
+              // ...f.positions.map((p) {
+              //   final pp = BasicClass.getPositionByID(p.id);
+              //   return Padding(
+              //       padding: const EdgeInsets.symmetric(horizontal: 8),
+              //       child: TagCountWidget(position:p,color: pp!.getColor,)
+              //     );
+              // })
             ],
           ),
         );
@@ -165,8 +174,8 @@ class FlightDataSource extends DataGridSource {
               const SizedBox(width: 12),
               DotButton(
                 icon: Icons.more_vert,
-                onPressed: () {
-                  flightsController.editContainers(f);
+                onPressed: () async{
+                  await flightsController.editContainers(f);
                 },
               )
             ],

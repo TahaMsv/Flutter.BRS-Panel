@@ -4,6 +4,7 @@ import '../../../core/abstracts/failures_abs.dart';
 import '../../../core/abstracts/request_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/abstracts/usecase_abs.dart';
+import '../../../core/classes/flight_class.dart';
 import '../../../core/classes/user_class.dart';
 import '../flights_repository.dart';
 
@@ -20,14 +21,22 @@ class FlightAddRemoveContainerUseCase extends UseCase<FlightAddRemoveContainerRe
 }
 
 class FlightAddRemoveContainerRequest extends Request {
-  FlightAddRemoveContainerRequest();
+  final Flight flight;
+  final TagContainer con;
+  final bool isAdd;
+  FlightAddRemoveContainerRequest({required this.flight,required this.con,required this.isAdd});
 
   @override
   Map<String, dynamic> toJson() =>{
     "Body": {
-      "Execution": "FlightAddRemoveContainer",
+      "Execution": "AssignContainerToFlight",
       "Token":token,
       "Request": {
+        "FlightScheduleID": flight.id,
+        "ContainerID": con.id!,
+        "Destination": flight.to,
+        "ClassTypeID": con.classTypeID,
+        "IsDeleted": isAdd?0:1
       }
     }
   };
@@ -44,15 +53,13 @@ class FlightAddRemoveContainerResponse extends Response {
       : super(
           status: status,
           message: message,
-          body: {
-            "TagContainer" : container.toJson(),
-          },
+          body: container.toJson(),
         );
 
     factory FlightAddRemoveContainerResponse.fromResponse(Response res) => FlightAddRemoveContainerResponse(
         status: res.status,
         message: res.message,
-        container:TagContainer.fromJson(res.body["TagContainer"]),
+        container:TagContainer.fromJson(res.body),
       );
 
 }

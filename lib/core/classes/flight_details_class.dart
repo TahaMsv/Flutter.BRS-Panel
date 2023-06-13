@@ -394,6 +394,7 @@ class WrongTag {
 class TagContainer {
   const TagContainer({
     required this.id,
+    this.flightID,
     required this.typeId,
     required this.positionID,
     required this.classTypeID,
@@ -407,6 +408,7 @@ class TagContainer {
   });
 
   final int? id;
+  final int? flightID;
   final int typeId;
   final int positionID;
   final int classTypeID;
@@ -420,6 +422,7 @@ class TagContainer {
 
   factory TagContainer.fromJson(Map<String, dynamic> json) => TagContainer(
         id: json["ID"],
+        flightID: json["FlightID"]??json["FlightScheduleID"],
         typeId: json["TypeID"] ?? 1,
         classTypeID: json["ClassTypeID"] ?? 1,
         positionID: json["PositionID"] ?? -1,
@@ -439,6 +442,7 @@ class TagContainer {
     return TagContainer(
       id: null,
       typeId: foundTypeID,
+      flightID: null,
       classTypeID: 1,
       positionID: -1,
       // title: BasicClass.settings.containers.firstWhere((element) => element.typeId == foundTypeID).title,
@@ -456,6 +460,7 @@ class TagContainer {
     return TagContainer(
       id: -100,
       typeId: 1,
+      flightID: null,
       classTypeID: 1,
       positionID: posId??-1,
       title: '',
@@ -474,8 +479,13 @@ class TagContainer {
 
   String get rote => (from.isEmpty || dest.isEmpty) ? "" : "${from}-${dest}";
 
+  String get type => typeId ==1?'ULD':"Cart";
+
+  String get barcode => barcodePrefix??'';
+
   Map<String, dynamic> toJson() => {
         "ID": id,
+        "FlightID":flightID,
         "TypeID": typeId,
         "ClassTypeID": classTypeID,
         "Title": title,
@@ -509,6 +519,10 @@ class TagContainer {
 
   List<FlightTag> getTags(FlightDetails fd) {
     return fd.tagList.where((element) => element.tagPositions.first.container == this).toList();
+  }
+
+  bool validateSearch(String s) {
+    return s.isEmpty || "$code".toLowerCase().contains(s.toLowerCase());
   }
 }
 

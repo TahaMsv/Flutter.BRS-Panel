@@ -4,6 +4,7 @@ import 'package:brs_panel/screens/airline_ulds/airline_ulds_controller.dart';
 import 'package:brs_panel/screens/airlines/airlines_controller.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_state.dart';
 import 'package:brs_panel/screens/flights/dialogs/flight_container_list_dialog.dart';
+import 'package:brs_panel/screens/flights/usecases/flight_add_remove_container_usecase.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_get_container_list_usecase.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_list_usecase.dart';
 
@@ -58,14 +59,13 @@ class FlightsController extends MainController {
 
   Future<void> editContainers(Flight f) async {
     final List<TagContainer>? cons = await flightGetContainerList(f);
-    AirlineUldsController alC = getIt<AirlineUldsController>();
+    // AirlineUldsController alC = getIt<AirlineUldsController>();
     // alC.airlineGetUldList();
     // final List<TagContainer>? allCons = await flightGetContainerList(f);
-    // if(cons!=null) {
-    //   print(cons.length);
-    //   nav.dialog(FlightContainerListDialog(cons: cons));
-    // }
+    if (cons != null) {
 
+      nav.dialog(FlightContainerListDialog(flight: f,cons: cons));
+    }
   }
 
   Future<List<TagContainer>?> flightGetContainerList(Flight flight) async {
@@ -78,5 +78,23 @@ class FlightsController extends MainController {
       cons = r.cons;
     });
     return cons;
+  }
+
+  void flightAddContainer(TagContainer e) {}
+
+  Future<TagContainer?> flightAddRemoveContainer(Flight flight,TagContainer c, bool isAdd) async {
+    TagContainer? container;
+    FlightAddRemoveContainerUseCase flightAddContainerUsecase = FlightAddRemoveContainerUseCase();
+    FlightAddRemoveContainerRequest flightAddRemoveContainerRequest = FlightAddRemoveContainerRequest(
+      flight:flight,
+      con: c,
+      isAdd: isAdd,
+    );
+    final fOrR = await flightAddContainerUsecase(request: flightAddRemoveContainerRequest);
+
+    fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightAddRemoveContainer(flight,c, isAdd)), (r) {
+      container = r.container;
+    });
+    return container;
   }
 }
