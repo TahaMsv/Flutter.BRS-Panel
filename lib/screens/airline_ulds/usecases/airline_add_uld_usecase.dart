@@ -5,6 +5,7 @@ import '../../../core/abstracts/request_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/abstracts/usecase_abs.dart';
 import '../../../core/classes/flight_details_class.dart';
+import '../../../core/classes/tag_container_class.dart';
 import '../../../core/classes/user_class.dart';
 import '../airline_ulds_repository.dart';
 

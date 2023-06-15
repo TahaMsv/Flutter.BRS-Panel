@@ -1,12 +1,15 @@
+import 'package:brs_panel/screens/login/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../core/classes/user_class.dart';
 import '../core/constants/ui.dart';
 import '../core/navigation/navigation_service.dart';
 import '../core/navigation/route_names.dart';
 import '../core/navigation/router.dart';
 import '../initialize.dart';
+import '../screens/login/login_controller.dart';
 import 'DotButton.dart';
 
 class MyAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -29,7 +32,7 @@ class _MyAppBarState extends State<MyAppBar> {
         final router = ref.watch(routerProvider);
         RouteNames? currentRoute = RouteNames.values.firstWhereOrNull((element) => element.path == router.location);
         bool isSubroute = currentRoute == null;
-        print(router.location);
+        // print(router.location);
         currentRoute ??= RouteNames.values.lastWhere((element) => router.location.contains("/${element.path}"));
         return Container(
           decoration: const BoxDecoration(color: MyColors.white1),
@@ -72,7 +75,9 @@ class _MyAppBarState extends State<MyAppBar> {
                                     ),
                                   ),
                                 ))
-                            .toList()
+                            .toList(),
+                        const Spacer(),
+                        UserIndicatorWidget(),
                       ],
                     ),
                   ),
@@ -121,11 +126,52 @@ class _MyAppBarState extends State<MyAppBar> {
                           );
                         },
                       ).toList(),
-                    )
+                    ),
+                    const Spacer(),
+                    UserIndicatorWidget(),
                   ],
                 ),
         );
       },
+    );
+  }
+}
+
+
+class UserIndicatorWidget extends ConsumerWidget {
+  UserIndicatorWidget({Key? key}) : super(key: key);
+  final LoginController myLoginController = getIt<LoginController>();
+  @override
+  Widget build(BuildContext context,WidgetRef ref) {
+    User? u = ref.watch(userProvider);
+    ThemeData theme = Theme.of(context);
+    double width = Get.width;
+    double height = Get.height;
+    double avatarRadius = 18;
+    if(u==null) return const SizedBox();
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(avatarRadius),
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Colors.blueAccent
+              ),
+              width: avatarRadius*2,
+              height: avatarRadius*2,
+              child: const Icon(Icons.person),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text("Hello, ${u.username}"),
+          const SizedBox(width: 8),
+          IconButton(onPressed: (){
+            myLoginController.logout();
+          }, icon: const Icon(Icons.exit_to_app_outlined))
+        ],
+      ),
     );
   }
 }

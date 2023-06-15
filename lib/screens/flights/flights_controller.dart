@@ -11,6 +11,7 @@ import 'package:brs_panel/screens/flights/usecases/flight_list_usecase.dart';
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/classes/flight_class.dart';
 import '../../core/classes/flight_details_class.dart';
+import '../../core/classes/tag_container_class.dart';
 import '../../core/util/basic_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
 

@@ -26,9 +26,9 @@ extension FlightDataTableColumnDetails on FlightDataTableColumn {
   double get width {
     switch (this) {
       case FlightDataTableColumn.flight:
-        return 0.15;
+        return 0.13;
       case FlightDataTableColumn.status:
-        return 0.41;
+        return 0.43;
       case FlightDataTableColumn.route:
         return 0.08;
       case FlightDataTableColumn.time:

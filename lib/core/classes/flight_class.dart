@@ -439,6 +439,7 @@ class Flight {
   final String from;
   final String to;
   final String route;
+  final String? destList;
   final bool isTest;
   final int flightType;
   final int totalBagPCs;
@@ -458,6 +459,7 @@ class Flight {
     required this.sta,
     required this.from,
     required this.to,
+    required this.destList,
     required this.route,
     required this.isTest,
     required this.flightType,
@@ -481,6 +483,7 @@ class Flight {
     String? sta,
     String? from,
     String? to,
+    String? destList,
     String? route,
     bool? isTest,
     int? flightType,
@@ -501,6 +504,7 @@ class Flight {
         sta: sta ?? this.sta,
         from: from ?? this.from,
         to: to ?? this.to,
+        destList: destList ?? this.destList,
         route: route ?? this.route,
         isTest: isTest ?? this.isTest,
         flightType: flightType ?? this.flightType,
@@ -522,6 +526,7 @@ class Flight {
     sta: json["STA"],
     from: json["From"],
     to: json["To"],
+    destList: json["DestList"],
     route: json["Route"],
     isTest: json["IsTest"],
     flightType: json["FlightType"],
@@ -543,6 +548,7 @@ class Flight {
     "STA": sta,
     "From": from,
     "To": to,
+    "DestList": destList,
     "Route": route,
     "IsTest": isTest,
     "FlightType": flightType,
@@ -567,6 +573,8 @@ class Flight {
   bool validateSearch(String s) {
     return s.isEmpty || "$al$flightNumber".toLowerCase().contains(s.toLowerCase());
   }
+
+  List<String> get destinations => (destList??to).split(",");
 
   @override
   String toString() => flightNumber;

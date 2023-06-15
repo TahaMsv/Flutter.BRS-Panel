@@ -56,7 +56,7 @@ class _DotButtonState extends State<DotButton> {
   }
   @override
   Widget build(BuildContext context) {
-    Color c = widget.color ?? Colors.blueAccent;
+    Color c = widget.onPressed==null?Colors.grey: widget.color ?? Colors.blueAccent;
     return SizedBox(
       width: widget.size,
       height: widget.size,

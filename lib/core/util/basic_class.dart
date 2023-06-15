@@ -52,10 +52,11 @@ class BasicClass {
   // static MyDeviceInfo get deviceInfo => instance._deviceInfo??MyDeviceInfo();
   static ScreenType get deviceType => instance._deviceType ?? ScreenType.phone;
 
-  static Position? getPositionByID(int id) {
+  static Position? getPositionByID(int? id) {
     return systemSetting.positions.firstWhereOrNull((e)=>e.id==id);
   }
   static Airport? getAirportByCode(String code) {
+    print(code);
     return systemSetting.airportList.firstWhereOrNull((e)=>e.code==code);
   }
   static Airline? getAirlineByCode(String code) {
@@ -67,6 +68,9 @@ class BasicClass {
 
   static ClassType? getClassTypeByID(int id) {
     return systemSetting.classTypeList.firstWhereOrNull((e)=>e.id==id);
+  }
+  static ClassType? getClassTypeByCode(String code) {
+    return systemSetting.classTypeList.firstWhereOrNull((e)=>e.abbreviation==code);
   }
 
   static TagStatus? getTagStatusByID(int id) {

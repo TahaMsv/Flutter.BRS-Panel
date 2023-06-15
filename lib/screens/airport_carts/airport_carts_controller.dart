@@ -8,6 +8,7 @@ import '../../core/abstracts/controller_abs.dart';
 import '../../core/abstracts/success_abs.dart';
 import '../../core/classes/airport_cart_class.dart';
 import '../../core/classes/flight_details_class.dart';
+import '../../core/classes/tag_container_class.dart';
 import '../../core/util/basic_class.dart';
 import '../../core/util/confirm_operation.dart';
 import '../../core/util/handlers/failure_handler.dart';

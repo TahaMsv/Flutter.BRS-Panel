@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../core/classes/airport_cart_class.dart';
 import '../../core/classes/flight_details_class.dart';
+import '../../core/classes/tag_container_class.dart';
 import '../../core/classes/user_class.dart';
 
 final airportCartsProvider = ChangeNotifierProvider<AirportCartsState>((_) => AirportCartsState());

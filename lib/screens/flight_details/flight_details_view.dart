@@ -16,6 +16,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 import '../../core/classes/flight_class.dart';
 import '../../core/classes/flight_details_class.dart';
+import '../../core/classes/tag_container_class.dart';
 import '../../core/classes/user_class.dart';
 import '../../core/util/basic_class.dart';
 import '../../widgets/DotButton.dart';
@@ -55,6 +56,7 @@ class _FlightDetailsViewState extends State<FlightDetailsView> {
 }
 
 class FlightDetailsPanel extends ConsumerWidget {
+  static FlightDetailsController myFlightDetailsController = getIt<FlightDetailsController>();
   static TextEditingController searchC = TextEditingController();
 
   const FlightDetailsPanel({Key? key}) : super(key: key);
@@ -106,7 +108,10 @@ class FlightDetailsPanel extends ConsumerWidget {
           const SizedBox(width: 12),
           DotButton(
             icon: Icons.refresh,
-            onPressed: () {
+            onPressed: () async{
+              final sfp = ref.read(selectedFlightProvider);
+              final fdP = ref.read(detailsProvider);
+               ref.refresh(detailsProvider);
               // FlightsController flightsController = getIt<FlightsController>();
               // flightsController.flightList(ref.read(flightDateProvider));
             },
@@ -130,6 +135,7 @@ class FlightDetailsWidget extends ConsumerWidget {
     return Expanded(
       child: Container(
         child: fdP.when(
+          skipLoadingOnRefresh: false,
           data: (d) => d == null
               ? const Text("No Data Found")
               : Row(
@@ -198,20 +204,10 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
     Position selectedPos = ref.watch(selectedPosInDetails)!;
     String searched = ref.watch(tagSearchProvider);
     List<FlightTag> filteredTag = widget.details.tagList.where((e) => e.validateSearch(searched, selectedPos)).toList();
-
-    List<ContainerSection> cons = widget.details.containerList.where((element) => selectedPos == null || element.positionID == selectedPos.id).map((e) => ContainerSection(con: e, allTags: filteredTag, ref: ref)).toList();
-
+    List<ContainerSection> cons = widget.details.containerList.where((element) => element.positionId == selectedPos.id).map((e) => ContainerSection(con: e, allTags: filteredTag, ref: ref)).toList();
     List<ContainerSection> bulks = widget.posList.map((e) => ContainerSection(con: TagContainer.bulk(e.id), allTags: filteredTag, ref: ref)).toList();
-    // ContainerSection bulkSec = ContainerSection(con: TagContainer.bulk(selectedPos?.id), allTags: widget.details.tagList, ref: ref);
-    cons = cons + bulks.where((element) => (element.con.positionID == selectedPos.id) && element.items.isNotEmpty).toList();
+    cons = cons + bulks.where((element) => (element.con.positionId == selectedPos.id) && element.items.isNotEmpty).toList();
     List<TagContainer> filteredCons = widget.details.containerList.where((element) => filteredTag.any((tag) => tag.getContainerID == element.id)).toList();
-    // if (selectedPos.binRequired) {
-    //   List<FlightTag> inBinNoCon = filteredTag.where((element) => element.currentPosition == selectedPos.id && element.getContainerID == null).toList();
-    //   if(inBinNoCon.isNotEmpty) {
-    //     TagContainer fakeCon = TagContainer.bulk(selectedPos.id);
-    //     filteredCons.add(fakeCon);
-    //   }
-    // }
     List<BinSection> bins = widget.details.binList.map((b) => BinSection(bin: b, allCons: filteredCons, ref: ref, fd: widget.details)).toList();
 
     return Column(
@@ -357,7 +353,14 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
                     ),
                   )
                 : Flexible(
-                    child: ListView.builder(itemCount: filteredTag.length, itemBuilder: (c, i) => TagWidget(tag: filteredTag[i], index: i, hasBinLine: false)),
+                    child: ListView.builder(
+                        itemCount: filteredTag.length,
+                        itemBuilder: (c, i) => TagWidget(
+                              tag: filteredTag[i],
+                              index: i,
+                              hasBinLine: false,
+                              hasTagLine: false,
+                            )),
                   ),
       ],
     );
@@ -546,11 +549,11 @@ class BinSection extends ExpandableListSection<TagContainer> {
 
   @override
   List<TagContainer>? getItems() {
-    List<TagContainer> results= [];
+    List<TagContainer> results = [];
     if (fd.tagList.any((element) => element.getContainerID == null && element.tagPositions.first.binID == bin.id)) {
-      results =  allCons.where((element) => element.getTags(fd).where((t) => t.tagPositions.first.binID==bin.id).isNotEmpty).toList() + [TagContainer.bulk(2)];
-    }else{
-      results = allCons.where((element) => element.getTags(fd).where((t) => t.tagPositions.first.binID==bin.id).isNotEmpty).toList();
+      results = allCons.where((element) => element.getTags(fd).where((t) => t.tagPositions.first.binID == bin.id).isNotEmpty).toList() + [TagContainer.bulk(2)];
+    } else {
+      results = allCons.where((element) => element.getTags(fd).where((t) => t.tagPositions.first.binID == bin.id).isNotEmpty).toList();
     }
 
     // results =  results.where((e) =>(e.isBulk || e.getTags(fd).isNotEmpty) && e.getTags(fd).any((element) {
@@ -560,7 +563,6 @@ class BinSection extends ExpandableListSection<TagContainer> {
     // })).toList();
     return results;
   }
-
 
   @override
   bool isSectionExpanded() {
@@ -584,7 +586,7 @@ class BinSection extends ExpandableListSection<TagContainer> {
     if (fd.tagList.any((element) => element.getContainerID == null && element.tagPositions.first.binID == bin.id)) {
       return allCons + [TagContainer.bulk(2)];
     }
-    return allCons.where((e) =>e.getTags(fd).isNotEmpty && e.getTags(fd).any((element) => !e.isBulk &&  element.tagPositions.first.binID==bin.id)).toList();
+    return allCons.where((e) => e.getTags(fd).isNotEmpty && e.getTags(fd).any((element) => !e.isBulk && element.tagPositions.first.binID == bin.id)).toList();
     return allCons;
   }
 }
@@ -594,8 +596,9 @@ class TagWidget extends StatelessWidget {
   final int index;
   final bool isLast;
   final bool hasBinLine;
+  final bool hasTagLine;
 
-  const TagWidget({Key? key, required this.tag, required this.index, this.isLast = false, required this.hasBinLine}) : super(key: key);
+  const TagWidget({Key? key, required this.tag, required this.index, this.isLast = false, required this.hasBinLine, this.hasTagLine = true}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -623,17 +626,24 @@ class TagWidget extends StatelessWidget {
                   const SizedBox(width: 8),
                   hasBinLine ? Container(width: 2, height: 40, color: MyColors.binGreen) : const SizedBox(),
                   const SizedBox(width: 60),
-                  Container(width: 2, height: isLast ? 20 : 40, color: MyColors.containerGreen),
-                  Container(
-                    width: 40,
-                    height: 2,
-                    color: MyColors.containerGreen,
-                    margin: const EdgeInsets.only(top: 19),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 16.0),
-                    child: Icon(Icons.circle, color: MyColors.containerGreen, size: 8),
-                  ),
+                  hasTagLine
+                      ? Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(width: 2, height: isLast ? 20 : 40, color: MyColors.containerGreen),
+                            Container(
+                              width: 40,
+                              height: 2,
+                              color: MyColors.containerGreen,
+                              margin: const EdgeInsets.only(top: 19),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 16.0),
+                              child: Icon(Icons.circle, color: MyColors.containerGreen, size: 8),
+                            ),
+                          ],
+                        )
+                      : const SizedBox(width: 50,),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     child: Text(

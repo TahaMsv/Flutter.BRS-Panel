@@ -4,6 +4,7 @@ import 'package:brs_panel/core/constants/assest.dart';
 import 'package:flutter/material.dart';
 
 import '../util/basic_class.dart';
+import 'tag_container_class.dart';
 import 'user_class.dart';
 
 @immutable
@@ -390,141 +391,141 @@ class WrongTag {
   }
 }
 
-@immutable
-class TagContainer {
-  const TagContainer({
-    required this.id,
-    this.flightID,
-    required this.typeId,
-    required this.positionID,
-    required this.classTypeID,
-    required this.title,
-    required this.code,
-    this.dest = "",
-    this.from = "",
-    this.barcodePrefix,
-    this.isClosed = false,
-    required this.ocrPrefix,
-  });
-
-  final int? id;
-  final int? flightID;
-  final int typeId;
-  final int positionID;
-  final int classTypeID;
-  final String title;
-  final String code;
-  final String? barcodePrefix;
-  final String dest;
-  final String from;
-  final List<String> ocrPrefix;
-  final bool isClosed;
-
-  factory TagContainer.fromJson(Map<String, dynamic> json) => TagContainer(
-        id: json["ID"],
-        flightID: json["FlightID"]??json["FlightScheduleID"],
-        typeId: json["TypeID"] ?? 1,
-        classTypeID: json["ClassTypeID"] ?? 1,
-        positionID: json["PositionID"] ?? -1,
-        title: json["Title"]??"",
-        code: json["Code"] ?? "",
-        dest: json["Dest"] ?? json["To"] ?? "",
-        isClosed: json["IsClosed"] ?? false,
-        barcodePrefix: json["BarcodePrefix"],
-        ocrPrefix: List<String>.from((json["OCRPrefix"] ?? ["AKE######", "CART######"]).map((x) => x.toString())),
-      );
-
-  factory TagContainer.fromQr(String qr) {
-    String labelAndTypeID = qr.replaceFirst("ConQR:", "");
-    String typeIDStr = labelAndTypeID.split(",").last;
-    String label = labelAndTypeID.split(",").first;
-    int foundTypeID = int.parse(typeIDStr);
-    return TagContainer(
-      id: null,
-      typeId: foundTypeID,
-      flightID: null,
-      classTypeID: 1,
-      positionID: -1,
-      // title: BasicClass.settings.containers.firstWhere((element) => element.typeId == foundTypeID).title,
-      title: '',
-      code: label,
-      dest: "",
-      from: "",
-      isClosed: false,
-      barcodePrefix: "",
-      ocrPrefix: ["AKE######", "CART######"],
-    );
-  }
-
-  factory TagContainer.bulk(int? posId) {
-    return TagContainer(
-      id: -100,
-      typeId: 1,
-      flightID: null,
-      classTypeID: 1,
-      positionID: posId??-1,
-      title: '',
-      code: "",
-      dest: "",
-      from: "",
-      isClosed: false,
-      barcodePrefix: "",
-      ocrPrefix: ["AKE######", "CART######"],
-    );
-  }
-
-  bool get isBulk => id==-100;
-
-  String get getQr => "ConQR:$code,$typeId";
-
-  String get rote => (from.isEmpty || dest.isEmpty) ? "" : "${from}-${dest}";
-
-  String get type => typeId ==1?'ULD':"Cart";
-
-  String get barcode => barcodePrefix??'';
-
-  Map<String, dynamic> toJson() => {
-        "ID": id,
-        "FlightID":flightID,
-        "TypeID": typeId,
-        "ClassTypeID": classTypeID,
-        "Title": title,
-        "Code": code,
-        "Dest": dest,
-        "From": from,
-        "To": dest,
-        "PositionID": positionID,
-        "BarcodePrefix": barcodePrefix,
-        "OCRPrefix": ocrPrefix,
-        "IsClosed": isClosed
-      };
-
-  @override
-  bool operator ==(Object other) {
-    // TODO: implement ==
-    return (other is TagContainer && other.id == id && id != null) || (other is TagContainer && other.typeId == typeId && other.code.toLowerCase() == code.toLowerCase());
-    // return (other is TagContainer && other.typeId == typeId && other.code.toLowerCase() == code.toLowerCase());
-    // return super == other;
-  }
-
-  bool get isLoadable => typeId != 1;
-
-  bool get isException => typeId != 1;
-
-  bool get isCart => typeId == 1;
-
-  ClassType get classType => BasicClass.getClassTypeByID(classTypeID)!;
-
-  Widget get getImg => isBulk?SizedBox(): Image.asset(isCart? AssetImages.cart:AssetImages.uld,width: 30,height: 30,);
-
-  List<FlightTag> getTags(FlightDetails fd) {
-    return fd.tagList.where((element) => element.tagPositions.first.container == this).toList();
-  }
-
-  bool validateSearch(String s) {
-    return s.isEmpty || "$code".toLowerCase().contains(s.toLowerCase());
-  }
-}
+// @immutable
+// class TagContainer {
+//   const TagContainer({
+//     required this.id,
+//     this.flightID,
+//     required this.typeId,
+//     required this.positionID,
+//     required this.classTypeID,
+//     required this.title,
+//     required this.code,
+//     this.dest = "",
+//     this.from = "",
+//     this.barcodePrefix,
+//     this.isClosed = false,
+//     required this.ocrPrefix,
+//   });
+//
+//   final int? id;
+//   final int? flightID;
+//   final int typeId;
+//   final int positionID;
+//   final int classTypeID;
+//   final String title;
+//   final String code;
+//   final String? barcodePrefix;
+//   final String dest;
+//   final String from;
+//   final List<String> ocrPrefix;
+//   final bool isClosed;
+//
+//   factory TagContainer.fromJson(Map<String, dynamic> json) => TagContainer(
+//         id: json["ID"],
+//         flightID: json["FlightID"]??json["FlightScheduleID"],
+//         typeId: json["TypeID"] ?? 1,
+//         classTypeID: json["ClassTypeID"] ?? 1,
+//         positionID: json["PositionID"] ?? -1,
+//         title: json["Title"]??"",
+//         code: json["Code"] ?? "",
+//         dest: json["Dest"] ?? json["To"] ?? "",
+//         isClosed: json["IsClosed"] ?? false,
+//         barcodePrefix: json["BarcodePrefix"],
+//         ocrPrefix: List<String>.from((json["OCRPrefix"] ?? ["AKE######", "CART######"]).map((x) => x.toString())),
+//       );
+//
+//   factory TagContainer.fromQr(String qr) {
+//     String labelAndTypeID = qr.replaceFirst("ConQR:", "");
+//     String typeIDStr = labelAndTypeID.split(",").last;
+//     String label = labelAndTypeID.split(",").first;
+//     int foundTypeID = int.parse(typeIDStr);
+//     return TagContainer(
+//       id: null,
+//       typeId: foundTypeID,
+//       flightID: null,
+//       classTypeID: 1,
+//       positionID: -1,
+//       // title: BasicClass.settings.containers.firstWhere((element) => element.typeId == foundTypeID).title,
+//       title: '',
+//       code: label,
+//       dest: "",
+//       from: "",
+//       isClosed: false,
+//       barcodePrefix: "",
+//       ocrPrefix: ["AKE######", "CART######"],
+//     );
+//   }
+//
+//   factory TagContainer.bulk(int? posId) {
+//     return TagContainer(
+//       id: -100,
+//       typeId: 1,
+//       flightID: null,
+//       classTypeID: 1,
+//       positionID: posId??-1,
+//       title: '',
+//       code: "",
+//       dest: "",
+//       from: "",
+//       isClosed: false,
+//       barcodePrefix: "",
+//       ocrPrefix: ["AKE######", "CART######"],
+//     );
+//   }
+//
+//   bool get isBulk => id==-100;
+//
+//   String get getQr => "ConQR:$code,$typeId";
+//
+//   String get rote => (from.isEmpty || dest.isEmpty) ? "" : "${from}-${dest}";
+//
+//   String get type => typeId ==1?'ULD':"Cart";
+//
+//   String get barcode => barcodePrefix??'';
+//
+//   Map<String, dynamic> toJson() => {
+//         "ID": id,
+//         "FlightID":flightID,
+//         "TypeID": typeId,
+//         "ClassTypeID": classTypeID,
+//         "Title": title,
+//         "Code": code,
+//         "Dest": dest,
+//         "From": from,
+//         "To": dest,
+//         "PositionID": positionID,
+//         "BarcodePrefix": barcodePrefix,
+//         "OCRPrefix": ocrPrefix,
+//         "IsClosed": isClosed
+//       };
+//
+//   @override
+//   bool operator ==(Object other) {
+//     // TODO: implement ==
+//     return (other is TagContainer && other.id == id && id != null) || (other is TagContainer && other.typeId == typeId && other.code.toLowerCase() == code.toLowerCase());
+//     // return (other is TagContainer && other.typeId == typeId && other.code.toLowerCase() == code.toLowerCase());
+//     // return super == other;
+//   }
+//
+//   bool get isLoadable => typeId != 1;
+//
+//   bool get isException => typeId != 1;
+//
+//   bool get isCart => typeId == 1;
+//
+//   ClassType get classType => BasicClass.getClassTypeByID(classTypeID)!;
+//
+//   Widget get getImg => isBulk?SizedBox(): Image.asset(isCart? AssetImages.cart:AssetImages.uld,width: 30,height: 30,);
+//
+//   List<FlightTag> getTags(FlightDetails fd) {
+//     return fd.tagList.where((element) => element.tagPositions.first.container == this).toList();
+//   }
+//
+//   bool validateSearch(String s) {
+//     return s.isEmpty || "$code".toLowerCase().contains(s.toLowerCase());
+//   }
+// }
 
 @immutable
 class TransferFlight {

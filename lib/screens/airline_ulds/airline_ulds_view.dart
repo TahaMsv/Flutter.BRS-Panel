@@ -8,6 +8,7 @@ import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../core/classes/flight_details_class.dart';
+import '../../core/classes/tag_container_class.dart';
 import '../../core/constants/ui.dart';
 import '../../core/util/basic_class.dart';
 import '../../initialize.dart';
@@ -170,7 +171,7 @@ class AirlineUldWidget extends StatelessWidget {
                   width: double.infinity,
                   // height:Get.width/12,
                   alignment: Alignment.center,
-                  child: QrImageView(data: uld.barcodePrefix??''),
+                  child: QrImageView(data: uld.barcode??''),
                 ),
               ),
               Padding(

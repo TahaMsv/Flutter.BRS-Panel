@@ -56,7 +56,7 @@ class RouterNotifier extends AutoDisposeAsyncNotifier<void> implements Listenabl
     if (isSplash) {
       return isAuth ? RouteNames.home.path : RouteNames.login.path;
     }
-
+    if(!isAuth) return RouteNames.login.path;
     print("isAuth $isAuth");
     final isLoggingIn = state.location == RouteNames.login.path;
     print("isLoggingIn $isLoggingIn");

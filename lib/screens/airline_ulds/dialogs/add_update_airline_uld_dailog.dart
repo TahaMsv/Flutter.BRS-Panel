@@ -12,6 +12,7 @@ import '../../../../core/constants/ui.dart';
 import '../../../../core/navigation/navigation_service.dart';
 import '../../../core/abstracts/success_abs.dart';
 import '../../../core/classes/flight_details_class.dart';
+import '../../../core/classes/tag_container_class.dart';
 import '../../../core/util/handlers/success_handler.dart';
 import '../../../initialize.dart';
 
@@ -99,7 +100,7 @@ class _AddUpdateAirlineDialogDialogState extends State<AddUpdateAirlineDialogDia
                         });
                       }
                     }else{
-                      final updated = TagContainer(id: widget.editingUld!.id, typeId: 1, code: codeC.text, positionID: 1, classTypeID: 1, title: '', ocrPrefix: [],);
+                      final updated = TagContainer(id: widget.editingUld!.id, typeId: 1, code: codeC.text, title: '', positionId: 1);
                       final up = await myAirlineUldsController.airlineUpdateUld(updated);
                       if (up != null) {
                         navigationService.popDialog(onPop: (){

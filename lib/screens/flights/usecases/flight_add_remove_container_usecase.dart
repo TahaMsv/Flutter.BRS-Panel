@@ -5,6 +5,7 @@ import '../../../core/abstracts/request_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/abstracts/usecase_abs.dart';
 import '../../../core/classes/flight_class.dart';
+import '../../../core/classes/tag_container_class.dart';
 import '../../../core/classes/user_class.dart';
 import '../flights_repository.dart';
 
@@ -34,8 +35,10 @@ class FlightAddRemoveContainerRequest extends Request {
       "Request": {
         "FlightScheduleID": flight.id,
         "ContainerID": con.id!,
-        "Destination": flight.to,
-        "ClassTypeID": con.classTypeID,
+        "Destination": con.destination,
+        "DestList":con.destList,
+        "ClassList":con.classList,
+        // "ClassTypeID": con.classTypeID,
         "IsDeleted": isAdd?0:1
       }
     }

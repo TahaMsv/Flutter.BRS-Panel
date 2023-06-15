@@ -1,5 +1,6 @@
 import 'package:brs_panel/core/platform/encryptor.dart';
 import 'package:brs_panel/core/util/basic_class.dart';
+import 'package:brs_panel/core/util/confirm_operation.dart';
 
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/abstracts/device_info_service_abs.dart';
@@ -16,9 +17,8 @@ import 'usecases/login_usecase.dart';
 class LoginController extends MainController {
   late LoginState loginState = ref.read(loginProvider);
 
-
   @override
-  onCreate(){
+  onCreate() {
     loadPreferences();
   }
 
@@ -26,8 +26,6 @@ class LoginController extends MainController {
     User? user;
     DeviceInfoService deviceInfoService = getIt<DeviceInfoService>();
     DeviceInfo deviceInfo = deviceInfoService.getInfo();
-
-
 
     String username = loginState.usernameC.text;
     String password = loginState.passwordC.text;
@@ -47,7 +45,8 @@ class LoginController extends MainController {
 
     final fOrR = await loginUsecase(request: loginRequest);
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => login()), (r) {
-      user = r.user??User.empty();
+      user = r.user ?? User.empty();
+      user = user!.copyWith(username: username, password: password);
       prefs.setString(SpKeys.username, username);
       prefs.setString(SpKeys.password, loginState.passwordC.text);
       prefs.setString(SpKeys.airline, al);
@@ -71,5 +70,14 @@ class LoginController extends MainController {
     loginState.passwordC.text = pass;
     loginState.alC.text = al;
     initNetworkManager(server);
+  }
+
+  void logout() async {
+    bool conf = await ConfirmOperation.getConfirm(Operation(message: "Are you sure?", title: "Logout?", actions: ["Confirm", 'Cancel']));
+
+    if (conf) {
+      final userP = ref.read(userProvider.notifier);
+      userP.state = null;
+    }
   }
 }

@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../core/classes/airline_uld_class.dart';
 import '../../core/classes/flight_details_class.dart';
+import '../../core/classes/tag_container_class.dart';
 import '../../core/classes/user_class.dart';
 
 final airlineUldsProvider = ChangeNotifierProvider<AirlineUldsState>((_) => AirlineUldsState());
