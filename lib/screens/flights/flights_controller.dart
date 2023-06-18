@@ -1,4 +1,5 @@
 import 'package:brs_panel/core/navigation/route_names.dart';
+import 'package:brs_panel/core/util/pickers.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/screens/airline_ulds/airline_ulds_controller.dart';
 import 'package:brs_panel/screens/airlines/airlines_controller.dart';
@@ -59,26 +60,27 @@ class FlightsController extends MainController {
   }
 
   Future<void> editContainers(Flight f) async {
-    final List<TagContainer>? cons = await flightGetContainerList(f);
+    final FlightGetContainerListResponse? res = await flightGetContainerList(f);
     // AirlineUldsController alC = getIt<AirlineUldsController>();
     // alC.airlineGetUldList();
     // final List<TagContainer>? allCons = await flightGetContainerList(f);
-    if (cons != null) {
+    if (res != null) {
 
-      nav.dialog(FlightContainerListDialog(flight: f,cons: cons));
+      print(res.destList);
+      nav.dialog(FlightContainerListDialog(flight: f,cons: res.cons, destList: res.destList));
     }
   }
 
-  Future<List<TagContainer>?> flightGetContainerList(Flight flight) async {
-    List<TagContainer>? cons;
+  Future<FlightGetContainerListResponse?> flightGetContainerList(Flight flight) async {
+    FlightGetContainerListResponse? res;
     FlightGetContainerListUseCase flightGetContainerListUsecase = FlightGetContainerListUseCase();
     FlightGetContainerListRequest flightGetContainerListRequest = FlightGetContainerListRequest(f: flight);
     final fOrR = await flightGetContainerListUsecase(request: flightGetContainerListRequest);
 
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightGetContainerList(flight)), (r) {
-      cons = r.cons;
+      res = r;
     });
-    return cons;
+    return res;
   }
 
   void flightAddContainer(TagContainer e) {}
@@ -97,5 +99,13 @@ class FlightsController extends MainController {
       container = r.container;
     });
     return container;
+  }
+
+  Future<void> pickDate() async {
+    DateTime current  = ref.read(flightDateProvider);
+    final pickedDate  = await Pickers.pickDate(nav.context, current);
+    if(pickedDate!=null){
+      flightList(pickedDate);
+    }
   }
 }

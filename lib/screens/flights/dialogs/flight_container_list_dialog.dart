@@ -23,8 +23,9 @@ import '../flights_controller.dart';
 class FlightContainerListDialog extends StatefulWidget {
   final Flight flight;
   final List<TagContainer> cons;
+  final List<String> destList;
 
-  const FlightContainerListDialog({Key? key, required this.cons, required this.flight}) : super(key: key);
+  const FlightContainerListDialog({Key? key, required this.cons, required this.flight,required this.destList}) : super(key: key);
 
   @override
   State<FlightContainerListDialog> createState() => _FlightContainerListDialogState();
@@ -50,9 +51,10 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
   void initState() {
     // dest = BasicClass.getAirportByCode(widget.flight.from)!;
     dest = widget.flight.to;
-    destList.add(dest!);
+    // destList.add(dest!);
+    destList = List.from(widget.destList);
     classes.add(BasicClass.systemSetting.classTypeList.first);
-    availableDests = widget.flight.destinations;
+    availableDests = List.from(widget.destList);
     assigned = widget.cons.where((element) => element.flightScheduleId != null).toList();
     available = widget.cons.where((element) => element.flightScheduleId == null && !assigned.any((as) => element.id == as.id)).toList();
     availableSearchC.addListener(() {
@@ -92,86 +94,6 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
               ],
             ),
             const Divider(height: 1),
-            Container(
-              // height: 200,
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text("Destination", style: TextStyles.styleBold16Grey),
-                      Column(
-                        children: availableDests
-                            .map((e) => MyRadioButton(
-                                value: dest == e,
-                                onChange: (v) {
-                                  if (v) {
-                                    dest = e;
-                                  }
-                                  setState(() {});
-                                },
-                                label: e!))
-                            .toList(),
-                      ),
-                    ],
-                  )),
-                  const VerticalDivider(thickness: 2),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text("Allowed Dest List", style: TextStyles.styleBold16Grey),
-                        Column(
-                          children: availableDests
-                              .map(
-                                (e) => MyCheckBoxButton(
-                                    value: destList.contains(e),
-                                    onChanged: (v) {
-                                      if (v) {
-                                        destList.add(e!);
-                                      } else if (destList.length > 1) {
-                                        destList.remove(e);
-                                      }
-                                      setState(() {});
-                                    },
-                                    label: e!),
-                              )
-                              .toList(),
-                        )
-                      ],
-                    ),
-                  ),
-                  const VerticalDivider(thickness: 2),
-                  Expanded(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text("Allowed Class List", style: TextStyles.styleBold16Grey),
-                      Column(
-                          children: BasicClass.systemSetting.classTypeList
-                              .map(
-                                (e) => MyCheckBoxButton(
-                                    value: classes.contains(e),
-                                    onChanged: (v) {
-                                      if (v) {
-                                        classes.add(e);
-                                      } else if (classes.length > 1) {
-                                        classes.remove(e);
-                                      }
-                                      setState(() {});
-                                    },
-                                    label: e.title),
-                              )
-                              .toList())
-                    ],
-                  )),
-                ],
-              ),
-            ),
-            const Divider(height: 1),
             Expanded(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,9 +125,9 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                               itemBuilder: (c, i) {
                                 TagContainer e = availableList[i];
                                 e = e.copyWith(
-                                  destination: dest,
-                                  destList: destList.join(","),
-                                  classList: classes.map((e) => e.abbreviation).join(",")
+                                    destination: dest,
+                                    destList: destList.join(","),
+                                    classList: classes.map((e) => e.abbreviation).join(",")
                                 );
                                 return AvailableContainerWidget(
                                   con: e,
@@ -279,13 +201,97 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                 ],
               ),
             ),
+
+            const Divider(height: 1),
+            Container(
+              // height: 200,
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Destination", style: TextStyles.styleBold16Grey),
+                          Column(
+                            children: widget.destList
+                                .map((e) => MyRadioButton(
+                                value: dest == e,
+                                onChange: (v) {
+                                  if (v) {
+                                    dest = e;
+                                  }
+                                  setState(() {});
+                                },
+                                label: e!))
+                                .toList(),
+                          ),
+                        ],
+                      )),
+                  const VerticalDivider(thickness: 2),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text("Allowed Dest List", style: TextStyles.styleBold16Grey),
+                        Column(
+                          children: widget.destList
+
+                              .map(
+                                (e) => MyCheckBoxButton(
+                                value: destList.contains(e),
+                                onChanged: (v) {
+                                  if (v) {
+                                    destList.add(e);
+                                  } else if (destList.length > 1) {
+                                    destList.remove(e);
+                                  }
+                                  setState(() {});
+                                },
+                                label: e),
+                          )
+                              .toList(),
+                        )
+                      ],
+                    ),
+                  ),
+                  const VerticalDivider(thickness: 2),
+                  Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Allowed Class List", style: TextStyles.styleBold16Grey),
+                          Column(
+                              children: BasicClass.systemSetting.classTypeList
+                                  .map(
+                                    (e) => MyCheckBoxButton(
+                                    value: classes.contains(e),
+                                    onChanged: (v) {
+                                      if (v) {
+                                        classes.add(e);
+                                      } else if (classes.length > 1) {
+                                        classes.remove(e);
+                                      }
+                                      setState(() {});
+                                    },
+                                    label: e.title),
+                              )
+                                  .toList())
+                        ],
+                      )),
+                ],
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(left: 18, right: 18, bottom: 18),
               child: Row(
                 children: [
                   const Spacer(),
                   MyButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      navigationService.popDialog();
+                    },
                     label: "Done",
                     color: theme.primaryColor,
                   ),
@@ -358,11 +364,11 @@ class AssignedContainerWidget extends StatelessWidget {
         children: [
           con.getImg,
           const SizedBox(width: 8),
-          Expanded(child: Text(con.code,style: TextStyles.styleBold16Black)),
+          Expanded(flex:2,child: Text(con.code,style: TextStyles.styleBold16Black)),
           Expanded(child: ArtemisCardField(title: "Position", value:con.getPosition?.title??'-',valueColor: con.getPosition?.getColor??Colors.black87,)),
           Expanded(child: ArtemisCardField(title: "Tag Count", value:con.tagCount.toString())),
-          Expanded(child: ArtemisCardField(title: "Dest List", value:"(${con.destination??''}) ${con.destination??''}")),
-          Expanded(child: ArtemisCardField(title: "Class Types", value:con.classList??'-')),
+          Expanded(flex:3,child: ArtemisCardField(title: "Dest List", value:"(${con.destination??''}) ${con.destList??''}")),
+          Expanded(flex:2,child: ArtemisCardField(title: "Class Types", value:con.classList??'-')),
           DotButton(
             icon: Icons.delete,
             color: Colors.red,

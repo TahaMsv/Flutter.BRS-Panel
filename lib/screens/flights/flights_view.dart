@@ -96,7 +96,7 @@ class FlightsPanel extends ConsumerWidget {
                     ),
                     leftAction: () => myFlightsController.flightList(dt.add(const Duration(days: -1))),
                     rightAction: () => myFlightsController.flightList(dt.add(const Duration(days: 1))),
-                    centerAction: () {},
+                    centerAction: myFlightsController.pickDate,
                   );
                 },
               )),

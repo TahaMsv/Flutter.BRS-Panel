@@ -7,7 +7,9 @@ import 'home_state.dart';
 class HomeController extends MainController {
   late HomeState homeState = ref.read(homeProvider);
 
-  void logout() {}
+  // void logout() {
+  //
+  // }
   // UseCase UseCase = UseCase(repository: Repository());
 
 }

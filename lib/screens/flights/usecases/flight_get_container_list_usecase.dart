@@ -28,7 +28,7 @@ class FlightGetContainerListRequest extends Request {
   @override
   Map<String, dynamic> toJson() =>{
     "Body": {
-      "Execution": "FlightContainerList",
+      "Execution": "FlightContainerList2",
       "Token":token,
       "Request": {
         "FlightScheduleID": f.id
@@ -44,13 +44,18 @@ class FlightGetContainerListRequest extends Request {
 
 class FlightGetContainerListResponse extends Response {
   final List<TagContainer> cons;
+  final List<String> destList;
 
-  FlightGetContainerListResponse({required int status, required String message, required this.cons})
-      : super(status: status, message: message, body: cons.map((e)=>e.toJson()).toList());
+  FlightGetContainerListResponse({required int status, required String message, required this.cons,required this.destList})
+      : super(status: status, message: message, body: {
+        "ContainerList":cons.map((e)=>e.toJson()).toList(),
+        "DestList": destList.map((e) => {"Airport":e}).toList()
+  });
 
   factory FlightGetContainerListResponse.fromResponse(Response res) => FlightGetContainerListResponse(
         status: res.status,
         message: res.message,
-        cons: List<TagContainer>.from(res.body.map((x) => TagContainer.fromJson(x))),
+        cons: List<TagContainer>.from(res.body["ContainerList"].map((x) => TagContainer.fromJson(x))),
+        destList: (res.body['DestList'] as List).map((x)=>x["Airport"].toString()).toList(),
       );
 }

@@ -72,12 +72,16 @@ class LoginController extends MainController {
     initNetworkManager(server);
   }
 
-  void logout() async {
-    bool conf = await ConfirmOperation.getConfirm(Operation(message: "Are you sure?", title: "Logout?", actions: ["Confirm", 'Cancel']));
-
-    if (conf) {
+  void logout([bool force=false]) async {
+    if(force){
       final userP = ref.read(userProvider.notifier);
       userP.state = null;
+    }else {
+      bool conf = await ConfirmOperation.getConfirm(Operation(message: "Are you sure?", title: "Logout?", actions: ["Confirm", 'Cancel']));
+      if (conf) {
+        final userP = ref.read(userProvider.notifier);
+        userP.state = null;
+      }
     }
   }
 }

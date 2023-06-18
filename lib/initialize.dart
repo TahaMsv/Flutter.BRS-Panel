@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:artemis_utils/artemis_utils.dart';
+import 'package:brs_panel/core/abstracts/failures_abs.dart';
+import 'package:brs_panel/core/util/handlers/failure_handler.dart';
 import 'package:brs_panel/screens/add_flight/add_flight_controller.dart';
 import 'package:brs_panel/screens/aircrafts/aircrafts_controller.dart';
 import 'package:brs_panel/screens/airlines/airlines_controller.dart';
@@ -110,8 +112,20 @@ initNetworkManager([String? baseUrl]) {
       extraSuccessRule: (NetworkResponse nr) {
         if (nr.responseCode != 200) return false;
         int statusCode = int.parse((nr.responseBody["Status"]?.toString() ?? nr.responseBody["ResultCode"]?.toString() ?? "0"));
-        print("Success Check => ${statusCode}");
-        return nr.responseCode == 200 && statusCode > 0;
+        // print("Success Check => ${statusCode}");
+        if(statusCode == -999){
+          LoginController loginController = getIt<LoginController>();
+          loginController.logout(true);
+          Future.delayed(const Duration(milliseconds: 500),(){
+            FailureHandler.handle(ServerFailure(code: 1, msg: "Token Expired", traceMsg: ''));
+
+          });
+          return false;
+        }else{
+          return nr.responseCode == 200 && statusCode > 0;
+
+        }
+
       },
       onStartDefault: (_) {
         final NavigationService navigationService = getIt<NavigationService>();
@@ -124,15 +138,19 @@ initNetworkManager([String? baseUrl]) {
         return (data["Message"] ?? data["ResultText"] ?? "Unknown Error").toString();
       },
       tokenExpireRule: (NetworkResponse res) {
+        print("Checkoin Token Expire");
         if (res.responseBody is Map && res.responseBody["Body"] != null) {
-          return res.extractedMessage?.contains("Token Expired") ?? false;
+          print("Checkoin Token 2 ${res.responseCode}");
+          print("Checkoin Token 2 ${res.extractedMessage}");
+          return res.responseCode==-999 || (res.extractedMessage?.contains("Token Expired") ?? false);
         } else {
           return false;
         }
       },
       onTokenExpire: (NetworkResponse res) {
-        HomeController homeController = getIt<HomeController>();
-        homeController.logout();
+        log("Token Expire Happend");
+        LoginController loginController = getIt<LoginController>();
+        loginController.logout();
       });
 }
 
