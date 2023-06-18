@@ -34,7 +34,9 @@ import 'screens/login/login_controller.dart';
 final getIt = GetIt.instance;
 
 Future<void> init() async {
+
   WidgetsFlutterBinding.ensureInitialized();
+  initFullScreen();
   await initDataBase();
   await loadConfigFile();
 
