@@ -49,13 +49,14 @@ class FlightGetContainerListResponse extends Response {
   FlightGetContainerListResponse({required int status, required String message, required this.cons,required this.destList})
       : super(status: status, message: message, body: {
         "ContainerList":cons.map((e)=>e.toJson()).toList(),
-        "DestList": destList.map((e) => {"Airport":e}).toList()
+        "DestList": destList.join(",")
   });
+
 
   factory FlightGetContainerListResponse.fromResponse(Response res) => FlightGetContainerListResponse(
         status: res.status,
         message: res.message,
         cons: List<TagContainer>.from(res.body["ContainerList"].map((x) => TagContainer.fromJson(x))),
-        destList: (res.body['DestList'] as List).map((x)=>x["Airport"].toString()).toList(),
+        destList: res.body['DestList'].toString().split(","),
       );
 }

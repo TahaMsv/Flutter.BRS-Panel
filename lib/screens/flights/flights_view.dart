@@ -200,6 +200,7 @@ class FlightListWidget extends ConsumerWidget {
         child: SfDataGrid(
             headerGridLinesVisibility: GridLinesVisibility.both,
             selectionMode: SelectionMode.none,
+            shrinkWrapColumns: true,
             sortingGestureType: SortingGestureType.doubleTap,
             gridLinesVisibility: GridLinesVisibility.vertical,
             allowSorting: true,

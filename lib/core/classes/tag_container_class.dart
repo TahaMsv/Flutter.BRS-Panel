@@ -8,14 +8,13 @@ import 'flight_details_class.dart';
 @immutable
 class TagContainer {
   final int? id;
-  final int? flightScheduleId;
+  final int? flightId;
   final int typeId;
   final String code;
   final int? positionId;
   final String bin;
   final String title;
-  final bool? isClosed;
-  final String? isClosedTime;
+  final String? closedTime;
   final int? classTypeId;
   final String? destination;
   final String? classList;
@@ -26,14 +25,13 @@ class TagContainer {
 
   const TagContainer({
     required this.id,
-    this.flightScheduleId,
+    this.flightId,
     this.typeId=1,
     required this.code,
     required this.positionId,
     this.bin ='',
     required this.title,
-     this.isClosed,
-     this.isClosedTime,
+     this.closedTime,
      this.classTypeId,
      this.destination,
      this.classList,
@@ -48,14 +46,13 @@ class TagContainer {
 
   TagContainer copyWith({
     int? id,
-    int? flightScheduleId,
+    int? flightId,
     int? typeId,
     String? code,
     int? positionId,
     String? bin,
     String? title,
-    bool? isClosed,
-    String? isClosedTime,
+    String? closedTime,
     int? classTypeId,
     String? destination,
     String? classList,
@@ -66,14 +63,13 @@ class TagContainer {
   }) =>
       TagContainer(
         id: id ?? this.id,
-        flightScheduleId: flightScheduleId ?? this.flightScheduleId,
+        flightId: flightId ?? this.flightId,
         typeId: typeId ?? this.typeId,
         code: code ?? this.code,
         positionId: positionId ?? this.positionId,
         bin: bin ?? this.bin,
         title: title ?? this.title,
-        isClosed: isClosed ?? this.isClosed,
-        isClosedTime: isClosedTime ?? this.isClosedTime,
+        closedTime: closedTime ?? this.closedTime,
         classTypeId: classTypeId ?? this.classTypeId,
         destination: destination ?? this.destination,
         classList: classList ?? this.classList,
@@ -85,14 +81,13 @@ class TagContainer {
 
   factory TagContainer.fromJson(Map<String, dynamic> json) => TagContainer(
     id: json["ID"],
-    flightScheduleId: json["FlightScheduleID"],
+    flightId: json["FlightID"],
     typeId: json["TypeID"],
     code: json["Code"]??'',
     positionId: json["PositionID"],
     bin: json["Bin"]??'',
     title: json["Title"],
-    isClosed: json["IsClosed"],
-    isClosedTime: json["IsClosed_Time"],
+    closedTime: json["ClosedTime"],
     classTypeId: json["ClassTypeID"],
     destination: json["Destination"],
     classList: json["ClassList"],
@@ -104,14 +99,12 @@ class TagContainer {
 
   Map<String, dynamic> toJson() => {
     "ID": id,
-    "FlightScheduleID": flightScheduleId,
+    "FlightID": flightId,
     "TypeID": typeId,
     "Code": code,
     "PositionID": positionId,
     "Bin": bin,
     "Title": title,
-    "IsClosed": isClosed,
-    "IsClosed_Time": isClosedTime,
     "ClassTypeID": classTypeId,
     "Destination": destination,
     "ClassList": classList,
@@ -137,8 +130,7 @@ class TagContainer {
       code: label,
       to: "",
       from: "",
-      isClosed: false,
-      flightScheduleId: null, positionId: null, bin: '', tagCount: null,
+      flightId: null, positionId: null, bin: '', tagCount: null,
     );
   }
 
@@ -153,10 +145,9 @@ class TagContainer {
       code: "",
       to: "",
       from: "",
-      isClosed: false,
       // barcodePrefix: "",
       // ocrPrefix: ["AKE######", "CART######"],
-      flightScheduleId: null, positionId: null, bin: '', tagCount: null,
+      flightId: null, positionId: null, bin: '', tagCount: null,
     );
   }
 
@@ -169,6 +160,8 @@ class TagContainer {
   String get type => typeId ==1?'Cart':"ULD";
 
   String get barcode => '';
+
+  List<String>get  dests => (destList??'').split(",");
 
 
   @override

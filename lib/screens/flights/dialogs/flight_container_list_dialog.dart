@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:artemis_ui_kit/artemis_ui_kit.dart';
 import 'package:brs_panel/core/util/basic_class.dart';
+import 'package:brs_panel/screens/flights/data_tables/assigned_containers_data_table.dart';
+import 'package:brs_panel/screens/flights/data_tables/available_containers_data_table.dart';
 import 'package:brs_panel/widgets/DotButton.dart';
 import 'package:brs_panel/widgets/MyCheckBoxButton.dart';
 import 'package:brs_panel/widgets/MyFieldPicker.dart';
@@ -9,6 +11,7 @@ import 'package:brs_panel/widgets/MyTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../../core/classes/flight_class.dart';
 import '../../../core/classes/flight_details_class.dart';
 import '../../../core/classes/tag_container_class.dart';
@@ -25,7 +28,7 @@ class FlightContainerListDialog extends StatefulWidget {
   final List<TagContainer> cons;
   final List<String> destList;
 
-  const FlightContainerListDialog({Key? key, required this.cons, required this.flight,required this.destList}) : super(key: key);
+  const FlightContainerListDialog({Key? key, required this.cons, required this.flight, required this.destList}) : super(key: key);
 
   @override
   State<FlightContainerListDialog> createState() => _FlightContainerListDialogState();
@@ -55,8 +58,8 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
     destList = List.from(widget.destList);
     classes.add(BasicClass.systemSetting.classTypeList.first);
     availableDests = List.from(widget.destList);
-    assigned = widget.cons.where((element) => element.flightScheduleId != null).toList();
-    available = widget.cons.where((element) => element.flightScheduleId == null && !assigned.any((as) => element.id == as.id)).toList();
+    assigned = widget.cons.where((element) => element.flightId != null).toList();
+    available = widget.cons.where((element) => element.flightId == null && !assigned.any((as) => element.id == as.id)).toList();
     availableSearchC.addListener(() {
       setState(() {});
     });
@@ -74,7 +77,7 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
     List<TagContainer> assignedList = assigned.where((element) => element.validateSearch(assignedSearchC.text)).toList();
     List<TagContainer> availableList = available.where((element) => element.validateSearch(availableSearchC.text)).toList();
     return Dialog(
-      insetPadding: EdgeInsets.symmetric(horizontal: width * 0.15, vertical: height * 0.2),
+      insetPadding: EdgeInsets.symmetric(horizontal: width * 0.1, vertical: height * 0.2),
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Container(
@@ -94,104 +97,49 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
               ],
             ),
             const Divider(height: 1),
-            Expanded(
+            Container(
+              decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: MyColors.lineColor))),
+              // padding: EdgeInsets.symmetric(vertical: 12,horizontal: 12),
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
                 children: [
                   Expanded(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              const Text("Available", style: TextStyles.styleBold16Grey),
-                              const SizedBox(width: 24),
-                              Expanded(
-                                child: MyTextField(
-                                  height: 35,
-                                  prefixIcon: const Icon(Icons.search),
-                                  controller: availableSearchC,
-                                  showClearButton: true,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            child: ListView.builder(
-                              itemBuilder: (c, i) {
-                                TagContainer e = availableList[i];
-                                e = e.copyWith(
-                                    destination: dest,
-                                    destList: destList.join(","),
-                                    classList: classes.map((e) => e.abbreviation).join(",")
-                                );
-                                return AvailableContainerWidget(
-                                  con: e,
-                                  index: i,
-                                  onAdd: () async {
-                                    final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, true);
-                                    if (a != null) {
-                                      available.removeWhere((element) => element.id == a.id);
-                                      assigned.add(a);
-                                      setState(() {});
-                                    }
-                                  },
-                                );
-                              },
-                              itemCount: availableList.length,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          const Text("Available", style: TextStyles.styleBold16Grey),
+                          const SizedBox(width: 24),
+                          Expanded(
+                            child: MyTextField(
+                              height: 35,
+                              prefixIcon: const Icon(Icons.search),
+                              controller: availableSearchC,
+                              showClearButton: true,
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                  // const SizedBox(width: 12),
-                  const VerticalDivider(width: 5, thickness: 5),
                   Expanded(
-                    flex: 2,
-                    child: Column(
+                      child: Container(
+                    height: 50,
+                    color: MyColors.evenRow,
+                  )),
+                  // const SizedBox(width: 12),
+                  Expanded(
+                    flex: 3,
+                    child: Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              const Text("Assigned", style: TextStyles.styleBold16Grey),
-                              const SizedBox(width: 24),
-                              Expanded(
-                                child: MyTextField(
-                                  height: 35,
-                                  prefixIcon: const Icon(Icons.search),
-                                  controller: assignedSearchC,
-                                  showClearButton: true,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        const SizedBox(width: 12),
+                        const Text("Assigned", style: TextStyles.styleBold16Grey),
+                        const SizedBox(width: 24),
                         Expanded(
-                          child: Container(
-                            color: Colors.white,
-                            child: ListView.builder(
-                              itemBuilder: (c, i) {
-                                TagContainer e = assignedList[i];
-                                return AssignedContainerWidget(
-                                    con: e,
-                                    index: i,
-                                    onDelete: () async {
-                                      final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, false);
-                                      if (a != null) {
-                                        assigned.removeWhere((element) => element.id == a.id);
-                                        available.add(a);
-                                        setState(() {});
-                                      }
-                                    });
-                              },
-                              itemCount: assignedList.length,
-                            ),
+                          child: MyTextField(
+                            height: 35,
+                            prefixIcon: const Icon(Icons.search),
+                            controller: assignedSearchC,
+                            showClearButton: true,
                           ),
                         ),
                       ],
@@ -201,90 +149,354 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                 ],
               ),
             ),
-
-            const Divider(height: 1),
-            Container(
-              // height: 200,
-              padding: const EdgeInsets.all(8.0),
+            Expanded(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("Destination", style: TextStyles.styleBold16Grey),
-                          Column(
-                            children: widget.destList
-                                .map((e) => MyRadioButton(
-                                value: dest == e,
-                                onChange: (v) {
-                                  if (v) {
-                                    dest = e;
-                                  }
-                                  setState(() {});
-                                },
-                                label: e!))
-                                .toList(),
-                          ),
-                        ],
-                      )),
-                  const VerticalDivider(thickness: 2),
-                  Expanded(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Allowed Dest List", style: TextStyles.styleBold16Grey),
-                        Column(
-                          children: widget.destList
-
-                              .map(
-                                (e) => MyCheckBoxButton(
-                                value: destList.contains(e),
-                                onChanged: (v) {
-                                  if (v) {
-                                    destList.add(e);
-                                  } else if (destList.length > 1) {
-                                    destList.remove(e);
-                                  }
-                                  setState(() {});
-                                },
-                                label: e),
-                          )
-                              .toList(),
-                        )
+                        // Padding(
+                        //   padding: const EdgeInsets.all(8.0),
+                        //   child: Row(
+                        //     children: [
+                        //       const Text("Available", style: TextStyles.styleBold16Grey),
+                        //       const SizedBox(width: 24),
+                        //       Expanded(
+                        //         child: MyTextField(
+                        //           height: 35,
+                        //           prefixIcon: const Icon(Icons.search),
+                        //           controller: availableSearchC,
+                        //           showClearButton: true,
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        Expanded(
+                            child: SfDataGrid(
+                                headerGridLinesVisibility: GridLinesVisibility.both,
+                                selectionMode: SelectionMode.none,
+                                horizontalScrollPhysics: const NeverScrollableScrollPhysics(),
+                                sortingGestureType: SortingGestureType.doubleTap,
+                                gridLinesVisibility: GridLinesVisibility.vertical,
+                                allowSorting: true,
+                                // shrinkWrapColumns: true,
+                                headerRowHeight: 35,
+                                source: AvailableContainerDataSource(
+                                  cons: availableList,
+                                  onAdd: (e) async {
+                                    // TagContainer e = availableList[i];
+                                    e = e.copyWith(destination: dest, destList: destList.join(","), classList: classes.map((e) => e.abbreviation).join(","));
+                                    final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, true);
+                                    if (a != null) {
+                                      available.removeWhere((element) => element.id == a.id);
+                                      assigned.insert(0, a);
+                                      setState(() {});
+                                    }
+                                  },
+                                ),
+                                columns: AvailableContainerDataTableColumn.values
+                                    .map(
+                                      (e) => GridColumn(
+                                          columnName: e.name,
+                                          label: Center(
+                                              child: Text(
+                                            e.label.capitalizeFirst!,
+                                            style: TextStyle(fontSize: 12),
+                                          )),
+                                          // columnWidthMode: ColumnWidthMode.fill
+                                          width: width * 0.8 * 0.2 * e.width),
+                                    )
+                                    .toList())
+                            // child: Container(
+                            //   child: ListView.builder(
+                            //     itemBuilder: (c, i) {
+                            //       TagContainer e = availableList[i];
+                            //       e = e.copyWith(destination: dest, destList: destList.join(","), classList: classes.map((e) => e.abbreviation).join(","));
+                            //       return AvailableContainerWidget(
+                            //         con: e,
+                            //         index: i,
+                            //         onAdd: () async {
+                            //           final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, true);
+                            //           if (a != null) {
+                            //             available.removeWhere((element) => element.id == a.id);
+                            //             assigned.add(a);
+                            //             setState(() {});
+                            //           }
+                            //         },
+                            //       );
+                            //     },
+                            //     itemCount: availableList.length,
+                            //   ),
+                            // ),
+                            ),
                       ],
                     ),
                   ),
-                  const VerticalDivider(thickness: 2),
+                  // const SizedBox(width: 12),
                   Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("Allowed Class List", style: TextStyles.styleBold16Grey),
-                          Column(
-                              children: BasicClass.systemSetting.classTypeList
-                                  .map(
-                                    (e) => MyCheckBoxButton(
-                                    value: classes.contains(e),
-                                    onChanged: (v) {
-                                      if (v) {
-                                        classes.add(e);
-                                      } else if (classes.length > 1) {
-                                        classes.remove(e);
-                                      }
-                                      setState(() {});
-                                    },
-                                    label: e.title),
-                              )
-                                  .toList())
-                        ],
+                      flex: 1,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                        decoration: const BoxDecoration(
+                            color: MyColors.evenRow,
+                            border: Border.symmetric(
+                              vertical: BorderSide(color: MyColors.lineColor, width: 2),
+                            )),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Padding(
+                            //   padding: const EdgeInsets.all(8.0),
+                            //   child: Row(
+                            //     children: [
+                            //       // const Text("Assigned", style: TextStyles.styleBold16Grey),
+                            //       const SizedBox(width: 24),
+                            //       SizedBox(height: 35,)
+                            //     ],
+                            //   ),
+                            // ),
+                            const Text("Destination"),
+                            const SizedBox(height: 12),
+                            GridView(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 3),
+                                children: widget.destList
+                                    .map(
+                                      (e) => Container(
+                                          width: double.infinity,
+
+                                          // height: 10,
+                                          child: MyRadioButton(
+                                              value: dest == e,
+                                              onChange: (v) {
+                                                if (v) {
+                                                  dest = e;
+                                                }
+                                                setState(() {});
+                                              },
+                                              label: e!)),
+                                    )
+                                    .toList()),
+                            const SizedBox(height: 24),
+                            const Text("Allowed Destinations"),
+                            const SizedBox(height: 12),
+                            GridView(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 3),
+                                children: widget.destList
+                                    .map(
+                                      (e) => Container(
+                                        width: double.infinity,
+
+                                        // height: 10,
+                                        child: MyCheckBoxButton(
+                                            value: destList.contains(e),
+                                            onChanged: (v) {
+                                              if (v) {
+                                                destList.add(e);
+                                              } else if (destList.length > 1) {
+                                                destList.remove(e);
+                                              }
+                                              setState(() {});
+                                            },
+                                            label: e),
+                                      ),
+                                    )
+                                    .toList()),
+                            const SizedBox(height: 24),
+                            const Text("Allowed Class Types"),
+                            const SizedBox(height: 12),
+                            GridView(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 3),
+                                children: BasicClass.systemSetting.classTypeList
+                                    .map(
+                                      (e) => SizedBox(
+                                        width: double.infinity,
+                                        child: MyCheckBoxButton(
+                                            value: classes.contains(e),
+                                            onChanged: (v) {
+                                              if (v) {
+                                                classes.add(e);
+                                              } else if (classes.length > 1) {
+                                                classes.remove(e);
+                                              }
+                                              setState(() {});
+                                            },
+                                            label: e.title),
+                                      ),
+                                    )
+                                    .toList()),
+                          ],
+                        ),
                       )),
+                  Expanded(
+                    flex: 3,
+                    child: SfDataGrid(
+                        horizontalScrollPhysics: const NeverScrollableScrollPhysics(),
+                        headerGridLinesVisibility: GridLinesVisibility.both,
+                        selectionMode: SelectionMode.none,
+                        columnSizer: ColumnSizer(),
+                        sortingGestureType: SortingGestureType.doubleTap,
+                        gridLinesVisibility: GridLinesVisibility.vertical,
+                        shrinkWrapColumns: true,
+                        allowSorting: true,
+                        headerRowHeight: 35,
+                        source: AssignedContainerDataSource(
+                          cons: assignedList,
+                          onDelete: (e) async {
+                            final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, false);
+                            if (a != null) {
+                              assigned.removeWhere((element) => element.id == a.id);
+                              available.add(a);
+                              setState(() {});
+                            }
+                          },
+                        ),
+                        columns: AssignedContainerDataTableColumn.values
+                            .map(
+                              (e) => GridColumn(
+                                  columnName: e.name,
+                                  label: Center(
+                                      child: Text(
+                                    e.label.capitalizeFirst!,
+                                    style: TextStyle(fontSize: 12),
+                                  )),
+                                  // columnWidthMode: ColumnWidthMode.fill
+                                  width: width * 0.8 * 0.6 * e.width),
+                            )
+                            .toList()),
+                    // Column(
+                    //   children: [
+                    //     Container(
+                    //       child: const Row(
+                    //         children: [
+                    //           ColumnHeaderWidget(flex: 6, label: "Name"),
+                    //           ColumnHeaderWidget(flex:2,label: "Position"),
+                    //           ColumnHeaderWidget(flex:2,label: "Tag Count"),
+                    //           ColumnHeaderWidget(flex: 6, label: "Dest List"),
+                    //           ColumnHeaderWidget(flex: 2, label: "Class Types"),
+                    //           ColumnHeaderWidget(label: ""),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     Expanded(
+                    //       child: Container(
+                    //         color: Colors.white,
+                    //         child: ListView.builder(
+                    //           itemBuilder: (c, i) {
+                    //             TagContainer e = assignedList[i];
+                    //             return AssignedContainerWidget(
+                    //                 con: e,
+                    //                 index: i,
+                    //                 onDelete: () async {
+                    //                   final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, false);
+                    //                   if (a != null) {
+                    //                     assigned.removeWhere((element) => element.id == a.id);
+                    //                     available.add(a);
+                    //                     setState(() {});
+                    //                   }
+                    //                 });
+                    //           },
+                    //           itemCount: assignedList.length,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                  ),
+                  const SizedBox(width: 12),
                 ],
               ),
             ),
+            const Divider(height: 1),
+            // Container(
+            //   // height: 200,
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Row(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       Expanded(
+            //           child: Column(
+            //         crossAxisAlignment: CrossAxisAlignment.start,
+            //         children: [
+            //           const Text("Destination", style: TextStyles.styleBold16Grey),
+            //           Column(
+            //             children: widget.destList
+            //                 .map((e) => MyRadioButton(
+            //                     value: dest == e,
+            //                     onChange: (v) {
+            //                       if (v) {
+            //                         dest = e;
+            //                       }
+            //                       setState(() {});
+            //                     },
+            //                     label: e!))
+            //                 .toList(),
+            //           ),
+            //         ],
+            //       )),
+            //       const VerticalDivider(thickness: 2),
+            //       Expanded(
+            //         child: Column(
+            //           crossAxisAlignment: CrossAxisAlignment.start,
+            //           children: [
+            //             const Text("Allowed Dest List", style: TextStyles.styleBold16Grey),
+            //             Column(
+            //               children: widget.destList
+            //                   .map(
+            //                     (e) => MyCheckBoxButton(
+            //                         value: destList.contains(e),
+            //                         onChanged: (v) {
+            //                           if (v) {
+            //                             destList.add(e);
+            //                           } else if (destList.length > 1) {
+            //                             destList.remove(e);
+            //                           }
+            //                           setState(() {});
+            //                         },
+            //                         label: e),
+            //                   )
+            //                   .toList(),
+            //             )
+            //           ],
+            //         ),
+            //       ),
+            //       const VerticalDivider(thickness: 2),
+            //       Expanded(
+            //           child: Column(
+            //         crossAxisAlignment: CrossAxisAlignment.start,
+            //         children: [
+            //           const Text("Allowed Class List", style: TextStyles.styleBold16Grey),
+            //           Column(
+            //               children: BasicClass.systemSetting.classTypeList
+            //                   .map(
+            //                     (e) => MyCheckBoxButton(
+            //                         value: classes.contains(e),
+            //                         onChanged: (v) {
+            //                           if (v) {
+            //                             classes.add(e);
+            //                           } else if (classes.length > 1) {
+            //                             classes.remove(e);
+            //                           }
+            //                           setState(() {});
+            //                         },
+            //                         label: e.title),
+            //                   )
+            //                   .toList())
+            //         ],
+            //       )),
+            //     ],
+            //   ),
+            // ),
             Padding(
-              padding: const EdgeInsets.only(left: 18, right: 18, bottom: 18),
+              padding: const EdgeInsets.only(left: 18, right: 18, bottom: 12, top: 12),
               child: Row(
                 children: [
                   const Spacer(),
@@ -326,7 +538,7 @@ class AvailableContainerWidget extends StatelessWidget {
         children: [
           con.getImg,
           const SizedBox(width: 8),
-          Text(con.code,style: TextStyles.styleBold16Black),
+          Text(con.code, style: TextStyles.styleBold16Black),
           const SizedBox(width: 8),
           const Spacer(),
           const ArtemisCardField(title: "", value: ''),
@@ -362,20 +574,59 @@ class AssignedContainerWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          con.getImg,
-          const SizedBox(width: 8),
-          Expanded(flex:2,child: Text(con.code,style: TextStyles.styleBold16Black)),
-          Expanded(child: ArtemisCardField(title: "Position", value:con.getPosition?.title??'-',valueColor: con.getPosition?.getColor??Colors.black87,)),
-          Expanded(child: ArtemisCardField(title: "Tag Count", value:con.tagCount.toString())),
-          Expanded(flex:3,child: ArtemisCardField(title: "Dest List", value:"(${con.destination??''}) ${con.destList??''}")),
-          Expanded(flex:2,child: ArtemisCardField(title: "Class Types", value:con.classList??'-')),
-          DotButton(
-            icon: Icons.delete,
-            color: Colors.red,
-            onPressed:(con.tagCount??0)>0?null: onDelete,
-          )
+          Expanded(
+              flex: 6,
+              child: Row(
+                children: [
+                  con.getImg,
+                  const SizedBox(width: 8),
+                  Text(con.code, style: TextStyles.styleBold16Black),
+                ],
+              )),
+          Expanded(
+              flex: 2,
+              child: ArtemisCardField(
+                title: "Position",
+                value: con.getPosition?.title ?? '-',
+                valueColor: con.getPosition?.getColor ?? Colors.black87,
+              )),
+          Expanded(flex: 2, child: Text(con.tagCount.toString())),
+          Expanded(flex: 6, child: Text("(${con.destination ?? ''}) ${con.destList ?? ''}")),
+          Expanded(flex: 2, child: Text(con.classList ?? '-')),
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                DotButton(
+                  icon: Icons.delete,
+                  color: Colors.red,
+                  onPressed: (con.tagCount ?? 0) > 0 ? null : onDelete,
+                )
+              ],
+            ),
+          ),
         ],
       ),
     );
+  }
+}
+
+class ColumnHeaderWidget extends StatelessWidget {
+  final int flex;
+  final String label;
+
+  const ColumnHeaderWidget({Key? key, this.flex = 1, required this.label}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+        flex: flex,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
+          child: Text(
+            label,
+            style: const TextStyle(fontWeight: FontWeight.w600, color: MyColors.black1, fontSize: 12),
+          ),
+        ));
   }
 }
