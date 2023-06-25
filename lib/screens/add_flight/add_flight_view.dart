@@ -98,7 +98,10 @@ class AddFlightFLNBWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 24),
-            MySwitchButton(value: false, onChange: (v){}, label: 'Is Test')
+            MySwitchButton(value: state.isTest, onChange: (v){
+              state.isTest =v;
+              state.setState();
+            }, label: 'Is Test')
           ],
         );
       },

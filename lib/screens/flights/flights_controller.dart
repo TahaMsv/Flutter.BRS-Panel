@@ -1,3 +1,4 @@
+import 'package:brs_panel/core/classes/user_class.dart';
 import 'package:brs_panel/core/navigation/route_names.dart';
 import 'package:brs_panel/core/util/pickers.dart';
 import 'package:brs_panel/initialize.dart';
@@ -51,11 +52,11 @@ class FlightsController extends MainController {
     nav.pushNamed(RouteNames.addFlight);
   }
 
-  void goDetails(Flight f) {
+  void goDetails(Flight f,{Position? selectedPos}) {
     final sfP = ref.read(selectedFlightProvider.notifier);
     sfP.state = f;
     final spP = ref.read(selectedPosInDetails.notifier);
-    spP.state = BasicClass.getPositionByID(f.positions.first.id)!;
+    spP.state = BasicClass.getPositionByID(selectedPos?.id??f.positions.first.id)!;
     nav.pushNamed(RouteNames.flightDetails, pathParameters: {"flightID": f.id.toString()});
   }
 

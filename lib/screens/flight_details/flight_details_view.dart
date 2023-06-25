@@ -274,7 +274,7 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
                   child: DataCellWidget(
                       child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: Text('Order', style: TextStyles.tagListHeader),
+                    child: Text('Weight', style: TextStyles.tagListHeader),
                   ))),
             ],
           ),
@@ -686,7 +686,7 @@ class TagWidget extends StatelessWidget {
               child: DataCellWidget(
                   child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: Text(tag.tagPositions.first.indexInPosition.toString()),
+                child: Text(tag.weight),
               ))),
         ],
       ),

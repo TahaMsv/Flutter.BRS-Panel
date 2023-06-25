@@ -162,6 +162,8 @@ class FlightTag {
 
   int? get getContainerID => tagPositions.first.container?.id;
 
+  String get weight => dcsInfo==null?'':'${dcsInfo!.weight} KG';
+
   Map<String, dynamic> toJson() => {
         "TagID": tagId,
         "TagNumber": tagNumber,

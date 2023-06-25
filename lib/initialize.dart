@@ -158,22 +158,26 @@ initNetworkManager([String? baseUrl]) {
 
 Future<void> loadConfigFile() async {
   String? directory = (await getApplicationDocumentsDirectory()).path;
-  final File file = File('$directory/config/config.json');
-  if (file.existsSync() && false) {
-    final jsonStr = file.readAsStringSync();
-    try {
-      Config config = Config.fromJson(jsonDecode(jsonStr));
-      BasicClass.setConfig(config);
-      initNetworkManager(config.baseURL);
-      log("Config read from config.json");
-    } catch (e) {
-      await file.create(recursive: true);
-      file.writeAsStringSync(json.encode(Config.def().toJson()), mode: FileMode.write);
-      BasicClass.setConfig(Config.def());
-      initNetworkManager(Config.def().baseURL);
-      log("Config read from config.default with exception $e");
-    }
+  String? confPath = '$directory/config/config.json';
+  print(confPath);
+  // final File file = File('$directory/config/config.json');
+  // await file.delete();
+  if (File('$directory/config/config.json').existsSync()) {
+    // final jsonStr = file.readAsStringSync();
+    // try {
+    //   Config config = Config.fromJson(jsonDecode(jsonStr));
+    //   BasicClass.setConfig(config);
+    //   initNetworkManager(config.baseURL);
+    //   log("Config read from config.json");
+    // } catch (e) {
+    //   await file.create(recursive: true);
+    //   file.writeAsStringSync(json.encode(Config.def().toJson()), mode: FileMode.write);
+    //   BasicClass.setConfig(Config.def());
+    //   initNetworkManager(Config.def().baseURL);
+    //   log("Config read from config.default with exception $e");
+    // }
   } else {
+    final File file = File('$directory/config/config.json');
     await file.create(recursive: true);
     file.writeAsStringSync(json.encode(Config.def().toJson()));
     BasicClass.setConfig(Config.def());

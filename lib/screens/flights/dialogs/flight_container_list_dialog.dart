@@ -248,16 +248,6 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Padding(
-                            //   padding: const EdgeInsets.all(8.0),
-                            //   child: Row(
-                            //     children: [
-                            //       // const Text("Assigned", style: TextStyles.styleBold16Grey),
-                            //       const SizedBox(width: 24),
-                            //       SizedBox(height: 35,)
-                            //     ],
-                            //   ),
-                            // ),
                             const Text("Destination"),
                             const SizedBox(height: 12),
                             GridView(

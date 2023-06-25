@@ -18,7 +18,6 @@ enum FlightDataTableColumn {
   time,
   aircraft,
   register,
-
   actions,
 }
 
@@ -59,7 +58,6 @@ class FlightDataSource extends DataGridSource {
               DataGridCell<String>(columnName: FlightDataTableColumn.time.name, value: e.std),
               DataGridCell<int>(columnName: FlightDataTableColumn.aircraft.name, value: e.getAircraft?.id),
               DataGridCell<String>(columnName: FlightDataTableColumn.register.name, value: e.getAircraft?.registration),
-
               DataGridCell<String>(columnName: FlightDataTableColumn.actions.name, value: ''),
             ],
           ),
@@ -77,112 +75,115 @@ class FlightDataSource extends DataGridSource {
     final int index = rows.indexOf(row);
     final Flight f = _dataList[index];
     return DataGridRowAdapter(
-      color: index.isEven?MyColors.evenRow:MyColors.oddRow,
+        color: index.isEven ? MyColors.evenRow : MyColors.oddRow,
         cells: row.getCells().map<Widget>((dataGridCell) {
-      if (dataGridCell.columnName == FlightDataTableColumn.flight.name) {
-        return Row(
-          children: [
-            const SizedBox(width: 12),
-            AirlineLogo(
-              f.al,
-              key: Key(f.al),
-            ),
-            const SizedBox(width: 8),
-            Expanded(child: Text("$f")),
-            SizedBox(
-              height: 15,
-              width: 30,
-              child: Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.zero,
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: f.isTest ? MyColors.red : Colors.transparent),
-                child: Text(
-                  f.isTest ? "Test" : "",
-                  style: const TextStyle(fontSize: 10, color: Colors.white),
+          if (dataGridCell.columnName == FlightDataTableColumn.flight.name) {
+            return Row(
+              children: [
+                const SizedBox(width: 12),
+                AirlineLogo(
+                  f.al,
+                  key: Key(f.al),
                 ),
+                const SizedBox(width: 8),
+                Expanded(child: Text("$f")),
+                SizedBox(
+                  height: 15,
+                  width: 30,
+                  child: Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.zero,
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: f.isTest ? MyColors.red : Colors.transparent),
+                    child: Text(
+                      f.isTest ? "Test" : "",
+                      style: const TextStyle(fontSize: 10, color: Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+              ],
+            );
+          }
+          if (dataGridCell.columnName == FlightDataTableColumn.route.name) {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              alignment: Alignment.centerLeft,
+              child: Text('${f.from}-${f.to}'),
+            );
+          }
+          if (dataGridCell.columnName == FlightDataTableColumn.time.name) {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              alignment: Alignment.centerLeft,
+              child: Text(f.std),
+            );
+          }
+          if (dataGridCell.columnName == FlightDataTableColumn.aircraft.name) {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              alignment: Alignment.centerLeft,
+              child: Text("${f.getAircraft?.id ?? '-'}"),
+            );
+          }
+          if (dataGridCell.columnName == FlightDataTableColumn.register.name) {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              alignment: Alignment.centerLeft,
+              child: Text(f.getAircraft?.registration ?? '-'),
+            );
+          }
+          if (dataGridCell.columnName == FlightDataTableColumn.status.name) {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              // alignment: Alignment.center,
+              child: Row(
+                children: [
+                  ...BasicClass.systemSetting.positions.map((p) {
+                    bool isActive = f.positions.map((e) => e.id).contains(p.id);
+                    if(f.flightType==0 && p.id>3) return SizedBox();
+                    return InkWell(
+                      onTap: (){
+                        flightsController.goDetails(f,selectedPos: p);
+                      },
+                      child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: TagCountWidget(
+                            position: p,
+                            color: p.getColor,
+                            count: isActive ? f.positions.firstWhere((element) => element.id == p.id).tagCount : 0,
+                          )),
+                    );
+                  }).toList(),
+                ],
               ),
-            ),
-            const SizedBox(width: 12),
-          ],
-        );
-      }
-      if (dataGridCell.columnName == FlightDataTableColumn.route.name) {
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          alignment: Alignment.centerLeft,
-          child: Text('${f.from}-${f.to}'),
-        );
-      }
-      if (dataGridCell.columnName == FlightDataTableColumn.time.name) {
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          alignment: Alignment.centerLeft,
-          child: Text(f.std),
-        );
-      }
-      if (dataGridCell.columnName == FlightDataTableColumn.aircraft.name) {
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          alignment: Alignment.centerLeft,
-          child: Text("${f.getAircraft?.id??'-'}"),
-        );
-      }
-      if (dataGridCell.columnName == FlightDataTableColumn.register.name) {
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          alignment: Alignment.centerLeft,
-          child: Text(f.getAircraft?.registration??'-'),
-        );
-      }
-      if (dataGridCell.columnName == FlightDataTableColumn.status.name) {
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          // alignment: Alignment.center,
-          child: Row(
-            children: [
-              ...BasicClass.systemSetting.positions.map((p) {
-                bool isActive = f.positions.map((e) => e.id).contains(p.id);
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: TagCountWidget(position:p,color: p.getColor,count: isActive?f.positions.firstWhere((element) => element.id==p.id).tagCount:0,)
-              );
-              }).toList(),
-
-              // ...f.positions.map((p) {
-              //   final pp = BasicClass.getPositionByID(p.id);
-              //   return Padding(
-              //       padding: const EdgeInsets.symmetric(horizontal: 8),
-              //       child: TagCountWidget(position:p,color: pp!.getColor,)
-              //     );
-              // })
-            ],
-          ),
-        );
-      }
-      if (dataGridCell.columnName == FlightDataTableColumn.actions.name) {
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              MyButton(
-                height: 30,
-                // fontSize: 12,
-                label: "Details",fade: true,onPressed: (){
-                flightsController.goDetails(f);
-              },),
-              const SizedBox(width: 12),
-              DotButton(
-                icon: Icons.more_vert,
-                onPressed: () async{
-                  await flightsController.editContainers(f);
-                },
-              )
-            ],
-          ),
-        );
-      }
-      return Container();
-    }).toList());
+            );
+          }
+          if (dataGridCell.columnName == FlightDataTableColumn.actions.name) {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  MyButton(
+                    height: 30,
+                    label: "Details",
+                    fade: true,
+                    onPressed: () {
+                      flightsController.goDetails(f);
+                    },
+                  ),
+                  const SizedBox(width: 12),
+                  DotButton(
+                    icon: Icons.more_vert,
+                    onPressed: () async {
+                      await flightsController.editContainers(f);
+                    },
+                  )
+                ],
+              ),
+            );
+          }
+          return Container();
+        }).toList());
   }
 }

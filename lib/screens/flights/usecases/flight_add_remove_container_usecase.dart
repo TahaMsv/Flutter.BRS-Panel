@@ -62,7 +62,8 @@ class FlightAddRemoveContainerResponse extends Response {
     factory FlightAddRemoveContainerResponse.fromResponse(Response res) => FlightAddRemoveContainerResponse(
         status: res.status,
         message: res.message,
-        container:TagContainer.fromJson(res.body),
+
+        container:TagContainer.fromJson(res.body["TagContainerList"]),
       );
 
 }

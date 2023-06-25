@@ -35,6 +35,7 @@ class AddFlightRequest extends Request {
   final Aircraft? aircraft;
   final int barcodeLength;
   final int flightTypeID;
+  final bool isTest;
 
   AddFlightRequest({
     required this.flnb,
@@ -49,6 +50,7 @@ class AddFlightRequest extends Request {
     required this.al,
     required this.barcodeLength,
     required this.flightTypeID,
+    required this.isTest,
 });
 
   @override
@@ -69,6 +71,7 @@ class AddFlightRequest extends Request {
         "BarcodeLength": barcodeLength,
         "FlightType": flightTypeID,
         "AircraftID":aircraft?.id,
+        "IsTest":isTest,
       }
     }
   };
