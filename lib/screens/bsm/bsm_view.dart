@@ -112,7 +112,7 @@ class BsmListWidget extends ConsumerWidget {
     final BsmState state = ref.watch(bsmProvider);
     final bsmList = ref.watch(filteredBsmListProvider);
     return Expanded(
-      child: 
+      child:
       state.loadingBSM?
           const SpinKitCircle(size: 50,color: MyColors.mainColor,):
       SfDataGrid(

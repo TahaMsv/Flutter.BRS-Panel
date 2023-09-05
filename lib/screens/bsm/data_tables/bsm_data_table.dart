@@ -115,7 +115,7 @@ class BsmDataSource extends DataGridSource {
                     .map((e) => BarcodeWidget(
                       height: 70,
                       margin: EdgeInsets.only(bottom: 48,top: 12),
-                      barcode: Barcode.codabar(),
+                      barcode: Barcode.itf(),
                       data: e,
                     ))
                     .toList(),
