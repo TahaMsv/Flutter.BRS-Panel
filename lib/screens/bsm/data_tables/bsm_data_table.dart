@@ -33,6 +33,18 @@ extension BsmDataTableColumnDetails on BsmDataTableColumn {
         return 0.2;
     }
   }
+  String get label {
+    switch (this) {
+      case BsmDataTableColumn.id:
+        return "Mesasge ID";
+      case BsmDataTableColumn.msg:
+        return "BSM Message";
+      case BsmDataTableColumn.response:
+        return "BSM Response";
+      case BsmDataTableColumn.tagNumbers:
+        return "#Tags";
+    }
+  }
 }
 
 class BsmDataSource extends DataGridSource {
@@ -111,7 +123,7 @@ class BsmDataSource extends DataGridSource {
               alignment: Alignment.center,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: bsm.getTags
+                children: bsm.getTags.where((element) => element.isNotEmpty)
                     .map((e) => BarcodeWidget(
                       height: 70,
                       margin: EdgeInsets.only(bottom: 48,top: 12),
