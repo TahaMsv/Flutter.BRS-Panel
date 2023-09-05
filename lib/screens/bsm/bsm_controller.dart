@@ -45,6 +45,7 @@ class BsmController extends MainController {
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => addBsm(msg)), (r) {
       bsmResult = r.bsmResult;
       final bsmList = ref.read(bsmListProvider.notifier);
+      bsmState.newBsmC.clear();
       bsmList.insertBsm(0,r.bsmResult);
     });
     return bsmResult;

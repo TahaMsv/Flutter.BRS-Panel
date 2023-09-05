@@ -1,11 +1,14 @@
 import 'package:brs_panel/core/constants/ui.dart';
 import 'package:brs_panel/initialize.dart';
+import 'package:brs_panel/screens/bsm/data_tables/bsm_data_table.dart';
 import 'package:brs_panel/widgets/DotButton.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
 import 'package:brs_panel/widgets/MyButton.dart';
 import 'package:brs_panel/widgets/MyTextField.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../core/classes/bsm_result_class.dart';
 import '../../core/util/basic_class.dart';
 import '../../widgets/LoadingListView.dart';
@@ -76,7 +79,7 @@ class BsmPanelWidget extends ConsumerWidget {
               const SizedBox(width: 12),
               MyButton(
                 label: "Submit",
-                onPressed: () async{
+                onPressed: () async {
                   await myBsmController.addBsm(state.newBsmC.text);
                 },
               ),
@@ -90,18 +93,6 @@ class BsmPanelWidget extends ConsumerWidget {
               )
             ],
           ),
-          Divider(height: 12,thickness: 4,),
-          Container(
-
-            child: const Row(
-              children: [
-                Expanded(flex: 1, child: Text("Message ID",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: MyColors.mainColor),)),
-                Expanded(flex: 8, child: Text("BSM Message",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: MyColors.mainColor))),
-                Expanded(flex: 3, child: Text("Response",style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold,color: MyColors.mainColor))),
-              ],
-            ),
-          ),
-          Divider(height: 12,thickness: 4,),
         ],
       ),
     );
@@ -117,15 +108,30 @@ class BsmListWidget extends ConsumerWidget {
     final BsmState state = ref.watch(bsmProvider);
     final bsmList = ref.watch(filteredBsmListProvider);
     return Expanded(
-      child: LoadingListView(
-          loading: state.loadingBSM,
-          child: ListView.builder(
-            itemBuilder: (c, i) => BsmResultWidget(
-              index: i,
-              bsmResult: bsmList[i],
-            ),
-            itemCount: bsmList.length,
-          )),
+      child: SfDataGrid(
+          onQueryRowHeight: (details) {
+            return details.getIntrinsicRowHeight(details.rowIndex);
+          },
+          headerGridLinesVisibility: GridLinesVisibility.both,
+          selectionMode: SelectionMode.none,
+          shrinkWrapColumns: true,
+          // shrinkWrapRows: true,
+          // shrinkWrapColumns: false,
+          sortingGestureType: SortingGestureType.doubleTap,
+          gridLinesVisibility: GridLinesVisibility.vertical,
+          allowSorting: true,
+          rowHeight: 70,
+          headerRowHeight: 35,
+          source: BsmDataSource(bsm: bsmList),
+          columns: BsmDataTableColumn.values
+              .map(
+                (e) => GridColumn(
+                  columnName: e.name,
+                  label: Center(child: Text(e.name.capitalizeFirst!)),
+                  width: e.width * width,
+                ),
+              )
+              .toList()),
     );
   }
 }
