@@ -1,4 +1,9 @@
+import 'dart:io';
+
+
+import '../../../core/abstracts/exception_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
+import '../../../core/classes/flight_class.dart';
 import '../../../core/platform/network_manager.dart';
 import '../interfaces/add_flight_data_source_interface.dart';
 import '../usecases/add_flight_usecase.dart';
@@ -13,6 +18,10 @@ class AddFlightRemoteDataSource implements AddFlightDataSourceInterface {
   @override
   Future<AddFlightResponse> addFlight({required AddFlightRequest request}) async {
     Response res = await networkManager.post(request);
-    return AddFlightResponse.fromResponse(res);
+    try {
+      return AddFlightResponse.fromResponse(res);
+    } catch (e) {
+      throw ParseException(message: e.toString(), trace: StackTrace.fromString(e.toString()));
+    }
   }
 }

@@ -63,7 +63,7 @@ class FlightAddRemoveContainerResponse extends Response {
         status: res.status,
         message: res.message,
 
-        container:TagContainer.fromJson(res.body["TagContainerList"]),
+        container:TagContainer.fromJson(res.body),
       );
 
 }
@@ -72,7 +72,7 @@ class FlightAddRemoveContainer extends Response {
   final List<TagContainer> containers;
 
   FlightAddRemoveContainer({required int status, required String message, required this.containers})
-      : super(status: status, message: message, body:{"TagContainerList": containers.map((e)=>e.toJson()).toList()});
+      : super(status: status, message: message, body: containers.map((e)=>e.toJson()).toList());
 
   factory FlightAddRemoveContainer.fromResponse(Response res) => FlightAddRemoveContainer(
         status: res.status,

@@ -14,6 +14,7 @@ enum RouteNames {
   board,
   airlineUlds,
   airportCarts,
+  bsm,
 
 }
 
@@ -48,6 +49,7 @@ extension RouteNamesDetails on RouteNames {
       RouteNames.airlines,
       RouteNames.airports,
       RouteNames.aircrafts,
+      RouteNames.bsm,
       // RouteNames.users,
     ].contains(this);
   }

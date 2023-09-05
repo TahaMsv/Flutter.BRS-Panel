@@ -3,6 +3,7 @@ import 'package:brs_panel/screens/airline_ulds/airline_ulds_view.dart';
 import 'package:brs_panel/screens/airlines/airlines_view.dart';
 import 'package:brs_panel/screens/airport_carts/airport_carts_view.dart';
 import 'package:brs_panel/screens/airports/airports_view.dart';
+import 'package:brs_panel/screens/bsm/bsm_view.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_view.dart';
 import 'package:brs_panel/screens/flights/flights_view.dart';
 import 'package:flutter/material.dart';
@@ -151,6 +152,15 @@ class RouterNotifier extends AutoDisposeAsyncNotifier<void> implements Listenabl
 
       pageBuilder: (context, state) {
         return NoTransitionPage<void>(key: state.pageKey, child: const AircraftsView());
+      },
+    ),
+    MyRoute(
+      // controller: RouteNames.home.controller,
+      name: RouteNames.bsm.name,
+      path: RouteNames.bsm.path,
+
+      pageBuilder: (context, state) {
+        return NoTransitionPage<void>(key: state.pageKey, child: const BsmView());
       },
     ),
       ];

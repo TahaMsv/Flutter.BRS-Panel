@@ -9,6 +9,7 @@ import 'package:brs_panel/screens/aircrafts/aircrafts_controller.dart';
 import 'package:brs_panel/screens/airlines/airlines_controller.dart';
 import 'package:brs_panel/screens/airport_carts/airport_carts_controller.dart';
 import 'package:brs_panel/screens/airports/airports_controller.dart';
+import 'package:brs_panel/screens/bsm/bsm_controller.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_controller.dart';
 import 'package:brs_panel/screens/flights/flights_controller.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -72,6 +73,7 @@ initControllers() {
   AircraftsController aircraftsController = AircraftsController();
   AirlineUldsController airlineUldsController = AirlineUldsController();
   AirportCartsController airportCartsController = AirportCartsController();
+  BsmController bsmController = BsmController();
 
   getIt.registerSingleton(loginController);
   getIt.registerSingleton(homeController);
@@ -83,6 +85,7 @@ initControllers() {
   getIt.registerSingleton(aircraftsController);
   getIt.registerSingleton(airlineUldsController);
   getIt.registerSingleton(airportCartsController);
+  getIt.registerSingleton(bsmController);
 
   ns.registerControllers({
     RouteNames.login: loginController,
@@ -94,7 +97,8 @@ initControllers() {
     RouteNames.airports: airportsController,
     RouteNames.aircrafts: aircraftsController,
     RouteNames.airlineUlds: airlineUldsController,
-    RouteNames.airlineUlds: airportCartsController,
+    RouteNames.airportCarts: airportCartsController,
+    RouteNames.bsm: bsmController,
   });
 }
 
@@ -157,6 +161,7 @@ initNetworkManager([String? baseUrl]) {
 }
 
 Future<void> loadConfigFile() async {
+  return ;
   String? directory = (await getApplicationDocumentsDirectory()).path;
   String? confPath = '$directory/config/config.json';
   print(confPath);

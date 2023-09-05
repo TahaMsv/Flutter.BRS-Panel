@@ -8,8 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 final addFlightProvider = ChangeNotifierProvider.autoDispose<AddFlightState>((_) => AddFlightState());
 
 class AddFlightState extends ChangeNotifier {
-
-
   void setState() => notifyListeners();
 
   DateTime fromDate = DateTime.now();
@@ -24,6 +22,7 @@ class AddFlightState extends ChangeNotifier {
   Aircraft? aircraft;
   int? barcodeLength;
   int flightTypeID = 0;
+  bool isTest = false;
 
   AddFlightRequest createAddFlightRequest() => AddFlightRequest(
         flnb: flnbC.text,
@@ -38,9 +37,11 @@ class AddFlightState extends ChangeNotifier {
         al: al!,
         barcodeLength: 10,
         flightTypeID: flightTypeID,
+        isTest: isTest,
       );
 
- bool get validateAddFlight => std==null ||from ==null || to==null ||al==null;
+  bool get validateAddFlight => std == null || from == null || to == null || al == null;
+
   ///bool loading = false;
 }
 
