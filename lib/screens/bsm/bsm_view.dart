@@ -6,6 +6,7 @@ import 'package:brs_panel/widgets/MyAppBar.dart';
 import 'package:brs_panel/widgets/MyButton.dart';
 import 'package:brs_panel/widgets/MyTextField.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -111,7 +112,10 @@ class BsmListWidget extends ConsumerWidget {
     final BsmState state = ref.watch(bsmProvider);
     final bsmList = ref.watch(filteredBsmListProvider);
     return Expanded(
-      child: SfDataGrid(
+      child: 
+      state.loadingBSM?
+          const SpinKitCircle(size: 50,color: MyColors.mainColor,):
+      SfDataGrid(
           onQueryRowHeight: (details) {
             return details.getIntrinsicRowHeight(details.rowIndex);
           },
