@@ -1,7 +1,13 @@
+import 'package:barcode/barcode.dart';
+import 'package:barcode_widget/barcode_widget.dart';
+import 'package:brs_panel/core/abstracts/success_abs.dart';
 import 'package:brs_panel/core/classes/bsm_result_class.dart';
+import 'package:brs_panel/core/navigation/navigation_service.dart';
 import 'package:brs_panel/core/util/basic_class.dart';
+import 'package:brs_panel/core/util/handlers/success_handler.dart';
 import 'package:brs_panel/widgets/TagCountWidget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../../../core/classes/flight_class.dart';
@@ -12,11 +18,7 @@ import '../../../widgets/DotButton.dart';
 import '../../../widgets/MyButton.dart';
 import '../bsm_controller.dart';
 
-enum BsmDataTableColumn {
-  id,
-  msg,
-  response,
-}
+enum BsmDataTableColumn { id, msg, response, tagNumbers }
 
 extension BsmDataTableColumnDetails on BsmDataTableColumn {
   double get width {
@@ -24,9 +26,11 @@ extension BsmDataTableColumnDetails on BsmDataTableColumn {
       case BsmDataTableColumn.id:
         return 0.1;
       case BsmDataTableColumn.msg:
-        return 0.6;
+        return 0.5;
       case BsmDataTableColumn.response:
-        return 0.3;
+        return 0.2;
+      case BsmDataTableColumn.tagNumbers:
+        return 0.2;
     }
   }
 }
@@ -44,6 +48,7 @@ class BsmDataSource extends DataGridSource {
               DataGridCell<int>(columnName: BsmDataTableColumn.id.name, value: e.messageId),
               DataGridCell<String>(columnName: BsmDataTableColumn.msg.name, value: e.messageBody),
               DataGridCell<String>(columnName: BsmDataTableColumn.response.name, value: e.bsmResultText),
+              DataGridCell<String>(columnName: BsmDataTableColumn.tagNumbers.name, value: e.tagListStr),
             ],
           ),
         )
@@ -64,17 +69,33 @@ class BsmDataSource extends DataGridSource {
         cells: row.getCells().map<Widget>((dataGridCell) {
           if (dataGridCell.columnName == BsmDataTableColumn.id.name) {
             return Container(
-              padding: EdgeInsets.symmetric(horizontal: 12),
-              child: Row(
-                children: [Text(bsm.messageId.toString())],
-              ),
+              alignment: Alignment.center,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Text(bsm.messageId.toString()),
             );
           }
           if (dataGridCell.columnName == BsmDataTableColumn.msg.name) {
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              alignment: Alignment.centerLeft,
-              child: Text(bsm.messageBody),
+            return Stack(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  alignment: Alignment.centerLeft,
+                  child: Text(bsm.messageBody),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  alignment: Alignment.bottomRight,
+                  child: DotButton(
+                    icon: Icons.file_copy,
+                    onPressed: () async {
+                      await Clipboard.setData(ClipboardData(text: bsm.messageBody));
+                      NavigationService ns = getIt<NavigationService>();
+                      ns.snackbar(const Text("Message Copied to Clipboard"));
+                      // SuccessHandler.handle(ServerSuccess(code: 1, msg: "Message Copied to Clipboard"));
+                    },
+                  ),
+                ),
+              ],
             );
           }
           if (dataGridCell.columnName == BsmDataTableColumn.response.name) {
@@ -82,6 +103,23 @@ class BsmDataSource extends DataGridSource {
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.centerLeft,
               child: Text(bsm.bsmResultText),
+            );
+          }
+          if (dataGridCell.columnName == BsmDataTableColumn.tagNumbers.name) {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: bsm.getTags
+                    .map((e) => BarcodeWidget(
+                      height: 70,
+                      margin: EdgeInsets.only(bottom: 48,top: 12),
+                      barcode: Barcode.codabar(),
+                      data: e,
+                    ))
+                    .toList(),
+              ),
             );
           }
           return Container();

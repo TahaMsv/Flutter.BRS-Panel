@@ -49,6 +49,8 @@ dependencies:
   sticky_and_expandable_list: ^1.1.2
   dotted_border: ^2.0.0+3
   window_manager: ^0.3.4
+#  barcode: ^2.2.4
+  barcode_widget: ^2.0.4
 
 dev_dependencies:
   flutter_test:

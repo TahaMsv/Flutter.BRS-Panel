@@ -74,6 +74,9 @@ class BsmPanelWidget extends ConsumerWidget {
                   maxLines: null,
                   placeholder: "BSM Message",
                   controller: state.newBsmC,
+                  suffixIcon: DotButton(icon: Icons.delete,onPressed: (){
+                    state.newBsmC.clear();
+                  },),
                 ),
               ),
               const SizedBox(width: 12),
