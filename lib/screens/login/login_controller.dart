@@ -42,7 +42,7 @@ class LoginController extends MainController {
       al: al,
       cachedUser: null,
     );
-
+    print("Aa");
     final fOrR = await loginUsecase(request: loginRequest);
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => login()), (r) {
       user = r.user ?? User.empty();

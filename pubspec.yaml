@@ -37,7 +37,7 @@ dependencies:
   flutter_spinkit: ^5.2.0
   objectbox: ^1.6.2
   objectbox_flutter_libs: ^1.6.2
-  artemis_utils: ^0.0.9
+  artemis_utils: ^0.0.10
   flutter_vector_icons: ^2.0.0
   google_fonts: ^4.0.4
   hive: ^2.2.3

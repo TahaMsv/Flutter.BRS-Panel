@@ -13,6 +13,7 @@ import 'package:brs_panel/screens/bsm/bsm_controller.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_controller.dart';
 import 'package:brs_panel/screens/flights/flights_controller.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -35,8 +36,9 @@ import 'screens/login/login_controller.dart';
 final getIt = GetIt.instance;
 
 Future<void> init() async {
-
-  WidgetsFlutterBinding.ensureInitialized();
+  if(!kIsWeb) {
+    WidgetsFlutterBinding.ensureInitialized();
+  }
   initFullScreen();
   await initDataBase();
   await loadConfigFile();
@@ -103,11 +105,14 @@ initControllers() {
 }
 
 void initFullScreen() async {
-  await windowManager.ensureInitialized();
-  windowManager.waitUntilReadyToShow().then((_) async {
-    await windowManager.maximize();
-  });
+  if(!kIsWeb &&(Platform.isMacOS || Platform.isWindows)) {
+    await windowManager.ensureInitialized();
+    windowManager.waitUntilReadyToShow().then((_) async {
+      await windowManager.maximize();
+    });
+  }
 }
+
 
 initNetworkManager([String? baseUrl]) {
   String base = baseUrl ?? BasicClass.config.baseURL;
