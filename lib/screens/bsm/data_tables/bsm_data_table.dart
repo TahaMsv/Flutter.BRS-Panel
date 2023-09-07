@@ -126,6 +126,7 @@ class BsmDataSource extends DataGridSource {
                 children: bsm.getTags.where((element) => element.isNotEmpty)
                     .map((e) => BarcodeWidget(
                       height: 70,
+                      width: 150,
                       margin: EdgeInsets.only(bottom: 48,top: 12),
                       barcode: Barcode.itf(),
                       data: e,

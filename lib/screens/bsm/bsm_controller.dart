@@ -19,9 +19,10 @@ class BsmController extends MainController {
   }
 
   Future<List<BsmResult>> bsmList(DateTime dt) async {
+    final bsmDate = ref.read(bsmDateProvider);
     List<BsmResult> bsms = [];
     BsmListUseCase bsmListUsecase = BsmListUseCase();
-    BsmListRequest bsmListRequest = BsmListRequest(date: DateTime.now());
+    BsmListRequest bsmListRequest = BsmListRequest(date: bsmDate);
     bsmState.loadingBSM = true;
     bsmState.setState();
     final fOrR = await bsmListUsecase(request: bsmListRequest);

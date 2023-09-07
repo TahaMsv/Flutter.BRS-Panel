@@ -1,9 +1,11 @@
+import 'package:artemis_utils/artemis_utils.dart';
 import 'package:brs_panel/core/constants/ui.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/screens/bsm/data_tables/bsm_data_table.dart';
 import 'package:brs_panel/widgets/DotButton.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
 import 'package:brs_panel/widgets/MyButton.dart';
+import 'package:brs_panel/widgets/MyButtonPanel.dart';
 import 'package:brs_panel/widgets/MyTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -27,6 +29,7 @@ class BsmView extends StatelessWidget {
         appBar: MyAppBar(),
         body: Column(
           children: [
+
             // TextButton(
             //     onPressed: () {
             //       myBsmController.bsmList(DateTime.now());
@@ -64,6 +67,7 @@ class BsmPanelWidget extends ConsumerWidget {
     final double width = MediaQuery.of(context).size.width;
     final BsmState state = ref.watch(bsmProvider);
     final bsmList = ref.watch(filteredBsmListProvider);
+    final bsmDate = ref.watch(bsmDateProvider);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       child: Column(
@@ -71,6 +75,7 @@ class BsmPanelWidget extends ConsumerWidget {
           Row(
             children: [
               Expanded(
+                flex: 4,
                 child: MyTextField(
                   maxLines: null,
                   placeholder: "BSM Message",
@@ -86,6 +91,24 @@ class BsmPanelWidget extends ConsumerWidget {
                 onPressed: () async {
                   await myBsmController.addBsm(state.newBsmC.text);
                 },
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                flex: 1,
+                child: MyButtonPanel(
+                  leftAction: (){
+                    ref.read(bsmDateProvider.notifier).update((state) => state.add(const Duration(days: -1)));
+                    myBsmController.bsmList(bsmDate);
+                  },
+                  rightAction: (){
+                    ref.read(bsmDateProvider.notifier).update((state) => state.add(const Duration(days: 1)));
+                    myBsmController.bsmList(bsmDate);
+                  },
+                  centerAction: (){},
+                  centerWidget: Text(bsmDate.format_ddMMMEEE),
+                  leftWidget: const Icon(Icons.chevron_left),
+                  rightWidget: const Icon(Icons.chevron_right),
+                ),
               ),
               const SizedBox(width: 12),
               DotButton(
