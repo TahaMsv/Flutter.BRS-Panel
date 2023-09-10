@@ -1,5 +1,6 @@
 import 'package:brs_panel/core/constants/assest.dart';
 import 'package:brs_panel/initialize.dart';
+import 'package:brs_panel/widgets/DotButton.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -18,8 +19,24 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            // myLoginController.getServers();
+          },
+          child: DotButton(
+            size: 45,
+            icon: Icons.device_hub,
+            color: Colors.white,
+            onPressed: ()async{
+              await myLoginController.getServers();
+            },
+          ),
+        ),
         body: Container(
-          decoration: BoxDecoration(image: DecorationImage(image: Image.asset(AssetImages.loginBG).image, fit: BoxFit.fill),),
+          decoration: BoxDecoration(
+            image: DecorationImage(image: Image.asset(AssetImages.loginBG).image, fit: BoxFit.fill),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -60,7 +77,6 @@ class LoginPanel extends ConsumerWidget {
                 MyTextField(
                   placeholder: "Username",
                   controller: state.usernameC,
-
                 ),
                 const SizedBox(height: 12),
                 MyTextField(

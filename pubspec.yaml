@@ -28,12 +28,12 @@ dependencies:
   archive: ^3.3.7
   bot_toast: ^4.0.3
   artemis_ui_kit: ^0.0.14
-  network_manager: ^0.1.14
+  network_manager: ^0.1.18
   shared_preferences: ^2.1.1
   intl: ^0.18.1
   url_launcher: ^6.1.11
   path_provider: ^2.0.15
-  dio: ^4.0.6
+  dio: ^5.3.0
   flutter_spinkit: ^5.2.0
   objectbox: ^1.6.2
   objectbox_flutter_libs: ^1.6.2

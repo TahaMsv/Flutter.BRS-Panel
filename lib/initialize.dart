@@ -118,9 +118,9 @@ initNetworkManager([String? baseUrl]) {
   String base = baseUrl ?? BasicClass.config.baseURL;
   // log("Setting Base URL to $baseUrl");
   NetworkOption.initialize(
-      timeout: 100000000000,
+      timeout: Duration(days: 1),
       baseUrl: base,
-      extraSuccessRule: (NetworkResponse nr) {
+      extraSuccessRule: (NetworkResponse nr,_) {
         if (nr.responseCode != 200) return false;
         int statusCode = int.parse((nr.responseBody["Status"]?.toString() ?? nr.responseBody["ResultCode"]?.toString() ?? "0"));
         // print("Success Check => ${statusCode}");
@@ -148,7 +148,7 @@ initNetworkManager([String? baseUrl]) {
       errorMsgExtractor: (data) {
         return (data["Message"] ?? data["ResultText"] ?? "Unknown Error").toString();
       },
-      tokenExpireRule: (NetworkResponse res) {
+      tokenExpireRule: (NetworkResponse res,_) {
         print("Checkoin Token Expire");
         if (res.responseBody is Map && res.responseBody["Body"] != null) {
           print("Checkoin Token 2 ${res.responseCode}");
@@ -158,7 +158,7 @@ initNetworkManager([String? baseUrl]) {
           return false;
         }
       },
-      onTokenExpire: (NetworkResponse res) {
+      onTokenExpire: (NetworkResponse res,_) {
         log("Token Expire Happend");
         LoginController loginController = getIt<LoginController>();
         loginController.logout();

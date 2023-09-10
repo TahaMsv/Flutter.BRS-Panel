@@ -111,10 +111,27 @@ class BsmDataSource extends DataGridSource {
             );
           }
           if (dataGridCell.columnName == BsmDataTableColumn.response.name) {
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              alignment: Alignment.centerLeft,
-              child: Text(bsm.bsmResultText),
+            return Stack(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  alignment: Alignment.centerLeft,
+                  child: Text(bsm.bsmResultText),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                  alignment: Alignment.bottomRight,
+                  child: DotButton(
+                    icon: Icons.file_copy,
+                    onPressed: () async {
+                      await Clipboard.setData(ClipboardData(text: bsm.messageBody));
+                      NavigationService ns = getIt<NavigationService>();
+                      ns.snackbar(const Text("Message Copied to Clipboard"));
+                      // SuccessHandler.handle(ServerSuccess(code: 1, msg: "Message Copied to Clipboard"));
+                    },
+                  ),
+                ),
+              ],
             );
           }
           if (dataGridCell.columnName == BsmDataTableColumn.tagNumbers.name) {
@@ -125,9 +142,9 @@ class BsmDataSource extends DataGridSource {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: bsm.getTags.where((element) => element.isNotEmpty)
                     .map((e) => BarcodeWidget(
-                      height: 70,
+                      height: 50,
                       width: 150,
-                      margin: EdgeInsets.only(bottom: 48,top: 12),
+                      margin: EdgeInsets.only(bottom: 36,top: 12),
                       barcode: Barcode.itf(),
                       data: e,
                     ))

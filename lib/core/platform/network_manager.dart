@@ -11,8 +11,8 @@ class NetworkManager implements NetworkManagerInterface {
   NetworkManager();
 
   @override
-  Future<Response> post(Request request) async {
-    NetworkRequest networkRequest = NetworkRequest(api: Apis.baseUrl, data: request.toJson());
+  Future<Response> post(Request request, {String? api}) async {
+    NetworkRequest networkRequest = NetworkRequest(api:api?? Apis.baseUrl, data: request.toJson());
     NetworkResponse networkResponse = await networkRequest.post();
     if (networkResponse.responseStatus) {
       try {
@@ -52,4 +52,6 @@ class NetworkManager implements NetworkManagerInterface {
     );
     return res;
   }
+
+  String get currentBaseUrl =>NetworkRequest(api: "").options.baseUrl;
 }

@@ -14,6 +14,7 @@ class BsmRemoteDataSource implements BsmDataSourceInterface {
 
   @override
   Future<BsmListResponse> bsmList({required BsmListRequest request}) async {
+    
     Response res = await networkManager.post(request);
     BsmListResponse response = await Parser().pars(BsmListResponse.fromResponse, res);
     return response;

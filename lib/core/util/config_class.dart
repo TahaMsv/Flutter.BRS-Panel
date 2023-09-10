@@ -18,7 +18,11 @@ class Config {
   factory Config.def() => Config(
     appName: 'BRS-Panel',
     company: 'Abomis',
-    baseURL: 'https://brsDev-api-desktop.abomis.com/jsn',
+    baseURL: 'https://brsStage-api-descktop.abomis.com/jsn',
+    // baseURL: 'https://brsStaging-api.abomis.com/BRS',
+
+    // baseURL: 'https://brsstaging-api.abomis.com/BRS',
+    // baseURL: 'https://brsDev-api-desktop.abomis.com/jsn',
   );
 
   Map<String, dynamic> toJson() => {

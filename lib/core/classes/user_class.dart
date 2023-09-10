@@ -142,17 +142,17 @@ class SystemSettings {
 
   factory SystemSettings.fromJson(Map<String, dynamic> json) => SystemSettings(
         positions: List<Position>.from(json["Positions"].map((x) => Position.fromJson(x))),
-        actions: List<Action>.from(json["Actions"].map((x) => Action.fromJson(x))),
+        actions: List<Action>.from((json["Actions2"]??[]).map((x) => Action.fromJson(x))),
         containers: List<TagContainer>.from(json["Containers"].map((x) => TagContainer.fromJson(x))),
         statusList: List<TagStatus>.from(json["StatusList"].map((x) => TagStatus.fromJson(x))),
-        exceptionStatusList: List<Action>.from(json["ExceptionStatusList"].map((x) => Action.fromJson(x))),
-        exceptionActionList: List<Action>.from(json["ExceptionActionList"].map((x) => Action.fromJson(x))),
+        exceptionStatusList: List<Action>.from((json["ExceptionStatusList2"]??[]).map((x) => Action.fromJson(x))),
+        exceptionActionList: List<Action>.from((json["ExceptionActionList2"]??[]).map((x) => Action.fromJson(x))),
         classTypeList: List<ClassType>.from(json["ClassTypeList"].map((x) => ClassType.fromJson(x))),
         handlingSetting: List<HandlingSetting>.from(json["HandlingSetting"].map((x) => HandlingSetting.fromJson(x))),
         handlingAccess: List<HandlingAccess>.from(json["HandlingAccess"].map((x) => HandlingAccess.fromJson(x))),
-        airlineList: List<Airline>.from(json["AirlineList"].map((x) => Airline.fromJson(x))),
+        airlineList: List<Airline>.from((json["AirlineList2"]??[]).map((x) => Airline.fromJson(x))),
         airportList: List<Airport>.from(json["AirportList"].map((x) => Airport.fromJson(x))),
-        aircraftList: List<Aircraft>.from(json["AircraftList"].map((x) => Aircraft.fromJson(x))),
+        aircraftList: List<Aircraft>.from((json["AircraftList2"]??[]).map((x) => Aircraft.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
