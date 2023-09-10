@@ -124,7 +124,7 @@ class BsmDataSource extends DataGridSource {
                   child: DotButton(
                     icon: Icons.file_copy,
                     onPressed: () async {
-                      await Clipboard.setData(ClipboardData(text: bsm.messageBody));
+                      await Clipboard.setData(ClipboardData(text: bsm.bsmResultText));
                       NavigationService ns = getIt<NavigationService>();
                       ns.snackbar(const Text("Message Copied to Clipboard"));
                       // SuccessHandler.handle(ServerSuccess(code: 1, msg: "Message Copied to Clipboard"));
