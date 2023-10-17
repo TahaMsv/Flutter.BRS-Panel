@@ -35,7 +35,7 @@ class _PieChart2State extends State<DetailsChart> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text(
-                "Exception Status",
+                "Tag Status",
                 style: TextStyles.styleBold16Grey,
               ),
               AspectRatio(
@@ -65,7 +65,7 @@ class _PieChart2State extends State<DetailsChart> {
                               show: false,
                             ),
                             sectionsSpace: 0,
-                            centerSpaceRadius: 100,
+                            centerSpaceRadius: MediaQuery.of(context).size.width * 0.06,
                             sections: showingSections(widget.details, widget.posList),
                           ),
                         ),
@@ -101,7 +101,7 @@ class _PieChart2State extends State<DetailsChart> {
     return posList.map((e) {
       final isTouched = posList.indexOf(e) == touchedIndex;
       // double value = 100 * details.tagList.where((element) => element.currentPosition == e.id).length / details.tagList.length;
-      double value =  details.tagList.where((element) => element.currentPosition == e.id).length *1.0;
+      double value = details.tagList.where((element) => element.currentPosition == e.id).length * 1.0;
       final radius = isTouched ? 20.0 : 10.0;
       final fontSize = isTouched ? 25.0 : 14.0;
       const shadows = [Shadow(color: Colors.black, blurRadius: 0)];
@@ -119,7 +119,6 @@ class _PieChart2State extends State<DetailsChart> {
         ),
       );
     }).toList();
-
   }
 }
 
@@ -138,7 +137,7 @@ class _LineChart2State extends State<DetailsLineChart> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.all(24.0),
       child: Material(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -150,7 +149,7 @@ class _LineChart2State extends State<DetailsLineChart> {
             mainAxisSize: MainAxisSize.min,
             children: [
               AspectRatio(
-                aspectRatio: 3,
+                aspectRatio: 2,
                 child: Column(
                   children: [
                     const Text(
@@ -158,35 +157,32 @@ class _LineChart2State extends State<DetailsLineChart> {
                       style: TextStyles.styleBold16Grey,
                     ),
                     Expanded(
+                      flex: 2,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: Row(
-                              children: <Widget>[
-                                ...BasicClass.systemSetting.exceptionStatusList
-                                    .where((e) => widget.details.tagList.where((element) => element.exceptionStatusID == e.id).isNotEmpty)
-                                    .map(
-                                      (e) {
-                                        int val =  ((widget.details.tagList.where((element) => element.exceptionStatusID == e.id).length/widget.details.tagList.length)*100).floor();
-                                        return Expanded(
-                                        flex: val,
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                            e.title,
-                                            // val.toString(),
-                                            style: const TextStyle(fontSize: 11),
-                                          ),
-                                        ),
-                                      );
-                                      },
-                                    )
-                                    .toList(),
-                              ],
-                            ),
-                          ),
+                          // ClipRRect(
+                          //   borderRadius: BorderRadius.circular(5),
+                          //   child: Row(
+                          //     children: <Widget>[
+                          //       ...BasicClass.systemSetting.statusList.where((e) => widget.details.tagList.where((element) => element.currentStatus == e.id).isNotEmpty).map(
+                          //         (e) {
+                          //           int val = ((widget.details.tagList.where((element) => element.currentStatus == e.id).length / widget.details.tagList.length) * 100).floor();
+                          //           return Expanded(
+                          //             flex: val,
+                          //             child: Container(
+                          //               alignment: Alignment.center,
+                          //               child: Text(
+                          //                 e.title,
+                          //                 style: const TextStyle(fontSize: 11),
+                          //               ),
+                          //             ),
+                          //           );
+                          //         },
+                          //       ).toList(),
+                          //     ],
+                          //   ),
+                          // ),
                           ClipRRect(
                             borderRadius: BorderRadius.circular(5),
                             child: Row(
@@ -197,11 +193,11 @@ class _LineChart2State extends State<DetailsLineChart> {
                                 //     Container(height: 10,color:Colors.red,),
                                 //   ],
                                 // ),),
-                                ...BasicClass.systemSetting.exceptionStatusList
-                                    .where((e) => widget.details.tagList.where((element) => element.exceptionStatusID == e.id).isNotEmpty)
+                                ...BasicClass.systemSetting.statusList
+                                    .where((e) => widget.details.tagList.where((element) => element.currentStatus == e.id).isNotEmpty)
                                     .map(
                                       (e) => Expanded(
-                                        flex: widget.details.tagList.where((element) => element.exceptionStatusID == e.id).length,
+                                        flex: widget.details.tagList.where((element) => element.currentStatus == e.id).length,
                                         child: Stack(
                                           children: [
                                             // Text(
@@ -209,7 +205,7 @@ class _LineChart2State extends State<DetailsLineChart> {
                                             //   style: const TextStyle(fontSize: 11),
                                             // ),
                                             // const SizedBox(height: 4),
-                                            Container(height: 10, color: e.getColor),
+                                            Container(height: 8, color: e.getColor),
                                           ],
                                         ),
                                       ),
@@ -230,7 +226,7 @@ class _LineChart2State extends State<DetailsLineChart> {
                 // direction: Axis.horizontal,
                 // mainAxisAlignment: MainAxisAlignment.end,
                 // crossAxisAlignment: CrossAxisAlignment.start,
-                children: BasicClass.systemSetting.exceptionStatusList
+                children: BasicClass.systemSetting.statusList
                     .map((e) => Padding(
                           padding: const EdgeInsets.only(left: 12, right: 12),
                           child: Indicator(color: e.getColor, text: e.title, isSquare: false, size: 12, fontSize: 13),

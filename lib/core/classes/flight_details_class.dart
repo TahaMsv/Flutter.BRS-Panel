@@ -106,13 +106,21 @@ class FlightTag {
     required this.flightScheduleId,
     required this.isRush,
     required this.deadline,
+    required this.sectionID,
+    required this.typeID,
     this.exceptionActionsStr = "",
     this.exceptionStatusID = 0,
     this.dcsInfo,
     this.classTypeID = 1,
+    this.tagSsrs = const [],
+    this.outboundLegs = const [],
+    this.inboundLeg,
+    this.hasChanged = false,
+    this.isGateTag = false,
   });
 
   final int tagId;
+  final int sectionID;
   final String tagNumber;
   final int currentPosition;
   final int currentOrder;
@@ -130,9 +138,16 @@ class FlightTag {
   final List<TagPosition> tagPositions;
   final List<ActionHistory> actionsHistory;
   final DcsInfo? dcsInfo;
+  final TagLeg? inboundLeg;
+  final List<TagLeg> outboundLegs;
+  final List<TagSSR> tagSsrs;
+  final bool isGateTag;
+  final bool hasChanged;
+  final int typeID;
 
   factory FlightTag.fromJson(Map<String, dynamic> json) => FlightTag(
         tagId: json["TagID"],
+        sectionID: json["SectionID"],
         tagNumber: json["TagNumber"],
         currentPosition: json["CurrentPosition"],
         currentOrder: json["CurrentOrder"],
@@ -147,9 +162,13 @@ class FlightTag {
         isRush: json["IsRush"] ?? false,
         exceptionActionsStr: json["ExcActStr"] ?? "",
         deadline: json["Deadline"] ?? 1000,
+        typeID: json["TypeID"],
         dcsInfo: json["DCSInfo"] == null ? null : DcsInfo.fromJson(json["DCSInfo"]),
         tagPositions: List<TagPosition>.from(json["TagPositions"].map((x) => TagPosition.fromJson(x))),
         actionsHistory: List<ActionHistory>.from((json["ActionsHistory"] ?? []).map((x) => ActionHistory.fromJson(x))),
+        outboundLegs: List<TagLeg>.from(json["OutboundList"].map((x) => TagLeg.fromJson(x))),
+        tagSsrs: List<TagSSR>.from(json["SSRList"].map((x) => TagSSR.fromJson(x))),
+        inboundLeg: json["InboundItem"] == null ? null : TagLeg.fromJson(json["InboundItem"]),
       );
 
   // ExceptionStatus get exception => BasicClass.settings.exceptionStatuses.firstWhere((element) => element.id == exceptionStatusID);
@@ -162,10 +181,61 @@ class FlightTag {
 
   int? get getContainerID => tagPositions.first.container?.id;
 
-  String get weight => dcsInfo==null?'':'${dcsInfo!.weight} KG';
+  Widget get weight => dcsInfo==null?SizedBox():Row(children: [
+    Text('${dcsInfo!.weight}'),
+    Text("KG",style: TextStyle(fontSize: 8),)
+  ],);
+
+  int? get containerID => tagPositions.first.container?.id;
+
+  int? get binID => tagPositions.first.binID;
+
+  bool get isFree => binID == null && containerID == null;
+
+
+  TagStatus get getStatus => BasicClass.systemSetting.statusList.firstWhere((element) => element.id == currentStatus);
+
+  Widget get getStatusWidget => Padding(
+    padding: const EdgeInsets.all(4.0),
+    child: Icon(getStatus.getIcon, color: getStatus.getColor, size: 15),
+  );
+
+  TagType? get getType {
+    // print("looking for ${typeID} in ${BasicClass.settings.systemSettings.tagTypeList.map((e) => e.id).toList()}");
+    return typeID == null ? BasicClass.systemSetting.tagTypeList.first : BasicClass.systemSetting.tagTypeList.firstWhereOrNull((element) => element.id == typeID);
+  }
+
+
+  Widget get getTypeWidget => Container(
+    padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+    decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: getType?.getColor.withOpacity(1) ?? Colors.transparent),
+    child: RichText(
+        text: TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
+          TextSpan(
+            // text: "${getType.label}",
+            text: "${getType?.label ?? ''}",
+            style: TextStyle(color: getType?.getTextColor),
+          ),
+        ])),
+  );
+
+  TagStatus? get exception => BasicClass.getTagStatusById(currentStatus);
+
+  String get getAddress => BasicClass.getAirportSectionByID(sectionID)?.label?? tagPositions.first.container?.code ?? (tagPositions.first.bin.isEmpty ? getSection.label : tagPositions.first.bin);
+
+  AirportPositionSection get getSection {
+    try {
+      return BasicClass.getAllAirportSections().firstWhere((element) => element.position == currentPosition && sectionID == element.id,
+          orElse: () => BasicClass.getAllAirportSections().firstWhere((element) => element.position == currentPosition, orElse: () => BasicClass.getAllAirportSections().first));
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
 
   Map<String, dynamic> toJson() => {
         "TagID": tagId,
+        "SectionID": sectionID,
         "TagNumber": tagNumber,
         "CurrentPosition": currentPosition,
         "ExceptionStatusID": exceptionStatusID,
@@ -183,6 +253,9 @@ class FlightTag {
         "DCSInfo": dcsInfo?.toJson(),
         "TagPositions": List<dynamic>.from(tagPositions.map((x) => x.toJson())),
         "ActionsHistory": List<dynamic>.from(actionsHistory.map((x) => x.toJson())),
+        "OutboundList": List<dynamic>.from(outboundLegs.map((x) => x.toJson())),
+        "SSRList": List<dynamic>.from(tagSsrs.map((x) => x.toJson())),
+        "InboundItem": inboundLeg?.toJson()
       };
 
   bool validateSearch(String searched, Position? selectedPosition) {
@@ -195,7 +268,7 @@ class FlightTag {
     return BasicClass.getTagStatusByID(currentStatus)!;
   }
 
-  String get numString => tagNumber.toString().padLeft(10, "0").substring(4, 10);
+  String get numString => tagNumber.toString().padLeft(10, "0").substring(0, 10);
 
   String get fullString => tagNumber.toString().padLeft(10, "0");
 
@@ -203,6 +276,11 @@ class FlightTag {
     // print(BasicClass.settings.classTypeList.map((e) => e.id));
     // print(classTypeID);
     return (dcsInfo?.securityCode ?? "----").toString().padLeft(10, "0").substring(6, 10);
+  }
+
+  IconData? get posIcon {
+    if (tagPositions.isEmpty) return null;
+    return BasicClass.getPositionById(tagPositions.first.positionId)?.getIcon;
   }
 
   @override
@@ -235,11 +313,88 @@ class FlightTag {
   }
 }
 
+class TagSSR {
+  final String name;
+
+  TagSSR({
+    required this.name,
+  });
+
+  TagSSR copyWith({
+    String? name,
+  }) =>
+      TagSSR(
+        name: name ?? this.name,
+      );
+
+  factory TagSSR.fromJson(Map<String, dynamic> json) => TagSSR(
+    name: json["Name"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "Name": name,
+  };
+}
+
+class TagLeg {
+  final String al;
+  final String flnb;
+  final DateTime flightDate;
+  final String city;
+  final String type;
+
+  TagLeg({
+    required this.al,
+    required this.flnb,
+    required this.flightDate,
+    required this.city,
+    required this.type,
+  });
+
+  TagLeg copyWith({
+    String? al,
+    String? flnb,
+    DateTime? flightDate,
+    String? city,
+    String? type,
+  }) =>
+      TagLeg(
+        al: al ?? this.al,
+        flnb: flnb ?? this.flnb,
+        flightDate: flightDate ?? this.flightDate,
+        city: city ?? this.city,
+        type: type ?? this.type,
+      );
+
+  factory TagLeg.fromJson(Map<String, dynamic> json) => TagLeg(
+    al: json["AL"],
+    flnb: json["FLNB"],
+    flightDate: DateTime.parse(json["FlightDate"]),
+    city: json["City"],
+    type: json["Type"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "AL": al,
+    "FLNB": flnb,
+    "FlightDate": "${flightDate.year.toString().padLeft(4, '0')}-${flightDate.month.toString().padLeft(2, '0')}-${flightDate.day.toString().padLeft(2, '0')}",
+    "City": city,
+    "Type": type,
+  };
+
+  @override
+  bool operator ==(Object other) {
+    return other is TagLeg && other.flnb == flnb && other.al == al;
+  }
+}
+
+
 @immutable
 class TagPosition {
   const TagPosition(
       {required this.sequenceNo,
       required this.indexInPosition,
+      required this.sectionID,
       required this.indexInBin,
       required this.indexInUld,
       required this.indexInCart,
@@ -261,6 +416,8 @@ class TagPosition {
       this.isForced = false});
 
   final int sequenceNo;
+  final int sectionID;
+
   final int indexInPosition;
   final int? indexInBin;
   final int? indexInUld;
@@ -289,6 +446,7 @@ class TagPosition {
 
   factory TagPosition.fromJson(Map<String, dynamic> json) => TagPosition(
         sequenceNo: json["SequenceNo"],
+        sectionID: json["SectionID"],
         indexInPosition: json["IndexInPosition"],
         indexInBin: json["IndexInBin"],
         indexInUld: json["IndexInULD"],
@@ -314,6 +472,7 @@ class TagPosition {
   Map<String, dynamic> toJson() => {
         "SequenceNo": sequenceNo,
         "IndexInPosition": indexInPosition,
+        "SectionID": sectionID,
         "IndexInBin": indexInBin,
         "IndexInULD": indexInUld,
         "IndexInCart": indexInCart,
@@ -566,6 +725,7 @@ class TransferFlight {
 class Bin {
   const Bin({
     required this.id,
+    required this.sectionID,
     required this.bin,
     required this.binNumber,
     required this.containerType,
@@ -576,6 +736,7 @@ class Bin {
   });
 
   final String bin;
+  final int sectionID;
   final bool isDeleted;
   final String binNumber;
   final String compartment;
@@ -586,6 +747,7 @@ class Bin {
 
   factory Bin.fromJson(Map<String, dynamic> json) => Bin(
         id: json["ID"],
+        sectionID: json["SectionID"],
         bin: json["Bin"] ?? '',
         isDeleted: json["IsDeleted"] ?? false,
         binNumber: json["BinNumber"] ?? "",
@@ -598,6 +760,7 @@ class Bin {
   Map<String, dynamic> toJson() => {
         "Bin": bin,
         "ID": id,
+        "SectionID": sectionID,
         "BinNumber": binNumber,
         "IsDeleted": isDeleted,
         "ContainerType": containerType,

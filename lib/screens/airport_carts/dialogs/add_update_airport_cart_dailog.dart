@@ -100,7 +100,7 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateAirportCartDialog>
                         });
                       }
                     }else{
-                      final updated = TagContainer(id: widget.editingCart!.id, typeId: 1, code: codeC.text, title: '', positionId: null);
+                      final updated = TagContainer(id: widget.editingCart!.id, typeId: 1, code: codeC.text, title: '', positionId: null, sectionID: null);
                       final up = await myAirportCartsController.airportUpdateCart(updated);
                       if (up != null) {
                         navigationService.popDialog(onPop: (){

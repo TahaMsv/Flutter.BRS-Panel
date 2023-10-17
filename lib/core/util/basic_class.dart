@@ -19,6 +19,7 @@ class BasicClass {
   UserSettings? _userSettings;
   SystemSettings? _systemSettings;
   User? _userInfo;
+  Airport? _airport;
 
   // MyDeviceInfo? _deviceInfo;
   ScreenType? _deviceType;
@@ -34,11 +35,13 @@ class BasicClass {
     // instance._userInfo = settings.userSettings.userInfo;
     // instance._deviceInfo = deviceInfo;
     instance._deviceType = deviceType;
+    instance._airport =user.systemSettings.airportList.firstWhere((element) => element.code==user.userSettings.airport);
   }
 
   static void setConfig(Config config) {
     instance._appConfig = config;
   }
+  static Airport get airport => instance._airport!;
 
   static String get username => instance._username!;
 
@@ -76,4 +79,28 @@ class BasicClass {
   static TagStatus? getTagStatusByID(int id) {
     return systemSetting.statusList.firstWhereOrNull((e)=>e.id==id);
   }
+
+  static Position? getPositionById(int id) {
+    return systemSetting.positions.firstWhereOrNull((e)=>e.id==id);
+  }
+  static TagStatus? getTagStatusById(int id) {
+    return systemSetting.statusList.firstWhereOrNull((e)=>e.id==id);
+  }
+
+  static List<AirportPositionSection> getAllAirportSections() {
+    List<AirportPositionSection> secs = [];
+    for (var s in userSetting.hierarchy) {
+      secs = secs + s.subSections.map((e) => e.copyWith(address: "${e.address}${e.label}")).toList();
+    }
+    return secs;
+  }
+
+  static AirportPositionSection? getAirportSectionByID(int sectionID) {
+    return BasicClass.getAllAirportSections().firstWhereOrNull((element) => element.id ==sectionID);
+  }
+
+  static DateTime? getTimeFromUTC(DateTime? dt) {
+    return dt?.add(Duration(minutes: airport.timeZone??0));
+  }
+
 }

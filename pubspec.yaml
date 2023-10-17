@@ -79,6 +79,9 @@ flutter:
     - family: ArtemisDcsIcons
       fonts:
         - asset: assets/fonts/ArtemisDcsIcons.ttf
+    - family: AbomisPack
+      fonts:
+        - asset: assets/fonts/AbomisPack.ttf
     - family: BrsIcons
       fonts:
         - asset: assets/fonts/BRSIcons.ttf

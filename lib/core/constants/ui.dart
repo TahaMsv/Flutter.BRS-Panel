@@ -21,6 +21,7 @@ class MyColors {
   static const black8 = Color.fromRGBO(0, 0, 0, 0.08);
   static const blueGreen = Color.fromRGBO(20, 122, 137, 1);
   static const printBlue = Colors.blueAccent;
+  static const myGreen = Color(0xff16e300);
   static const adobe = Color.fromRGBO(186, 112, 72, 1);
   static const oliveDrab = Color.fromRGBO(111, 108, 46, 1);
   static const paleGrey2 = Color.fromRGBO(247, 248, 255, 1);
@@ -220,5 +221,5 @@ class TextStyles {
   static const styleBold16Grey = TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xff808080));
   static const styleBold16Black = TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: MyColors.black1);
   static const style16Grey = TextStyle(fontSize: 16, color: Color(0xff808080), fontWeight: FontWeight.w300);
-  static const tagListHeader = TextStyle(fontWeight: FontWeight.bold, fontSize: 13);
+  static const tagListHeader = TextStyle(fontWeight: FontWeight.bold, fontSize: 12);
 }

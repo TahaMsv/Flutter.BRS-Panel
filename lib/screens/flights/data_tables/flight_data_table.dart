@@ -151,6 +151,7 @@ class FlightDataSource extends DataGridSource {
                             position: p,
                             color: p.getColor,
                             count: isActive ? f.positions.firstWhere((element) => element.id == p.id).tagCount : 0,
+
                           )),
                     );
                   }).toList(),

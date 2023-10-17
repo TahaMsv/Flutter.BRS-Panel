@@ -223,7 +223,7 @@ class AddFlightFromWidget extends StatelessWidget {
           locked: state.flightTypeID==0,
           items: BasicClass.systemSetting.airportList,
           label: "From",
-          itemToString: (e) => "${e.code} - ${e.name}",
+          itemToString: (e) => "${e.code} - ${e.code}",
           value: state.from,
           onChange: (e) {
             final afState = ref.read(addFlightProvider.notifier);
@@ -249,7 +249,7 @@ class AddFlightToWidget extends StatelessWidget {
           locked: state.flightTypeID==1,
           items: BasicClass.systemSetting.airportList,
           label: "To",
-          itemToString: (e) => "${e.code} - ${e.name}",
+          itemToString: (e) => "${e.code} - ${e.code}",
           value: state.to,
           onChange: (e) {
             final afState = ref.read(addFlightProvider.notifier);

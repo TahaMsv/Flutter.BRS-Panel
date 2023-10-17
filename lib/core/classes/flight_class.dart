@@ -515,7 +515,7 @@ class Flight {
       );
 
   factory Flight.fromJson(Map<String, dynamic> json) => Flight(
-    id: json["ID"],
+    id: json["FlightScheduleID"],
     aircraftId: json["AircraftID"],
     returnedTagCount: json["ReturnedTagCount"],
     color: json["Color"],
@@ -524,8 +524,8 @@ class Flight {
     flightDate: DateTime.parse(json["FlightDate"]),
     std: json["STD"],
     sta: json["STA"],
-    from: json["From"],
-    to: json["To"],
+    from: json["FromCity"],
+    to: json["ToCity"],
     destList: json["DestList"],
     route: json["Route"],
     isTest: json["IsTest"],
@@ -537,7 +537,8 @@ class Flight {
   );
 
   Map<String, dynamic> toJson() => {
-    "ID": id,
+    "FlightScheduleID": id,
+
     "AircraftID": aircraftId,
     "ReturnedTagCount": returnedTagCount,
     "Color": color,
@@ -546,8 +547,8 @@ class Flight {
     "FlightDate": "${flightDate.year.toString().padLeft(4, '0')}-${flightDate.month.toString().padLeft(2, '0')}-${flightDate.day.toString().padLeft(2, '0')}",
     "STD": std,
     "STA": sta,
-    "From": from,
-    "To": to,
+    "FromCity": from,
+    "ToCity": to,
     "DestList": destList,
     "Route": route,
     "IsTest": isTest,

@@ -117,7 +117,7 @@ class FlightsPanel extends ConsumerWidget {
                             return SizedBox(
                               height: 35,
                               child: MyFieldPicker<Airport>(
-                                itemToString: (a) => "${a.code} (${a.name})",
+                                itemToString: (a) => "${a.code} (${a.code})",
                                 label: 'Airport',
                                 items: BasicClass.systemSetting.airportList,
                                 onChange: (v) {

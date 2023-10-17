@@ -8,6 +8,7 @@ import 'flight_details_class.dart';
 @immutable
 class TagContainer {
   final int? id;
+  final int? sectionID;
   final int? flightId;
   final int typeId;
   final String code;
@@ -25,6 +26,7 @@ class TagContainer {
 
   const TagContainer({
     required this.id,
+    required this.sectionID,
     this.flightId,
     this.typeId=1,
     required this.code,
@@ -46,6 +48,7 @@ class TagContainer {
 
   TagContainer copyWith({
     int? id,
+    int? sectionID,
     int? flightId,
     int? typeId,
     String? code,
@@ -63,6 +66,7 @@ class TagContainer {
   }) =>
       TagContainer(
         id: id ?? this.id,
+        sectionID: sectionID ?? this.sectionID,
         flightId: flightId ?? this.flightId,
         typeId: typeId ?? this.typeId,
         code: code ?? this.code,
@@ -81,6 +85,7 @@ class TagContainer {
 
   factory TagContainer.fromJson(Map<String, dynamic> json) => TagContainer(
     id: json["ID"],
+    sectionID: json["SectionID"],
     flightId: json["FlightID"],
     typeId: json["TypeID"],
     code: json["Code"]??'',
@@ -99,6 +104,7 @@ class TagContainer {
 
   Map<String, dynamic> toJson() => {
     "ID": id,
+    "SectionID": sectionID,
     "FlightID": flightId,
     "TypeID": typeId,
     "Code": code,
@@ -121,6 +127,7 @@ class TagContainer {
     int foundTypeID = int.parse(typeIDStr);
     return TagContainer(
       id: null,
+      sectionID: 1,
       typeId: foundTypeID,
       // flightID: null,
       // classTypeID: 1,
@@ -147,7 +154,7 @@ class TagContainer {
       from: "",
       // barcodePrefix: "",
       // ocrPrefix: ["AKE######", "CART######"],
-      flightId: null, positionId: null, bin: '', tagCount: null,
+      flightId: null, positionId: null, bin: '', tagCount: null, sectionID: 1,
     );
   }
 

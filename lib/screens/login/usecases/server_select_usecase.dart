@@ -20,7 +20,7 @@ class ServerSelectUseCase extends UseCase<ServerSelectResponse, ServerSelectRequ
 class ServerSelectRequest extends Request {
   ServerSelectRequest();
 
-  
+
   @override
   Map<String, dynamic> toJson() => {
         "Body": {

@@ -41,7 +41,7 @@ class AirportDataSource extends DataGridSource {
           (e) => DataGridRow(
             cells: [
               DataGridCell<String>(columnName: AirportDataTableColumn.airport.name, value: e.code),
-              DataGridCell<String>(columnName: AirportDataTableColumn.name.name, value: e.name),
+              DataGridCell<String>(columnName: AirportDataTableColumn.name.name, value: e.code),
               DataGridCell<String>(columnName: AirportDataTableColumn.actions.name, value: ''),
             ],
           ),
@@ -73,7 +73,7 @@ class AirportDataSource extends DataGridSource {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           alignment: Alignment.center,
-          child: Text(a.name),
+          child: Text(a.code),
         );
       }
       if (dataGridCell.columnName == AirportDataTableColumn.actions.name) {

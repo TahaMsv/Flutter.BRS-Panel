@@ -18,7 +18,8 @@ class Config {
   factory Config.def() => Config(
     appName: 'BRS-Panel',
     company: 'Abomis',
-    baseURL: 'https://brsStage-api-descktop.abomis.com/jsn',
+    // baseURL: 'https://brsStage-api-descktop.abomis.com/jsn',
+    baseURL: 'https://brsdev-api.abomis.com/brs',
     // baseURL: 'https://brsStaging-api.abomis.com/BRS',
 
     // baseURL: 'https://brsstaging-api.abomis.com/BRS',

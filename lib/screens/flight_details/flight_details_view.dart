@@ -100,7 +100,9 @@ class FlightDetailsPanel extends ConsumerWidget {
                 itemToString: (e) => e.title,
                 items: pos,
                 onChange: (Position v) {
-                  ref.read(selectedPosInDetails.notifier).state = v;
+                  ref
+                      .read(selectedPosInDetails.notifier)
+                      .state = v;
                 },
                 value: ref.watch(selectedPosInDetails),
               )),
@@ -108,10 +110,10 @@ class FlightDetailsPanel extends ConsumerWidget {
           const SizedBox(width: 12),
           DotButton(
             icon: Icons.refresh,
-            onPressed: () async{
+            onPressed: () async {
               final sfp = ref.read(selectedFlightProvider);
               final fdP = ref.read(detailsProvider);
-               ref.refresh(detailsProvider);
+              ref.refresh(detailsProvider);
               // FlightsController flightsController = getIt<FlightsController>();
               // flightsController.flightList(ref.read(flightDateProvider));
             },
@@ -136,36 +138,37 @@ class FlightDetailsWidget extends ConsumerWidget {
       child: Container(
         child: fdP.when(
           skipLoadingOnRefresh: false,
-          data: (d) => d == null
+          data: (d) =>
+          d == null
               ? const Text("No Data Found")
               : Row(
-                  children: [
-                    Expanded(
-                      flex: 4,
-                      child: DetailsWidget(
+            children: [
+              Expanded(
+                flex: 4,
+                child: DetailsWidget(
+                  details: d,
+                  posList: posList,
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(border: Border(left: BorderSide(color: MyColors.lineColor))),
+                  child: Column(
+                    children: [
+                      DetailsChart(
                         details: d,
                         posList: posList,
                       ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        decoration: const BoxDecoration(border: Border(left: BorderSide(color: MyColors.lineColor))),
-                        child: Column(
-                          children: [
-                            DetailsChart(
-                              details: d,
-                              posList: posList,
-                            ),
-                            DetailsLineChart(
-                              details: d,
-                              posList: posList,
-                            ),
-                          ],
-                        ),
+                      DetailsLineChart(
+                        details: d,
+                        posList: posList,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
+              ),
+            ],
+          ),
           error: (e, __) => Text("$e"),
           loading: () => Spinners.spinner1,
         ),
@@ -218,150 +221,158 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
           child: Row(
             children: [
               Expanded(
-                  flex: 3,
+                  flex: 7,
                   child: DataCellWidget(
                       child: Row(
-                    children: [
-                      const SizedBox(width: 12),
-                      Container(
-                          width: 40,
-                          alignment: Alignment.center,
-                          child: Text(
-                            '#',
-                            style: TextStyle(color: MyColors.indexColor.withOpacity(0.3), fontWeight: FontWeight.bold),
-                          )),
-                      const SizedBox(width: 48),
-                      const Spacer(),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        child: Text(
-                          'Tag Number',
-                          style: TextStyles.tagListHeader,
-                        ),
-                      ),
-                    ],
-                  ))),
-              const Expanded(
-                  flex: 1,
-                  child: DataCellWidget(
-                      child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: Text('Sec.', style: TextStyles.tagListHeader),
-                  ))),
-              const Expanded(
-                  flex: 3,
-                  child: DataCellWidget(
-                      child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: Text('Pax Name', style: TextStyles.tagListHeader),
-                  ))),
-              const Expanded(
-                  flex: 1,
-                  child: DataCellWidget(
-                      child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: Text('Time', style: TextStyles.tagListHeader),
-                  ))),
+                        children: [
+                          const SizedBox(width: 12),
+                          Container(
+                              width: 40,
+                              alignment: Alignment.center,
+                              child: Text(
+                                '#',
+                                style: TextStyle(color: MyColors.indexColor.withOpacity(0.3), fontWeight: FontWeight.bold),
+                              )),
+                          const SizedBox(width: 48),
+                          const Spacer(),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            child: Text(
+                              'Tag Number',
+                              style: TextStyles.tagListHeader,
+                            ),
+                          ),
+                        ],
+                      ))),
               const Expanded(
                   flex: 2,
                   child: DataCellWidget(
                       child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: Text('Agent', style: TextStyles.tagListHeader),
-                  ))),
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        child: Text('Sec.', style: TextStyles.tagListHeader),
+                      ))),
+              const Expanded(
+                  flex: 5,
+                  child: DataCellWidget(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        child: Text('Pax Name', style: TextStyles.tagListHeader),
+                      ))),
+              const Expanded(
+                  flex: 2,
+                  child: DataCellWidget(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        child: Text('Time', style: TextStyles.tagListHeader),
+                      ))),
+              const Expanded(
+                  flex: 2,
+                  child: DataCellWidget(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        child: Text('Agent', style: TextStyles.tagListHeader),
+                      ))),
               const Expanded(
                   flex: 1,
                   child: DataCellWidget(
                       child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: Text('Weight', style: TextStyles.tagListHeader),
-                  ))),
+                        padding: EdgeInsets.symmetric(horizontal: 2, vertical: 8),
+                        child: Text('Weight', style: TextStyles.tagListHeader),
+                      ))),
             ],
           ),
         ),
         selectedPos.binRequired
             ? Flexible(
-                child: ExpandableListView(
-                  builder: SliverExpandableChildDelegate<TagContainer, BinSection>(
-                      sectionList: bins,
-                      headerBuilder: (context, sectionIndex, index) {
-                        Bin bin = bins[sectionIndex].bin;
-                        // int count = List.generate(sectionIndex, (index) => cons[index].items.length).sum as int;
-                        // bool isFirstSec = index == (count-sectionIndex);
-                        return BinTileWidget(
-                          isFirstSec: false,
-                          bin: bin,
-                          sec: bins[sectionIndex],
-                        );
-                      },
-                      itemBuilder: (context, sectionIndex, itemIndex, index) {
-                        TagContainer con = bins[sectionIndex].items[itemIndex];
-                        bool isLastCon = bins[sectionIndex].items.length == itemIndex + 1;
-                        List<FlightTag> thisConTags =
-                            filteredTag.where((element) => (element.getContainerID == con.id || (element.getContainerID == null && con.isBulk)) && element.tagPositions.first.binID == bins[sectionIndex].bin.id).toList();
+          child: ExpandableListView(
+            builder: SliverExpandableChildDelegate<TagContainer, BinSection>(
+                sectionList: bins,
+                headerBuilder: (context, sectionIndex, index) {
+                  Bin bin = bins[sectionIndex].bin;
+                  // int count = List.generate(sectionIndex, (index) => cons[index].items.length).sum as int;
+                  // bool isFirstSec = index == (count-sectionIndex);
+                  return BinTileWidget(
+                    isFirstSec: false,
+                    bin: bin,
+                    sec: bins[sectionIndex],
+                  );
+                },
+                itemBuilder: (context, sectionIndex, itemIndex, index) {
+                  TagContainer con = bins[sectionIndex].items[itemIndex];
+                  bool isLastCon = bins[sectionIndex].items.length == itemIndex + 1;
+                  List<FlightTag> thisConTags =
+                  filteredTag.where((element) => (element.getContainerID == con.id || (element.getContainerID == null && con.isBulk)) && element.tagPositions.first.binID == bins[sectionIndex].bin.id).toList();
 
-                        // if(thisConTags.isEmpty) return const SizedBox();
-                        return MyExpansionTile(
-                          tilePadding: EdgeInsets.zero,
-                          headerTileColor: MyColors.containerGreen,
-                          title: ContainerTileWidget(
-                            isLast: isLastCon,
-                            binLines: true,
-                            con: con,
-                            sec: ContainerSection(con: con, allTags: filteredTag, ref: ref),
-                            isFirstSec: false,
-                            tagCount: thisConTags.length,
-                          ),
-                          children: thisConTags
-                              .map((e) => TagWidget(
-                                    tag: e,
-                                    index: thisConTags.indexOf(e),
-                                    hasBinLine: !isLastCon,
-                                    isLast: thisConTags.last == e,
-                                  ))
-                              .toList(),
-                        );
-                      }),
-                ),
-              )
-            : selectedPos.containerRequired
-                ? Flexible(
-                    child: ExpandableListView(
-                      builder: SliverExpandableChildDelegate<FlightTag, ContainerSection>(
-                          sectionList: cons,
-                          headerBuilder: (context, sectionIndex, index) {
-                            TagContainer con = cons[sectionIndex].con;
-                            return ContainerTileWidget(
-                              isFirstSec: false,
-                              binLines: false,
-                              con: con,
-                              sec: cons[sectionIndex],
-                              isLast: false,
-                              tagCount: cons[sectionIndex].items.length,
-                            );
-                          },
-                          itemBuilder: (context, sectionIndex, itemIndex, index) {
-                            FlightTag tag = cons[sectionIndex].items[itemIndex];
-                            bool isLastTag = cons[sectionIndex].items.length == itemIndex + 1;
-                            return TagWidget(
-                              tag: tag,
-                              index: index,
-                              hasBinLine: false,
-                              isLast: isLastTag,
-                            );
-                          }),
+                  // if(thisConTags.isEmpty) return const SizedBox();
+                  return MyExpansionTile(
+                    tilePadding: EdgeInsets.zero,
+                    headerTileColor: MyColors.containerGreen,
+                    title: ContainerTileWidget(
+                      isLast: isLastCon,
+                      binLines: true,
+                      con: con,
+                      sec: ContainerSection(con: con, allTags: filteredTag, ref: ref),
+                      isFirstSec: false,
+                      tagCount: thisConTags.length,
                     ),
-                  )
-                : Flexible(
-                    child: ListView.builder(
-                        itemCount: filteredTag.length,
-                        itemBuilder: (c, i) => TagWidget(
-                              tag: filteredTag[i],
-                              index: i,
-                              hasBinLine: false,
-                              hasTagLine: false,
-                            )),
-                  ),
+                    children: thisConTags
+                        .map((e) =>
+                        TagWidget(
+                          tag: e,
+                          fd: widget.details,
+                          total: thisConTags.length,
+                          index: thisConTags.indexOf(e),
+                          hasBinLine: !isLastCon,
+                          isLast: thisConTags.last == e,
+                        ))
+                        .toList(),
+                  );
+                }),
+          ),
+        )
+            : selectedPos.containerRequired
+            ? Flexible(
+          child: ExpandableListView(
+            builder: SliverExpandableChildDelegate<FlightTag, ContainerSection>(
+                sectionList: cons,
+                headerBuilder: (context, sectionIndex, index) {
+                  TagContainer con = cons[sectionIndex].con;
+                  return ContainerTileWidget(
+                    isFirstSec: false,
+                    binLines: false,
+                    con: con,
+                    sec: cons[sectionIndex],
+                    isLast: false,
+                    tagCount: cons[sectionIndex].items.length,
+                  );
+                },
+                itemBuilder: (context, sectionIndex, itemIndex, index) {
+                  FlightTag tag = cons[sectionIndex].items[itemIndex];
+                  bool isLastTag = cons[sectionIndex].items.length == itemIndex + 1;
+                  return TagWidget(
+                    tag: tag,
+                    fd: widget.details,
+                    total: cons[sectionIndex].items.length,
+                    index: index,
+                    hasBinLine: false,
+                    isLast: isLastTag,
+                  );
+                }),
+          ),
+        )
+            : Flexible(
+          child: ListView.builder(
+              itemCount: filteredTag.length,
+              itemBuilder: (c, i) =>
+                  TagWidget(
+                    tag: filteredTag[i],
+                    index: i,
+                    fd: widget.details,
+                    total: filteredTag.length,
+                    hasBinLine: false,
+                    hasTagLine: false,
+                  )),
+        ),
       ],
     );
   }
@@ -402,7 +413,7 @@ class ContainerTileWidget extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              binLines ? Container(width: 1.5, height: isLast ? 20 : 40, color: MyColors.binGreen) : SizedBox(),
+              binLines ? Container(width: 1.5, height: isLast ? 20 : 40, color: MyColors.binGreen) : const SizedBox(),
               Expanded(
                 child: SizedBox(
                   height: 40,
@@ -551,9 +562,17 @@ class BinSection extends ExpandableListSection<TagContainer> {
   List<TagContainer>? getItems() {
     List<TagContainer> results = [];
     if (fd.tagList.any((element) => element.getContainerID == null && element.tagPositions.first.binID == bin.id)) {
-      results = allCons.where((element) => element.getTags(fd).where((t) => t.tagPositions.first.binID == bin.id).isNotEmpty).toList() + [TagContainer.bulk(2)];
+      results = allCons.where((element) =>
+      element
+          .getTags(fd)
+          .where((t) => t.tagPositions.first.binID == bin.id)
+          .isNotEmpty).toList() + [TagContainer.bulk(2)];
     } else {
-      results = allCons.where((element) => element.getTags(fd).where((t) => t.tagPositions.first.binID == bin.id).isNotEmpty).toList();
+      results = allCons.where((element) =>
+      element
+          .getTags(fd)
+          .where((t) => t.tagPositions.first.binID == bin.id)
+          .isNotEmpty).toList();
     }
 
     // results =  results.where((e) =>(e.isBulk || e.getTags(fd).isNotEmpty) && e.getTags(fd).any((element) {
@@ -586,108 +605,236 @@ class BinSection extends ExpandableListSection<TagContainer> {
     if (fd.tagList.any((element) => element.getContainerID == null && element.tagPositions.first.binID == bin.id)) {
       return allCons + [TagContainer.bulk(2)];
     }
-    return allCons.where((e) => e.getTags(fd).isNotEmpty && e.getTags(fd).any((element) => !e.isBulk && element.tagPositions.first.binID == bin.id)).toList();
+    return allCons.where((e) =>
+    e
+        .getTags(fd)
+        .isNotEmpty && e.getTags(fd).any((element) => !e.isBulk && element.tagPositions.first.binID == bin.id)).toList();
     return allCons;
   }
 }
 
 class TagWidget extends StatelessWidget {
   final FlightTag tag;
+  final FlightDetails? fd;
   final int index;
+  final int total;
   final bool isLast;
   final bool hasBinLine;
   final bool hasTagLine;
+  final bool inDetails;
 
-  const TagWidget({Key? key, required this.tag, required this.index, this.isLast = false, required this.hasBinLine, this.hasTagLine = true}) : super(key: key);
+  const TagWidget({Key? key, required this.tag, required this.index, this.isLast = false, required this.hasBinLine, this.hasTagLine = true, required this.total,required this.fd,this.inDetails = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+    TextStyle tagNumStyle = TextStyle(
+        fontFamily: "Signika",
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        color: tag.isForced
+            ? MyColors.havaPrime
+            : tag.currentStatus > 0
+            ? tag.getStatus.getColor
+            : MyColors.black1);
     return Container(
       decoration: BoxDecoration(color: index.isEven ? MyColors.evenRow : MyColors.oddRow),
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-              flex: 3,
-              child: DataCellWidget(
-                  child: Row(
+            flex: 7,
+            child: DataCellWidget(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(width: 12),
+
                   Container(
                       width: 40,
                       height: 40,
                       alignment: Alignment.center,
                       child: Text(
-                        '$index',
+                        '${total - index}',
                         style: TextStyle(color: MyColors.indexColor.withOpacity(0.3), fontWeight: FontWeight.bold),
                       )),
                   const SizedBox(width: 8),
-                  hasBinLine ? Container(width: 2, height: 40, color: MyColors.binGreen) : const SizedBox(),
-                  const SizedBox(width: 60),
-                  hasTagLine
+                  (hasBinLine && !inDetails) ? Container(width: 2, height: 40, color: MyColors.binGreen) : const SizedBox(width: 50,),
+                  (hasTagLine && !inDetails)
                       ? Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(width: 2, height: isLast ? 20 : 40, color: MyColors.containerGreen),
-                            Container(
-                              width: 40,
-                              height: 2,
-                              color: MyColors.containerGreen,
-                              margin: const EdgeInsets.only(top: 19),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 16.0),
-                              child: Icon(Icons.circle, color: MyColors.containerGreen, size: 8),
-                            ),
-                          ],
-                        )
-                      : const SizedBox(width: 50,),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(width: 2, height: isLast ? 20 : 40, color: MyColors.containerGreen),
+                      Container(
+                        width: 40,
+                        height: 2,
+                        color: MyColors.containerGreen,
+                        margin: const EdgeInsets.only(top: 19),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 16.0),
+                        child: Icon(Icons.circle, color: MyColors.containerGreen, size: 8),
+                      ),
+                    ],
+                  )
+                      : const SizedBox(width: 50),
+                  IndexedStack(
+                    index: tag.inboundLeg == null ? 0 : 1,
+                    children: const [
+                      SizedBox(),
+                      Padding(
+                        padding: EdgeInsets.only(left: 2),
+                        child: Icon(Icons.flight_land, color: MyColors.green, size: 20),
+                      )
+                    ],
+                  ),
+                  IndexedStack(
+                    index: tag.outboundLegs.isEmpty ? 0 : 1,
+                    children: const [
+                      SizedBox(),
+                      Padding(
+                        padding: EdgeInsets.only(left: 2),
+                        child: Icon(Icons.flight_takeoff, color: MyColors.blueGreen, size: 20),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 40,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        tag.getStatusWidget,
+                      ],),
+                  ),
+
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     child: Text(
                       tag.numString,
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      style: tagNumStyle,
                     ),
                   ),
+
+                  SizedBox(
+                    height: 40,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        tag.getTypeWidget
+                      ],),
+                  ),
+                  const SizedBox(width: 12),
+                  inDetails?SizedBox():
+                  SizedBox(
+                    height: 40,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        DotButton(icon: Icons.info,size: 20,onPressed: ()async{
+                          FlightDetailsController fd = getIt<FlightDetailsController>();
+                          await fd.flightGetTagMoreDetails(tag.flightScheduleId, tag);
+                        },),
+                      ],),
+                  ),
+
+                  // const SizedBox(width: 12),
                 ],
-              ))),
+              ),
+            ),
+          ),
           Expanded(
-              flex: 1,
-              child: DataCellWidget(
-                  child: Padding(
+            flex: 2,
+            child: DataCellWidget(
+              child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: Text(tag.secString),
-              ))),
+                child: Row(
+                  children: [
+                    Text(tag.secString),
+                    const SizedBox(width: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        fd ==null? SizedBox():Text(
+                          "(${fd!.tagList
+                              .where((element) => element.dcsInfo != null && element.dcsInfo?.securityCode == tag.dcsInfo?.securityCode)
+                              .length})",
+                        ),
+                        const SizedBox(width: 8),
+                        Icon(tag.posIcon, color: tag.posColor, size: 20),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
           Expanded(
-              flex: 3,
-              child: DataCellWidget(
-                  child: Padding(
+            flex: 5,
+            child: DataCellWidget(
+              child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: Text(tag.dcsInfo?.paxName ?? '-'),
-              ))),
+                child: Row(
+                  children: [
+                    Expanded(child: Text(tag.dcsInfo?.paxName ?? '-')),
+                    IndexedStack(
+                      index: tag.tagSsrs.isEmpty
+                          ? 0
+                          : tag.tagSsrs.length == 1
+                          ? 1
+                          : 1,
+                      children: [
+                        const SizedBox(),
+                        Container(
+                          width: 50,
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+                          decoration: BoxDecoration(color: MyColors.green.withOpacity(0.4), borderRadius: BorderRadius.circular(2)),
+                          child: Text(
+                            tag.tagSsrs.isEmpty ? "" : tag.tagSsrs.map((e) => e.name).join(", "),
+                            style: const TextStyle(fontSize: 8),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 2),
+                          child: Icon(Icons.star_purple500, color: Colors.deepOrange, size: 20),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
           Expanded(
-              flex: 1,
-              child: DataCellWidget(
-                  child: Padding(
+            flex: 2,
+            child: DataCellWidget(
+              child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 child: Text(tag.tagPositions.first.getTime()),
-              ))),
+              ),
+            ),
+          ),
           Expanded(
-              flex: 2,
-              child: DataCellWidget(
-                  child: Padding(
+            flex: 2,
+            child: DataCellWidget(
+              child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 child: Text(tag.tagPositions.first.username),
-              ))),
+              ),
+            ),
+          ),
           Expanded(
-              flex: 1,
-              child: DataCellWidget(
-                  child: Padding(
+            flex: 1,
+            child: DataCellWidget(
+              child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: Text(tag.weight),
-              ))),
+                child: tag.weight,
+              ),
+            ),
+          ),
+
         ],
       ),
     );
