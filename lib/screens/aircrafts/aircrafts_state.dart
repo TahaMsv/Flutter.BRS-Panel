@@ -17,7 +17,9 @@ final aircraftSearchProvider = StateProvider<String>((ref) => '');
 final filteredAircraftListProvider = Provider<List<Aircraft>>((ref) {
   // final aircrafts = ref.watch(aircraftListProvider);
   final aircrafts = BasicClass.systemSetting.aircraftList;
+  print("filteredAircraftListProvider ${aircrafts.length}");
   final searchFilter = ref.watch(aircraftSearchProvider);
+
   return aircrafts
       .where(
         (f) => f.validateSearch(searchFilter),

@@ -158,7 +158,7 @@ class SystemSettings {
         handlingAccess: List<HandlingAccess>.from(json["HandlingAccess"].map((x) => HandlingAccess.fromJson(x))),
         // airlineList: List<Airline>.from((json["AirlineList2"] ?? []).map((x) => Airline.fromJson(x))),
         airportList: List<Airport>.from(json["AirportList"].map((x) => Airport.fromJson(x))),
-        aircraftList: List<Aircraft>.from((json["AircraftList2"] ?? []).map((x) => Aircraft.fromJson(x))),
+        aircraftList: List<Aircraft>.from((json["AircraftList"]).map((x) => Aircraft.fromJson(x))),
         tagTypeList: List<TagType>.from((json["TagTypeList"] ?? []).map((x) => TagType.fromJson(x))),
       );
 
@@ -1343,7 +1343,7 @@ class Aircraft {
       };
 
   bool validateSearch(String s) {
-    return s.isEmpty || "$registration $al".toLowerCase().contains(s.toLowerCase());
+    return s.trim().isEmpty || "$registration $al".toLowerCase().contains(s.toLowerCase());
   }
 }
 
