@@ -12,16 +12,18 @@ class AirlinesState extends ChangeNotifier {
   ///bool loading = false;
 }
 
-final airlineListProvider = StateNotifierProvider<AirlineListNotifier, List<Airline>>((ref) => AirlineListNotifier(ref));
+// final airlineListProvider = StateNotifierProvider<AirlineListNotifier, List<String>>((ref) => AirlineListNotifier(ref));
+// final airlineListProvider = StateNotifier<List<String>>((ref) => []);
 
 final airlineSearchProvider = StateProvider<String>((ref) => '');
-final filteredAirlineListProvider = Provider<List<Airline>>((ref) {
+final airlineListProvider = StateProvider<List<String>>((ref) => []);
+final filteredAirlineListProvider = Provider<List<String>>((ref) {
   // final airlines = ref.watch(airlineListProvider);
-  final airlines = BasicClass.systemSetting.airlineList;
+  final airlines = BasicClass.airlineList;
   final searchFilter = ref.watch(airlineSearchProvider);
   return airlines
       .where(
-        (f) => f.validateSearch(searchFilter),
+        (f) => f.contains(searchFilter),
       )
       .toList();
 });

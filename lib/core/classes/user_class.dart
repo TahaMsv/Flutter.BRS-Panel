@@ -90,7 +90,7 @@ class SystemSettings {
   final List<HandlingSetting> handlingSetting;
   final List<HandlingAccess> handlingAccess;
   final List<Airport> airportList;
-  final List<Airline> airlineList;
+  // final List<Airline> airlineList;
   final List<Aircraft> aircraftList;
   final List<TagType> tagTypeList;
 
@@ -104,7 +104,7 @@ class SystemSettings {
     required this.classTypeList,
     required this.handlingSetting,
     required this.handlingAccess,
-    required this.airlineList,
+    // required this.airlineList,
     required this.airportList,
     required this.aircraftList,
     required this.tagTypeList,
@@ -127,7 +127,7 @@ class SystemSettings {
     List<HandlingAccess>? handlingAccess,
     List<Airport>? airportList,
     List<Aircraft>? aircraftList,
-    List<Airline>? airlineList,
+    // List<Airline>? airlineList,
     List<TagType>? tagTypeList,
   }) =>
       SystemSettings(
@@ -142,7 +142,7 @@ class SystemSettings {
         handlingAccess: handlingAccess ?? this.handlingAccess,
         aircraftList: aircraftList ?? this.aircraftList,
         airportList: airportList ?? this.airportList,
-        airlineList: airlineList ?? this.airlineList,
+        // airlineList: airlineList ?? this.airlineList,
         tagTypeList: tagTypeList ?? this.tagTypeList,
       );
 
@@ -156,7 +156,7 @@ class SystemSettings {
         classTypeList: List<ClassType>.from(json["ClassTypeList"].map((x) => ClassType.fromJson(x))),
         handlingSetting: List<HandlingSetting>.from(json["HandlingSetting"].map((x) => HandlingSetting.fromJson(x))),
         handlingAccess: List<HandlingAccess>.from(json["HandlingAccess"].map((x) => HandlingAccess.fromJson(x))),
-        airlineList: List<Airline>.from((json["AirlineList2"] ?? []).map((x) => Airline.fromJson(x))),
+        // airlineList: List<Airline>.from((json["AirlineList2"] ?? []).map((x) => Airline.fromJson(x))),
         airportList: List<Airport>.from(json["AirportList"].map((x) => Airport.fromJson(x))),
         aircraftList: List<Aircraft>.from((json["AircraftList2"] ?? []).map((x) => Aircraft.fromJson(x))),
         tagTypeList: List<TagType>.from((json["TagTypeList"] ?? []).map((x) => TagType.fromJson(x))),
@@ -173,7 +173,7 @@ class SystemSettings {
         "HandlingSetting": List<dynamic>.from(handlingSetting.map((x) => x.toJson())),
         "HandlingAccess": List<dynamic>.from(handlingAccess.map((x) => x.toJson())),
         "AirportList": List<dynamic>.from(airportList.map((x) => x.toJson())),
-        "AirlineList": List<dynamic>.from(airlineList.map((x) => x.toJson())),
+        // "AirlineList": List<dynamic>.from(airlineList.map((x) => x.toJson())),
         "AircraftList": List<dynamic>.from(aircraftList.map((x) => x.toJson())),
         "TagTypeList": List<dynamic>.from(tagTypeList.map((x) => x.toJson())),
       };
@@ -189,7 +189,7 @@ class SystemSettings {
       classTypeList: [],
       handlingSetting: [],
       handlingAccess: [],
-      airlineList: [],
+      // airlineList: [],
       airportList: [],
       aircraftList: [],
       tagTypeList: [],
@@ -491,6 +491,9 @@ class ClassType {
         "Segregation": segregation,
         "Abbreviation": abbreviation,
       };
+
+  int? get colorValue => int.tryParse(color);
+  Color get getColor => HexColor(color);
 }
 //
 // @immutable

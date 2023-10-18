@@ -160,10 +160,7 @@ class AirportCartWidget extends StatelessWidget {
                   // color: Colors.orange
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                child: Text(
-                  cart.type,
-                  style: GoogleFonts.titilliumWeb(fontWeight: FontWeight.bold),
-                ),
+                child: cart.allowedTagTypesWidgetMini,
               ),
               Expanded(
                 child: Container(

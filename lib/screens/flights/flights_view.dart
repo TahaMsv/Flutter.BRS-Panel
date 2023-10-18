@@ -136,10 +136,10 @@ class FlightsPanel extends ConsumerWidget {
                             final a = ref.watch(flightAirlineFilterProvider.notifier);
                             return SizedBox(
                               height: 35,
-                              child: MyFieldPicker<Airline>(
-                                itemToString: (a) => "${a.al} (${a.name})",
+                              child: MyFieldPicker<String>(
+                                itemToString: (a) => "$a",
                                 label: 'Airline',
-                                items: BasicClass.systemSetting.airlineList,
+                                items: BasicClass.airlineList,
                                 onChange: (v) {
                                   a.state = v;
                                 },

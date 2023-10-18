@@ -43,6 +43,7 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
   TextEditingController assignedSearchC = TextEditingController();
   List<ClassType> classes = [];
   List<String> destList = [];
+  List<TagType> typeList = [];
 
   // late Airport dest;
   late String? dest;
@@ -58,8 +59,8 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
     destList = List.from(widget.destList);
     classes.add(BasicClass.systemSetting.classTypeList.first);
     availableDests = List.from(widget.destList);
-    assigned = widget.cons.where((element) => element.flightId != null).toList();
-    available = widget.cons.where((element) => element.flightId == null && !assigned.any((as) => element.id == as.id)).toList();
+    assigned = widget.cons.where((element) => element.flightID != null).toList();
+    available = widget.cons.where((element) => element.flightID == null && !assigned.any((as) => element.id == as.id)).toList();
     availableSearchC.addListener(() {
       setState(() {});
     });
@@ -103,6 +104,7 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
               child: Row(
                 children: [
                   Expanded(
+                    flex: 2,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
@@ -122,13 +124,16 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                     ),
                   ),
                   Expanded(
-                      child: Container(
-                    height: 50,
-                    color: MyColors.evenRow,
-                  )),
+                    child: Container(
+                      height: 50,
+                      alignment: Alignment.center,
+                      color: MyColors.evenRow,
+                      child: const Text("Tag Types", style: TextStyles.styleBold16Grey),
+                    ),
+                  ),
                   // const SizedBox(width: 12),
                   Expanded(
-                    flex: 3,
+                    flex: 6,
                     child: Row(
                       children: [
                         const SizedBox(width: 12),
@@ -155,25 +160,9 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Expanded(
+                    flex: 2,
                     child: Column(
                       children: [
-                        // Padding(
-                        //   padding: const EdgeInsets.all(8.0),
-                        //   child: Row(
-                        //     children: [
-                        //       const Text("Available", style: TextStyles.styleBold16Grey),
-                        //       const SizedBox(width: 24),
-                        //       Expanded(
-                        //         child: MyTextField(
-                        //           height: 35,
-                        //           prefixIcon: const Icon(Icons.search),
-                        //           controller: availableSearchC,
-                        //           showClearButton: true,
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
                         Expanded(
                             child: SfDataGrid(
                                 headerGridLinesVisibility: GridLinesVisibility.both,
@@ -188,7 +177,8 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                   cons: availableList,
                                   onAdd: (e) async {
                                     // TagContainer e = availableList[i];
-                                    e = e.copyWith(destination: dest, destList: destList.join(","), classList: classes.map((e) => e.abbreviation).join(","));
+                                    // e = e.copyWith(destination: dest, destList: destList.join(","), classList: classes.map((e) => e.abbreviation).join(","));
+                                    e.tagTypeIds = typeList.map((e) => e.id.toString()).join(",");
                                     final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, true);
                                     if (a != null) {
                                       available.removeWhere((element) => element.id == a.id);
@@ -200,14 +190,16 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                 columns: AvailableContainerDataTableColumn.values
                                     .map(
                                       (e) => GridColumn(
-                                          columnName: e.name,
-                                          label: Center(
-                                              child: Text(
-                                            e.label.capitalizeFirst!,
-                                            style: TextStyle(fontSize: 12),
-                                          )),
-                                          // columnWidthMode: ColumnWidthMode.fill
-                                          width: width * 0.8 * 0.2 * e.width),
+                                        columnName: e.name,
+
+                                        label: Center(
+                                            child: Text(
+                                          e.label.capitalizeFirst!,
+                                          style: TextStyle(fontSize: 12),
+                                        )),
+                                        // columnWidthMode: ColumnWidthMode.fill
+                                        width: width * 0.8 * 0.2 * e.width,
+                                      ),
                                     )
                                     .toList())
                             // child: Container(
@@ -248,86 +240,35 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text("Destination"),
-                            const SizedBox(height: 12),
-                            GridView(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 3),
-                                children: widget.destList
-                                    .map(
-                                      (e) => Container(
+                            Expanded(
+                              child: GridView(
+                                  shrinkWrap: true,
+                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1, childAspectRatio: 3),
+                                  children: BasicClass.systemSetting.tagTypeList
+                                      .where((element) => element.label.isNotEmpty)
+                                      .map(
+                                        (e) => SizedBox(
                                           width: double.infinity,
-
-                                          // height: 10,
-                                          child: MyRadioButton(
-                                              value: dest == e,
-                                              onChange: (v) {
+                                          child: MyCheckBoxButton(
+                                              value: typeList.contains(e),
+                                              onChanged: (v) {
                                                 if (v) {
-                                                  dest = e;
+                                                  typeList.add(e);
+                                                } else if (typeList.length > 1 || true) {
+                                                  typeList.remove(e);
                                                 }
                                                 setState(() {});
                                               },
-                                              label: e!)),
-                                    )
-                                    .toList()),
-                            const SizedBox(height: 24),
-                            const Text("Allowed Destinations"),
-                            const SizedBox(height: 12),
-                            GridView(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 3),
-                                children: widget.destList
-                                    .map(
-                                      (e) => Container(
-                                        width: double.infinity,
-
-                                        // height: 10,
-                                        child: MyCheckBoxButton(
-                                            value: destList.contains(e),
-                                            onChanged: (v) {
-                                              if (v) {
-                                                destList.add(e);
-                                              } else if (destList.length > 1) {
-                                                destList.remove(e);
-                                              }
-                                              setState(() {});
-                                            },
-                                            label: e),
-                                      ),
-                                    )
-                                    .toList()),
-                            const SizedBox(height: 24),
-                            const Text("Allowed Class Types"),
-                            const SizedBox(height: 12),
-                            GridView(
-                                physics: const NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 3),
-                                children: BasicClass.systemSetting.classTypeList
-                                    .map(
-                                      (e) => SizedBox(
-                                        width: double.infinity,
-                                        child: MyCheckBoxButton(
-                                            value: classes.contains(e),
-                                            onChanged: (v) {
-                                              if (v) {
-                                                classes.add(e);
-                                              } else if (classes.length > 1) {
-                                                classes.remove(e);
-                                              }
-                                              setState(() {});
-                                            },
-                                            label: e.title),
-                                      ),
-                                    )
-                                    .toList()),
+                                              label: e.label),
+                                        ),
+                                      )
+                                      .toList()),
+                            ),
                           ],
                         ),
                       )),
                   Expanded(
-                    flex: 3,
+                    flex: 6,
                     child: SfDataGrid(
                         horizontalScrollPhysics: const NeverScrollableScrollPhysics(),
                         headerGridLinesVisibility: GridLinesVisibility.both,
@@ -362,44 +303,6 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                   width: width * 0.8 * 0.6 * e.width),
                             )
                             .toList()),
-                    // Column(
-                    //   children: [
-                    //     Container(
-                    //       child: const Row(
-                    //         children: [
-                    //           ColumnHeaderWidget(flex: 6, label: "Name"),
-                    //           ColumnHeaderWidget(flex:2,label: "Position"),
-                    //           ColumnHeaderWidget(flex:2,label: "Tag Count"),
-                    //           ColumnHeaderWidget(flex: 6, label: "Dest List"),
-                    //           ColumnHeaderWidget(flex: 2, label: "Class Types"),
-                    //           ColumnHeaderWidget(label: ""),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //     Expanded(
-                    //       child: Container(
-                    //         color: Colors.white,
-                    //         child: ListView.builder(
-                    //           itemBuilder: (c, i) {
-                    //             TagContainer e = assignedList[i];
-                    //             return AssignedContainerWidget(
-                    //                 con: e,
-                    //                 index: i,
-                    //                 onDelete: () async {
-                    //                   final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, false);
-                    //                   if (a != null) {
-                    //                     assigned.removeWhere((element) => element.id == a.id);
-                    //                     available.add(a);
-                    //                     setState(() {});
-                    //                   }
-                    //                 });
-                    //           },
-                    //           itemCount: assignedList.length,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
                   ),
                   const SizedBox(width: 12),
                 ],
@@ -581,8 +484,8 @@ class AssignedContainerWidget extends StatelessWidget {
                 valueColor: con.getPosition?.getColor ?? Colors.black87,
               )),
           Expanded(flex: 2, child: Text(con.tagCount.toString())),
-          Expanded(flex: 6, child: Text("(${con.destination ?? ''}) ${con.destList ?? ''}")),
-          Expanded(flex: 2, child: Text(con.classList ?? '-')),
+          Expanded(flex: 6, child: Text("(${con.dest ?? ''}) ${con.destList ?? ''}")),
+          Expanded(flex: 2, child: Text(con.classTypeList.join(", ") ?? '-')),
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,

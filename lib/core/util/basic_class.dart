@@ -44,6 +44,7 @@ class BasicClass {
   static Airport get airport => instance._airport!;
 
   static String get username => instance._username!;
+  static List<String> get airlineList => instance._userSettings!.accessAirlines;
 
   static SystemSettings get systemSetting => instance._systemSettings ?? SystemSettings.empty();
   static UserSettings get userSetting => instance._userSettings ?? UserSettings.empty();
@@ -62,8 +63,8 @@ class BasicClass {
     print(code);
     return systemSetting.airportList.firstWhereOrNull((e)=>e.code==code);
   }
-  static Airline? getAirlineByCode(String code) {
-    return systemSetting.airlineList.firstWhereOrNull((e)=>e.al==code);
+  static String? getAirlineByCode(String code) {
+    return userSetting.accessAirlines.firstWhereOrNull((e)=>e==code);
   }
   static Aircraft? getAircraftByID(int? id) {
     return systemSetting.aircraftList.firstWhereOrNull((e)=>e.id==id);

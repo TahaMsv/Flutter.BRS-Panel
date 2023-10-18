@@ -563,8 +563,8 @@ class Flight {
     return flightType == typeFilter.index;
   }
 
-  bool validateAirline(Airline? a) {
-    return a==null || al == a.al;
+  bool validateAirline(String? a) {
+    return a==null || al == a;
   }
 
   bool validateAirport(Airport? a) {

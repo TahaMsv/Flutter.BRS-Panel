@@ -20,7 +20,7 @@ final flightDateProvider = StateProvider<DateTime>((ref) => DateTime.now());
 final flightsShowFiltersProvider = StateProvider<bool>((ref) => true);
 final flightTypeFilterProvider = StateProvider<FlightTypeFilter>((ref) => FlightTypeFilter.departure);
 final flightAirportFilterProvider = StateProvider<Airport?>((ref) => null);
-final flightAirlineFilterProvider = StateProvider<Airline?>((ref) => null);
+final flightAirlineFilterProvider = StateProvider<String?>((ref) => null);
 
 final filteredFlightListProvider = Provider<List<Flight>>((ref) {
   final flights = ref.watch(flightListProvider);

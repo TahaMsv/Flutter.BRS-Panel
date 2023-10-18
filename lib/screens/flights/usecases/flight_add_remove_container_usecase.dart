@@ -35,12 +35,20 @@ class FlightAddRemoveContainerRequest extends Request {
       "Request": {
         "FlightScheduleID": flight.id,
         "ContainerID": con.id!,
-        "Destination": con.destination,
+        "Destination": con.dest,
         "DestList":con.destList,
-        "ClassList":con.classList,
+        "ClassList":con.classTypeList,
         // "ClassTypeID": con.classTypeID,
-        "IsDeleted": isAdd?0:1
-      }
+        "IsDeleted": isAdd?0:1,
+        "SpotID": con.spotID,
+        "ShootID": con.shootID,
+        "TagTypeIDs": con.tagTypeIds,
+        "ClassTypeID": 1,
+        // "PositionID": positionID,
+        // "IsDeleted": assign ? 0 : 1,
+        // "IsForced": isForce,
+        "SectionID": con.sectionID
+      },
     }
   };
 

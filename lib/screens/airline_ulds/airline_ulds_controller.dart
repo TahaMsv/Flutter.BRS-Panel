@@ -24,7 +24,7 @@ class AirlineUldsController extends MainController {
   // UseCase UseCase = UseCase(repository: Repository());
 
   Future<List<TagContainer>?> airlineGetUldList() async {
-    Airline? al = ref.read(selectedAirlineProvider);
+    String? al = ref.read(selectedAirlineProvider);
     if (al == null) return null;
     List<TagContainer>? ulds;
     AirlineGetUldListUseCase airlineGetUldListUsecase = AirlineGetUldListUseCase();
@@ -43,10 +43,10 @@ class AirlineUldsController extends MainController {
     nav.dialog(const AddUpdateAirlineDialogDialog(editingUld: null));
   }
 
-  Future<TagContainer?> airlineAddUld(Airline al, String code, String type) async {
+  Future<TagContainer?> airlineAddUld(String al, String code, String type) async {
     TagContainer? uld;
     AirlineAddUldUseCase airlineAddUldUsecase = AirlineAddUldUseCase();
-    AirlineAddUldRequest airlineAddUldRequest = AirlineAddUldRequest(al: al.al, uldCode: code, uldType: type);
+    AirlineAddUldRequest airlineAddUldRequest = AirlineAddUldRequest(al: al, uldCode: code, uldType: type);
     final fOrR = await airlineAddUldUsecase(request: airlineAddUldRequest);
 
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => airlineAddUld(al, code, type)), (r) {
@@ -62,7 +62,7 @@ class AirlineUldsController extends MainController {
     TagContainer? uld;
 
     AirlineUpdateUldUseCase airlineUpdateUldUsecase = AirlineUpdateUldUseCase();
-    AirlineUpdateUldRequest airlineUpdateUldRequest = AirlineUpdateUldRequest(id: updating.id!, al: selectedAirlineP!.al, uldCode: updating.code, uldType: updating.typeId);
+    AirlineUpdateUldRequest airlineUpdateUldRequest = AirlineUpdateUldRequest(id: updating.id!, al: selectedAirlineP!, uldCode: updating.code, uldType: updating.typeId);
     final fOrR = await airlineUpdateUldUsecase(request: airlineUpdateUldRequest);
 
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => airlineUpdateUld(updating)), (r) {
@@ -88,7 +88,7 @@ class AirlineUldsController extends MainController {
     bool? status;
     final selectedAirlineP = ref.read(selectedAirlineProvider);
     AirlineDeleteUldUseCase airlineDeleteUldUsecase = AirlineDeleteUldUseCase();
-    AirlineDeleteUldRequest airlineDeleteUldRequest = AirlineDeleteUldRequest(id: uld.id!, al: selectedAirlineP!.al);
+    AirlineDeleteUldRequest airlineDeleteUldRequest = AirlineDeleteUldRequest(id: uld.id!, al: selectedAirlineP!);
     final fOrR = await airlineDeleteUldUsecase(request: airlineDeleteUldRequest);
 
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => airlineDeleteUld(uld)), (r) {

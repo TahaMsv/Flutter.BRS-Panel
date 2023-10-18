@@ -22,7 +22,7 @@ class AirlineGetUldListUseCase extends UseCase<AirlineGetUldListResponse,Airline
 }
 
 class AirlineGetUldListRequest extends Request {
-  final Airline al;
+  final String al;
   AirlineGetUldListRequest({required this.al});
 
   @override
@@ -31,7 +31,7 @@ class AirlineGetUldListRequest extends Request {
       "Execution": "ULDList",
       "Token":token,
       "Request": {
-        "AL": al.al
+        "AL": al
       }
     }
   };

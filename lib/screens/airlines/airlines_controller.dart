@@ -13,7 +13,7 @@ import 'airlines_state.dart';
 class AirlinesController extends MainController {
   late AirlinesState airlinesState = ref.read(airlinesProvider);
 
-  Future<void> goUlds(Airline al) async{
+  Future<void> goUlds(String al) async{
     AirlineUldsController airlineUldsController = getIt<AirlineUldsController>();
     final saP = ref.read(selectedAirlineProvider.notifier);
     saP.state = al;

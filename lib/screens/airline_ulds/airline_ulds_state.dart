@@ -16,7 +16,7 @@ class AirlineUldsState extends ChangeNotifier {
 
 }
 
-final selectedAirlineProvider = StateProvider<Airline?>((ref) => BasicClass.getAirlineByCode(BasicClass.userSetting.al));
+final selectedAirlineProvider = StateProvider<String?>((ref) => BasicClass.getAirlineByCode(BasicClass.userSetting.al));
 
 final uldListProvider = StateNotifierProvider<AirlineUldListNotifier, List<TagContainer>>((ref) => AirlineUldListNotifier(ref));
 

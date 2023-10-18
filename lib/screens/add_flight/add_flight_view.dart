@@ -117,11 +117,11 @@ class AddFlightAirlineWidget extends StatelessWidget {
     return Consumer(
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
         AddFlightState state = ref.watch(addFlightProvider);
-        return MyFieldPicker<Airline>(
+        return MyFieldPicker<String>(
           hasSearch: true,
-          items: BasicClass.systemSetting.airlineList,
+          items: BasicClass.airlineList,
           label: "Airline",
-          itemToString: (e) => "${e.al}(${e.name})",
+          itemToString: (e) => e,
           value: state.al,
           onChange: (e) {
             final afState = ref.read(addFlightProvider.notifier);

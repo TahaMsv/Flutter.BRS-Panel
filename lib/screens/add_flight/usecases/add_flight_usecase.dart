@@ -31,7 +31,7 @@ class AddFlightRequest extends Request {
   final Airport from;
   final Airport to;
   final String flnb;
-  final Airline al;
+  final String al;
   final Aircraft? aircraft;
   final int barcodeLength;
   final int flightTypeID;
@@ -66,7 +66,7 @@ class AddFlightRequest extends Request {
         "ToCity": to.code,
         "FromCity": from.code,
         "FLNB": flnb,
-        "AL": al.al,
+        "AL": al,
         "Registration": aircraft?.registration,
         "BarcodeLength": barcodeLength,
         "FlightType": flightTypeID,

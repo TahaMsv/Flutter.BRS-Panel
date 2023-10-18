@@ -11,8 +11,7 @@ enum AssignedContainerDataTableColumn {
   name,
   position,
   tagCount,
-  destList,
-  classTypes,
+  tagTypes,
   actions
 }
 
@@ -22,15 +21,13 @@ extension FlightDataTableColumnDetails on AssignedContainerDataTableColumn {
       case AssignedContainerDataTableColumn.name:
         return 0.23;
       case AssignedContainerDataTableColumn.position:
-        return 0.1;
+        return 0.12;
       case AssignedContainerDataTableColumn.tagCount:
-        return 0.1;
-      case AssignedContainerDataTableColumn.destList:
-        return 0.2;
-      case AssignedContainerDataTableColumn.classTypes:
-        return 0.22;
+        return 0.12;
+      case AssignedContainerDataTableColumn.tagTypes:
+        return 0.45;
       case AssignedContainerDataTableColumn.actions:
-        return 0.06;
+        return 0.1;
       case AssignedContainerDataTableColumn.id:
         return 0.08;
     }
@@ -59,8 +56,7 @@ class AssignedContainerDataSource extends DataGridSource {
           DataGridCell<String>(columnName: AssignedContainerDataTableColumn.name.name, value: e.title),
           DataGridCell<int>(columnName: AssignedContainerDataTableColumn.position.name, value: 1),
           DataGridCell<String>(columnName: AssignedContainerDataTableColumn.tagCount.name, value: e.from),
-          DataGridCell<String>(columnName: AssignedContainerDataTableColumn.destList.name, value: e.destList),
-          DataGridCell<String>(columnName: AssignedContainerDataTableColumn.classTypes.name, value: e.classList),
+          DataGridCell<String>(columnName: AssignedContainerDataTableColumn.tagTypes.name, value: e.tagTypeIds),
           DataGridCell<String>(columnName: AssignedContainerDataTableColumn.actions.name, value: ''),
         ],
       ),
@@ -110,23 +106,11 @@ class AssignedContainerDataSource extends DataGridSource {
               child: Text(con.tagCount.toString()),
             );
           }
-          if (dataGridCell.columnName == AssignedContainerDataTableColumn.destList.name) {
+          if (dataGridCell.columnName == AssignedContainerDataTableColumn.tagTypes.name) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.centerLeft,
-              child: Row(
-                children: [
-                  Text("(${con.destination})",style: const TextStyle(fontWeight: FontWeight.bold),),
-                  Text(con.dests.where((element) => element!=con.destination).join(", ")),
-                ],
-              ),
-            );
-          }
-          if (dataGridCell.columnName == AssignedContainerDataTableColumn.classTypes.name) {
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              alignment: Alignment.centerLeft,
-              child: Text(con.classList??'-'),
+              child: con.allowedTagTypesWidget
             );
           }
           if (dataGridCell.columnName == AssignedContainerDataTableColumn.actions.name) {
@@ -139,6 +123,7 @@ class AssignedContainerDataSource extends DataGridSource {
                     icon: Icons.delete,
                     color: Colors.red,
                     onPressed: (con.tagCount ?? 0) > 0 ? null : ()async{
+
                      await onDelete(con);
                     },
                   )

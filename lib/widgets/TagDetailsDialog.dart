@@ -443,7 +443,7 @@ class TagActionHistoryWidget extends StatelessWidget {
           DateTime? scanTimeUtc = ah.actionTime.tryDateTimeUTC;
           DateTime? scanTime = scanTimeUtc?.toLocal();
           // TagAction tagAction = model.loginUser!.systemSettings.statusActionList.firstWhere((element) => element.id == ah.actionId);
-          TagAction tagAction = BasicClass.systemSetting.actions.firstWhere((element) => element.id == ah.actionId);
+          TagAction? tagAction = BasicClass.systemSetting.actions.firstWhereOrNull((element) => element.id == ah.actionId);
           return Container(
             color: index % 2 == 0 ? MyColors.paleGrey : Colors.white,
             child: Row(
@@ -457,7 +457,7 @@ class TagActionHistoryWidget extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     )),
                 Expanded(flex: 3, child: Text("${ah.id}")),
-                Expanded(flex: 8, child: Text("${tagAction.actionTitle}", style: const TextStyle(fontWeight: FontWeight.bold))),
+                Expanded(flex: 8, child: Text("${tagAction?.actionTitle??''}", style: const TextStyle(fontWeight: FontWeight.bold))),
               ],
             ),
           );

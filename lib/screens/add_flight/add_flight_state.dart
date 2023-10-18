@@ -18,7 +18,7 @@ class AddFlightState extends ChangeNotifier {
   Airport? from = BasicClass.getAirportByCode(BasicClass.userSetting.airport);
   Airport? to;
   TextEditingController flnbC = TextEditingController();
-  Airline? al = BasicClass.getAirlineByCode(BasicClass.userSetting.al);
+  String? al = BasicClass.userSetting.al;
   Aircraft? aircraft;
   int? barcodeLength;
   int flightTypeID = 0;

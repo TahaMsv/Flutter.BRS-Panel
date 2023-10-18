@@ -32,17 +32,17 @@ extension AirlineDataTableColumnDetails on AirlineDataTableColumn {
 }
 
 class AirlineDataSource extends DataGridSource {
-  late final List<Airline> _dataList;
+  late final List<String> _dataList;
   late final AirlinesController airlinesController = getIt<AirlinesController>();
 
-  AirlineDataSource({required List<Airline> airlines}) {
+  AirlineDataSource({required List<String> airlines}) {
     _dataList = airlines;
     _airlines = airlines
         .map<DataGridRow>(
           (e) => DataGridRow(
             cells: [
-              DataGridCell<String>(columnName: AirlineDataTableColumn.airline.name, value: e.al),
-              DataGridCell<String>(columnName: AirlineDataTableColumn.name.name, value: e.name),
+              DataGridCell<String>(columnName: AirlineDataTableColumn.airline.name, value: e),
+              DataGridCell<String>(columnName: AirlineDataTableColumn.name.name, value: e),
               DataGridCell<String>(columnName: AirlineDataTableColumn.actions.name, value: ''),
             ],
           ),
@@ -58,7 +58,7 @@ class AirlineDataSource extends DataGridSource {
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
     final int index = rows.indexOf(row);
-    final Airline f = _dataList[index];
+    final String f = _dataList[index];
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((dataGridCell) {
       if (dataGridCell.columnName == AirlineDataTableColumn.airline.name) {
@@ -66,11 +66,11 @@ class AirlineDataSource extends DataGridSource {
           children: [
             const SizedBox(width: 12),
             AirlineLogo(
-              f.al,
-              key: Key(f.al),
+              f,
+              key: Key(f),
             ),
             const SizedBox(width: 8),
-            Expanded(child: Text(f.al)),
+            Expanded(child: Text(f)),
             const SizedBox(width: 12),
           ],
         );
@@ -79,7 +79,7 @@ class AirlineDataSource extends DataGridSource {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           alignment: Alignment.center,
-          child: Text(f.name),
+          child: Text(f),
         );
       }
       if (dataGridCell.columnName == AirlineDataTableColumn.actions.name) {

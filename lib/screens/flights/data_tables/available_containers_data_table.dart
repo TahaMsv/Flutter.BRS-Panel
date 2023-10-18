@@ -17,7 +17,7 @@ extension FlightDataTableColumnDetails on AvailableContainerDataTableColumn {
       case AvailableContainerDataTableColumn.name:
         return 0.65;
       case AvailableContainerDataTableColumn.actions:
-        return 0.18;
+        return 0.28;
       case AvailableContainerDataTableColumn.id:
         return 0.17;
     }

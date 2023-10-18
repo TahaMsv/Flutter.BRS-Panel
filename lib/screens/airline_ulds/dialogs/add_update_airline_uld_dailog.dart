@@ -100,7 +100,7 @@ class _AddUpdateAirlineDialogDialogState extends State<AddUpdateAirlineDialogDia
                         });
                       }
                     }else{
-                      final updated = TagContainer(id: widget.editingUld!.id, typeId: 1, code: codeC.text, title: '', positionId: 1, sectionID: null);
+                      final updated = TagContainer(id: widget.editingUld!.id, typeId: 1, code: codeC.text, title: '', positionID: 1, sectionID: 2, flightID: null, classTypeID: 1, ocrPrefix: []);
                       final up = await myAirlineUldsController.airlineUpdateUld(updated);
                       if (up != null) {
                         navigationService.popDialog(onPop: (){
