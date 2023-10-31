@@ -84,6 +84,15 @@ class AirportDataSource extends DataGridSource {
             children: [
               MyButton(
                 height: 30,
+                label: "Sections",
+                fade: true,
+                onPressed: () async {
+                  await airportsController.goSections(a);
+                },
+              ),
+              const SizedBox(width: 12),
+              MyButton(
+                height: 30,
                 // fontSize: 12,
                 label: "Cart List",
                 fade: true,

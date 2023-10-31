@@ -30,13 +30,14 @@ import 'core/platform/network_info.dart';
 import 'core/util/basic_class.dart';
 import 'core/util/config_class.dart';
 import 'screens/airline_ulds/airline_ulds_controller.dart';
+import 'screens/airport_sections/airport_sections_controller.dart';
 import 'screens/home/home_controller.dart';
 import 'screens/login/login_controller.dart';
 
 final getIt = GetIt.instance;
 
 Future<void> init() async {
-  if(!kIsWeb) {
+  if (!kIsWeb) {
     WidgetsFlutterBinding.ensureInitialized();
   }
   initFullScreen();
@@ -75,6 +76,7 @@ initControllers() {
   AircraftsController aircraftsController = AircraftsController();
   AirlineUldsController airlineUldsController = AirlineUldsController();
   AirportCartsController airportCartsController = AirportCartsController();
+  AirportSectionsController airportSectionsController = AirportSectionsController();
   BsmController bsmController = BsmController();
 
   getIt.registerSingleton(loginController);
@@ -87,6 +89,7 @@ initControllers() {
   getIt.registerSingleton(aircraftsController);
   getIt.registerSingleton(airlineUldsController);
   getIt.registerSingleton(airportCartsController);
+  getIt.registerSingleton(airportSectionsController);
   getIt.registerSingleton(bsmController);
 
   ns.registerControllers({
@@ -100,12 +103,13 @@ initControllers() {
     RouteNames.aircrafts: aircraftsController,
     RouteNames.airlineUlds: airlineUldsController,
     RouteNames.airportCarts: airportCartsController,
+    RouteNames.airportSections: airportSectionsController,
     RouteNames.bsm: bsmController,
   });
 }
 
 void initFullScreen() async {
-  if(!kIsWeb &&(Platform.isMacOS || Platform.isWindows)) {
+  if (!kIsWeb && (Platform.isMacOS || Platform.isWindows)) {
     await windowManager.ensureInitialized();
     windowManager.waitUntilReadyToShow().then((_) async {
       await windowManager.maximize();
@@ -113,30 +117,27 @@ void initFullScreen() async {
   }
 }
 
-
 initNetworkManager([String? baseUrl]) {
   String base = baseUrl ?? BasicClass.config.baseURL;
   // log("Setting Base URL to $baseUrl");
   NetworkOption.initialize(
       timeout: Duration(days: 1),
       baseUrl: base,
-      extraSuccessRule: (NetworkResponse nr,_) {
+      extraSuccessRule: (NetworkResponse nr, _) {
         if (nr.responseCode != 200) return false;
-        int statusCode = int.parse((nr.responseBody["Status"]?.toString() ?? nr.responseBody["ResultCode"]?.toString() ?? "0"));
+        int statusCode =
+            int.parse((nr.responseBody["Status"]?.toString() ?? nr.responseBody["ResultCode"]?.toString() ?? "0"));
         // print("Success Check => ${statusCode}");
-        if(statusCode == -999){
+        if (statusCode == -999) {
           LoginController loginController = getIt<LoginController>();
           loginController.logout(true);
-          Future.delayed(const Duration(milliseconds: 500),(){
+          Future.delayed(const Duration(milliseconds: 500), () {
             FailureHandler.handle(ServerFailure(code: 1, msg: "Token Expired", traceMsg: ''));
-
           });
           return false;
-        }else{
+        } else {
           return nr.responseCode == 200 && statusCode > 0;
-
         }
-
       },
       onStartDefault: (_) {
         final NavigationService navigationService = getIt<NavigationService>();
@@ -148,17 +149,16 @@ initNetworkManager([String? baseUrl]) {
       errorMsgExtractor: (data) {
         return (data["Message"] ?? data["ResultText"] ?? "Unknown Error").toString();
       },
-      tokenExpireRule: (NetworkResponse res,_) {
-        print("Checkoin Token Expire");
+      tokenExpireRule: (NetworkResponse res, _) {
         if (res.responseBody is Map && res.responseBody["Body"] != null) {
           print("Checkoin Token 2 ${res.responseCode}");
           print("Checkoin Token 2 ${res.extractedMessage}");
-          return res.responseCode==-999 || (res.extractedMessage?.contains("Token Expired") ?? false);
+          return res.responseCode == -999 || (res.extractedMessage?.contains("Token Expired") ?? false);
         } else {
           return false;
         }
       },
-      onTokenExpire: (NetworkResponse res,_) {
+      onTokenExpire: (NetworkResponse res, _) {
         log("Token Expire Happend");
         LoginController loginController = getIt<LoginController>();
         loginController.logout();
@@ -166,7 +166,7 @@ initNetworkManager([String? baseUrl]) {
 }
 
 Future<void> loadConfigFile() async {
-  return ;
+  return;
   String? directory = (await getApplicationDocumentsDirectory()).path;
   String? confPath = '$directory/config/config.json';
   print(confPath);

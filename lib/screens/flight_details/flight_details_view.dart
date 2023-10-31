@@ -148,19 +148,21 @@ class FlightDetailsWidget extends ConsumerWidget {
                       ),
                     ),
                     Expanded(
-                      child: Container(
-                        decoration: const BoxDecoration(border: Border(left: BorderSide(color: MyColors.lineColor))),
-                        child: Column(
-                          children: [
-                            DetailsChart(
-                              details: d,
-                              posList: posList,
-                            ),
-                            DetailsLineChart(
-                              details: d,
-                              posList: posList,
-                            ),
-                          ],
+                      child: SingleChildScrollView(
+                        child: Container(
+                          decoration: const BoxDecoration(border: Border(left: BorderSide(color: MyColors.lineColor))),
+                          child: Column(
+                            children: [
+                              DetailsChart(
+                                details: d,
+                                posList: posList,
+                              ),
+                              DetailsLineChart(
+                                details: d,
+                                posList: posList,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -641,7 +643,7 @@ class TagWidget extends StatelessWidget {
                   (hasBinLine && !inDetails)
                       ? Container(width: 2, height: 40, color: MyColors.binGreen)
                       : const SizedBox(
-                          width: 50,
+                          width: 10,
                         ),
                   (hasTagLine && !inDetails)
                       ? Row(
@@ -649,7 +651,7 @@ class TagWidget extends StatelessWidget {
                           children: [
                             Container(width: 2, height: isLast ? 20 : 40, color: MyColors.containerGreen),
                             Container(
-                              width: 40,
+                              width: 10,
                               height: 2,
                               color: MyColors.containerGreen,
                               margin: const EdgeInsets.only(top: 19),
@@ -660,7 +662,7 @@ class TagWidget extends StatelessWidget {
                             ),
                           ],
                         )
-                      : const SizedBox(width: 50),
+                      : const SizedBox(width: 10),
                   IndexedStack(
                     index: tag.inboundLeg == null ? 0 : 1,
                     children: [
@@ -683,6 +685,7 @@ class TagWidget extends StatelessWidget {
                       )
                     ],
                   ),
+                  Spacer(),
                   SizedBox(
                     height: 40,
                     child: Column(
@@ -708,7 +711,7 @@ class TagWidget extends StatelessWidget {
                       children: [tag.getTypeWidget],
                     ),
                   ),
-                  Spacer(),
+                  const SizedBox(width: 12),
                   inDetails
                       ? SizedBox()
                       : SizedBox(
@@ -737,8 +740,9 @@ class TagWidget extends StatelessWidget {
             flex: 2,
             child: DataCellWidget(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(tag.secString),
                     const SizedBox(width: 12),
@@ -818,8 +822,8 @@ class TagWidget extends StatelessWidget {
           Expanded(
             flex: 1,
             child: DataCellWidget(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: Align(
+                alignment: Alignment.center,
                 child: tag.weight,
               ),
             ),
