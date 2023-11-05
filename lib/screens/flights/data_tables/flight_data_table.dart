@@ -1,3 +1,4 @@
+import 'package:brs_panel/core/abstracts/local_data_base_abs.dart';
 import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:brs_panel/widgets/TagCountWidget.dart';
 import 'package:flutter/material.dart';
@@ -139,20 +140,20 @@ class FlightDataSource extends DataGridSource {
               child: Row(
                 children: [
                   ...BasicClass.systemSetting.positions.map((p) {
-                    bool isActive = f.positions.map((e) => e.id).contains(p.id);
-                    if(f.flightType==0 && p.id>3) return SizedBox();
-                    return InkWell(
-                      onTap: (){
-                        flightsController.goDetails(f,selectedPos: p);
-                      },
-                      child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: TagCountWidget(
-                            position: p,
-                            color: p.getColor,
-                            count: isActive ? f.positions.firstWhere((element) => element.id == p.id).tagCount : 0,
-
-                          )),
+                    // bool isActive = f.positions.map((e) => e.id).contains(p.id) || true;
+                    // if (f.flightType == 0 && p.id > 3) return SizedBox();
+                    return Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          flightsController.goDetails(f, selectedPos: p);
+                        },
+                        child: TagCountWidget(
+                          position: p,
+                          sections: f.positions.firstWhereOrNull((element) => element.id==p.id)?.sections??[],
+                          color: p.getColor,
+                          count:f.positions.firstWhereOrNull((element) => element.id == p.id)?.tagCount ??0,
+                        ),
+                      ),
                     );
                   }).toList(),
                 ],

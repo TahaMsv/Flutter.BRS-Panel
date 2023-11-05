@@ -421,6 +421,7 @@
 
 import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../enums/flight_type_filter_enum.dart';
 import 'user_class.dart';
@@ -586,12 +587,14 @@ class PositionData {
   final int tagCount;
   final int order;
   final int excTagCount;
+  final List<PositionSection> sections;
 
   PositionData({
     required this.id,
     required this.tagCount,
     required this.order,
     required this.excTagCount,
+    required this.sections,
   });
 
   PositionData copyWith({
@@ -599,12 +602,14 @@ class PositionData {
     int? tagCount,
     int? order,
     int? excTagCount,
+    List<PositionSection>? sections,
   }) =>
       PositionData(
         id: id ?? this.id,
         tagCount: tagCount ?? this.tagCount,
         order: order ?? this.order,
         excTagCount: excTagCount ?? this.excTagCount,
+        sections: sections ?? this.sections,
       );
 
   factory PositionData.fromJson(Map<String, dynamic> json) => PositionData(
@@ -612,6 +617,7 @@ class PositionData {
     tagCount: json["TagCount"],
     order: json["Order"],
     excTagCount: json["ExcTagCount"],
+    sections: List<PositionSection>.from((json["Sections"]??[]).map((x) => PositionSection.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -619,5 +625,10 @@ class PositionData {
     "TagCount": tagCount,
     "Order": order,
     "ExcTagCount": excTagCount,
+    "ExcTagCount": sections,
+    "Sections": List<dynamic>.from(sections.map((x) => x.toJson())),
   };
+
+  Color get color => Colors.green;
+  String get value => "$tagCount";
 }
