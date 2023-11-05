@@ -162,7 +162,8 @@ class FlightTag {
         isRush: json["IsRush"] ?? false,
         exceptionActionsStr: json["ExcActStr"] ?? "",
         deadline: json["Deadline"] ?? 1000,
-        typeID: json["TypeID"],
+        typeID: json["TypeID"]??1,
+
         dcsInfo: json["DCSInfo"] == null ? null : DcsInfo.fromJson(json["DCSInfo"]),
         tagPositions: List<TagPosition>.from(json["TagPositions"].map((x) => TagPosition.fromJson(x))),
         actionsHistory: List<ActionHistory>.from((json["ActionsHistory"] ?? []).map((x) => ActionHistory.fromJson(x))),

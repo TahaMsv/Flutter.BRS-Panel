@@ -11,6 +11,7 @@ import 'package:brs_panel/screens/airport_carts/airport_carts_controller.dart';
 import 'package:brs_panel/screens/airports/airports_controller.dart';
 import 'package:brs_panel/screens/bsm/bsm_controller.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_controller.dart';
+import 'package:brs_panel/screens/flight_summary/flight_summary_controller.dart';
 import 'package:brs_panel/screens/flights/flights_controller.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/foundation.dart';
@@ -76,6 +77,7 @@ initControllers() {
   AirlineUldsController airlineUldsController = AirlineUldsController();
   AirportCartsController airportCartsController = AirportCartsController();
   BsmController bsmController = BsmController();
+  FlightSummaryController flightSummaryController = FlightSummaryController();
 
   getIt.registerSingleton(loginController);
   getIt.registerSingleton(homeController);
@@ -88,6 +90,7 @@ initControllers() {
   getIt.registerSingleton(airlineUldsController);
   getIt.registerSingleton(airportCartsController);
   getIt.registerSingleton(bsmController);
+  getIt.registerSingleton(flightSummaryController);
 
   ns.registerControllers({
     RouteNames.login: loginController,
@@ -101,6 +104,7 @@ initControllers() {
     RouteNames.airlineUlds: airlineUldsController,
     RouteNames.airportCarts: airportCartsController,
     RouteNames.bsm: bsmController,
+    RouteNames.flightDetails: flightSummaryController,
   });
 }
 

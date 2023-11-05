@@ -10,6 +10,7 @@ enum RouteNames {
   // users,
   addFlight,
   flightDetails,
+  flightSummary,
   checkin,
   board,
   airlineUlds,
@@ -26,7 +27,9 @@ extension RouteNamesDetails on RouteNames {
       case RouteNames.flightDetails:
         return 'details';
       case RouteNames.airlineUlds:
-        return 'airlineUlds';
+        return 'details';
+      case RouteNames.flightSummary:
+        return 'flightSummary';
       case RouteNames.login:
         return '/login';
       case RouteNames.airportCarts:

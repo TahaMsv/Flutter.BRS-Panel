@@ -52,6 +52,7 @@ class _MyAppBarState extends State<MyAppBar> {
                           onPressed: () {
                             NavigationService ns = getIt<NavigationService>();
                             ns.pop();
+                            ref.refresh(routerProvider);
                           },
                         ),
                         const SizedBox(width: 8),
