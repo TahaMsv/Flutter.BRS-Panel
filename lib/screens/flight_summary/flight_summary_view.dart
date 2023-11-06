@@ -2,10 +2,12 @@ import 'package:artemis_utils/artemis_utils.dart';
 import 'package:brs_panel/core/classes/flight_details_class.dart';
 import 'package:brs_panel/core/constants/assest.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_state.dart';
+import 'package:brs_panel/widgets/FlightBanner.dart';
 import 'package:brs_panel/widgets/MyExpansionTile.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../../core/classes/flight_class.dart';
 import '../../core/classes/flight_summary_class.dart';
 import '../../core/constants/ui.dart';
 import '../../core/platform/spiners.dart';
@@ -44,26 +46,29 @@ class FlightDetailsPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ThemeData theme = Theme.of(context);
+    Flight? f = ref.watch(selectedFlightProvider);
     return Container(
       color: MyColors.white1,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       child: Row(
         children: [
-          Expanded(
-              flex: 1,
-              child: MyTextField(
-                height: 35,
-                prefixIcon: const Icon(Icons.search),
-                placeholder: "Search Here...",
-                controller: searchC,
-                showClearButton: true,
-                onChanged: (v) {
-                  // final s = ref.read(tagSearchProvider.notifier);
-                  // s.state = v;
-                },
-              )),
-          const SizedBox(width: 12),
           const Expanded(flex: 2, child: SizedBox(width: 12)),
+          FlightBanner(flight: f!),
+          // Expanded(
+          //     flex: 1,
+          //     child: MyTextField(
+          //       height: 35,
+          //       prefixIcon: const Icon(Icons.search),
+          //       placeholder: "Search Here...",
+          //       controller: searchC,
+          //       showClearButton: true,
+          //       onChanged: (v) {
+          //         // final s = ref.read(tagSearchProvider.notifier);
+          //         // s.state = v;
+          //       },
+          //     )),
+          const SizedBox(width: 12),
+
           DotButton(
             icon: Icons.history,
             onPressed: () async {
@@ -127,7 +132,7 @@ class FlightSummaryWidget extends ConsumerWidget {
                       ),
                       MyExpansionTile(
                         headerTileColor: MyColors.evenRow,
-                        title:  Padding(
+                        title: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           child: Row(
                             children: [
@@ -167,7 +172,7 @@ class FlightSummaryWidget extends ConsumerWidget {
                       ),
                       MyExpansionTile(
                         headerTileColor: MyColors.evenRow,
-                        title:Padding(
+                        title: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           child: Row(
                             children: [
@@ -1074,16 +1079,15 @@ class DeletedTagWidget extends StatelessWidget {
 
 class CountWidget extends StatelessWidget {
   final int count;
-  const CountWidget({Key? key,required this.count}) : super(key: key);
+
+  const CountWidget({Key? key, required this.count}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 2),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(width: 1)
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), border: Border.all(width: 1)),
       child: Center(child: Text('$count')),
     );
   }

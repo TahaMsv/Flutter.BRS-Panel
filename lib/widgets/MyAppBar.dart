@@ -34,7 +34,7 @@ class _MyAppBarState extends State<MyAppBar> {
         // print(router.location);
         currentRoute ??= RouteNames.values.lastWhere((element) => router.location.contains("/${element.path}"));
         return Container(
-          decoration: const BoxDecoration(color: MyColors.white1),
+          decoration: const BoxDecoration(color: MyColors.white1,border: Border(bottom: BorderSide(color: MyColors.lineColor))),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
           child: isSubroute
               ? DecoratedBox(
@@ -44,6 +44,7 @@ class _MyAppBarState extends State<MyAppBar> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 8.0, top: 4),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         DotButton(
                           size: 35,
@@ -55,15 +56,17 @@ class _MyAppBarState extends State<MyAppBar> {
                         ),
                         const SizedBox(width: 8),
                         ...RouteNames.values
+
                             .where((element) => router.location.split("/").contains(element.name))
                             .map((e) => DecoratedBox(
                                   decoration: const BoxDecoration(
                                     border:Border(right: BorderSide(color: MyColors.lightIshBlue, width: 4)) ,
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 8.0, top: 0),
+                                    padding: const EdgeInsets.only(bottom: 0.0, top: 0),
                                     child: TextButton(
                                       onPressed: () {
+
                                         NavigationService ns = getIt<NavigationService>();
                                         ns.pushNamed(e);
                                       },
@@ -154,13 +157,18 @@ class UserIndicatorWidget extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(avatarRadius),
-            child: Container(
-              decoration: const BoxDecoration(color: Colors.blueAccent),
-              width: avatarRadius * 2,
-              height: avatarRadius * 2,
-              child: const Icon(Icons.person),
+          GestureDetector(
+            onTap: (){
+              myLoginController.showStimulPreview();
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(avatarRadius),
+              child: Container(
+                decoration: const BoxDecoration(color: Colors.blueAccent),
+                width: avatarRadius * 2,
+                height: avatarRadius * 2,
+                child: const Icon(Icons.person),
+              ),
             ),
           ),
           const SizedBox(width: 8),

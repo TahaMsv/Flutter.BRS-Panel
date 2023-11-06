@@ -67,11 +67,11 @@ class TagCountWidget extends StatelessWidget {
                       height: 18,
                       margin: const EdgeInsets.only(left: 0),
                       padding: const EdgeInsets.symmetric(horizontal: 4),
-                      decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(0), border: Border.all(width: 1, color: Colors.white)),
+                      decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(5), border: Border.all(width: 1, color: Colors.white)),
                       child: Center(
                         child: Text(
                           e.count.toString(),
-                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11),
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
                         ),
                       ),
                     ),
@@ -91,11 +91,11 @@ class TagCountWidget extends StatelessWidget {
                   height: 18,
                   margin: const EdgeInsets.only(left: 0),
                   padding: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(0), border: Border.all(width: 1, color: Colors.white)),
+                  decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(5), border: Border.all(width: 1, color: Colors.white)),
                   child: Center(
                     child: Text(
                       e.value,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11),
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
                     ),
                   ),
                 ),
@@ -115,11 +115,11 @@ class TagCountWidget extends StatelessWidget {
                   height: 18,
                   margin: const EdgeInsets.only(left: 0),
                   padding: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(0), border: Border.all(width: 1, color: Colors.white)),
+                  decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(5), border: Border.all(width: 1, color: Colors.white)),
                   child: Center(
                     child: Text(
                       e.value,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11),
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
                     ),
                   ),
                 ),
@@ -139,11 +139,11 @@ class TagCountWidget extends StatelessWidget {
                   height: 18,
                   margin: const EdgeInsets.only(left: 0),
                   padding: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(0), border: Border.all(width: 1, color: Colors.white)),
+                  decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(5), border: Border.all(width: 1, color: Colors.white)),
                   child: Center(
                     child: Text(
                       e.value,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11),
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
                     ),
                   ),
                 ),
@@ -163,11 +163,11 @@ class TagCountWidget extends StatelessWidget {
                   height: 18,
                   margin: const EdgeInsets.only(left: 0),
                   padding: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(0), border: Border.all(width: 1, color: Colors.white)),
+                  decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(5), border: Border.all(width: 1, color: Colors.white)),
                   child: Center(
                     child: Text(
                       e.value,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11),
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
                     ),
                   ),
                 ),
@@ -187,11 +187,11 @@ class TagCountWidget extends StatelessWidget {
                   height: 18,
                   margin: const EdgeInsets.only(left: 0),
                   padding: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(0), border: Border.all(width: 1, color: Colors.white)),
+                  decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(5), border: Border.all(width: 1, color: Colors.white)),
                   child: Center(
                     child: Text(
                       e.value,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11),
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
                     ),
                   ),
                 ),

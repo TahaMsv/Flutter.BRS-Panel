@@ -33,6 +33,7 @@ class FlightBanner extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5)),
                   child: SizedBox(
                       width: 350,
+
                       height: 30,
                       child:  Row(
                               children: [

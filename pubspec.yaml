@@ -51,6 +51,8 @@ dependencies:
   window_manager: ^0.3.4
   #  barcode: ^2.2.4
   barcode_widget: ^2.0.4
+#  webview_all: ^0.3.7
+  webview_windows: ^0.3.0
 
 dev_dependencies:
   flutter_test:
