@@ -53,6 +53,13 @@ class _MyAppBarState extends State<MyAppBar> {
                             NavigationService ns = getIt<NavigationService>();
                             ns.pop();
                             ref.refresh(routerProvider);
+                            List<RouteNames> l =
+                                RouteNames.values.where((r) => router.location.split("/").contains(r.name)).toList();
+                            if (l.length == 1) {
+                              ns.pushNamed(l[0]);
+                            } else {
+                              ns.pop();
+                            }
                           },
                         ),
                         const SizedBox(width: 8),
