@@ -3,7 +3,9 @@ import 'package:get/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../core/classes/airport_section_class.dart';
 import '../../core/constants/ui.dart';
+import '../../initialize.dart';
 import '../../widgets/MyAppBar.dart';
+import 'airport_sections_controller.dart';
 import 'airport_sections_state.dart';
 
 class AirportSectionsView extends StatelessWidget {
@@ -44,6 +46,8 @@ class AirportSectionBody extends ConsumerWidget {
 }
 
 class SectionListWidget extends ConsumerWidget {
+  static AirportSectionsController controller = getIt<AirportSectionsController>();
+
   const SectionListWidget({super.key});
 
   @override
@@ -60,7 +64,7 @@ class SectionListWidget extends ConsumerWidget {
         itemBuilder: (c, i) => ItemBoxWidget(
           label: sectionList?.sections[i].label ?? "",
           isSelected: selectedSection == sectionList?.sections[i],
-          onTap: () {},
+          onTap: () => controller.onChangeSection(sectionList?.sections[i]),
         ),
       ),
     );
@@ -69,6 +73,7 @@ class SectionListWidget extends ConsumerWidget {
 
 class SubCategoriesWidget extends ConsumerWidget {
   final List<SubCategory> subCategories;
+  static AirportSectionsController controller = getIt<AirportSectionsController>();
 
   const SubCategoriesWidget({super.key, required this.subCategories});
 
@@ -85,7 +90,7 @@ class SubCategoriesWidget extends ConsumerWidget {
         itemBuilder: (c, i) => ItemBoxWidget(
           label: subCategories[i].label,
           isSelected: selectedCategories.contains(subCategories[i]),
-          onTap: () {},
+          onTap: () => controller.onChangeSubCategory(subCategories[i]),
         ),
       ),
     );
@@ -105,13 +110,10 @@ class ItemBoxWidget extends StatelessWidget {
       onTap: onTap,
       child: Container(
           decoration: BoxDecoration(
-            color: isSelected ? MyColors.lightBlue : MyColors.white1,
-            border: Border.all(color: MyColors.brownGrey3),
-            // borderRadius: BorderRadius.circular(5),
-          ),
-          height: 90,
+              color: isSelected ? MyColors.sectionSelected : MyColors.white3,
+              border: Border.all(color: MyColors.brownGrey3)),
           alignment: Alignment.centerLeft,
-          padding: const EdgeInsets.only(left: 24),
+          padding: const EdgeInsets.only(left: 24, top: 31, bottom: 33),
           child: Text(label)),
     );
   }

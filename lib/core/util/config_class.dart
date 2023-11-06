@@ -1,3 +1,5 @@
+import '../constants/apis.dart';
+
 class Config {
   Config({
     required this.appName,
@@ -19,7 +21,7 @@ class Config {
     appName: 'BRS-Panel',
     company: 'Abomis',
     // baseURL: 'https://brsStage-api-descktop.abomis.com/jsn',
-    baseURL: 'https://brsdev-api.abomis.com/brs',
+    baseURL: Apis.configClassBaseUrl,
     // baseURL: 'https://brsStaging-api.abomis.com/BRS',
 
     // baseURL: 'https://brsstaging-api.abomis.com/BRS',

@@ -1,5 +1,5 @@
-import 'package:brs_panel/core/classes/airport_section_class.dart';
 import '../../core/abstracts/controller_abs.dart';
+import '../../core/classes/airport_section_class.dart';
 import '../../core/classes/user_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
 import '../airport_carts/airport_carts_state.dart';
@@ -11,7 +11,34 @@ class AirportSectionsController extends MainController {
 
   /// View Related -----------------------------------------------------------------------------------------------------
 
-  onChangeSection() {}
+  onChangeSection(Section? section) {
+    if (section == null) return;
+    final selectedSectionP = ref.read(selectedSectionProvider.notifier);
+    selectedSectionP.state = section;
+    final selectedCategoriesP = ref.read(selectedCategoriesProvider.notifier);
+    selectedCategoriesP.state = [];
+    setFirstSubCategories(section.subCategories);
+  }
+
+  onChangeSubCategory(SubCategory subCategory) {
+    final selectedSectionP = ref.read(selectedSectionProvider.notifier);
+    List<SubCategory> sbc0 = selectedSectionP.state?.subCategories ?? [];
+    final selectedCategoriesP = ref.read(selectedCategoriesProvider.notifier);
+    List<SubCategory> ssc0 = selectedCategoriesP.state;
+    if (sbc0.any((e) => e == subCategory)) {
+      selectedCategoriesP.state = [subCategory];
+      setFirstSubCategories(subCategory.subCategories);
+    } else {
+      for (int i = 0; i < ssc0.length; i++) {
+        if (ssc0[i].subCategories.contains(subCategory)) {
+          List<SubCategory> newSsc0 = ssc0.sublist(0, i + 1);
+          newSsc0.add(subCategory);
+          selectedCategoriesP.state = newSsc0;
+          setFirstSubCategories(subCategory.subCategories);
+        }
+      }
+    }
+  }
 
   /// Requests ---------------------------------------------------------------------------------------------------------
 
