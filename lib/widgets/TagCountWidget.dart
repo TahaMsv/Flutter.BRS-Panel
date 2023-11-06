@@ -1,9 +1,7 @@
-import 'package:brs_panel/core/classes/flight_class.dart';
 import 'package:brs_panel/core/constants/ui.dart';
 import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
-
 import '../core/classes/user_class.dart';
 
 class TagCountWidget extends StatelessWidget {

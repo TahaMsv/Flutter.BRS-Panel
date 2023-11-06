@@ -133,23 +133,23 @@ class ExpansionTileController {
       ),
       ErrorDescription(
         'No ExpansionTile ancestor could be found starting from the context that was passed to ExpansionTileController.of(). '
-            'This usually happens when the context provided is from the same StatefulWidget as that '
-            'whose build function actually creates the ExpansionTile widget being sought.',
+        'This usually happens when the context provided is from the same StatefulWidget as that '
+        'whose build function actually creates the ExpansionTile widget being sought.',
       ),
       ErrorHint(
         'There are several ways to avoid this problem. The simplest is to use a Builder to get a '
-            'context that is "under" the ExpansionTile. For an example of this, please see the '
-            'documentation for ExpansionTileController.of():\n'
-            '  https://api.flutter.dev/flutter/material/ExpansionTile/of.html',
+        'context that is "under" the ExpansionTile. For an example of this, please see the '
+        'documentation for ExpansionTileController.of():\n'
+        '  https://api.flutter.dev/flutter/material/ExpansionTile/of.html',
       ),
       ErrorHint(
         'A more efficient solution is to split your build function into several widgets. This '
-            'introduces a new context from which you can obtain the ExpansionTile. In this solution, '
-            'you would have an outer widget that creates the ExpansionTile populated by instances of '
-            'your new inner widgets, and then in these inner widgets you would use ExpansionTileController.of().\n'
-            'An other solution is assign a GlobalKey to the ExpansionTile, '
-            'then use the key.currentState property to obtain the ExpansionTile rather than '
-            'using the ExpansionTileController.of() function.',
+        'introduces a new context from which you can obtain the ExpansionTile. In this solution, '
+        'you would have an outer widget that creates the ExpansionTile populated by instances of '
+        'your new inner widgets, and then in these inner widgets you would use ExpansionTileController.of().\n'
+        'An other solution is assign a GlobalKey to the ExpansionTile, '
+        'then use the key.currentState property to obtain the ExpansionTile rather than '
+        'using the ExpansionTileController.of() function.',
       ),
       context.describeElement('The context used was'),
     ]);
@@ -240,10 +240,10 @@ class MyExpansionTile extends StatefulWidget {
     this.controlAffinity,
     this.controller,
   }) : assert(
-  expandedCrossAxisAlignment != CrossAxisAlignment.baseline,
-  'CrossAxisAlignment.baseline is not supported since the expanded children '
-      'are aligned in a column, not a row. Try to use another constant.',
-  );
+          expandedCrossAxisAlignment != CrossAxisAlignment.baseline,
+          'CrossAxisAlignment.baseline is not supported since the expanded children '
+          'are aligned in a column, not a row. Try to use another constant.',
+        );
 
   /// A widget to display before the title.
   ///
@@ -253,6 +253,7 @@ class MyExpansionTile extends StatefulWidget {
   /// may replace the rotating expansion arrow icon.
   final Widget? leading;
   final Color? headerTileColor;
+
   /// The primary content of the list item.
   ///
   /// Typically a [Text] widget.
@@ -405,7 +406,6 @@ class MyExpansionTile extends StatefulWidget {
   /// * [ExpansionTileTheme.of], which returns the nearest [ExpansionTileTheme]'s
   ///   [ExpansionTileThemeData].
   final Color? collapsedIconColor;
-
 
   /// The color of the tile's titles when the sublist is expanded.
   ///
@@ -575,7 +575,7 @@ class _MyExpansionTileState extends State<MyExpansionTile> with SingleTickerProv
       width: 60,
       child: RotationTransition(
         turns: _iconTurns,
-        child: const Icon(Icons.expand_more),
+        child: Icon(Icons.expand_more, color: _iconColor.value),
       ),
     );
   }
@@ -596,14 +596,14 @@ class _MyExpansionTileState extends State<MyExpansionTile> with SingleTickerProv
 
   Widget _buildChildren(BuildContext context, Widget? child) {
     final ExpansionTileThemeData expansionTileTheme = ExpansionTileTheme.of(context);
-    final ShapeBorder expansionTileBorder = _border.value ?? const Border(
-      top: BorderSide(color: Colors.transparent),
-      bottom: BorderSide(color: Colors.transparent),
-    );
+    final ShapeBorder expansionTileBorder = _border.value ??
+        const Border(
+          top: BorderSide(color: Colors.transparent),
+          bottom: BorderSide(color: Colors.transparent),
+        );
     final Clip clipBehavior = widget.clipBehavior ?? expansionTileTheme.clipBehavior ?? Clip.none;
 
     return Container(
-
       clipBehavior: clipBehavior,
       decoration: ShapeDecoration(
         color: widget.headerTileColor,
@@ -614,31 +614,31 @@ class _MyExpansionTileState extends State<MyExpansionTile> with SingleTickerProv
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           ListTileTheme.merge(
-            iconColor: _iconColor.value ?? expansionTileTheme.iconColor,
-            textColor: _headerColor.value,
-            child:InkWell(
-              onTap: _handleTap,
-              child:  Row(
-                children: [
-                  widget.trailing ?? _buildTrailingIcon(context)!,
-                  Expanded(child: widget.title,)
-                ],
+              iconColor: _iconColor.value ?? expansionTileTheme.iconColor,
+              textColor: _headerColor.value,
+              child: InkWell(
+                onTap: _handleTap,
+                child: Row(
+                  children: [
+                    widget.trailing ?? _buildTrailingIcon(context)!,
+                    Expanded(
+                      child: widget.title,
+                    )
+                  ],
+                ),
+              )
+              // ListTile(
+              //   onTap: _handleTap,
+              //   contentPadding: widget.tilePadding ?? expansionTileTheme.tilePadding,
+              //   leading: widget.leading ?? _buildLeadingIcon(context),
+              //   title: widget.title,
+              //   subtitle: widget.subtitle,
+              //   trailing: widget.trailing ?? _buildTrailingIcon(context),
+              // ),
               ),
-            )
-            // ListTile(
-            //   onTap: _handleTap,
-            //   contentPadding: widget.tilePadding ?? expansionTileTheme.tilePadding,
-            //   leading: widget.leading ?? _buildLeadingIcon(context),
-            //   title: widget.title,
-            //   subtitle: widget.subtitle,
-            //   trailing: widget.trailing ?? _buildTrailingIcon(context),
-            // ),
-          ),
           ClipRect(
             child: Align(
-              alignment: widget.expandedAlignment
-                  ?? expansionTileTheme.expandedAlignment
-                  ?? Alignment.center,
+              alignment: widget.expandedAlignment ?? expansionTileTheme.expandedAlignment ?? Alignment.center,
               heightFactor: _heightFactor.value,
               child: child,
             ),
@@ -652,31 +652,26 @@ class _MyExpansionTileState extends State<MyExpansionTile> with SingleTickerProv
   void didChangeDependencies() {
     final ThemeData theme = Theme.of(context);
     final ExpansionTileThemeData expansionTileTheme = ExpansionTileTheme.of(context);
-    final ExpansionTileThemeData defaults = theme.useMaterial3
-        ? _ExpansionTileDefaultsM3(context)
-        : _ExpansionTileDefaultsM2(context);
+    final ExpansionTileThemeData defaults =
+        theme.useMaterial3 ? _ExpansionTileDefaultsM3(context) : _ExpansionTileDefaultsM2(context);
     _borderTween
-      ..begin = widget.collapsedShape
-          ?? expansionTileTheme.collapsedShape
-          ?? const Border(
+      ..begin = widget.collapsedShape ??
+          expansionTileTheme.collapsedShape ??
+          const Border(
             top: BorderSide(color: Colors.transparent),
             bottom: BorderSide(color: Colors.transparent),
           )
-      ..end = widget.shape
-          ?? expansionTileTheme.collapsedShape
-          ?? Border(
+      ..end = widget.shape ??
+          expansionTileTheme.collapsedShape ??
+          Border(
             top: BorderSide(color: theme.dividerColor),
             bottom: BorderSide(color: theme.dividerColor),
           );
     _headerColorTween
-      ..begin = widget.collapsedTextColor
-          ?? expansionTileTheme.collapsedTextColor
-          ?? defaults.collapsedTextColor
+      ..begin = widget.collapsedTextColor ?? expansionTileTheme.collapsedTextColor ?? defaults.collapsedTextColor
       ..end = widget.textColor ?? expansionTileTheme.textColor ?? defaults.textColor;
     _iconColorTween
-      ..begin = widget.collapsedIconColor
-          ?? expansionTileTheme.collapsedIconColor
-          ?? defaults.collapsedIconColor
+      ..begin = widget.collapsedIconColor ?? expansionTileTheme.collapsedIconColor ?? defaults.collapsedIconColor
       ..end = widget.iconColor ?? expansionTileTheme.iconColor ?? defaults.iconColor;
     _backgroundColorTween
       ..begin = widget.collapsedBackgroundColor ?? expansionTileTheme.collapsedBackgroundColor

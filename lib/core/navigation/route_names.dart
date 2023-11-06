@@ -15,8 +15,8 @@ enum RouteNames {
   board,
   airlineUlds,
   airportCarts,
+  airportSections,
   bsm,
-
 }
 
 extension RouteNamesDetails on RouteNames {
@@ -34,6 +34,8 @@ extension RouteNamesDetails on RouteNames {
         return '/login';
       case RouteNames.airportCarts:
         return 'airportCarts';
+      case RouteNames.airportSections:
+        return 'airportSections';
       default:
         return "/$name";
     }

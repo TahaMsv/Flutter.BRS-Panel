@@ -12,11 +12,12 @@ class NetworkManager implements NetworkManagerInterface {
 
   @override
   Future<Response> post(Request request, {String? api}) async {
-    NetworkRequest networkRequest = NetworkRequest(api:api?? Apis.baseUrl, data: request.toJson());
+    NetworkRequest networkRequest = NetworkRequest(api: api ?? Apis.baseUrl, data: request.toJson());
+    // debugPrint(jsonEncode(request.toJson()));
+    debugPrint(networkRequest.options.baseUrl);
     NetworkResponse networkResponse = await networkRequest.post();
     if (networkResponse.responseStatus) {
       try {
-        print(networkRequest.options.baseUrl);
         // Response res = Response.fromJson(networkResponse.responseBody);
         Response res = await compute(Response.fromJson, networkResponse.responseBody);
         return res;
@@ -24,7 +25,6 @@ class NetworkManager implements NetworkManagerInterface {
         throw ParseException(message: e.toString(), trace: trace);
       }
     } else {
-      print(networkRequest.options.baseUrl);
       throw ServerException(
         code: networkResponse.responseCode,
         message: networkResponse.extractedMessage!,
@@ -53,5 +53,5 @@ class NetworkManager implements NetworkManagerInterface {
     return res;
   }
 
-  String get currentBaseUrl =>NetworkRequest(api: "").options.baseUrl;
+  String get currentBaseUrl => NetworkRequest(api: "").options.baseUrl;
 }

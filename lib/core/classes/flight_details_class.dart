@@ -182,7 +182,7 @@ class FlightTag {
 
   int? get getContainerID => tagPositions.first.container?.id;
 
-  Widget get weight => dcsInfo==null?SizedBox():Row(children: [
+  Widget get weight => dcsInfo==null?SizedBox():Row(mainAxisSize: MainAxisSize.min, children: [
     Text('${dcsInfo!.weight}'),
     Text("KG",style: TextStyle(fontSize: 8),)
   ],);

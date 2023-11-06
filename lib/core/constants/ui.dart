@@ -83,7 +83,9 @@ class MyColors {
   static const boardingBlue = Color.fromRGBO(77, 111, 255, 1);
   static const reserveGreen = Color.fromRGBO(176, 255, 223, 1);
   static const containerGreen = Color(0xffe1eae6);
-  static const binGreen = Color(0xff389573);
+  static const containerGreen2 = Color(0xffCDDDD6);
+  static const binGrey = Color(0xff687A89);
+  static const sectionSelected = Color(0xffF7F8FF);
   static const evenRow = Color(0xfff8f8f8);
   static const oddRow = Color(0xffffffff);
   static const indexColor = Color(0xff3b3b3b);
@@ -113,7 +115,8 @@ class MyTheme {
     brightness: Brightness.light,
     disabledColor: MyColors.brownGrey,
     scaffoldBackgroundColor: Colors.white,
-    tabBarTheme: TabBarTheme(labelPadding: EdgeInsets.zero, labelColor: Colors.blue, unselectedLabelColor: Colors.blue.withOpacity(0.5)),
+    tabBarTheme: TabBarTheme(
+        labelPadding: EdgeInsets.zero, labelColor: Colors.blue, unselectedLabelColor: Colors.blue.withOpacity(0.5)),
     timePickerTheme: const TimePickerThemeData(),
     dividerTheme: const DividerThemeData(color: MyColors.lineColor, indent: 1, space: 1),
     appBarTheme: const AppBarTheme(
@@ -173,7 +176,7 @@ class MyTheme {
           filled: true,
           fillColor: Colors.red,
           border: MaterialStateOutlineInputBorder.resolveWith(
-                (states) {
+            (states) {
               Color borderColor = MyColors.black;
               double borderWidth = 1;
               // if (_errorMsg != null) {
@@ -206,13 +209,9 @@ class MyTheme {
             },
           ),
         ),
-        menuStyle: MenuStyle(
-            backgroundColor: MaterialStateColor.resolveWith((states) => Colors.red)
-        )
-    ),
+        menuStyle: MenuStyle(backgroundColor: MaterialStateColor.resolveWith((states) => Colors.red))),
   );
 }
-
 
 class TextStyles {
   TextStyles._();

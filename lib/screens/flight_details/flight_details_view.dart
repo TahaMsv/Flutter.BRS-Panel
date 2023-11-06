@@ -1,20 +1,11 @@
-import 'dart:math';
-
-import 'package:artemis_ui_kit/artemis_ui_kit.dart';
-import 'package:artemis_utils/artemis_utils.dart';
 import 'package:brs_panel/core/constants/ui.dart';
 import 'package:brs_panel/core/platform/spiners.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/widgets/DetailsChart.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
-import 'package:brs_panel/widgets/MySeparator.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
-import '../../core/classes/flight_class.dart';
 import '../../core/classes/flight_details_class.dart';
 import '../../core/classes/tag_container_class.dart';
 import '../../core/classes/user_class.dart';
@@ -64,7 +55,9 @@ class FlightDetailsPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ThemeData theme = Theme.of(context);
-    List<Position> pos = BasicClass.systemSetting.positions.where((element) => ref.watch(selectedFlightProvider)!.positions.map((e) => e.id).contains(element.id)).toList();
+    List<Position> pos = BasicClass.systemSetting.positions
+        .where((element) => ref.watch(selectedFlightProvider)!.positions.map((e) => e.id).contains(element.id))
+        .toList();
     return Container(
       color: MyColors.white1,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -131,7 +124,9 @@ class FlightDetailsWidget extends ConsumerWidget {
     ThemeData theme = Theme.of(context);
     final fdP = ref.watch(detailsProvider);
     final posListP = ref.watch(selectedFlightProvider);
-    List<Position> posList = BasicClass.systemSetting.positions.where((pos) => posListP!.positions.map((e) => e.id).contains(pos.id)).toList();
+    List<Position> posList = BasicClass.systemSetting.positions
+        .where((pos) => posListP!.positions.map((e) => e.id).contains(pos.id))
+        .toList();
     return Expanded(
       child: Container(
         child: fdP.when(
@@ -141,26 +136,29 @@ class FlightDetailsWidget extends ConsumerWidget {
               : Row(
                   children: [
                     Expanded(
-                      flex: 4,
+                      flex: 42,
                       child: DetailsWidget(
                         details: d,
                         posList: posList,
                       ),
                     ),
                     Expanded(
-                      child: Container(
-                        decoration: const BoxDecoration(border: Border(left: BorderSide(color: MyColors.lineColor))),
-                        child: Column(
-                          children: [
-                            DetailsChart(
-                              details: d,
-                              posList: posList,
-                            ),
-                            DetailsLineChart(
-                              details: d,
-                              posList: posList,
-                            ),
-                          ],
+                      flex: 10,
+                      child: SingleChildScrollView(
+                        child: Container(
+                          decoration: const BoxDecoration(border: Border(left: BorderSide(color: MyColors.lineColor))),
+                          child: Column(
+                            children: [
+                              DetailsChart(
+                                details: d,
+                                posList: posList,
+                              ),
+                              DetailsLineChart(
+                                details: d,
+                                posList: posList,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -204,11 +202,21 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
     Position selectedPos = ref.watch(selectedPosInDetails)!;
     String searched = ref.watch(tagSearchProvider);
     List<FlightTag> filteredTag = widget.details.tagList.where((e) => e.validateSearch(searched, selectedPos)).toList();
-    List<ContainerSection> cons = widget.details.containerList.where((element) => element.positionID == selectedPos.id).map((e) => ContainerSection(con: e, allTags: filteredTag, ref: ref)).toList();
-    List<ContainerSection> bulks = widget.posList.map((e) => ContainerSection(con: TagContainer.bulk(e.id), allTags: filteredTag, ref: ref)).toList();
-    cons = cons + bulks.where((element) => (element.con.positionID == selectedPos.id) && element.items.isNotEmpty).toList();
-    List<TagContainer> filteredCons = widget.details.containerList.where((element) => filteredTag.any((tag) => tag.getContainerID == element.id)).toList();
-    List<BinSection> bins = widget.details.binList.map((b) => BinSection(bin: b, allCons: filteredCons, ref: ref, fd: widget.details)).toList();
+    List<ContainerSection> cons = widget.details.containerList
+        .where((element) => element.positionID == selectedPos.id)
+        .map((e) => ContainerSection(con: e, allTags: filteredTag, ref: ref))
+        .toList();
+    List<ContainerSection> bulks = widget.posList
+        .map((e) => ContainerSection(con: TagContainer.bulk(e.id), allTags: filteredTag, ref: ref))
+        .toList();
+    cons = cons +
+        bulks.where((element) => (element.con.positionID == selectedPos.id) && element.items.isNotEmpty).toList();
+    List<TagContainer> filteredCons = widget.details.containerList
+        .where((element) => filteredTag.any((tag) => tag.getContainerID == element.id))
+        .toList();
+    List<BinSection> bins = widget.details.binList
+        .map((b) => BinSection(bin: b, allCons: filteredCons, ref: ref, fd: widget.details))
+        .toList();
 
     return Column(
       children: [
@@ -218,7 +226,7 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
           child: Row(
             children: [
               Expanded(
-                  flex: 7,
+                  flex: dataTableFlexes[0],
                   child: DataCellWidget(
                       child: Row(
                     children: [
@@ -241,37 +249,37 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
                       ),
                     ],
                   ))),
-              const Expanded(
-                  flex: 2,
-                  child: DataCellWidget(
+              Expanded(
+                  flex: dataTableFlexes[1],
+                  child: const DataCellWidget(
                       child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     child: Text('Sec.', style: TextStyles.tagListHeader),
                   ))),
-              const Expanded(
-                  flex: 5,
-                  child: DataCellWidget(
+              Expanded(
+                  flex: dataTableFlexes[2],
+                  child: const DataCellWidget(
                       child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     child: Text('Pax Name', style: TextStyles.tagListHeader),
                   ))),
-              const Expanded(
-                  flex: 2,
-                  child: DataCellWidget(
+              Expanded(
+                  flex: dataTableFlexes[3],
+                  child: const DataCellWidget(
                       child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     child: Text('Time', style: TextStyles.tagListHeader),
                   ))),
-              const Expanded(
-                  flex: 2,
-                  child: DataCellWidget(
+              Expanded(
+                  flex: dataTableFlexes[4],
+                  child: const DataCellWidget(
                       child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     child: Text('Agent', style: TextStyles.tagListHeader),
                   ))),
-              const Expanded(
-                  flex: 1,
-                  child: DataCellWidget(
+              Expanded(
+                  flex: dataTableFlexes[5],
+                  child: const DataCellWidget(
                       child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 2, vertical: 8),
                     child: Text('Weight', style: TextStyles.tagListHeader),
@@ -288,7 +296,11 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
                         Bin bin = bins[sectionIndex].bin;
                         // int count = List.generate(sectionIndex, (index) => cons[index].items.length).sum as int;
                         // bool isFirstSec = index == (count-sectionIndex);
+                        List<FlightTag> tags = filteredTag
+                            .where((element) => element.tagPositions.first.binID == bins[sectionIndex].bin.id)
+                            .toList();
                         return BinTileWidget(
+                          tagCount: tags.length,
                           isFirstSec: false,
                           bin: bin,
                           sec: bins[sectionIndex],
@@ -297,32 +309,50 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
                       itemBuilder: (context, sectionIndex, itemIndex, index) {
                         TagContainer con = bins[sectionIndex].items[itemIndex];
                         bool isLastCon = bins[sectionIndex].items.length == itemIndex + 1;
-                        List<FlightTag> thisConTags =
-                            filteredTag.where((element) => (element.getContainerID == con.id || (element.getContainerID == null && con.isCart)) && element.tagPositions.first.binID == bins[sectionIndex].bin.id).toList();
+                        List<FlightTag> thisConTags = filteredTag
+                            .where((element) =>
+                                (element.getContainerID == con.id || (element.getContainerID == null && con.isCart)) &&
+                                element.tagPositions.first.binID == bins[sectionIndex].bin.id)
+                            .toList();
 
                         // if(thisConTags.isEmpty) return const SizedBox();
-                        return MyExpansionTile(
-                          tilePadding: EdgeInsets.zero,
-                          headerTileColor: MyColors.containerGreen,
-                          title: ContainerTileWidget(
-                            isLast: isLastCon,
-                            binLines: true,
-                            con: con,
-                            sec: ContainerSection(con: con, allTags: filteredTag, ref: ref),
-                            isFirstSec: false,
-                            tagCount: thisConTags.length,
-                          ),
-                          children: thisConTags
-                              .map((e) => TagWidget(
-                                    tag: e,
-                                    fd: widget.details,
-                                    total: thisConTags.length,
-                                    index: thisConTags.indexOf(e),
-                                    hasBinLine: !isLastCon,
-                                    isLast: thisConTags.last == e,
-                                  ))
-                              .toList(),
-                        );
+                        return con.type != "ULD"
+                            ? Column(
+                                children: thisConTags
+                                    .map((e) => TagWidget(
+                                          tag: e,
+                                          fd: widget.details,
+                                          total: thisConTags.length,
+                                          index: thisConTags.indexOf(e),
+                                          hasBinLine: !isLastCon,
+                                          isLast: thisConTags.last == e,
+                                        ))
+                                    .toList())
+                            : MyExpansionTile(
+                                tilePadding: EdgeInsets.zero,
+                                headerTileColor: MyColors.containerGreen,
+                                iconColor: MyColors.brownGrey3,
+                                collapsedIconColor: MyColors.brownGrey3,
+                                title: ContainerTileWidget(
+                                  index: index,
+                                  isLast: isLastCon,
+                                  binLines: true,
+                                  con: con,
+                                  sec: ContainerSection(con: con, allTags: filteredTag, ref: ref),
+                                  isFirstSec: false,
+                                  tagCount: thisConTags.length,
+                                ),
+                                children: thisConTags
+                                    .map((e) => TagWidget(
+                                          tag: e,
+                                          fd: widget.details,
+                                          total: thisConTags.length,
+                                          index: thisConTags.indexOf(e),
+                                          hasBinLine: !isLastCon,
+                                          isLast: thisConTags.last == e,
+                                        ))
+                                    .toList(),
+                              );
                       }),
                 ),
               )
@@ -334,6 +364,7 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
                           headerBuilder: (context, sectionIndex, index) {
                             TagContainer con = cons[sectionIndex].con;
                             return ContainerTileWidget(
+                              index: index,
                               isFirstSec: false,
                               binLines: false,
                               con: con,
@@ -349,7 +380,7 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
                               tag: tag,
                               fd: widget.details,
                               total: cons[sectionIndex].items.length,
-                              index: index,
+                              index: itemIndex,
                               hasBinLine: false,
                               isLast: isLastTag,
                             );
@@ -380,6 +411,7 @@ class ContainerTileWidget extends StatelessWidget {
   final bool isLast;
   final bool binLines;
   final int tagCount;
+  final int index;
 
   const ContainerTileWidget({
     Key? key,
@@ -389,6 +421,7 @@ class ContainerTileWidget extends StatelessWidget {
     required this.isLast,
     required this.binLines,
     required this.tagCount,
+    required this.index,
   }) : super(key: key);
 
   @override
@@ -401,14 +434,14 @@ class ContainerTileWidget extends StatelessWidget {
           sec.setSectionExpanded(!sec.isSectionExpanded());
         },
         child: Container(
-          decoration: const BoxDecoration(
-            color: MyColors.containerGreen,
+          decoration: BoxDecoration(
+            color: index.isEven ? MyColors.containerGreen : MyColors.containerGreen2,
           ),
           padding: const EdgeInsets.only(right: 12),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              binLines ? Container(width: 1.5, height: isLast ? 20 : 40, color: MyColors.binGreen) : const SizedBox(),
+              binLines ? Container(width: 1.5, height: isLast ? 20 : 40, color: MyColors.binGrey) : const SizedBox(),
               Expanded(
                 child: SizedBox(
                   height: 40,
@@ -416,19 +449,26 @@ class ContainerTileWidget extends StatelessWidget {
                     children: [
                       Stack(
                         alignment: Alignment.center,
-                        children: [Container(width: 45, height: 1, color: binLines ? MyColors.binGreen : Colors.transparent), con.getImg],
+                        children: [
+                          Container(width: 45, height: 1, color: binLines ? MyColors.binGrey : Colors.transparent),
+                          binLines ? Container() : con.getImg
+                        ],
                       ),
-                      const Icon(Icons.circle, color: MyColors.binGreen, size: 8),
+                      const Icon(Icons.circle, color: MyColors.binGrey, size: 8),
                       const SizedBox(width: 8),
                       Text("${con.title} ${con.code}"),
+                      const SizedBox(width: 8),
+                      con.allowedTagTypesWidgetMini,
                       const Spacer(),
                       Container(
                         height: 25,
                         width: 100,
                         alignment: Alignment.center,
-                        decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), border: Border.all(color: MyColors.black3.withOpacity(0.5))),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(color: MyColors.black3.withOpacity(0.5))),
                         child: Text(
-                          "Tags: ${tagCount}",
+                          "Tags: $tagCount",
                           style: const TextStyle(fontSize: 12),
                         ),
                       )
@@ -448,8 +488,11 @@ class BinTileWidget extends StatelessWidget {
   final BinSection sec;
   final Bin bin;
   final bool isFirstSec;
+  final int tagCount;
 
-  const BinTileWidget({Key? key, required this.bin, required this.sec, required this.isFirstSec}) : super(key: key);
+  const BinTileWidget(
+      {Key? key, required this.bin, required this.sec, required this.isFirstSec, required this.tagCount})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -460,7 +503,7 @@ class BinTileWidget extends StatelessWidget {
       },
       child: Container(
         decoration: const BoxDecoration(
-          color: MyColors.binGreen,
+          color: MyColors.binGrey,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
         child: Row(
@@ -480,11 +523,26 @@ class BinTileWidget extends StatelessWidget {
               style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
             ),
             const Spacer(),
+            if (!sec.items.any((e) => e.type == "ULD"))
+              Container(
+                height: 25,
+                width: 100,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(color: MyColors.black3.withOpacity(0.5))),
+                child: Text(
+                  "Tags: $tagCount",
+                  style: const TextStyle(fontSize: 12),
+                ),
+              ),
+            const SizedBox(width: 8),
             Container(
               height: 25,
               width: 100,
               alignment: Alignment.center,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), border: Border.all(color: MyColors.black3.withOpacity(0.5))),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15), border: Border.all(color: MyColors.black3.withOpacity(0.5))),
               child: Text(
                 "Containers: ${sec.items.length}",
                 style: const TextStyle(fontSize: 12),
@@ -508,8 +566,11 @@ class ContainerSection extends ExpandableListSection<FlightTag> {
   List<FlightTag>? getItems() {
     Position? selectedPos = ref.watch(selectedPosInDetails);
 
-    List<FlightTag> itms = allTags.where((element) => selectedPos == null || selectedPos.id == element.currentPosition).where((element) {
-      return ((selectedPos == null || element.currentPosition == selectedPos.id) && element.tagPositions.first.container?.id == con.id) || (element.tagPositions.first.container?.id == null && con.isCart);
+    List<FlightTag> itms =
+        allTags.where((element) => selectedPos == null || selectedPos.id == element.currentPosition).where((element) {
+      return ((selectedPos == null || element.currentPosition == selectedPos.id) &&
+              element.tagPositions.first.container?.id == con.id) ||
+          (element.tagPositions.first.container?.id == null && con.isCart);
     }).toList();
     return itms;
   }
@@ -538,7 +599,9 @@ class ContainerSection extends ExpandableListSection<FlightTag> {
       // }else{
       //   element.tagPositions.first.container!.id == con.id;
       // }
-      return (selectedPos == null || selectedPos.id == element.currentPosition) && element.tagPositions.first.container?.id == con.id || (element.tagPositions.first.container?.id == null && con.isCart);
+      return (selectedPos == null || selectedPos.id == element.currentPosition) &&
+              element.tagPositions.first.container?.id == con.id ||
+          (element.tagPositions.first.container?.id == null && con.isCart);
     }).toList();
   }
 
@@ -557,9 +620,14 @@ class BinSection extends ExpandableListSection<TagContainer> {
   List<TagContainer>? getItems() {
     List<TagContainer> results = [];
     if (fd.tagList.any((element) => element.getContainerID == null && element.tagPositions.first.binID == bin.id)) {
-      results = allCons.where((element) => element.getTags(fd).where((t) => t.tagPositions.first.binID == bin.id).isNotEmpty).toList() + [TagContainer.bulk(2)];
+      results = allCons
+              .where((element) => element.getTags(fd).where((t) => t.tagPositions.first.binID == bin.id).isNotEmpty)
+              .toList() +
+          [TagContainer.bulk(2)];
     } else {
-      results = allCons.where((element) => element.getTags(fd).where((t) => t.tagPositions.first.binID == bin.id).isNotEmpty).toList();
+      results = allCons
+          .where((element) => element.getTags(fd).where((t) => t.tagPositions.first.binID == bin.id).isNotEmpty)
+          .toList();
     }
 
     // results =  results.where((e) =>(e.isBulk || e.getTags(fd).isNotEmpty) && e.getTags(fd).any((element) {
@@ -601,11 +669,20 @@ class TagWidget extends StatelessWidget {
   final bool hasTagLine;
   final bool inDetails;
 
-  const TagWidget({Key? key, required this.tag, required this.index, this.isLast = false, required this.hasBinLine, this.hasTagLine = true, required this.total, required this.fd, this.inDetails = false}) : super(key: key);
+  const TagWidget(
+      {Key? key,
+      required this.tag,
+      required this.index,
+      this.isLast = false,
+      required this.hasBinLine,
+      this.hasTagLine = true,
+      required this.total,
+      required this.fd,
+      this.inDetails = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
     TextStyle tagNumStyle = TextStyle(
         fontFamily: "Signika",
         fontSize: 18,
@@ -622,7 +699,7 @@ class TagWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            flex: 7,
+            flex: dataTableFlexes[0],
             child: DataCellWidget(
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -639,9 +716,9 @@ class TagWidget extends StatelessWidget {
                       )),
                   const SizedBox(width: 8),
                   (hasBinLine && !inDetails)
-                      ? Container(width: 2, height: 40, color: MyColors.binGreen)
+                      ? Container(width: 2, height: 40, color: MyColors.binGrey)
                       : const SizedBox(
-                          width: 50,
+                          width: 10,
                         ),
                   (hasTagLine && !inDetails)
                       ? Row(
@@ -649,7 +726,7 @@ class TagWidget extends StatelessWidget {
                           children: [
                             Container(width: 2, height: isLast ? 20 : 40, color: MyColors.containerGreen),
                             Container(
-                              width: 40,
+                              width: 10,
                               height: 2,
                               color: MyColors.containerGreen,
                               margin: const EdgeInsets.only(top: 19),
@@ -660,15 +737,15 @@ class TagWidget extends StatelessWidget {
                             ),
                           ],
                         )
-                      : const SizedBox(width: 50),
+                      : const SizedBox(width: 10),
                   IndexedStack(
                     index: tag.inboundLeg == null ? 0 : 1,
                     children: [
                       const SizedBox(),
                       Container(
                         height: 40,
-                        padding: EdgeInsets.only(left: 2),
-                        child: Icon(Icons.flight_land, color: MyColors.green, size: 20),
+                        padding: const EdgeInsets.only(left: 2),
+                        child: const Icon(Icons.flight_land, color: MyColors.green, size: 20),
                       )
                     ],
                   ),
@@ -678,11 +755,12 @@ class TagWidget extends StatelessWidget {
                       const SizedBox(),
                       Container(
                         height: 40,
-                        padding: EdgeInsets.only(left: 2),
-                        child: Icon(Icons.flight_takeoff, color: MyColors.blueGreen, size: 20),
+                        padding: const EdgeInsets.only(left: 2),
+                        child: const Icon(Icons.flight_takeoff, color: MyColors.blueGreen, size: 20),
                       )
                     ],
                   ),
+                  const Spacer(),
                   SizedBox(
                     height: 40,
                     child: Column(
@@ -708,9 +786,9 @@ class TagWidget extends StatelessWidget {
                       children: [tag.getTypeWidget],
                     ),
                   ),
-                  Spacer(),
+                  const SizedBox(width: 12),
                   inDetails
-                      ? SizedBox()
+                      ? const SizedBox()
                       : SizedBox(
                           height: 40,
                           child: Column(
@@ -734,11 +812,12 @@ class TagWidget extends StatelessWidget {
             ),
           ),
           Expanded(
-            flex: 2,
+            flex: dataTableFlexes[1],
             child: DataCellWidget(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(tag.secString),
                     const SizedBox(width: 12),
@@ -746,7 +825,7 @@ class TagWidget extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         fd == null
-                            ? SizedBox()
+                            ? const SizedBox()
                             : Text(
                                 "(${fd!.tagList.where((element) => element.dcsInfo != null && element.dcsInfo?.securityCode == tag.dcsInfo?.securityCode).length})",
                               ),
@@ -760,7 +839,7 @@ class TagWidget extends StatelessWidget {
             ),
           ),
           Expanded(
-            flex: 5,
+            flex: dataTableFlexes[2],
             child: DataCellWidget(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -779,7 +858,8 @@ class TagWidget extends StatelessWidget {
                           width: 50,
                           alignment: Alignment.center,
                           padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
-                          decoration: BoxDecoration(color: MyColors.green.withOpacity(0.4), borderRadius: BorderRadius.circular(2)),
+                          decoration: BoxDecoration(
+                              color: MyColors.green.withOpacity(0.4), borderRadius: BorderRadius.circular(2)),
                           child: Text(
                             tag.tagSsrs.isEmpty ? "" : tag.tagSsrs.map((e) => e.name).join(", "),
                             style: const TextStyle(fontSize: 8),
@@ -798,30 +878,21 @@ class TagWidget extends StatelessWidget {
             ),
           ),
           Expanded(
-            flex: 2,
+            flex: dataTableFlexes[3],
             child: DataCellWidget(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: Text(tag.tagPositions.first.getTime()),
-              ),
+              child: Text(tag.tagPositions.first.getTime()),
             ),
           ),
           Expanded(
-            flex: 2,
+            flex: dataTableFlexes[4],
             child: DataCellWidget(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: Text(tag.tagPositions.first.username),
-              ),
+              child: Text(tag.tagPositions.first.username),
             ),
           ),
           Expanded(
-            flex: 1,
+            flex: dataTableFlexes[5],
             child: DataCellWidget(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: tag.weight,
-              ),
+              child: tag.weight,
             ),
           ),
         ],
@@ -832,16 +903,20 @@ class TagWidget extends StatelessWidget {
 
 class DataCellWidget extends StatelessWidget {
   final Widget child;
+  final Alignment alignment;
 
-  const DataCellWidget({Key? key, required this.child}) : super(key: key);
+  const DataCellWidget({Key? key, required this.child, this.alignment = Alignment.center}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     return Container(
       // padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      alignment: alignment,
       decoration: const BoxDecoration(border: Border(right: BorderSide(color: MyColors.lineColor))),
       child: child,
     );
   }
 }
+
+const List<int> dataTableFlexes = [35, 10, 25, 10, 10, 7];
