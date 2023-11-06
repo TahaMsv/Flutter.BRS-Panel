@@ -5,6 +5,7 @@ import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/screens/airline_ulds/airline_ulds_controller.dart';
 import 'package:brs_panel/screens/airlines/airlines_controller.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_state.dart';
+import 'package:brs_panel/screens/flights/data_tables/flight_data_table.dart';
 import 'package:brs_panel/screens/flights/dialogs/flight_container_list_dialog.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_add_remove_container_usecase.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_get_container_list_usecase.dart';
@@ -107,6 +108,25 @@ class FlightsController extends MainController {
     final pickedDate  = await Pickers.pickDate(nav.context, current);
     if(pickedDate!=null){
       flightList(pickedDate);
+    }
+  }
+
+  void goSummary(Flight f) {
+    final sfP = ref.read(selectedFlightProvider.notifier);
+    sfP.state = f;
+    nav.pushNamed(RouteNames.flightSummary, pathParameters: {"flightID": f.id.toString()});
+  }
+
+  Future<void> handleActions(MenuItem value,Flight flight) async{
+    switch (value) {
+      case MenuItems.flightSummary:
+        goSummary(flight);
+        return;
+      case MenuItems.assignContainer:
+        await editContainers(flight);
+        return;
+      default:
+        return;
     }
   }
 }

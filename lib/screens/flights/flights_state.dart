@@ -18,6 +18,7 @@ final flightListProvider = StateNotifierProvider<FlightListNotifier, List<Flight
 final flightSearchProvider = StateProvider<String>((ref) => '');
 final flightDateProvider = StateProvider<DateTime>((ref) => DateTime.now());
 final flightsShowFiltersProvider = StateProvider<bool>((ref) => true);
+final flightActionHandlingProvider = StateProvider<List<int>>((ref) => []);
 final flightTypeFilterProvider = StateProvider<FlightTypeFilter>((ref) => FlightTypeFilter.departure);
 final flightAirportFilterProvider = StateProvider<Airport?>((ref) => null);
 final flightAirlineFilterProvider = StateProvider<String?>((ref) => null);

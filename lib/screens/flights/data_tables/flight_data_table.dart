@@ -1,6 +1,11 @@
+import 'package:brs_panel/core/abstracts/local_data_base_abs.dart';
+import 'package:brs_panel/core/platform/spiners.dart';
 import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:brs_panel/widgets/TagCountWidget.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../../../core/classes/flight_class.dart';
@@ -10,6 +15,7 @@ import '../../../widgets/AirlineLogo.dart';
 import '../../../widgets/DotButton.dart';
 import '../../../widgets/MyButton.dart';
 import '../flights_controller.dart';
+import '../flights_state.dart';
 
 enum FlightDataTableColumn {
   flight,
@@ -139,20 +145,21 @@ class FlightDataSource extends DataGridSource {
               child: Row(
                 children: [
                   ...BasicClass.systemSetting.positions.map((p) {
-                    bool isActive = f.positions.map((e) => e.id).contains(p.id);
-                    if(f.flightType==0 && p.id>3) return SizedBox();
-                    return InkWell(
-                      onTap: (){
-                        flightsController.goDetails(f,selectedPos: p);
-                      },
+                    return Expanded(
                       child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: InkWell(
+                          onTap: () {
+                            flightsController.goDetails(f, selectedPos: p);
+                          },
                           child: TagCountWidget(
                             position: p,
+                            sections: f.positions.firstWhereOrNull((element) => element.id == p.id)?.sections ?? [],
                             color: p.getColor,
-                            count: isActive ? f.positions.firstWhere((element) => element.id == p.id).tagCount : 0,
-
-                          )),
+                            count: f.positions.firstWhereOrNull((element) => element.id == p.id)?.tagCount ?? 0,
+                          ),
+                        ),
+                      ),
                     );
                   }).toList(),
                 ],
@@ -174,17 +181,121 @@ class FlightDataSource extends DataGridSource {
                     },
                   ),
                   const SizedBox(width: 12),
-                  DotButton(
-                    icon: Icons.more_vert,
-                    onPressed: () async {
-                      await flightsController.editContainers(f);
-                    },
-                  )
+                  DropdownButtonHideUnderline(
+                    child: DropdownButton2(
+                      items: [
+                        ...MenuItems.firstItems.map(
+                          (item) => DropdownMenuItem<MenuItem>(
+                            value: item,
+                            child: MenuItems.buildItem(item),
+                          ),
+                        ),
+                        // const DropdownMenuItem<Divider>(enabled: false, child: Divider()),
+                        // ...MenuItems.secondItems.map(
+                        //   (item) => DropdownMenuItem<MenuItem>(
+                        //     value: item,
+                        //     child: MenuItems.buildItem(item),
+                        //   ),
+                        // ),
+                      ],
+                      onChanged: (value) async{
+                        WidgetRef ref = getIt<WidgetRef>();
+                        bool loading = ref.watch(flightActionHandlingProvider).contains(f.id);
+                        if(loading) return;
+                        ref.read(flightActionHandlingProvider.notifier).update((state) => (state + [f.id]).toSet().toList());
+                        await flightsController.handleActions(value as MenuItem, f);
+                        ref.read(flightActionHandlingProvider.notifier).update((state) => state.where((element) => element!=f.id).toList());
+                        // MenuItems.onChanged(navigator!.context, value! as MenuItem);
+                      },
+                      customButton: Consumer(
+                        builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                          bool loading = ref.watch(flightActionHandlingProvider).contains(f.id);
+                          if (loading) {
+                            return DotButton(
+                              icon: Icons.more_vert,
+                              color: MyColors.mainColor,
+                              child: Spinners.circle,
+                            );
+                          } else {
+                            return const IgnorePointer(
+                              child: DotButton(
+                                icon: Icons.more_vert,
+                                color: MyColors.mainColor,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                      dropdownStyleData: DropdownStyleData(
+                        width: 160,
+                        padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: Colors.white,
+                        ),
+                        offset: const Offset(0, 8),
+                      ),
+                      menuItemStyleData: const MenuItemStyleData(
+                        padding: EdgeInsets.only(left: 4, right: 4),
+                      ),
+                    ),
+                  ),
+                  // DotButton(
+                  //   icon: Icons.more_vert,
+                  //   onPressed: () async {
+                  //     await flightsController.editContainers(f);
+                  //   },
+                  // )
                 ],
               ),
             );
           }
           return Container();
         }).toList());
+  }
+}
+
+class MenuItem {
+  const MenuItem({
+    required this.text,
+    required this.icon,
+  });
+
+  final String text;
+  final IconData icon;
+}
+
+abstract class MenuItems {
+  static const List<MenuItem> firstItems = [flightSummary, assignContainer];
+
+  static const flightSummary = MenuItem(text: 'Flight Summary', icon: Icons.home);
+  static const assignContainer = MenuItem(text: 'Assign Container', icon: Icons.share);
+
+  static Widget buildItem(MenuItem item) {
+    return Row(
+      children: [
+        Icon(item.icon, color: Colors.black, size: 20),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            item.text,
+            style: const TextStyle(
+              color: Colors.black87,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  static void onChanged(BuildContext context, MenuItem item) {
+    switch (item) {
+      case MenuItems.assignContainer:
+        //Do something
+        break;
+      case MenuItems.flightSummary:
+        //Do something
+        break;
+    }
   }
 }

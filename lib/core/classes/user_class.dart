@@ -158,7 +158,7 @@ class SystemSettings {
         handlingAccess: List<HandlingAccess>.from(json["HandlingAccess"].map((x) => HandlingAccess.fromJson(x))),
         // airlineList: List<Airline>.from((json["AirlineList2"] ?? []).map((x) => Airline.fromJson(x))),
         airportList: List<Airport>.from(json["AirportList"].map((x) => Airport.fromJson(x))),
-        aircraftList: List<Aircraft>.from((json["AircraftList"]).map((x) => Aircraft.fromJson(x))),
+        aircraftList: List<Aircraft>.from(((json["AircraftList"]??[])).map((x) => Aircraft.fromJson(x))),
         tagTypeList: List<TagType>.from((json["TagTypeList"] ?? []).map((x) => TagType.fromJson(x))),
       );
 
@@ -645,7 +645,7 @@ class Position {
   final bool containerAction;
   final String color;
   final String icon;
-  final List<PositionAction> actions;
+  // final List<PositionAction> actions;
 
   const Position({
     required this.id,
@@ -657,7 +657,7 @@ class Position {
     required this.containerAction,
     required this.color,
     required this.icon,
-    required this.actions,
+    // required this.actions,
   });
 
   Position copyWith({
@@ -670,7 +670,7 @@ class Position {
     bool? containerAction,
     String? color,
     String? icon,
-    List<PositionAction>? actions,
+    // List<PositionAction>? actions,
   }) =>
       Position(
         id: id ?? this.id,
@@ -682,10 +682,11 @@ class Position {
         containerAction: containerAction ?? this.containerAction,
         color: color ?? this.color,
         icon: icon ?? this.icon,
-        actions: actions ?? this.actions,
+        // actions: actions ?? this.actions,
       );
 
-  factory Position.fromJson(Map<String, dynamic> json) => Position(
+  factory Position.fromJson(Map<String, dynamic> json) {
+    return Position(
         id: json["ID"],
         title: json["Title"],
         binRequired: json["BinRequired"],
@@ -695,8 +696,10 @@ class Position {
         containerAction: json["ContainerAction"],
         color: json["Color"],
         icon: json["Icon"],
-        actions: List<PositionAction>.from(json["Actions"].map((x) => PositionAction.fromJson(x))),
+
+        // actions: List<PositionAction>.from(json["Actions"].map((x) => PositionAction.fromJson(x))),
       );
+  }
 
   Map<String, dynamic> toJson() => {
         "ID": id,
@@ -708,7 +711,7 @@ class Position {
         "ContainerAction": containerAction,
         "Color": color,
         "Icon": icon,
-        "Actions": List<dynamic>.from(actions.map((x) => x.toJson())),
+        // "Actions": List<dynamic>.from(actions.map((x) => x.toJson())),
       };
 
   Color get getColor => HexColor(color);
@@ -732,29 +735,29 @@ class Position {
   IconData? get getIcon => posIcon;
 }
 
-@immutable
-class PositionAction {
-  final int id;
-
-  const PositionAction({
-    required this.id,
-  });
-
-  PositionAction copyWith({
-    int? id,
-  }) =>
-      PositionAction(
-        id: id ?? this.id,
-      );
-
-  factory PositionAction.fromJson(Map<String, dynamic> json) => PositionAction(
-        id: json["ID"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "ID": id,
-      };
-}
+// @immutable
+// class PositionAction {
+//   final int id;
+//
+//   const PositionAction({
+//     required this.id,
+//   });
+//
+//   PositionAction copyWith({
+//     int? id,
+//   }) =>
+//       PositionAction(
+//         id: id ?? this.id,
+//       );
+//
+//   factory PositionAction.fromJson(Map<String, dynamic> json) => PositionAction(
+//         id: json["ID"],
+//       );
+//
+//   Map<String, dynamic> toJson() => {
+//         "ID": id,
+//       };
+// }
 
 @immutable
 class RealAlarmSetting {
@@ -861,6 +864,43 @@ class ZplList {
         "ZPL": zpl,
         "Description": description,
       };
+}
+
+class PositionSection {
+  final int offset;
+  final int count;
+  final String color;
+
+  PositionSection({
+    required this.offset,
+    required this.count,
+    required this.color,
+  });
+
+  PositionSection copyWith({
+    int? offset,
+    int? count,
+    String? color,
+  }) =>
+      PositionSection(
+        offset: offset ?? this.offset,
+        count: count ?? this.count,
+        color: color ?? this.color,
+      );
+
+  factory PositionSection.fromJson(Map<String, dynamic> json) => PositionSection(
+    offset: json["Offset"],
+    count: json["Count"],
+    color: json["Color"],
+  );
+
+  Color get getColor => HexColor(color);
+  String get value => "$count";
+  Map<String, dynamic> toJson() => {
+    "Offset": offset,
+    "Count": count,
+    "Color": color,
+  };
 }
 
 @immutable
