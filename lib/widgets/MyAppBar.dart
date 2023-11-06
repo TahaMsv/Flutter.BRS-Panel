@@ -1,7 +1,6 @@
 import 'package:brs_panel/screens/login/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../core/classes/user_class.dart';
 import '../core/constants/ui.dart';
@@ -52,14 +51,6 @@ class _MyAppBarState extends State<MyAppBar> {
                           onPressed: () {
                             NavigationService ns = getIt<NavigationService>();
                             ns.pop();
-                            ref.refresh(routerProvider);
-                            List<RouteNames> l =
-                                RouteNames.values.where((r) => router.location.split("/").contains(r.name)).toList();
-                            if (l.length == 1) {
-                              ns.pushNamed(l[0]);
-                            } else {
-                              ns.pop();
-                            }
                           },
                         ),
                         const SizedBox(width: 8),
@@ -116,7 +107,9 @@ class _MyAppBarState extends State<MyAppBar> {
                           bool selected = currentRoute == e;
                           return DecoratedBox(
                             decoration: BoxDecoration(
-                              border: selected ? const Border(bottom: BorderSide(color: MyColors.lightIshBlue, width: 4)) : const Border(),
+                              border: selected
+                                  ? const Border(bottom: BorderSide(color: MyColors.lightIshBlue, width: 4))
+                                  : const Border(),
                             ),
                             child: Padding(
                               padding: const EdgeInsets.only(bottom: 8.0, top: 4),
@@ -145,18 +138,18 @@ class _MyAppBarState extends State<MyAppBar> {
   }
 }
 
-
 class UserIndicatorWidget extends ConsumerWidget {
   UserIndicatorWidget({Key? key}) : super(key: key);
   final LoginController myLoginController = getIt<LoginController>();
+
   @override
-  Widget build(BuildContext context,WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     User? u = ref.watch(userProvider);
     ThemeData theme = Theme.of(context);
     double width = Get.width;
     double height = Get.height;
     double avatarRadius = 18;
-    if(u==null) return const SizedBox();
+    if (u == null) return const SizedBox();
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -164,20 +157,20 @@ class UserIndicatorWidget extends ConsumerWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(avatarRadius),
             child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.blueAccent
-              ),
-              width: avatarRadius*2,
-              height: avatarRadius*2,
+              decoration: const BoxDecoration(color: Colors.blueAccent),
+              width: avatarRadius * 2,
+              height: avatarRadius * 2,
               child: const Icon(Icons.person),
             ),
           ),
           const SizedBox(width: 8),
           Text("Hello, ${u.username}"),
           const SizedBox(width: 8),
-          IconButton(onPressed: (){
-            myLoginController.logout();
-          }, icon: const Icon(Icons.exit_to_app_outlined))
+          IconButton(
+              onPressed: () {
+                myLoginController.logout();
+              },
+              icon: const Icon(Icons.exit_to_app_outlined))
         ],
       ),
     );
