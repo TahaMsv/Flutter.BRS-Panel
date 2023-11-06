@@ -688,7 +688,6 @@ class Position {
       );
 
   factory Position.fromJson(Map<String, dynamic> json) {
-    print(json);
     return Position(
         id: json["ID"],
         title: json["Title"],

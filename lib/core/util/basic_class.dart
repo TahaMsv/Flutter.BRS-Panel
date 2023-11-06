@@ -59,6 +59,9 @@ class BasicClass {
   static Position? getPositionByID(int? id) {
     return systemSetting.positions.firstWhereOrNull((e)=>e.id==id);
   }
+  static TagAction? getExceptionByID(int? id) {
+    return systemSetting.exceptionStatusList.firstWhereOrNull((e)=>e.id==id);
+  }
   static Airport? getAirportByCode(String code) {
     print(code);
     return systemSetting.airportList.firstWhereOrNull((e)=>e.code==code);

@@ -148,15 +148,18 @@ class FlightDataSource extends DataGridSource {
                     // bool isActive = f.positions.map((e) => e.id).contains(p.id) || true;
                     // if (f.flightType == 0 && p.id > 3) return SizedBox();
                     return Expanded(
-                      child: InkWell(
-                        onTap: () {
-                          flightsController.goDetails(f, selectedPos: p);
-                        },
-                        child: TagCountWidget(
-                          position: p,
-                          sections: f.positions.firstWhereOrNull((element) => element.id == p.id)?.sections ?? [],
-                          color: p.getColor,
-                          count: f.positions.firstWhereOrNull((element) => element.id == p.id)?.tagCount ?? 0,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: InkWell(
+                          onTap: () {
+                            flightsController.goDetails(f, selectedPos: p);
+                          },
+                          child: TagCountWidget(
+                            position: p,
+                            sections: f.positions.firstWhereOrNull((element) => element.id == p.id)?.sections ?? [],
+                            color: p.getColor,
+                            count: f.positions.firstWhereOrNull((element) => element.id == p.id)?.tagCount ?? 0,
+                          ),
                         ),
                       ),
                     );
