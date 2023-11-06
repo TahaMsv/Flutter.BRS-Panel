@@ -58,7 +58,9 @@ class FlightsController extends MainController {
     sfP.state = f;
     final spP = ref.read(selectedPosInDetails.notifier);
     spP.state = BasicClass.getPositionByID(selectedPos?.id??f.positions.first.id)!;
-    nav.pushNamed(RouteNames.flightDetails, pathParameters: {"flightID": f.id.toString()});
+    nav.pushNamed(RouteNames.flightDetails, pathParameters: {"flightID": f.id.toString()}).then((value) {
+      flightList(DateTime.now());
+    });
   }
 
   Future<void> editContainers(Flight f) async {

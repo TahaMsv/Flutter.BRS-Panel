@@ -50,13 +50,7 @@ class _MyAppBarState extends State<MyAppBar> {
                           icon: Icons.keyboard_arrow_left_sharp,
                           onPressed: () {
                             NavigationService ns = getIt<NavigationService>();
-                            List<RouteNames> l =
-                                RouteNames.values.where((r) => router.location.split("/").contains(r.name)).toList();
-                            if (l.length == 1) {
-                              ns.pushNamed(l[0]);
-                            } else {
-                              ns.pop();
-                            }
+                            ns.pop();
                           },
                         ),
                         const SizedBox(width: 8),

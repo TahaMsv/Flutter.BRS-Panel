@@ -434,6 +434,8 @@ class ContainerTileWidget extends StatelessWidget {
           sec.setSectionExpanded(!sec.isSectionExpanded());
         },
         child: Container(
+          height: 50,
+          alignment: Alignment.center,
           decoration: BoxDecoration(
             color: index.isEven ? MyColors.containerGreen : MyColors.containerGreen2,
           ),
@@ -451,7 +453,7 @@ class ContainerTileWidget extends StatelessWidget {
                         alignment: Alignment.center,
                         children: [
                           Container(width: 45, height: 1, color: binLines ? MyColors.binGrey : Colors.transparent),
-                          binLines ? Container() : con.getImg
+                          con.getImg
                         ],
                       ),
                       const Icon(Icons.circle, color: MyColors.binGrey, size: 8),
@@ -502,9 +504,8 @@ class BinTileWidget extends StatelessWidget {
         sec.setSectionExpanded(!sec.isSectionExpanded());
       },
       child: Container(
-        decoration: const BoxDecoration(
-          color: MyColors.binGrey,
-        ),
+        height: 50,
+        decoration: const BoxDecoration(color: MyColors.binGrey),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
         child: Row(
           children: [
@@ -530,10 +531,10 @@ class BinTileWidget extends StatelessWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    border: Border.all(color: MyColors.black3.withOpacity(0.5))),
+                    border: Border.all(color: MyColors.white3.withOpacity(0.5))),
                 child: Text(
                   "Tags: $tagCount",
-                  style: const TextStyle(fontSize: 12),
+                  style: const TextStyle(fontSize: 12, color: MyColors.white3),
                 ),
               ),
             const SizedBox(width: 8),
@@ -542,10 +543,10 @@ class BinTileWidget extends StatelessWidget {
               width: 100,
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15), border: Border.all(color: MyColors.black3.withOpacity(0.5))),
+                  borderRadius: BorderRadius.circular(15), border: Border.all(color: MyColors.white3.withOpacity(0.5))),
               child: Text(
                 "Containers: ${sec.items.length}",
-                style: const TextStyle(fontSize: 12),
+                style: const TextStyle(fontSize: 12, color: MyColors.white3),
               ),
             )
           ],
@@ -695,6 +696,7 @@ class TagWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(color: index.isEven ? MyColors.evenRow : MyColors.oddRow),
       padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+      height: 50,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -815,7 +817,7 @@ class TagWidget extends StatelessWidget {
             flex: dataTableFlexes[1],
             child: DataCellWidget(
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
