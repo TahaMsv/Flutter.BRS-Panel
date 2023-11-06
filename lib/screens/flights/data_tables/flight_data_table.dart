@@ -145,8 +145,6 @@ class FlightDataSource extends DataGridSource {
               child: Row(
                 children: [
                   ...BasicClass.systemSetting.positions.map((p) {
-                    // bool isActive = f.positions.map((e) => e.id).contains(p.id) || true;
-                    // if (f.flightType == 0 && p.id > 3) return SizedBox();
                     return Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4),
