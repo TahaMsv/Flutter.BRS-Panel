@@ -1,4 +1,3 @@
-import 'dart:convert';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/platform/network_manager.dart';
 import '../interfaces/airport_sections_data_source_interface.dart';
@@ -14,7 +13,7 @@ class AirportSectionsRemoteDataSource implements AirportSectionsDataSourceInterf
   @override
   Future<AirportGetSectionsResponse> airportGetSections({required AirportGetSectionsRequest request}) async {
     Response res = await networkManager.post(request);
-    print(jsonEncode(res.body));
+    print(res.body);
     return AirportGetSectionsResponse.fromResponse(res);
   }
 }

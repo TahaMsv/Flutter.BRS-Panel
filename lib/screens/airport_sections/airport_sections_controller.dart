@@ -4,6 +4,7 @@ import '../../core/classes/user_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
 import '../airport_carts/airport_carts_state.dart';
 import 'airport_sections_state.dart';
+import 'dialogs/add_section_dialog.dart';
 import 'usecase/airport_get_sections_usecase.dart';
 
 class AirportSectionsController extends MainController {
@@ -11,33 +12,58 @@ class AirportSectionsController extends MainController {
 
   /// View Related -----------------------------------------------------------------------------------------------------
 
-  onChangeSection(Section? section) {
-    if (section == null) return;
-    final selectedSectionP = ref.read(selectedSectionProvider.notifier);
-    selectedSectionP.state = section;
-    final selectedCategoriesP = ref.read(selectedCategoriesProvider.notifier);
-    selectedCategoriesP.state = [];
-    setFirstSubCategories(section.subCategories);
-  }
-
-  onChangeSubCategory(SubCategory subCategory) {
-    final selectedSectionP = ref.read(selectedSectionProvider.notifier);
-    List<SubCategory> sbc0 = selectedSectionP.state?.subCategories ?? [];
-    final selectedCategoriesP = ref.read(selectedCategoriesProvider.notifier);
-    List<SubCategory> ssc0 = selectedCategoriesP.state;
-    if (sbc0.any((e) => e == subCategory)) {
-      selectedCategoriesP.state = [subCategory];
-      setFirstSubCategories(subCategory.subCategories);
+  onTapSection(Section section) {
+    final sectionsP = ref.read(sectionsProvider.notifier);
+    List<Section> sc0 = sectionsP.state?.sections ?? [];
+    final selectedSectionsP = ref.read(selectedSectionsProvider.notifier);
+    List<Section> ssc0 = selectedSectionsP.state;
+    if (sc0.any((e) => e == section)) {
+      selectedSectionsP.state = [section];
+      setFirstSections(section.sections);
     } else {
       for (int i = 0; i < ssc0.length; i++) {
-        if (ssc0[i].subCategories.contains(subCategory)) {
-          List<SubCategory> newSsc0 = ssc0.sublist(0, i + 1);
-          newSsc0.add(subCategory);
-          selectedCategoriesP.state = newSsc0;
-          setFirstSubCategories(subCategory.subCategories);
+        if (ssc0[i].sections.contains(section)) {
+          List<Section> newSsc0 = ssc0.sublist(0, i + 1);
+          newSsc0.add(section);
+          selectedSectionsP.state = newSsc0;
+          setFirstSections(section.sections);
         }
       }
     }
+  }
+
+  addSection({required List<Section> subs}) async {
+    Section? newSection = await nav.dialog(const AddSectionDialog());
+    if (newSection == null) return;
+    final sectionsP = ref.read(sectionsProvider.notifier);
+    List<Section> sc0 = sectionsP.state?.sections ?? [];
+    final selectedSectionsP = ref.read(selectedSectionsProvider.notifier);
+    List<Section> ssc0 = selectedSectionsP.state;
+    if (subs.isEmpty) {
+      if (sc0.isEmpty) {
+        //first layer!
+        sc0.add(newSection);
+        sectionsP.state = AirportSections(airport: sectionsP.state?.airport ?? "", sections: sc0);
+        selectedSectionsP.state = [newSection];
+      } else {
+        ssc0[ssc0.length - 1].sections.add(newSection);
+        setFirstSections(ssc0.last.sections);
+      }
+    } else if (sc0.contains(subs.first)) {
+      //first layer!
+      sc0.add(newSection);
+      sectionsP.state = AirportSections(airport: sectionsP.state?.airport ?? "", sections: sc0);
+      selectedSectionsP.state = [newSection];
+    } else {
+      //second layer!
+      for (int i = 0; i < ssc0.length; i++) {
+        List<Section> temp = ssc0[i].sections;
+        if (temp.contains(subs.first)) {
+          ssc0[i].sections.add(newSection);
+        }
+      }
+    }
+    airportSectionsState.setState();
   }
 
   /// Requests ---------------------------------------------------------------------------------------------------------
@@ -55,24 +81,27 @@ class AirportSectionsController extends MainController {
     return sections;
   }
 
+  addSectionRequest() async {}
+
   /// Core -------------------------------------------------------------------------------------------------------------
 
   initSelection() {
+    final selectedSectionsP = ref.read(selectedSectionsProvider.notifier);
     List<Section> sections = ref.read(sectionsProvider.notifier).state?.sections ?? [];
-    if (sections.isEmpty) return;
-    final selectedSectionP = ref.read(selectedSectionProvider.notifier);
-    selectedSectionP.state = sections.first;
-    final selectedCategoriesP = ref.read(selectedCategoriesProvider.notifier);
-    selectedCategoriesP.state = [];
-    setFirstSubCategories(sections.first.subCategories);
+    if (sections.isEmpty) {
+      selectedSectionsP.state = [];
+      return;
+    }
+    selectedSectionsP.state = [sections.first];
+    setFirstSections(sections.first.sections);
   }
 
-  setFirstSubCategories(List<SubCategory> subs) {
+  setFirstSections(List<Section> subs) {
     if (subs.isEmpty) return;
-    final selectedCategoriesP = ref.read(selectedCategoriesProvider.notifier);
-    List<SubCategory> prev = selectedCategoriesP.state;
+    final selectedSectionsP = ref.read(selectedSectionsProvider.notifier);
+    List<Section> prev = selectedSectionsP.state;
     prev.add(subs.first);
-    selectedCategoriesP.state = prev;
-    setFirstSubCategories(subs.first.subCategories);
+    selectedSectionsP.state = prev;
+    setFirstSections(subs.first.sections);
   }
 }

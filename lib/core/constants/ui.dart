@@ -66,7 +66,9 @@ class MyColors {
   static const red = Color.fromRGBO(238, 91, 92, 1);
   static const shinyRed = Color(0xffff0647);
   static const lineColor = Color(0xffE1E1E1);
+  static const lineColor2 = Color(0xffEDEDED);
   static const fadedBlue = Color(0xff7c8ac9);
+  static const fadedBlue2 = Color(0xffDAE0F8);
   static const duskBlue = Color(0xff293a84);
   static const lightPeriwinkle = Color(0xffbdcaff);
   static const ice = Color.fromRGBO(218, 250, 246, 1);

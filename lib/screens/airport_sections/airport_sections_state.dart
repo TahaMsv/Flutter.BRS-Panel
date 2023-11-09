@@ -12,6 +12,4 @@ class AirportSectionsState extends ChangeNotifier {
 
 // final selectedAirportProvider = StateProvider<Airport?>((ref) => null);
 final sectionsProvider = StateProvider<AirportSections?>((ref) => null);
-
-final selectedSectionProvider = StateProvider<Section?>((ref) => null);
-final selectedCategoriesProvider = StateProvider<List<SubCategory>>((ref) => []);
+final selectedSectionsProvider = StateProvider<List<Section>>((ref) => []);

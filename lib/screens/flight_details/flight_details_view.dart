@@ -217,7 +217,8 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
     List<BinSection> bins = widget.details.binList
         .map((b) => BinSection(bin: b, allCons: filteredCons, ref: ref, fd: widget.details))
         .toList();
-
+    //todo use this!
+    final List<AirportPositionSection> positionSections = BasicClass.userSetting.hierarchy;
     return Column(
       children: [
         Container(
@@ -359,6 +360,7 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
             : selectedPos.containerRequired
                 ? Flexible(
                     child: ExpandableListView(
+                      //todo here!
                       builder: SliverExpandableChildDelegate<FlightTag, ContainerSection>(
                           sectionList: cons,
                           headerBuilder: (context, sectionIndex, index) {

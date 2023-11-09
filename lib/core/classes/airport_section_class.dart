@@ -20,7 +20,7 @@ class AirportSections {
       );
 
   factory AirportSections.fromJson(Map<String, dynamic> json) => AirportSections(
-        airport: json["Airport"],
+        airport: json["Airport"] ?? "",
         sections: List<Section>.from((json["Section"] ?? []).map((x) => Section.fromJson(x))),
       );
 
@@ -36,7 +36,7 @@ class AirportSections {
 
 @immutable
 class Section {
-  final int id;
+  final int? id;
   final String label;
   final int position;
   final int offset;
@@ -45,7 +45,7 @@ class Section {
   final bool canHaveContainer;
   final bool canHaveBin;
   final bool spotRequired;
-  final List<SubCategory> subCategories;
+  final List<Section> sections;
 
   const Section({
     required this.id,
@@ -57,7 +57,7 @@ class Section {
     required this.canHaveContainer,
     required this.canHaveBin,
     required this.spotRequired,
-    required this.subCategories,
+    required this.sections,
   });
 
   Section copyWith({
@@ -70,7 +70,7 @@ class Section {
     bool? canHaveContainer,
     bool? canHaveBin,
     bool? spotRequired,
-    List<SubCategory>? subCategories,
+    List<Section>? sections,
   }) =>
       Section(
         id: id ?? this.id,
@@ -82,7 +82,7 @@ class Section {
         canHaveContainer: canHaveContainer ?? this.canHaveContainer,
         canHaveBin: canHaveBin ?? this.canHaveBin,
         spotRequired: spotRequired ?? this.spotRequired,
-        subCategories: subCategories ?? this.subCategories,
+        sections: sections ?? this.sections,
       );
 
   factory Section.fromJson(Map<String, dynamic> json) => Section(
@@ -95,7 +95,7 @@ class Section {
         canHaveContainer: json["CanHaveContainer"],
         canHaveBin: json["CanHaveBin"],
         spotRequired: json["SpotRequired"],
-        subCategories: List<SubCategory>.from((json["SUBS"] ?? []).map((x) => SubCategory.fromJson(x))),
+        sections: List<Section>.from((json["SUBS"] ?? []).map((x) => Section.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -108,89 +108,7 @@ class Section {
         "CanHaveContainer": canHaveContainer,
         "CanHaveBin": canHaveBin,
         "SpotRequired": spotRequired,
-        "SUBS": List<dynamic>.from(subCategories.map((x) => x.toJson())),
-      };
-
-  validateSearch(String s) {
-    return null;
-  }
-}
-
-@immutable
-class SubCategory {
-  final int id;
-  final String label;
-  final int position;
-  final int offset;
-  final bool isMainSection;
-  final bool canHaveTag;
-  final bool canHaveContainer;
-  final bool canHaveBin;
-  final bool spotRequired;
-  final List<SubCategory> subCategories;
-
-  const SubCategory({
-    required this.id,
-    required this.label,
-    required this.position,
-    required this.offset,
-    required this.isMainSection,
-    required this.canHaveTag,
-    required this.canHaveContainer,
-    required this.canHaveBin,
-    required this.spotRequired,
-    required this.subCategories,
-  });
-
-  SubCategory copyWith({
-    int? id,
-    String? label,
-    int? position,
-    int? offset,
-    bool? isMainSection,
-    bool? canHaveTag,
-    bool? canHaveContainer,
-    bool? canHaveBin,
-    bool? spotRequired,
-    List<SubCategory>? subCategories,
-  }) =>
-      SubCategory(
-        id: id ?? this.id,
-        label: label ?? this.label,
-        position: position ?? this.position,
-        offset: offset ?? this.offset,
-        isMainSection: isMainSection ?? this.isMainSection,
-        canHaveTag: canHaveTag ?? this.canHaveTag,
-        canHaveContainer: canHaveContainer ?? this.canHaveContainer,
-        canHaveBin: canHaveBin ?? this.canHaveBin,
-        spotRequired: spotRequired ?? this.spotRequired,
-        subCategories: subCategories ?? this.subCategories,
-      );
-
-  factory SubCategory.fromJson(Map<String, dynamic> json) => SubCategory(
-        id: json["ID"],
-        label: json["Label"],
-        position: json["Position"],
-        offset: json["Offset"],
-        isMainSection: json["IsMainSection"],
-        canHaveTag: json["CanHaveTag"],
-        canHaveContainer: json["CanHaveContainer"],
-        canHaveBin: json["CanHaveBin"],
-        spotRequired: json["SpotRequired"],
-        subCategories: List<SubCategory>.from((json["SUBS"] ?? []).map((x) => SubCategory.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "ID": id,
-        "Label": label,
-        "Position": position,
-        "Offset": offset,
-        "IsMainSection": isMainSection,
-        "CanHaveTag": canHaveTag,
-        "CanHaveContainer": canHaveContainer,
-        "CanHaveBin": canHaveBin,
-        "SpotRequired": spotRequired,
-        "SUBS": List<dynamic>.from(subCategories.map((x) => x.toJson())),
+        "SUBS": List<dynamic>.from(sections.map((x) => x.toJson())),
       };
 
   validateSearch(String s) {

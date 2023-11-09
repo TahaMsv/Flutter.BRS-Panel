@@ -38,14 +38,14 @@ class AirportGetSectionsRequest extends Request {
 }
 
 class AirportGetSectionsResponse extends Response {
-  final AirportSections airportSections;
+  final AirportSections? airportSections;
 
   AirportGetSectionsResponse({required int status, required String message, required this.airportSections})
-      : super(status: status, message: message, body: airportSections.toJson());
+      : super(status: status, message: message, body: airportSections?.toJson());
 
   factory AirportGetSectionsResponse.fromResponse(Response res) => AirportGetSectionsResponse(
         status: res.status,
         message: res.message,
-        airportSections: AirportSections.fromJson(res.body),
+        airportSections: AirportSections.fromJson(res.body ?? {}),
       );
 }
