@@ -5,6 +5,7 @@ import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:brs_panel/core/util/confirm_operation.dart';
 import 'package:brs_panel/screens/login/usecases/server_select_usecase.dart';
 import 'package:brs_panel/widgets/ServerSelectDialog.dart';
+import 'package:brs_panel/widgets/stimul_preview_dialog.dart';
 
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/abstracts/device_info_service_abs.dart';
@@ -109,5 +110,9 @@ class LoginController extends MainController {
       });
     });
     return servers;
+  }
+
+  void showStimulPreview() {
+    nav.dialog(StimulPreviewDialog(url: "http://www.google.com"));
   }
 }

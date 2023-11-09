@@ -160,6 +160,7 @@ class SystemSettings {
         airportList: List<Airport>.from(json["AirportList"].map((x) => Airport.fromJson(x))),
         aircraftList: List<Aircraft>.from(((json["AircraftList"]??[])).map((x) => Aircraft.fromJson(x))),
         tagTypeList: List<TagType>.from((json["TagTypeList"] ?? []).map((x) => TagType.fromJson(x))),
+
       );
 
   Map<String, dynamic> toJson() => {
@@ -637,6 +638,7 @@ class HandlingSetting {
 @immutable
 class Position {
   final int id;
+
   final String title;
   final bool binRequired;
   final bool containerRequired;

@@ -25,9 +25,9 @@ extension RouteNamesDetails on RouteNames {
       case RouteNames.addFlight:
         return 'addFlight';
       case RouteNames.flightDetails:
-        return 'details';
+        return 'flightDetails';
       case RouteNames.airlineUlds:
-        return 'details';
+        return 'airlineUlds';
       case RouteNames.flightSummary:
         return 'flightSummary';
       case RouteNames.login:

@@ -2,10 +2,12 @@ import 'package:brs_panel/core/constants/ui.dart';
 import 'package:brs_panel/core/platform/spiners.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/widgets/DetailsChart.dart';
+import 'package:brs_panel/widgets/FlightBanner.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
+import '../../core/classes/flight_class.dart';
 import '../../core/classes/flight_details_class.dart';
 import '../../core/classes/tag_container_class.dart';
 import '../../core/classes/user_class.dart';
@@ -39,6 +41,7 @@ class _FlightDetailsViewState extends State<FlightDetailsView> {
         appBar: MyAppBar(),
         body: Column(
           children: [
+
             FlightDetailsPanel(),
             FlightDetailsWidget(),
           ],
@@ -58,6 +61,7 @@ class FlightDetailsPanel extends ConsumerWidget {
     List<Position> pos = BasicClass.systemSetting.positions
         .where((element) => ref.watch(selectedFlightProvider)!.positions.map((e) => e.id).contains(element.id))
         .toList();
+    Flight f = ref.watch(selectedFlightProvider)!;
     return Container(
       color: MyColors.white1,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -97,7 +101,9 @@ class FlightDetailsPanel extends ConsumerWidget {
                 },
                 value: ref.watch(selectedPosInDetails),
               )),
-          const Expanded(flex: 2, child: SizedBox(width: 12)),
+          const Expanded(flex: 1, child: SizedBox(width: 12)),
+          const SizedBox(width: 12),
+          FlightBanner(flight: f),
           const SizedBox(width: 12),
           DotButton(
             icon: Icons.refresh,

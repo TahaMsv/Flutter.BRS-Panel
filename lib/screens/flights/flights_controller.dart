@@ -69,9 +69,8 @@ class FlightsController extends MainController {
     // alC.airlineGetUldList();
     // final List<TagContainer>? allCons = await flightGetContainerList(f);
     if (res != null) {
-
       print(res.destList);
-      nav.dialog(FlightContainerListDialog(flight: f,cons: res.cons, destList: res.destList));
+      nav.dialog(FlightContainerListDialog(flight: f, cons: res.cons, destList: res.destList));
     }
   }
 
@@ -106,9 +105,9 @@ class FlightsController extends MainController {
   }
 
   Future<void> pickDate() async {
-    DateTime current  = ref.read(flightDateProvider);
-    final pickedDate  = await Pickers.pickDate(nav.context, current);
-    if(pickedDate!=null){
+    DateTime current = ref.read(flightDateProvider);
+    final pickedDate = await Pickers.pickDate(nav.context, current);
+    if (pickedDate != null) {
       flightList(pickedDate);
     }
   }
