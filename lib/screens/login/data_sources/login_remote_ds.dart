@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../../../core/abstracts/response_abs.dart';
+import '../../../core/constants/apis.dart';
 import '../../../core/platform/network_manager.dart';
 import '../interfaces/login_data_source_interface.dart';
 import '../usecases/login_usecase.dart';
@@ -21,7 +22,7 @@ class LoginRemoteDataSource implements LoginDataSourceInterface {
 
   @override
   Future<ServerSelectResponse> serverSelect({required ServerSelectRequest request}) async {
-    Response res = await networkManager.post(request);
+    Response res = await networkManager.post(request, api: Apis.serverSelect);
     return ServerSelectResponse.fromResponse(res);
   }
 }

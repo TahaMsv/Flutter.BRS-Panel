@@ -20,6 +20,8 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - syncfusion_pdfviewer_macos (0.0.1):
+    - FlutterMacOS
   - url_launcher_macos (0.0.1):
     - FlutterMacOS
   - window_manager (0.2.0):
@@ -34,6 +36,7 @@ DEPENDENCIES:
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
   - screen_retriever (from `Flutter/ephemeral/.symlinks/plugins/screen_retriever/macos`)
   - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - syncfusion_pdfviewer_macos (from `Flutter/ephemeral/.symlinks/plugins/syncfusion_pdfviewer_macos/macos`)
   - url_launcher_macos (from `Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos`)
   - window_manager (from `Flutter/ephemeral/.symlinks/plugins/window_manager/macos`)
 
@@ -59,6 +62,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/screen_retriever/macos
   shared_preferences_foundation:
     :path: Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin
+  syncfusion_pdfviewer_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/syncfusion_pdfviewer_macos/macos
   url_launcher_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos
   window_manager:
@@ -75,9 +80,10 @@ SPEC CHECKSUMS:
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   screen_retriever: 59634572a57080243dd1bf715e55b6c54f241a38
   shared_preferences_foundation: e2dae3258e06f44cc55f49d42024fd8dd03c590c
+  syncfusion_pdfviewer_macos: e9194851581cad04b28b53913d0636d39a4ed4b2
   url_launcher_macos: 5335912b679c073563f29d89d33d10d459f95451
   window_manager: 3a1844359a6295ab1e47659b1a777e36773cd6e8
 
 PODFILE CHECKSUM: 236401fc2c932af29a9fcf0e97baeeb2d750d367
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.12.0

@@ -1,5 +1,3 @@
-import 'dart:developer';
-import 'package:brs_panel/screens/flight_details/usecases/flight_get_details_usecase.dart';
 import 'package:dartz/dartz.dart';
 import '../../core/abstracts/exception_abs.dart';
 import '../../core/abstracts/failures_abs.dart';
@@ -8,7 +6,9 @@ import '../../initialize.dart';
 import 'interfaces/flight_details_repository_interface.dart';
 import 'data_sources/flight_details_local_ds.dart';
 import 'data_sources/flight_details_remote_ds.dart';
+import 'usecases/flight_get_details_usecase.dart';
 import 'usecases/flight_get_tag_details_usecase.dart';
+import 'usecases/get_container_pdf_usecase.dart';
 
 class FlightDetailsRepository implements FlightDetailsRepositoryInterface {
   final FlightDetailsRemoteDataSource flightDetailsRemoteDataSource = FlightDetailsRemoteDataSource();
@@ -33,7 +33,8 @@ class FlightDetailsRepository implements FlightDetailsRepositoryInterface {
   }
 
   @override
-  Future<Either<Failure, FlightGetTagMoreDetailsResponse>> flightGetTagMoreDetails(FlightGetTagMoreDetailsRequest request) async {
+  Future<Either<Failure, FlightGetTagMoreDetailsResponse>> flightGetTagMoreDetails(
+      FlightGetTagMoreDetailsRequest request) async {
     try {
       FlightGetTagMoreDetailsResponse flightGetTagMoreDetailsResponse;
       if (await networkInfo.isConnected) {
@@ -42,6 +43,21 @@ class FlightDetailsRepository implements FlightDetailsRepositoryInterface {
         flightGetTagMoreDetailsResponse = await flightDetailsLocalDataSource.flightGetTagMoreDetails(request: request);
       }
       return Right(flightGetTagMoreDetailsResponse);
+    } on AppException catch (e) {
+      return Left(ServerFailure.fromAppException(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, GetContainerReportResponse>> getContainerReport(GetContainerReportRequest request) async {
+    try {
+      GetContainerReportResponse getContainerReportResponse;
+      if (await networkInfo.isConnected) {
+        getContainerReportResponse = await flightDetailsRemoteDataSource.getContainerReport(request: request);
+      } else {
+        getContainerReportResponse = await flightDetailsLocalDataSource.getContainerReport(request: request);
+      }
+      return Right(getContainerReportResponse);
     } on AppException catch (e) {
       return Left(ServerFailure.fromAppException(e));
     }

@@ -12,11 +12,18 @@ import 'airport_sections_state.dart';
 class AirportSectionsView extends StatelessWidget {
   const AirportSectionsView({super.key});
 
+  static AirportSectionsController controller = getIt<AirportSectionsController>();
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: MyAppBar(),
-      body: AirportSectionBody(),
+    return Scaffold(
+      appBar: const MyAppBar(),
+      body: const AirportSectionBody(),
+      floatingActionButton: ElevatedButton(
+        style: ElevatedButton.styleFrom(foregroundColor: MyColors.white3, backgroundColor: MyColors.mainColor),
+        onPressed: controller.updateSectionsRequest,
+        child: const Text("Save Changes"),
+      ),
     );
   }
 }
@@ -63,6 +70,7 @@ class SectionsWidget extends ConsumerWidget {
                 label: sections[i].label,
                 isSelected: selectedCategories.contains(sections[i]),
                 onTap: () => controller.onTapSection(sections[i]),
+          onDelete: () => controller.onDeleteSection(sections[i]),
               ),
       ),
     );
@@ -73,8 +81,10 @@ class ItemBoxWidget extends StatelessWidget {
   final bool isSelected;
   final String label;
   final void Function() onTap;
+  final void Function() onDelete;
 
-  const ItemBoxWidget({super.key, required this.label, required this.isSelected, required this.onTap});
+  const ItemBoxWidget(
+      {super.key, required this.label, required this.isSelected, required this.onTap, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +96,13 @@ class ItemBoxWidget extends StatelessWidget {
               border: Border.all(color: MyColors.lineColor2)),
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.only(left: 19, top: 26, bottom: 28),
-          child: Text(label, style: const TextStyle(color: MyColors.indexColor))),
+          child: Row(
+            children: [
+              Expanded(child: Text(label, style: const TextStyle(color: MyColors.indexColor))),
+              IconButton(color: MyColors.red2, onPressed: onDelete, icon: const Icon(Icons.delete_forever_outlined)),
+              const SizedBox(width: 8),
+            ],
+          )),
     );
   }
 }

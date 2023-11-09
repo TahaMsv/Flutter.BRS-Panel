@@ -64,6 +64,7 @@ class MyColors {
   static const turquoise = Color.fromRGBO(10, 195, 159, 1);
   static const grapefruit = Color.fromRGBO(255, 93, 93, 1);
   static const red = Color.fromRGBO(238, 91, 92, 1);
+  static const red2 = Color(0xffF74E4D);
   static const shinyRed = Color(0xffff0647);
   static const lineColor = Color(0xffE1E1E1);
   static const lineColor2 = Color(0xffEDEDED);

@@ -4,6 +4,7 @@ import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/widgets/DetailsChart.dart';
 import 'package:brs_panel/widgets/FlightBanner.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
+import 'package:brs_panel/widgets/MyButton.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
@@ -41,7 +42,6 @@ class _FlightDetailsViewState extends State<FlightDetailsView> {
         appBar: MyAppBar(),
         body: Column(
           children: [
-
             FlightDetailsPanel(),
             FlightDetailsWidget(),
           ],
@@ -413,6 +413,7 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
 }
 
 class ContainerTileWidget extends StatelessWidget {
+  final FlightDetailsController controller = getIt<FlightDetailsController>();
   final ContainerSection sec;
   final TagContainer con;
   final bool isFirstSec;
@@ -421,7 +422,7 @@ class ContainerTileWidget extends StatelessWidget {
   final int tagCount;
   final int index;
 
-  const ContainerTileWidget({
+  ContainerTileWidget({
     Key? key,
     required this.con,
     required this.sec,
@@ -470,6 +471,21 @@ class ContainerTileWidget extends StatelessWidget {
                       const SizedBox(width: 8),
                       con.allowedTagTypesWidgetMini,
                       const Spacer(),
+                      MyButton(
+                        label: "PDF",
+                        height: 25,
+                        onPressed: () async => await controller.getContainerPDF(con),
+                        child: const Row(
+                          children: [
+                            SizedBox(width: 10),
+                            Icon(Icons.picture_as_pdf_outlined, size: 16),
+                            SizedBox(width: 5),
+                            Text("PDF", style: TextStyle(fontSize: 12)),
+                            SizedBox(width: 12),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 12),
                       Container(
                         height: 25,
                         width: 100,
@@ -919,9 +935,7 @@ class DataCellWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
     return Container(
-      // padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       alignment: alignment,
       decoration: const BoxDecoration(border: Border(right: BorderSide(color: MyColors.lineColor))),
       child: child,

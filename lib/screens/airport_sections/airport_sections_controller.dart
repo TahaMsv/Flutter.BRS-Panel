@@ -1,3 +1,5 @@
+import 'package:brs_panel/initialize.dart';
+
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/classes/airport_section_class.dart';
 import '../../core/classes/user_class.dart';
@@ -32,6 +34,28 @@ class AirportSectionsController extends MainController {
     }
   }
 
+  onDeleteSection(Section section) {
+    final sectionsP = ref.read(sectionsProvider.notifier);
+    List<Section> sc0 = sectionsP.state?.sections ?? [];
+    final selectedSectionsP = ref.read(selectedSectionsProvider.notifier);
+    List<Section> ssc0 = selectedSectionsP.state;
+    if (sc0.any((e) => e == section)) {
+      sc0.remove(section);
+      if (ssc0.contains(section)) initSelection();
+    } else {
+      for (int i = 0; i < ssc0.length; i++) {
+        if (ssc0[i].sections.contains(section)) {
+          ssc0[i].sections.remove(section);
+          if (ssc0.contains(section)) {
+            ssc0 = ssc0.sublist(0, ssc0.indexOf(section));
+            if (ssc0.isNotEmpty) setFirstSections(ssc0.last.sections);
+          }
+        }
+      }
+    }
+    airportSectionsState.setState();
+  }
+
   addSection({required List<Section> subs}) async {
     Section? newSection = await nav.dialog(const AddSectionDialog());
     if (newSection == null) return;
@@ -46,6 +70,7 @@ class AirportSectionsController extends MainController {
         sectionsP.state = AirportSections(airport: sectionsP.state?.airport ?? "", sections: sc0);
         selectedSectionsP.state = [newSection];
       } else {
+        //last layer!
         ssc0[ssc0.length - 1].sections.add(newSection);
         setFirstSections(ssc0.last.sections);
       }
@@ -81,7 +106,9 @@ class AirportSectionsController extends MainController {
     return sections;
   }
 
-  addSectionRequest() async {}
+  updateSectionsRequest() async {
+    // initSelection();
+  }
 
   /// Core -------------------------------------------------------------------------------------------------------------
 
