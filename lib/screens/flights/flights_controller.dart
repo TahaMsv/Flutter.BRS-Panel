@@ -53,11 +53,11 @@ class FlightsController extends MainController {
     nav.pushNamed(RouteNames.addFlight);
   }
 
-  void goDetails(Flight f,{Position? selectedPos}) {
+  void goDetails(Flight f, {Position? selectedPos}) {
     final sfP = ref.read(selectedFlightProvider.notifier);
     sfP.state = f;
     final spP = ref.read(selectedPosInDetails.notifier);
-    spP.state = BasicClass.getPositionByID(selectedPos?.id??f.positions.first.id)!;
+    spP.state = BasicClass.getPositionByID(selectedPos?.id ?? f.positions.first.id)!;
     nav.pushNamed(RouteNames.flightDetails, pathParameters: {"flightID": f.id.toString()}).then((value) {
       flightList(DateTime.now());
     });
@@ -88,17 +88,17 @@ class FlightsController extends MainController {
 
   void flightAddContainer(TagContainer e) {}
 
-  Future<TagContainer?> flightAddRemoveContainer(Flight flight,TagContainer c, bool isAdd) async {
+  Future<TagContainer?> flightAddRemoveContainer(Flight flight, TagContainer c, bool isAdd) async {
     TagContainer? container;
     FlightAddRemoveContainerUseCase flightAddContainerUsecase = FlightAddRemoveContainerUseCase();
     FlightAddRemoveContainerRequest flightAddRemoveContainerRequest = FlightAddRemoveContainerRequest(
-      flight:flight,
+      flight: flight,
       con: c,
       isAdd: isAdd,
     );
     final fOrR = await flightAddContainerUsecase(request: flightAddRemoveContainerRequest);
 
-    fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightAddRemoveContainer(flight,c, isAdd)), (r) {
+    fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightAddRemoveContainer(flight, c, isAdd)), (r) {
       container = r.container;
     });
     return container;
@@ -118,13 +118,16 @@ class FlightsController extends MainController {
     nav.pushNamed(RouteNames.flightSummary, pathParameters: {"flightID": f.id.toString()});
   }
 
-  Future<void> handleActions(MenuItem value,Flight flight) async{
+  Future<void> handleActions(MenuItem value, Flight flight) async {
     switch (value) {
       case MenuItems.flightSummary:
         goSummary(flight);
         return;
       case MenuItems.assignContainer:
         await editContainers(flight);
+        return;
+      case MenuItems.openWebView:
+        nav.pushNamed(RouteNames.webView);
         return;
       default:
         return;

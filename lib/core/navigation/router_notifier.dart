@@ -59,7 +59,7 @@ class RouterNotifier extends AutoDisposeAsyncNotifier<void> implements Listenabl
     if (isSplash) {
       return isAuth ? RouteNames.home.path : RouteNames.login.path;
     }
-    if(!isAuth) return RouteNames.login.path;
+    if (!isAuth) return RouteNames.login.path;
     print("isAuth $isAuth");
     final isLoggingIn = state.location == RouteNames.login.path;
     print("isLoggingIn $isLoggingIn");
@@ -77,6 +77,15 @@ class RouterNotifier extends AutoDisposeAsyncNotifier<void> implements Listenabl
           pageBuilder: (context, state) {
             // LoginController loginController = getIt<LoginController>();
             return NoTransitionPage<void>(key: state.pageKey, child: const LoginView());
+          },
+        ),
+        MyRoute(
+          // controller: RouteNames.login.controller,
+          name: RouteNames.webView.name,
+          path: RouteNames.webView.path,
+          pageBuilder: (context, state) {
+            // LoginController loginController = getIt<LoginController>();
+            return NoTransitionPage<void>(key: state.pageKey, child: const MyWebView());
           },
         ),
         MyRoute(
@@ -137,49 +146,48 @@ class RouterNotifier extends AutoDisposeAsyncNotifier<void> implements Listenabl
                 },
               )
             ]),
-    MyRoute(
-      name: RouteNames.airports.name,
-      path: RouteNames.airports.path,
-      pageBuilder: (context, state) {
-        return NoTransitionPage<void>(key: state.pageKey, child: const AirportsView());
-      },
-      routes: [
+        MyRoute(
+            name: RouteNames.airports.name,
+            path: RouteNames.airports.path,
+            pageBuilder: (context, state) {
+              return NoTransitionPage<void>(key: state.pageKey, child: const AirportsView());
+            },
+            routes: [
+              MyRoute(
+                // controller: RouteNames.home.controller,
+                name: RouteNames.airportCarts.name,
+                path: RouteNames.airportCarts.path,
+
+                pageBuilder: (context, state) {
+                  return NoTransitionPage<void>(key: state.pageKey, child: const AirportCartsView());
+                },
+              ),
+              MyRoute(
+                name: RouteNames.airportSections.name,
+                path: RouteNames.airportSections.path,
+                pageBuilder: (context, state) {
+                  return NoTransitionPage<void>(key: state.pageKey, child: const AirportSectionsView());
+                },
+              ),
+            ]),
         MyRoute(
           // controller: RouteNames.home.controller,
-          name: RouteNames.airportCarts.name,
-          path: RouteNames.airportCarts.path,
+          name: RouteNames.aircrafts.name,
+          path: RouteNames.aircrafts.path,
 
           pageBuilder: (context, state) {
-            return NoTransitionPage<void>(key: state.pageKey, child: const AirportCartsView());
+            return NoTransitionPage<void>(key: state.pageKey, child: const AircraftsView());
           },
         ),
         MyRoute(
-          name: RouteNames.airportSections.name,
-          path: RouteNames.airportSections.path,
+          // controller: RouteNames.home.controller,
+          name: RouteNames.bsm.name,
+          path: RouteNames.bsm.path,
+
           pageBuilder: (context, state) {
-            return NoTransitionPage<void>(key: state.pageKey, child: const AirportSectionsView());
+            return NoTransitionPage<void>(key: state.pageKey, child: const BsmView());
           },
         ),
-      ]
-    ),
-    MyRoute(
-      // controller: RouteNames.home.controller,
-      name: RouteNames.aircrafts.name,
-      path: RouteNames.aircrafts.path,
-
-      pageBuilder: (context, state) {
-        return NoTransitionPage<void>(key: state.pageKey, child: const AircraftsView());
-      },
-    ),
-    MyRoute(
-      // controller: RouteNames.home.controller,
-      name: RouteNames.bsm.name,
-      path: RouteNames.bsm.path,
-
-      pageBuilder: (context, state) {
-        return NoTransitionPage<void>(key: state.pageKey, child: const BsmView());
-      },
-    ),
       ];
 
   /// Adds [GoRouter]'s listener as specified by its [Listenable].

@@ -19,6 +19,7 @@ import '../../widgets/MyTextField.dart';
 import 'data_tables/flight_data_table.dart';
 import 'flights_controller.dart';
 import 'flights_state.dart';
+import "package:webview_universal/webview_universal.dart";
 
 class FlightsView extends StatelessWidget {
   static FlightsController myFlightsController = getIt<FlightsController>();
@@ -208,9 +209,10 @@ class FlightListWidget extends ConsumerWidget {
             source: FlightDataSource(flights: flightList),
             columns: FlightDataTableColumn.values
                 .map(
-                  (e) => GridColumn(
+                  (e) =>
+                      GridColumn(
                     columnName: e.name,
-                    label: Center(child: Text(e.name.capitalizeFirst!)),
+                    label: Center(child: Text(e.name.capitalizeFirst ?? "")),
                     width: e.width * width,
                   ),
                 )
@@ -219,3 +221,42 @@ class FlightListWidget extends ConsumerWidget {
     );
   }
 }
+
+class MyWebView extends StatefulWidget {
+  const MyWebView({Key? key}) : super(key: key);
+
+  @override
+  State<MyWebView> createState() => _MyWebViewState();
+}
+
+class _MyWebViewState extends State<MyWebView> {
+
+  WebViewController webViewController = WebViewController();
+
+  @override
+  void initState() {
+    super.initState();
+    task();
+  }
+
+  Future<void> task() async {
+    await webViewController.init(
+      context: context,
+      uri: Uri.parse(
+        // "https://www.google.com/",
+        "https://flutter.dev",
+      ),
+      setState: (void Function() fn) {},
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: WebView(
+        controller: webViewController,
+      ),
+    );
+  }
+}
+

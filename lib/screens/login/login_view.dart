@@ -36,6 +36,7 @@ class LoginView extends StatelessWidget {
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(image: Image.asset(AssetImages.loginBG).image, fit: BoxFit.fill),
+            // image: DecorationImage(image: Image.asset('assets/images/login_bg.jpg').image, fit: BoxFit.fill),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,

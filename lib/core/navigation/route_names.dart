@@ -17,6 +17,7 @@ enum RouteNames {
   airportCarts,
   airportSections,
   bsm,
+  webView,
 }
 
 extension RouteNamesDetails on RouteNames {
@@ -36,6 +37,8 @@ extension RouteNamesDetails on RouteNames {
         return 'airportCarts';
       case RouteNames.airportSections:
         return 'airportSections';
+      case RouteNames.webView:
+        return '/webview';
       default:
         return "/$name";
     }

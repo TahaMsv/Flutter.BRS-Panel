@@ -53,6 +53,8 @@ dependencies:
   barcode_widget: ^2.0.4
 #  webview_all: ^0.3.7
   webview_windows: ^0.3.0
+  webview_universal: ^0.0.5
+
 
 dev_dependencies:
   flutter_test:
@@ -140,10 +142,12 @@ msix_config:
   languages: "en-us"
   #  logo_path: "C:/Users/Bakhshaiesh/Desktop/Flutter.NewDCS/installers/exe_creator/dcs_icon.ico"
   #  certificate_path: "C:/Users/Bakhshaiesh/Desktop/Flutter.NewDCS/installers/exe_creator/abomis_innovations_inc_.pfx"
-  logo_path: "/Users/fps/Amir/Projects/brs_panel/installers/exe_creator/dcs_icon.ico"
-  certificate_path: "/Users/fps/Amir/Projects/brs_panel/installers/exe_creator/abomis_innovations_inc_.pfx"
+#  logo_path: "/Users/fps/Amir/Projects/brs_panel/installers/exe_creator/dcs_icon.ico"
+  logo_path: "D:/Mobile_Development/Flutter/Faranegar_projects/Flutter.BRS-Panel/installers/windows_files/dcs_icon.ico"
+#  certificate_path: "/Users/fps/Amir/Projects/brs_panel/installers/exe_creator/abomis_innovations_inc_.pfx"
+  certificate_path: "D:/Mobile_Development/Flutter/Faranegar_projects/Flutter.BRS-Panel/installers/windows_files/abomis_innovations_inc_.pfx"
   certificate_password: "Tima@131313"
-  output_path: "/Users/fps/Desktop"
+#  output_path: "/Users/fps/Desktop"
   date: "test"
   output_name: "BRS Panel Setup"
   add_execution_alias: true
