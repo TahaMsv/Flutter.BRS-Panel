@@ -2,7 +2,7 @@ import 'package:brs_panel/initialize.dart';
 
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/classes/airport_section_class.dart';
-import '../../core/classes/user_class.dart';
+import '../../core/classes/login_user_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
 import '../airport_carts/airport_carts_state.dart';
 import 'airport_sections_state.dart';

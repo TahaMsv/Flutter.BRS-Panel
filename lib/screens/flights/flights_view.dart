@@ -1,8 +1,7 @@
 import 'package:artemis_ui_kit/artemis_ui_kit.dart';
-import 'package:brs_panel/core/classes/user_class.dart';
+import 'package:brs_panel/core/classes/login_user_class.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
-import 'package:brs_panel/widgets/MyDropDown.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

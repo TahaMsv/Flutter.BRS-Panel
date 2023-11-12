@@ -2,7 +2,7 @@ import 'package:brs_panel/core/abstracts/local_data_base_abs.dart';
 import 'package:brs_panel/core/classes/flight_details_class.dart';
 
 import '../abstracts/device_info_service_abs.dart';
-import '../classes/user_class.dart';
+import '../classes/login_user_class.dart';
 import 'config_class.dart';
 // import 'settings_class.dart';
 
@@ -18,7 +18,7 @@ class BasicClass {
   String? _username;
   UserSettings? _userSettings;
   SystemSettings? _systemSettings;
-  User? _userInfo;
+  LoginUser? _userInfo;
   Airport? _airport;
 
   // MyDeviceInfo? _deviceInfo;
@@ -27,7 +27,7 @@ class BasicClass {
 
   // stConfig? get config=>_appConfig;
 
-  static void initialize(User user, ScreenType deviceType) {
+  static void initialize(LoginUser user, ScreenType deviceType) {
     // instance._settings ??= settings;
     instance._userSettings = user.userSettings;
     instance._systemSettings = user.systemSettings;
@@ -49,7 +49,7 @@ class BasicClass {
   static SystemSettings get systemSetting => instance._systemSettings ?? SystemSettings.empty();
   static UserSettings get userSetting => instance._userSettings ?? UserSettings.empty();
 
-  static User get userInfo => instance._userInfo ?? User.empty();
+  static LoginUser get userInfo => instance._userInfo ?? LoginUser.empty();
 
   static Config get config => instance._appConfig ?? Config.def();
 

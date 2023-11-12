@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../../core/classes/user_class.dart';
+import '../../core/classes/login_user_class.dart';
 
 final loginProvider = ChangeNotifierProvider<LoginState>((_) => LoginState());
 
 class LoginState extends ChangeNotifier {
   void setState() => notifyListeners();
 
-  User? admin;
+  LoginUser? admin;
   TextEditingController usernameC= TextEditingController();
   TextEditingController passwordC= TextEditingController();
   TextEditingController alC= TextEditingController();
@@ -18,5 +18,5 @@ class LoginState extends ChangeNotifier {
 }
 
 
-final userProvider = StateProvider<User?>((ref) => null);
-final adminProvider = StateProvider<User?>((ref) => null);
+final userProvider = StateProvider<LoginUser?>((ref) => null);
+final adminProvider = StateProvider<LoginUser?>((ref) => null);

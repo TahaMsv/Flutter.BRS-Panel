@@ -60,11 +60,7 @@ class _PDFPreviewDialogState extends State<PDFPreviewDialog> {
                 padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
                 child: SfPdfViewer.memory(
                   widget.pdfFileBytes,
-                  onDocumentLoadFailed: (f) {
-                    print("failed");
-                    print(f.error);
-                    print(f.description);
-                  },
+                  onDocumentLoadFailed: (f) {},
                   pageLayoutMode: PdfPageLayoutMode.single,
                 ),
               ),

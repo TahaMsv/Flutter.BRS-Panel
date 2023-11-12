@@ -1,4 +1,4 @@
-import 'package:brs_panel/core/classes/user_class.dart';
+import 'package:brs_panel/core/classes/login_user_class.dart';
 import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:brs_panel/screens/add_flight/usecases/add_flight_usecase.dart';
 import 'package:flutter/cupertino.dart';

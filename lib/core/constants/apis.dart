@@ -3,6 +3,7 @@ class Apis {
 
   // static const baseUrl = 'https://brs-api.abomis.com/default';
   static const String baseUrl = "";
+  static const String mainUrl = 'https://brs-api.abomis.com/default';
 
   // static const String configClassBaseUrl = "https://brsdev-api.abomis.com/brs";
   static const String configClassBaseUrl = "https://brsdev-api.abomis.com/jsn";

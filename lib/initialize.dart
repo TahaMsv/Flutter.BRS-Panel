@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:artemis_utils/artemis_utils.dart';
@@ -19,7 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:network_manager/network_manager.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 import 'core/data_base/classes/db_user_class.dart';
@@ -29,11 +27,11 @@ import 'core/navigation/route_names.dart';
 import 'core/platform/device_info.dart';
 import 'core/platform/network_info.dart';
 import 'core/util/basic_class.dart';
-import 'core/util/config_class.dart';
 import 'screens/airline_ulds/airline_ulds_controller.dart';
 import 'screens/airport_sections/airport_sections_controller.dart';
 import 'screens/home/home_controller.dart';
 import 'screens/login/login_controller.dart';
+import 'screens/users/users_controller.dart';
 
 final getIt = GetIt.instance;
 
@@ -75,6 +73,7 @@ initControllers() {
   AirlinesController airlinesController = AirlinesController();
   AirportsController airportsController = AirportsController();
   AircraftsController aircraftsController = AircraftsController();
+  UsersController usersController = UsersController();
   AirlineUldsController airlineUldsController = AirlineUldsController();
   AirportCartsController airportCartsController = AirportCartsController();
   AirportSectionsController airportSectionsController = AirportSectionsController();
@@ -89,6 +88,7 @@ initControllers() {
   getIt.registerSingleton(airlinesController);
   getIt.registerSingleton(airportsController);
   getIt.registerSingleton(aircraftsController);
+  getIt.registerSingleton(usersController);
   getIt.registerSingleton(airlineUldsController);
   getIt.registerSingleton(airportCartsController);
   getIt.registerSingleton(airportSectionsController);
@@ -104,6 +104,7 @@ initControllers() {
     RouteNames.airlines: airlinesController,
     RouteNames.airports: airportsController,
     RouteNames.aircrafts: aircraftsController,
+    RouteNames.users: usersController,
     RouteNames.airlineUlds: airlineUldsController,
     RouteNames.airportCarts: airportCartsController,
     RouteNames.airportSections: airportSectionsController,
@@ -170,34 +171,32 @@ initNetworkManager([String? baseUrl]) {
 }
 
 Future<void> loadConfigFile() async {
-  return;
-  String? directory = (await getApplicationDocumentsDirectory()).path;
-  String? confPath = '$directory/config/config.json';
-  print(confPath);
-  // final File file = File('$directory/config/config.json');
-  // await file.delete();
-  if (File('$directory/config/config.json').existsSync()) {
-    // final jsonStr = file.readAsStringSync();
-    // try {
-    //   Config config = Config.fromJson(jsonDecode(jsonStr));
-    //   BasicClass.setConfig(config);
-    //   initNetworkManager(config.baseURL);
-    //   log("Config read from config.json");
-    // } catch (e) {
-    //   await file.create(recursive: true);
-    //   file.writeAsStringSync(json.encode(Config.def().toJson()), mode: FileMode.write);
-    //   BasicClass.setConfig(Config.def());
-    //   initNetworkManager(Config.def().baseURL);
-    //   log("Config read from config.default with exception $e");
-    // }
-  } else {
-    final File file = File('$directory/config/config.json');
-    await file.create(recursive: true);
-    file.writeAsStringSync(json.encode(Config.def().toJson()));
-    BasicClass.setConfig(Config.def());
-    initNetworkManager(Config.def().baseURL);
-    log("Config read from config.default");
-  }
+  // String? directory = (await getApplicationDocumentsDirectory()).path;
+  // String? confPath = '$directory/config/config.json';
+  // print(confPath);
+  // // final File file = File('$directory/config/config.json');
+  // // await file.delete();
+  // if (File('$directory/config/config.json').existsSync()) {
+  //   // final jsonStr = file.readAsStringSync();
+  //   // try {
+  //   //   Config config = Config.fromJson(jsonDecode(jsonStr));
+  //   //   BasicClass.setConfig(config);
+  //   //   initNetworkManager(config.baseURL);
+  //   //   log("Config read from config.json");
+  //   // } catch (e) {
+  //   //   await file.create(recursive: true);
+  //   //   file.writeAsStringSync(json.encode(Config.def().toJson()), mode: FileMode.write);
+  //   //   BasicClass.setConfig(Config.def());
+  //   //   initNetworkManager(Config.def().baseURL);
+  //   //   log("Config read from config.default with exception $e");
+  //   // }
+  // } else {
+  //   final File file = File('$directory/config/config.json');
+  //   await file.create(recursive: true);
+  //   file.writeAsStringSync(json.encode(Config.def().toJson()));
+  //   BasicClass.setConfig(Config.def());
+  //   initNetworkManager(Config.def().baseURL);
+  //   log("Config read from config.default");
 }
 
 Future<void> initDataBase() async {

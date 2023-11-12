@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
-import '../../../core/classes/user_class.dart';
+import '../../../core/classes/login_user_class.dart';
 import '../../../core/constants/ui.dart';
 import '../../../initialize.dart';
 import '../../../widgets/AirlineLogo.dart';

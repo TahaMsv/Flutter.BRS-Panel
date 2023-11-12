@@ -1,4 +1,4 @@
-import 'package:brs_panel/core/classes/user_class.dart';
+import 'package:brs_panel/core/classes/login_user_class.dart';
 import 'package:brs_panel/core/navigation/route_names.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/screens/airline_ulds/airline_ulds_controller.dart';

@@ -5,7 +5,7 @@ import '../../../core/abstracts/failures_abs.dart';
 import '../../../core/abstracts/request_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/abstracts/usecase_abs.dart';
-import '../../../core/classes/user_class.dart';
+import '../../../core/classes/login_user_class.dart';
 import '../login_repository.dart';
 
 class LoginUseCase extends UseCase<LoginResponse, LoginRequest> {
@@ -25,7 +25,7 @@ class LoginRequest extends Request {
   final String al;
   final String newPassword;
   final DeviceInfo deviceInfo;
-  final User? cachedUser;
+  final LoginUser? cachedUser;
 
   LoginRequest({
     required this.username,
@@ -69,7 +69,7 @@ class LoginRequest extends Request {
 }
 
 class LoginResponse extends Response {
-  final User? user;
+  final LoginUser? user;
 
   LoginResponse({required int status, required String message, required this.user})
       : super(
@@ -85,7 +85,7 @@ class LoginResponse extends Response {
     return LoginResponse(
         status: res.status,
         message: res.message,
-        user:res.body==null?null: User.fromJson(res.body),
+        user:res.body==null?null: LoginUser.fromJson(res.body),
       );
   }
 }

@@ -10,7 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../core/classes/flight_details_class.dart';
 import '../core/classes/tag_more_details_class.dart';
-import '../core/classes/user_class.dart';
+import '../core/classes/login_user_class.dart';
 import '../core/constants/ui.dart';
 import '../screens/flight_details/flight_details_controller.dart';
 import 'AirlineLogo.dart';

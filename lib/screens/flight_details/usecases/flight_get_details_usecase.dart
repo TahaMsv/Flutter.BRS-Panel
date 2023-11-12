@@ -5,7 +5,7 @@ import '../../../core/abstracts/request_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/abstracts/usecase_abs.dart';
 import '../../../core/classes/flight_details_class.dart';
-import '../../../core/classes/user_class.dart';
+import '../../../core/classes/login_user_class.dart';
 import '../flight_details_repository.dart';
 
 class FlightGetDetailsUseCase extends UseCase<FlightGetDetailsResponse,FlightGetDetailsRequest> {

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../util/basic_class.dart';
 import 'tag_container_class.dart';
-import 'user_class.dart';
+import 'login_user_class.dart';
 
 @immutable
 class FlightDetails {

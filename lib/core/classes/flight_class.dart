@@ -424,7 +424,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../enums/flight_type_filter_enum.dart';
-import 'user_class.dart';
+import 'login_user_class.dart';
 
 @immutable
 class Flight {

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../core/classes/user_class.dart';
+import '../../core/classes/login_user_class.dart';
 import '../../core/util/basic_class.dart';
 
 final airportsProvider = ChangeNotifierProvider<AirportsState>((_) => AirportsState());

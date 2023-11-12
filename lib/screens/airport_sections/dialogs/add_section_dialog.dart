@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/classes/airport_section_class.dart';
-import '../../../core/classes/user_class.dart';
+import '../../../core/classes/login_user_class.dart';
 import '../../../core/constants/ui.dart';
 import '../../../core/navigation/navigation_service.dart';
 import '../../../core/util/basic_class.dart';

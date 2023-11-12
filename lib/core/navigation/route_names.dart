@@ -7,7 +7,7 @@ enum RouteNames {
   airlines,
   aircrafts,
   airports,
-  // users,
+  users,
   addFlight,
   flightDetails,
   flightSummary,
@@ -55,7 +55,7 @@ extension RouteNamesDetails on RouteNames {
       RouteNames.airports,
       RouteNames.aircrafts,
       RouteNames.bsm,
-      // RouteNames.users,
+      RouteNames.users,
     ].contains(this);
   }
 

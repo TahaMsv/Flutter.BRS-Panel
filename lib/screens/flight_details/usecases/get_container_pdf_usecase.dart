@@ -4,7 +4,7 @@ import '../../../core/abstracts/request_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/abstracts/usecase_abs.dart';
 import '../../../core/classes/tag_container_class.dart';
-import '../../../core/classes/user_class.dart';
+import '../../../core/classes/login_user_class.dart';
 import '../flight_details_repository.dart';
 
 class GetContainerReportUseCase extends UseCase<GetContainerReportResponse, GetContainerReportRequest> {

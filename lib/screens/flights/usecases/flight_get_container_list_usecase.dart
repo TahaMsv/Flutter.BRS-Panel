@@ -6,7 +6,7 @@ import '../../../core/abstracts/response_abs.dart';
 import '../../../core/abstracts/usecase_abs.dart';
 import '../../../core/classes/flight_class.dart';
 import '../../../core/classes/tag_container_class.dart';
-import '../../../core/classes/user_class.dart';
+import '../../../core/classes/login_user_class.dart';
 import '../flights_repository.dart';
 
 class FlightGetContainerListUseCase extends UseCase<FlightGetContainerListResponse,FlightGetContainerListRequest> {

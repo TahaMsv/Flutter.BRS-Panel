@@ -1,4 +1,4 @@
-// import 'package:brs_panel/core/classes/user_class.dart';
+// import 'package:brs_panel/core/classes/login_user_class.dart';
 // import 'package:flutter/cupertino.dart';
 //
 // import '../constants/assest.dart';
@@ -198,7 +198,7 @@
 //   }
 // }
 
-import 'package:brs_panel/core/classes/user_class.dart';
+import 'package:brs_panel/core/classes/login_user_class.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

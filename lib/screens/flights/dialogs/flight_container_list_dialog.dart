@@ -15,7 +15,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../../core/classes/flight_class.dart';
 import '../../../core/classes/flight_details_class.dart';
 import '../../../core/classes/tag_container_class.dart';
-import '../../../core/classes/user_class.dart';
+import '../../../core/classes/login_user_class.dart';
 import '../../../initialize.dart';
 import '../../../widgets/MyButton.dart';
 

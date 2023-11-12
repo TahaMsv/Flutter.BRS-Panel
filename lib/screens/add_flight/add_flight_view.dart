@@ -1,5 +1,5 @@
 import 'package:artemis_utils/artemis_utils.dart';
-import 'package:brs_panel/core/classes/user_class.dart';
+import 'package:brs_panel/core/classes/login_user_class.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
 import 'package:brs_panel/widgets/MyButton.dart';

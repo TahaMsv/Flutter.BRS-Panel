@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/abstracts/exception_abs.dart';
 import '../../../core/abstracts/local_data_base_abs.dart';
-import '../../../core/classes/user_class.dart';
+import '../../../core/classes/login_user_class.dart';
 import '../../../core/data_base/local_data_base.dart';
 import '../../../core/data_base/table_names.dart';
 import '../../../initialize.dart';
@@ -19,7 +19,7 @@ class LoginLocalDataSource implements LoginDataSourceInterface {
 
   @override
   Future<LoginResponse> login({required LoginRequest request}) async {
-    User? u = await localDataSource.getFromTableWhere<User>(
+    LoginUser? u = await localDataSource.getFromTableWhere<LoginUser>(
       TableNames.usersTable,
       (e) => e.username.toLowerCase() == request.username.toLowerCase() && e.password== request.password,
     );

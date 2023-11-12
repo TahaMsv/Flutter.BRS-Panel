@@ -4,7 +4,7 @@ import '../../../core/abstracts/failures_abs.dart';
 import '../../../core/abstracts/request_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/abstracts/usecase_abs.dart';
-import '../../../core/classes/user_class.dart';
+import '../../../core/classes/login_user_class.dart';
 import '../airport_carts_repository.dart';
 
 class AirportDeleteCartUseCase extends UseCase<AirportDeleteCartResponse, AirportDeleteCartRequest> {

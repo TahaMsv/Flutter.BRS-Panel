@@ -8,7 +8,7 @@ import '../../core/abstracts/success_abs.dart';
 import '../../core/classes/airline_uld_class.dart';
 import '../../core/classes/flight_details_class.dart';
 import '../../core/classes/tag_container_class.dart';
-import '../../core/classes/user_class.dart';
+import '../../core/classes/login_user_class.dart';
 import '../../core/util/basic_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
 

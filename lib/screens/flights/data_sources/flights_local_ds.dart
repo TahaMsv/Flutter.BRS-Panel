@@ -5,7 +5,7 @@ import 'package:brs_panel/screens/flights/usecases/flight_list_usecase.dart';
 
 import '../../../core/abstracts/exception_abs.dart';
 import '../../../core/abstracts/local_data_base_abs.dart';
-import '../../../core/classes/user_class.dart';
+import '../../../core/classes/login_user_class.dart';
 import '../../../core/data_base/classes/db_user_class.dart';
 import '../../../core/data_base/local_data_base.dart';
 import '../../../core/data_base/table_names.dart';

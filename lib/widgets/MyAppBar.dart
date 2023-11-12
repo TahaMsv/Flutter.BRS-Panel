@@ -2,7 +2,7 @@ import 'package:brs_panel/screens/login/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../core/classes/user_class.dart';
+import '../core/classes/login_user_class.dart';
 import '../core/constants/ui.dart';
 import '../core/navigation/navigation_service.dart';
 import '../core/navigation/route_names.dart';
@@ -147,7 +147,7 @@ class UserIndicatorWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    User? u = ref.watch(userProvider);
+    LoginUser? u = ref.watch(userProvider);
     ThemeData theme = Theme.of(context);
     double width = Get.width;
     double height = Get.height;

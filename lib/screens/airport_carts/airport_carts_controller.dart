@@ -1,4 +1,4 @@
-import 'package:brs_panel/core/classes/user_class.dart';
+import 'package:brs_panel/core/classes/login_user_class.dart';
 import 'package:brs_panel/screens/airport_carts/usecase/airline_add_uld_usecase.dart';
 import 'package:brs_panel/screens/airport_carts/usecase/airline_delete_uld_usecase.dart';
 import 'package:brs_panel/screens/airport_carts/usecase/airline_update_uld_usecase.dart';

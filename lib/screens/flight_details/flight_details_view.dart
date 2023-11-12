@@ -11,7 +11,7 @@ import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 import '../../core/classes/flight_class.dart';
 import '../../core/classes/flight_details_class.dart';
 import '../../core/classes/tag_container_class.dart';
-import '../../core/classes/user_class.dart';
+import '../../core/classes/login_user_class.dart';
 import '../../core/util/basic_class.dart';
 import '../../widgets/DotButton.dart';
 import '../../widgets/MyExpansionTile.dart';

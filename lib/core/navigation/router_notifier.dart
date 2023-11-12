@@ -17,6 +17,7 @@ import '../../screens/login/login_controller.dart';
 import '../../screens/login/login_state.dart';
 import '../../screens/login/login_view.dart'; // final userProvider = StateProvider<User?>((ref) => null);
 
+import '../../screens/users/users_view.dart';
 import '../abstracts/controller_abs.dart';
 import 'route_names.dart';
 
@@ -169,6 +170,15 @@ class RouterNotifier extends AutoDisposeAsyncNotifier<void> implements Listenabl
 
       pageBuilder: (context, state) {
         return NoTransitionPage<void>(key: state.pageKey, child: const AircraftsView());
+      },
+    ),
+    MyRoute(
+      // controller: RouteNames.home.controller,
+      name: RouteNames.users.name,
+      path: RouteNames.users.path,
+
+      pageBuilder: (context, state) {
+        return NoTransitionPage<void>(key: state.pageKey, child: const UsersView());
       },
     ),
     MyRoute(

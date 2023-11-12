@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../core/classes/flight_class.dart';
 import '../core/classes/flight_details_class.dart';
-import '../core/classes/user_class.dart';
+import '../core/classes/login_user_class.dart';
 
 class DetailsChart extends StatefulWidget {
   final List<Position> posList;

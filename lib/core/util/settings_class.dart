@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../classes/user_class.dart';
+import '../classes/login_user_class.dart';
 
 class Settings {
   Settings({
@@ -40,14 +40,14 @@ class SystemSettings {
 @immutable
 class UserSettings {
   const UserSettings({required this.userInfo});
-  final User userInfo;
+  final LoginUser userInfo;
 
   factory UserSettings.fromJson(Map<String, dynamic> json) => UserSettings(
-        userInfo: User.fromJson(json["UserInfo"]),
+        userInfo: LoginUser.fromJson(json["UserInfo"]),
       );
 
   factory UserSettings.empty() => UserSettings(
-        userInfo: User.empty(),
+        userInfo: LoginUser.empty(),
       );
 
   Map<String, dynamic> toJson() => {
