@@ -144,12 +144,13 @@ msix_config:
   store: false
   install_certificate: false
   languages: "en-us"
-  #  logo_path: "C:/Users/Bakhshaiesh/Desktop/Flutter.NewDCS/installers/exe_creator/dcs_icon.ico"
-  #  certificate_path: "C:/Users/Bakhshaiesh/Desktop/Flutter.NewDCS/installers/exe_creator/abomis_innovations_inc_.pfx"
-  logo_path: "/Users/fps/Amir/Projects/brs_panel/installers/exe_creator/dcs_icon.ico"
-  certificate_path: "/Users/fps/Amir/Projects/brs_panel/installers/exe_creator/abomis_innovations_inc_.pfx"
+  logo_path: "C:/Users/Bakhshaiesh/Desktop/Flutter.NewDCS/installers/exe_creator/dcs_icon.ico"
+  certificate_path: "C:/Users/Bakhshaiesh/Desktop/Flutter.NewDCS/installers/exe_creator/abomis_innovations_inc_.pfx"
+  #  logo_path: "/Users/fps/Amir/Projects/brs_panel/installers/exe_creator/dcs_icon.ico"
+  #  certificate_path: "/Users/fps/Amir/Projects/brs_panel/installers/exe_creator/abomis_innovations_inc_.pfx"
   certificate_password: "Tima@131313"
-  output_path: "/Users/fps/Desktop"
+  output_path: "C:/Users/Bakhshaiesh/Desktop"
+  #  output_path: "/Users/fps/Desktop"
   date: "test"
   output_name: "BRS Panel Setup"
   add_execution_alias: true
