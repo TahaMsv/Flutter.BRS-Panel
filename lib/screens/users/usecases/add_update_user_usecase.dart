@@ -32,7 +32,19 @@ class AddUpdateUserRequest extends Request {
       };
 
   Failure? validate() {
-    return null;
+    String? msg;
+    if (user0.username.isEmpty) {
+      msg = "Username must not be empty!";
+    } else if (user0.password?.isEmpty ?? true) {
+      msg = "Password must not be empty!";
+    } else if (user0.name.isEmpty) {
+      msg = "User's name must not be empty!";
+    } else if (user0.al.isEmpty) {
+      msg = "Airline must not be empty!";
+    } else if (user0.al.isEmpty) {
+      msg = "Airline must not be empty!";
+    }
+    return msg == null ? null : ValidationFailure(code: -1, msg: msg, traceMsg: "AddUpdateUserUseCase>Validation");
   }
 }
 

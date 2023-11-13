@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-
 import '../core/constants/ui.dart';
 
 class MyTextField extends StatefulWidget {
@@ -51,7 +50,7 @@ class MyTextField extends StatefulWidget {
     this.textCapitalization = TextCapitalization.none,
     this.textInputAction,
     this.style,
-    this.maxLines =1,
+    this.maxLines = 1,
     this.strutStyle,
     this.textDirection,
     this.textAlign = TextAlign.start,
@@ -103,7 +102,7 @@ class _MyTextFieldState extends State<MyTextField> {
 
   @override
   Widget build(BuildContext context) {
-    if(widget.maxLines!=1){
+    if (widget.maxLines != 1) {
       return IntrinsicHeight(
         child: Stack(
           children: [
@@ -128,46 +127,46 @@ class _MyTextFieldState extends State<MyTextField> {
                 suffixIcon: widget.locked
                     ? const Icon(Icons.lock)
                     : Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    widget.isPassword
-                        ? GestureDetector(
-                        onTap: () {
-                          obscureText = !obscureText;
-                          setState(() {});
-                        },
-                        child: Icon(obscureText ? Ionicons.eye : Ionicons.eye_off, size: 20))
-                        : const SizedBox(),
-                    widget.suffixIcon ?? const SizedBox(),
-                    widget.showClearButton
-                        ? GestureDetector(
-                      child: const Icon(Icons.clear),
-                      onTap: () {
-                        widget.controller?.clear();
-                      },
-                    )
-                        : const SizedBox()
-                  ],
-                ),
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          widget.isPassword
+                              ? GestureDetector(
+                                  onTap: () {
+                                    obscureText = !obscureText;
+                                    setState(() {});
+                                  },
+                                  child: Icon(obscureText ? Ionicons.eye : Ionicons.eye_off, size: 20))
+                              : const SizedBox(),
+                          widget.suffixIcon ?? const SizedBox(),
+                          widget.showClearButton
+                              ? GestureDetector(
+                                  child: const Icon(Icons.clear),
+                                  onTap: () {
+                                    widget.controller?.clear();
+                                  },
+                                )
+                              : const SizedBox()
+                        ],
+                      ),
                 counterText: '',
                 label: widget.label == null
                     ? null
                     : widget.required
-                    ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(widget.label ?? ''),
-                    const SizedBox(width: 4),
-                    const Icon(Icons.circle, color: Colors.red, size: 7.5),
-                  ],
-                )
-                    : Text(widget.label!),
+                        ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(widget.label ?? ''),
+                              const SizedBox(width: 4),
+                              const Icon(Icons.circle, color: Colors.red, size: 7.5),
+                            ],
+                          )
+                        : Text(widget.label!),
                 // hintText: widget.label,
                 errorText: null,
                 // border: OutlineInputBorder(),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 border: MaterialStateOutlineInputBorder.resolveWith(
-                      (states) {
+                  (states) {
                     Color borderColor = MyColors.black;
                     double borderWidth = 1;
                     if (_errorMsg != null) {
@@ -350,17 +349,21 @@ class MyInputFormatter {
 TextEditingController tcFromIntValue(int? num, {bool isZeroValid = true}) {
   if (num == null) return TextEditingController();
   if (isZeroValid) {
-    TextEditingController tc = TextEditingController.fromValue(TextEditingValue(text: num == 0 ? "0" : num.toString(), selection: TextSelection.fromPosition(TextPosition(offset: num.toString().length))));
+    TextEditingController tc = TextEditingController.fromValue(TextEditingValue(
+        text: num == 0 ? "0" : num.toString(),
+        selection: TextSelection.fromPosition(TextPosition(offset: num.toString().length))));
     return tc;
   } else {
     String numS = num == 0 ? "" : "$num";
-    TextEditingController tc = TextEditingController.fromValue(TextEditingValue(text: numS, selection: TextSelection.fromPosition(TextPosition(offset: numS.length))));
+    TextEditingController tc = TextEditingController.fromValue(
+        TextEditingValue(text: numS, selection: TextSelection.fromPosition(TextPosition(offset: numS.length))));
     return tc;
   }
 }
 
 TextEditingController tcFromStrValue(String val) {
-  TextEditingController tc = TextEditingController.fromValue(TextEditingValue(text: val, selection: TextSelection.fromPosition(TextPosition(offset: val.length))));
+  TextEditingController tc = TextEditingController.fromValue(
+      TextEditingValue(text: val, selection: TextSelection.fromPosition(TextPosition(offset: val.length))));
   return tc;
 }
 

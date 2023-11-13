@@ -1,6 +1,5 @@
-import 'dart:convert';
-import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
+import '../platform/encryptor.dart';
 
 @immutable
 class User {
@@ -121,9 +120,7 @@ class User {
 
   String? encryptPassword() {
     if (password == null) return null;
-    List<int> passwordBytes = utf8.encode(password!);
-    String passwordEncrypted = sha256.convert(passwordBytes).toString();
-    return passwordEncrypted;
+    return Encryptor.encryptPassword(password!);
   }
 
   validateSearch(String searched) {
