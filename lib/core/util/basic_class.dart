@@ -35,18 +35,22 @@ class BasicClass {
     // instance._userInfo = settings.userSettings.userInfo;
     // instance._deviceInfo = deviceInfo;
     instance._deviceType = deviceType;
-    instance._airport =user.systemSettings.airportList.firstWhere((element) => element.code==user.userSettings.airport);
+    instance._airport =
+        user.systemSettings.airportList.firstWhere((element) => element.code == user.userSettings.airport);
   }
 
   static void setConfig(Config config) {
     instance._appConfig = config;
   }
+
   static Airport get airport => instance._airport!;
 
   static String get username => instance._username!;
+
   static List<String> get airlineList => instance._userSettings!.accessAirlines;
 
   static SystemSettings get systemSetting => instance._systemSettings ?? SystemSettings.empty();
+
   static UserSettings get userSetting => instance._userSettings ?? UserSettings.empty();
 
   static LoginUser get userInfo => instance._userInfo ?? LoginUser.empty();
@@ -57,38 +61,44 @@ class BasicClass {
   static ScreenType get deviceType => instance._deviceType ?? ScreenType.phone;
 
   static Position? getPositionByID(int? id) {
-    return systemSetting.positions.firstWhereOrNull((e)=>e.id==id);
+    return systemSetting.positions.firstWhereOrNull((e) => e.id == id);
   }
+
   static TagAction? getExceptionByID(int? id) {
-    return systemSetting.exceptionStatusList.firstWhereOrNull((e)=>e.id==id);
+    return systemSetting.exceptionStatusList.firstWhereOrNull((e) => e.id == id);
   }
+
   static Airport? getAirportByCode(String code) {
     print(code);
-    return systemSetting.airportList.firstWhereOrNull((e)=>e.code==code);
+    return systemSetting.airportList.firstWhereOrNull((e) => e.code == code);
   }
+
   static String? getAirlineByCode(String code) {
-    return userSetting.accessAirlines.firstWhereOrNull((e)=>e==code);
+    return userSetting.accessAirlines.firstWhereOrNull((e) => e == code);
   }
+
   static Aircraft? getAircraftByID(int? id) {
-    return systemSetting.aircraftList.firstWhereOrNull((e)=>e.id==id);
+    return systemSetting.aircraftList.firstWhereOrNull((e) => e.id == id);
   }
 
   static ClassType? getClassTypeByID(int id) {
-    return systemSetting.classTypeList.firstWhereOrNull((e)=>e.id==id);
+    return systemSetting.classTypeList.firstWhereOrNull((e) => e.id == id);
   }
+
   static ClassType? getClassTypeByCode(String code) {
-    return systemSetting.classTypeList.firstWhereOrNull((e)=>e.abbreviation==code);
+    return systemSetting.classTypeList.firstWhereOrNull((e) => e.abbreviation == code);
   }
 
   static TagStatus? getTagStatusByID(int id) {
-    return systemSetting.statusList.firstWhereOrNull((e)=>e.id==id);
+    return systemSetting.statusList.firstWhereOrNull((e) => e.id == id);
   }
 
   static Position? getPositionById(int id) {
-    return systemSetting.positions.firstWhereOrNull((e)=>e.id==id);
+    return systemSetting.positions.firstWhereOrNull((e) => e.id == id);
   }
+
   static TagStatus? getTagStatusById(int id) {
-    return systemSetting.statusList.firstWhereOrNull((e)=>e.id==id);
+    return systemSetting.statusList.firstWhereOrNull((e) => e.id == id);
   }
 
   static List<AirportPositionSection> getAllAirportSections() {
@@ -99,12 +109,29 @@ class BasicClass {
     return secs;
   }
 
+  static List<AirportPositionSection> getAllAirportSections1() {
+    List<AirportPositionSection> secs = [];
+    for (var s in userSetting.hierarchy) {
+      List<AirportPositionSection> sections = getAllAirportSections2(s);
+      secs = secs + sections;
+    }
+    return secs;
+  }
+
+  static List<AirportPositionSection> getAllAirportSections2(AirportPositionSection s) {
+    List<AirportPositionSection> secs = [s.copyWith(address: "${s.address}${s.label}")];
+    for (var sub in s.subs) {
+      List<AirportPositionSection> sections = getAllAirportSections2(sub);
+      secs = secs + sections;
+    }
+    return secs;
+  }
+
   static AirportPositionSection? getAirportSectionByID(int sectionID) {
-    return BasicClass.getAllAirportSections().firstWhereOrNull((element) => element.id ==sectionID);
+    return BasicClass.getAllAirportSections().firstWhereOrNull((element) => element.id == sectionID);
   }
 
   static DateTime? getTimeFromUTC(DateTime? dt) {
-    return dt?.add(Duration(minutes: airport.timeZone??0));
+    return dt?.add(Duration(minutes: airport.timeZone ?? 0));
   }
-
 }

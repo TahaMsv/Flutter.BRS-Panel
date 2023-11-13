@@ -1,3 +1,4 @@
+import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:brs_panel/screens/login/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,7 +35,8 @@ class _MyAppBarState extends State<MyAppBar> {
         // print(router.location);
         currentRoute ??= RouteNames.values.lastWhere((element) => router.location.contains("/${element.path}"));
         return Container(
-          decoration: const BoxDecoration(color: MyColors.white1,border: Border(bottom: BorderSide(color: MyColors.lineColor))),
+          decoration: const BoxDecoration(
+              color: MyColors.white1, border: Border(bottom: BorderSide(color: MyColors.lineColor))),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
           child: isSubroute
               ? DecoratedBox(
@@ -56,17 +58,15 @@ class _MyAppBarState extends State<MyAppBar> {
                         ),
                         const SizedBox(width: 8),
                         ...RouteNames.values
-
                             .where((element) => router.location.split("/").contains(element.name))
                             .map((e) => DecoratedBox(
                                   decoration: const BoxDecoration(
-                                    border:Border(right: BorderSide(color: MyColors.lightIshBlue, width: 4)) ,
+                                    border: Border(right: BorderSide(color: MyColors.lightIshBlue, width: 4)),
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.only(bottom: 0.0, top: 0),
                                     child: TextButton(
                                       onPressed: () {
-
                                         NavigationService ns = getIt<NavigationService>();
                                         ns.pushNamed(e);
                                       },
@@ -108,6 +108,7 @@ class _MyAppBarState extends State<MyAppBar> {
                       children: RouteNames.values.where((element) => element.isMainRoute).map(
                         (e) {
                           bool selected = currentRoute == e;
+                          if (e.name == RouteNames.users.name && !BasicClass.userSetting.isAdmin) return Container();
                           return DecoratedBox(
                             decoration: BoxDecoration(
                               border: selected
@@ -158,7 +159,7 @@ class UserIndicatorWidget extends ConsumerWidget {
       child: Row(
         children: [
           GestureDetector(
-            onTap: (){
+            onTap: () {
               myLoginController.showStimulPreview();
             },
             child: ClipRRect(

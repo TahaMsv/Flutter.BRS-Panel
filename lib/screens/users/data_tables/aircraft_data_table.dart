@@ -9,7 +9,7 @@ enum UserDataTableColumn {
   username,
   name,
   airline,
-  barcode,
+  airport,
 }
 
 extension UserDataTableColumnDetails on UserDataTableColumn {
@@ -21,7 +21,7 @@ extension UserDataTableColumnDetails on UserDataTableColumn {
         return 0.3;
       case UserDataTableColumn.airline:
         return 0.2;
-      case UserDataTableColumn.barcode:
+      case UserDataTableColumn.airport:
         return 0.2;
     }
   }
@@ -39,7 +39,7 @@ class UserDataSource extends DataGridSource {
             DataGridCell<String>(columnName: UserDataTableColumn.username.name, value: e.username),
             DataGridCell<String>(columnName: UserDataTableColumn.name.name, value: e.name),
             DataGridCell<String>(columnName: UserDataTableColumn.airline.name, value: e.alCode),
-            DataGridCell<String>(columnName: UserDataTableColumn.barcode.name, value: "Barcode-L: ${e.barcodeLength}"),
+            DataGridCell<String>(columnName: UserDataTableColumn.airport.name, value: e.airport),
           ]),
         )
         .toList();
@@ -67,8 +67,8 @@ class UserDataSource extends DataGridSource {
       if (dataGridCell.columnName == UserDataTableColumn.airline.name) {
         return Align(alignment: Alignment.center, child: Text("${f.al}-${f.alCode}"));
       }
-      if (dataGridCell.columnName == UserDataTableColumn.barcode.name) {
-        return Align(alignment: Alignment.center, child: Text("Barcode-L: ${f.barcodeLength}"));
+      if (dataGridCell.columnName == UserDataTableColumn.airport.name) {
+        return Align(alignment: Alignment.center, child: Text(f.airport));
       }
       return Container();
     }).toList());

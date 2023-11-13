@@ -21,6 +21,7 @@ class AddSectionDialog extends StatefulWidget {
 
 class _AddUpdateAirportCartDialogState extends State<AddSectionDialog> {
   final TextEditingController nameC = TextEditingController();
+  final TextEditingController codeC = TextEditingController();
   bool tag = true;
   bool con = true;
   bool bin = true;
@@ -62,17 +63,29 @@ class _AddUpdateAirportCartDialogState extends State<AddSectionDialog> {
           Row(
             children: [
               const SizedBox(width: 20),
-              SizedBox(height: 40, width: 350, child: MyTextField(controller: nameC, label: "Name")),
+              SizedBox(height: 40, width: 350 - 1, child: MyTextField(controller: nameC, label: "Name")),
               const SizedBox(width: 30),
               Container(color: MyColors.lineColor2, width: 1, height: 60),
               const SizedBox(width: 30),
-              MyCheckBoxButton(label: "Tag", value: tag, onChanged: (b) => setState(() => tag = b)),
-              const SizedBox(width: 30),
-              MyCheckBoxButton(label: "Container", value: con, onChanged: (b) => setState(() => con = b)),
-              const SizedBox(width: 30),
-              MyCheckBoxButton(label: "Bin", value: bin, onChanged: (b) => setState(() => bin = b)),
+              SizedBox(height: 40, width: 350 - 1, child: MyTextField(controller: codeC, label: "Code")),
+              const SizedBox(width: 20),
             ],
           ),
+          const Divider(height: 1, color: MyColors.lineColor2),
+          Row(children: [
+            const SizedBox(width: 20, height: 60),
+            MyCheckBoxButton(label: "Tag", value: tag, onChanged: (b) => setState(() => tag = b)),
+            const SizedBox(width: 30),
+            MyCheckBoxButton(
+                label: "Container",
+                value: con,
+                onChanged: (b) => setState(() {
+                      con = b;
+                      if (!b) spotRequired = b;
+                    })),
+            const SizedBox(width: 30),
+            MyCheckBoxButton(label: "Bin", value: bin, onChanged: (b) => setState(() => bin = b)),
+          ]),
           const Divider(height: 1, color: MyColors.lineColor2),
           Row(
             children: [
@@ -82,7 +95,10 @@ class _AddUpdateAirportCartDialogState extends State<AddSectionDialog> {
                 alignment: Alignment.centerLeft,
                 child: MySwitchButton(
                   value: spotRequired,
-                  onChange: (b) => setState(() => spotRequired = b),
+                  onChange: (b) => setState(() {
+                    spotRequired = b;
+                    if (b) con = b;
+                  }),
                   label: "Spot Required",
                 ),
               ),

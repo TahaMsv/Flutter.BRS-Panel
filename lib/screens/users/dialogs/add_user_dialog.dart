@@ -1,8 +1,11 @@
 import 'package:brs_panel/initialize.dart';
+import 'package:brs_panel/widgets/MyDropDown.dart';
 import 'package:flutter/material.dart';
+import '../../../core/classes/login_user_class.dart';
 import '../../../core/classes/user_class.dart';
 import '../../../core/constants/ui.dart';
 import '../../../core/navigation/navigation_service.dart';
+import '../../../core/util/basic_class.dart';
 import '../../../widgets/MyButton.dart';
 import '../../../widgets/MySwitchButton.dart';
 import '../../../widgets/MyTextField.dart';
@@ -25,10 +28,17 @@ class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
   final TextEditingController usernameC = TextEditingController();
   final TextEditingController passwordC = TextEditingController();
   final TextEditingController alC = TextEditingController();
+  final TextEditingController airportC = TextEditingController();
+  late final List<Airport> airportList;
+  Airport? selectedAirport;
+  late final List<HandlingAccess> handlingList;
+  HandlingAccess? selectedHandling;
 
   @override
   void initState() {
     isEditing = widget.user != null;
+    airportList = BasicClass.systemSetting.airportList;
+    handlingList = BasicClass.systemSetting.handlingAccess;
     super.initState();
   }
 
@@ -65,7 +75,17 @@ class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
                   children: [
                     Row(
                       children: [
-                        Expanded(flex: 3, child: MyTextField(label: "Handling", controller: handlingC)),
+                        Expanded(
+                            flex: 3,
+                            child: MyDropDown<HandlingAccess>(
+                              label: "Handling",
+                              items: handlingList,
+                              value: selectedHandling,
+                              itemToString: (ha) => ha.name,
+                              canClear: true,
+                              showType2: true,
+                              onSelect: (HandlingAccess? ha) => setState(() => selectedHandling = ha),
+                            )),
                         const SizedBox(width: 120),
                         Expanded(
                           flex: 1,
@@ -78,17 +98,31 @@ class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
                       ],
                     ),
                     const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Expanded(child: MyTextField(label: "AL", controller: alC)),
+                        const SizedBox(width: 20),
+                        Expanded(
+                            child: MyDropDown<Airport>(
+                          label: "Airport",
+                          items: airportList,
+                          value: selectedAirport,
+                          itemToString: (sa) => sa.code,
+                          showType2: true,
+                          onSelect: (Airport? sa) => setState(() => selectedAirport = sa),
+                        )),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
                     MyTextField(label: "Name", controller: nameC),
                     const SizedBox(height: 20),
                     Row(
                       children: [
                         Expanded(child: MyTextField(label: "Username", controller: usernameC)),
                         const SizedBox(width: 20),
-                        Expanded(child: MyTextField(label: "AL", controller: alC)),
+                        Expanded(child: MyTextField(label: "Password", controller: passwordC)),
                       ],
                     ),
-                    const SizedBox(height: 20),
-                    MyTextField(label: "Password", controller: passwordC),
                   ],
                 ),
               ),
@@ -109,7 +143,7 @@ class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
                         id: 0,
                         username: usernameC.text,
                         name: nameC.text,
-                        airport: "",
+                        airport: airportC.text,
                         al: alC.text,
                         barcodeLength: 10,
                         alCode: "000",
@@ -117,7 +151,7 @@ class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
                         waitSecondMax: 6,
                         tagOnlyDigit: true,
                         isAdmin: isAdmin,
-                        handlingID: 0,
+                        handlingID: selectedHandling?.id,
                         isHandlingAdmin: isAdmin,
                         password: passwordC.text);
                     await controller.addUpdateUserRequest(user);

@@ -43,6 +43,8 @@ class AddUpdateUserRequest extends Request {
       msg = "Airline must not be empty!";
     } else if (user0.al.isEmpty) {
       msg = "Airline must not be empty!";
+    } else if (user0.airport.isEmpty) {
+      msg = "Airport must not be empty!";
     }
     return msg == null ? null : ValidationFailure(code: -1, msg: msg, traceMsg: "AddUpdateUserUseCase>Validation");
   }

@@ -223,8 +223,13 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
     List<BinSection> bins = widget.details.binList
         .map((b) => BinSection(bin: b, allCons: filteredCons, ref: ref, fd: widget.details))
         .toList();
-    //todo use this!
-    final List<AirportPositionSection> positionSections = BasicClass.userSetting.hierarchy;
+    //assigning sections
+    final List<AirportPositionSection> positionSections = BasicClass.getAllAirportSections();
+    List<AirportPositionSection> filteredSections =
+        positionSections.where((s) => filteredCons.any((con) => con.sectionID == s.id)).toList();
+    final List<AirportSectionSection> sectionSections = filteredSections
+        .map((e) => AirportSectionSection(airportPositionSection: e, cons: filteredCons, ref: ref))
+        .toList();
     return Column(
       children: [
         Container(
@@ -395,6 +400,48 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
                           }),
                     ),
                   )
+                /*
+                ? ExpandableListView(
+                    shrinkWrap: true,
+                    builder: SliverExpandableChildDelegate<TagContainer, AirportSectionSection>(
+                        sectionList: sectionSections,
+                        headerBuilder: (context, sectionIndex, index) {
+                          return Container(color: Colors.red, height: 20);
+                        },
+                        itemBuilder: (context, sectionIndex, itemIndex, index) {
+                          return ExpandableListView(
+                            shrinkWrap: true,
+                            builder: SliverExpandableChildDelegate<FlightTag, ContainerSection>(
+                                sectionList: cons,
+                                headerBuilder: (context, sectionIndex, index) {
+                                  TagContainer con = cons[sectionIndex].con;
+                                  print(con.sectionID);
+                                  print("con.sectionID");
+                                  return ContainerTileWidget(
+                                    index: index,
+                                    isFirstSec: false,
+                                    binLines: false,
+                                    con: con,
+                                    sec: cons[sectionIndex],
+                                    isLast: false,
+                                    tagCount: cons[sectionIndex].items.length,
+                                  );
+                                },
+                                itemBuilder: (context, sectionIndex, itemIndex, index) {
+                                  FlightTag tag = cons[sectionIndex].items[itemIndex];
+                                  bool isLastTag = cons[sectionIndex].items.length == itemIndex + 1;
+                                  return TagWidget(
+                                    tag: tag,
+                                    fd: widget.details,
+                                    total: cons[sectionIndex].items.length,
+                                    index: itemIndex,
+                                    hasBinLine: false,
+                                    isLast: isLastTag,
+                                  );
+                                }),
+                          );
+                        }),
+                  )*/
                 : Flexible(
                     child: ListView.builder(
                         itemCount: filteredTag.length,
@@ -577,6 +624,40 @@ class BinTileWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class AirportSectionSection extends ExpandableListSection<TagContainer> {
+  final WidgetRef ref;
+  final AirportPositionSection airportPositionSection;
+  final List<TagContainer> cons;
+
+  AirportSectionSection({required this.airportPositionSection, required this.cons, required this.ref});
+
+  @override
+  List<TagContainer>? getItems() {
+    List<TagContainer> items = cons.where((c) => c.sectionID == airportPositionSection.id).toList();
+    return items;
+  }
+
+  @override
+  bool isSectionExpanded() {
+    List<int> expandeds = ref.watch(expandedAirportSections);
+    return !expandeds.contains(airportPositionSection.id);
+  }
+
+  @override
+  void setSectionExpanded(bool expanded) {
+    final expandeds = ref.watch(expandedAirportSections.notifier);
+    if (!expanded) {
+      expandeds.state = expandeds.state + [airportPositionSection.id];
+    } else {
+      expandeds.state = expandeds.state.where((element) => element != airportPositionSection.id).toList();
+    }
+  }
+
+  List<TagContainer> get items {
+    return getItems() ?? [];
   }
 }
 
