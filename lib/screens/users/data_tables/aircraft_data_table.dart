@@ -1,3 +1,5 @@
+import 'package:brs_panel/widgets/DotButton.dart';
+import 'package:brs_panel/widgets/MyButton.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -10,6 +12,7 @@ enum UserDataTableColumn {
   name,
   airline,
   airport,
+  actions,
 }
 
 extension UserDataTableColumnDetails on UserDataTableColumn {
@@ -22,7 +25,9 @@ extension UserDataTableColumnDetails on UserDataTableColumn {
       case UserDataTableColumn.airline:
         return 0.2;
       case UserDataTableColumn.airport:
-        return 0.2;
+        return 0.1;
+      case UserDataTableColumn.actions:
+        return 0.1;
     }
   }
 }
@@ -40,6 +45,7 @@ class UserDataSource extends DataGridSource {
             DataGridCell<String>(columnName: UserDataTableColumn.name.name, value: e.name),
             DataGridCell<String>(columnName: UserDataTableColumn.airline.name, value: e.alCode),
             DataGridCell<String>(columnName: UserDataTableColumn.airport.name, value: e.airport),
+            DataGridCell<String>(columnName: UserDataTableColumn.actions.name, value: ""),
           ]),
         )
         .toList();
@@ -57,18 +63,29 @@ class UserDataSource extends DataGridSource {
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((dataGridCell) {
       if (dataGridCell.columnName == UserDataTableColumn.username.name) {
-        return Container(
-            padding: const EdgeInsets.only(left: 12), alignment: Alignment.centerLeft, child: Text(f.username));
+        return Container(padding: const EdgeInsets.only(left: 12), alignment: Alignment.centerLeft, child: Text(f.username));
       }
       if (dataGridCell.columnName == UserDataTableColumn.name.name) {
-        return Container(
-            padding: const EdgeInsets.only(left: 12), alignment: Alignment.centerLeft, child: Text(f.name));
+        return Container(padding: const EdgeInsets.only(left: 12), alignment: Alignment.centerLeft, child: Text(f.name));
       }
       if (dataGridCell.columnName == UserDataTableColumn.airline.name) {
         return Align(alignment: Alignment.center, child: Text("${f.al}-${f.alCode}"));
       }
       if (dataGridCell.columnName == UserDataTableColumn.airport.name) {
         return Align(alignment: Alignment.center, child: Text(f.airport));
+      }
+      if (dataGridCell.columnName == UserDataTableColumn.actions.name) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          alignment: Alignment.centerRight,
+          child: DotButton(
+            icon: Icons.edit,
+            onPressed: () {
+              UsersController usersController = getIt<UsersController>();
+              usersController.addUpdateUser(f);
+            },
+          ),
+        );
       }
       return Container();
     }).toList());

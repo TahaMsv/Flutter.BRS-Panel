@@ -14,6 +14,7 @@ class NetworkManager implements NetworkManagerInterface {
   Future<Response> post(Request request, {String? api}) async {
     NetworkRequest networkRequest = NetworkRequest(api: api ?? Apis.baseUrl, data: request.toJson());
     // debugPrint(jsonEncode(request.toJson()));
+    print(api);
     debugPrint(networkRequest.options.baseUrl);
     NetworkResponse networkResponse = await networkRequest.post();
     if (networkResponse.responseStatus) {
@@ -22,9 +23,12 @@ class NetworkManager implements NetworkManagerInterface {
         Response res = await compute(Response.fromJson, networkResponse.responseBody);
         return res;
       } catch (e, trace) {
+
         throw ParseException(message: e.toString(), trace: trace);
       }
     } else {
+      print("dasdad");
+      print(networkResponse.responseDetails);
       throw ServerException(
         code: networkResponse.responseCode,
         message: networkResponse.extractedMessage!,

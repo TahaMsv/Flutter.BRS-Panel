@@ -134,4 +134,8 @@ class BasicClass {
   static DateTime? getTimeFromUTC(DateTime? dt) {
     return dt?.add(Duration(minutes: airport.timeZone ?? 0));
   }
+
+  static HandlingAccess? getHandlingByID(int? handlingID) {
+    return BasicClass.systemSetting.handlingAccess.firstWhereOrNull((element) => element.id == handlingID);
+  }
 }

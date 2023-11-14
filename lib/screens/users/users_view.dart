@@ -63,7 +63,7 @@ class UsersPanel extends ConsumerWidget {
                       visualDensity: const VisualDensity(horizontal: -2, vertical: -2),
                       backgroundColor: MyColors.mainColor,
                       foregroundColor: MyColors.white3),
-                  onPressed: controller.addUser,
+                  onPressed: ()=>controller.addUpdateUser(null),
                   icon: const Icon(Icons.add, size: 16),
                 ),
               ],

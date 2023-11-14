@@ -50,7 +50,7 @@ class LoginRequest extends Request {
             "Company": deviceInfo.company,
             "Model": deviceInfo.deviceModel,
             "IsWifi": false,
-            "AppName": AppConfig.instance!.flavor!.name,
+            "AppName": "BRSPanel",
             "OSVersion": deviceInfo.osVersion,
             "VersionNum": deviceInfo.versionNumber,
             "Device": deviceInfo.deviceModel,

@@ -11,8 +11,8 @@ class UsersController extends MainController {
 
   /// View -------------------------------------------------------------------------------------------------------------
 
-  addUser() async {
-    await nav.dialog(const AddUpdateUserDialog());
+  addUpdateUser(User? u) async {
+    await nav.dialog(AddUpdateUserDialog(user: u,));
   }
 
   /// Requests ---------------------------------------------------------------------------------------------------------

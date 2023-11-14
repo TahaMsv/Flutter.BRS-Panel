@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:get/utils.dart';
 import '../platform/encryptor.dart';
 
 @immutable
@@ -18,6 +19,7 @@ class User {
     required this.handlingID,
     required this.isHandlingAdmin,
     required this.password,
+    required this.accessType,
   });
 
   final int id;
@@ -34,6 +36,7 @@ class User {
   final bool isAdmin;
   final bool isHandlingAdmin;
   final int? handlingID;
+  final int? accessType;
 
   User copyWith({
     int? id,
@@ -50,9 +53,11 @@ class User {
     bool? isAdmin,
     bool? isHandlingAdmin,
     int? handlingID,
+    int? accessType,
   }) =>
       User(
         id: id ?? this.id,
+        accessType: accessType ?? this.accessType,
         username: username ?? this.username,
         name: name ?? this.name,
         airport: airport ?? this.airport,
@@ -82,6 +87,7 @@ class User {
         isAdmin: json["IsAdmin"],
         password: json["Password"],
         handlingID: json["HandlingID"] ?? 0,
+        accessType: json["AccessType"] ?? 1,
         isHandlingAdmin: json["IsHandlingAdmin"] ?? false,
       );
 
@@ -99,6 +105,7 @@ class User {
       tagOnlyDigit: true,
       isAdmin: false,
       isHandlingAdmin: false,
+      accessType: 1,
       handlingID: null);
 
   Map<String, dynamic> toJson() => {
@@ -115,6 +122,7 @@ class User {
         "IsAdmin": isAdmin,
         "Password": encryptPassword(),
         "HandlingID": handlingID,
+        "AccessType": accessType,
         "IsHandlingAdmin": isHandlingAdmin,
       };
 
@@ -125,5 +133,28 @@ class User {
 
   validateSearch(String searched) {
     return ("$username $name $al $alCode".toLowerCase().contains(searched.toLowerCase()) || searched == "");
+  }
+}
+
+
+enum UserAccessType {
+  agent,
+  supervisor,
+  admin
+}
+
+extension UserAccessTypeDetails on UserAccessType {
+  int get id {
+    switch (this){
+      case UserAccessType.agent:
+       return 1;
+      case UserAccessType.supervisor:
+       return 2;
+      case UserAccessType.admin:
+       return 3;
+    }
+  }
+  String? get label {
+   return name.capitalizeFirst;
   }
 }

@@ -19,7 +19,7 @@ class MySegment<T> extends StatelessWidget {
     this.itemToString,
     this.itemsMap,
     this.itemToWidget,
-    this.height,
+    this.height=32,
     this.selectionColor,
   }) : super(key: key);
 
@@ -34,6 +34,7 @@ class MySegment<T> extends StatelessWidget {
               .map((e) => Expanded(
                   child: SizedBox(
                     height: (height ?? 32)-8,
+
                     child: TextButton(
                         style: TextButton.styleFrom(
                             alignment: Alignment.center,
