@@ -35,7 +35,7 @@ class AddUpdateUserRequest extends Request {
     String? msg;
     if (user0.username.isEmpty) {
       msg = "Username must not be empty!";
-    } else if (user0.password?.isEmpty ?? true) {
+    } else if (user0.password?.isEmpty ?? true && user0.id==0) {
       msg = "Password must not be empty!";
     } else if (user0.name.isEmpty) {
       msg = "User's name must not be empty!";
