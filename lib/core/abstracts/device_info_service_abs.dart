@@ -31,7 +31,8 @@ class DeviceInfo {
 enum ScreenType {
   phone,
   tablet,
-  desktop
+  desktop,
+  web
 }
 
 extension DeviceTypeExt on ScreenType {

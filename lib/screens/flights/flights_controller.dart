@@ -10,11 +10,13 @@ import 'package:brs_panel/screens/flights/dialogs/flight_container_list_dialog.d
 import 'package:brs_panel/screens/flights/usecases/flight_add_remove_container_usecase.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_get_container_list_usecase.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_list_usecase.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/abstracts/controller_abs.dart';
+import '../../core/abstracts/device_info_service_abs.dart';
 import '../../core/classes/flight_class.dart';
 import '../../core/classes/flight_details_class.dart';
 import '../../core/classes/tag_container_class.dart';
+import '../../core/platform/device_info.dart';
 import '../../core/util/basic_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
 
@@ -119,6 +121,7 @@ class FlightsController extends MainController {
   }
 
   Future<void> handleActions(MenuItem value, Flight flight) async {
+    late final FlightsController flightsController = getIt<FlightsController>();
     switch (value) {
       case MenuItems.flightSummary:
         goSummary(flight);
@@ -127,10 +130,29 @@ class FlightsController extends MainController {
         await editContainers(flight);
         return;
       case MenuItems.openWebView:
-        nav.pushNamed(RouteNames.webView);
+        if (flightsController.isDesktop()) {
+          nav.pushNamed(RouteNames.webView);
+        } else {
+          print("here136");
+          _launchUrl(Uri.parse('https://www.ldoceonline.com/'));
+          print("here138");
+
+        }
         return;
       default:
         return;
+    }
+  }
+
+  bool isDesktop() {
+    DeviceInfoService deviceInfoService = getIt<DeviceInfoService>();
+    DeviceInfo deviceInfo = deviceInfoService.getInfo();
+    return deviceInfo.screenType == ScreenType.desktop;
+  }
+
+  Future<void> _launchUrl(Uri url) async {
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
     }
   }
 }

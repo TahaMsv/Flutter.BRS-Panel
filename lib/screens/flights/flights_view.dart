@@ -1,4 +1,5 @@
 import 'package:artemis_ui_kit/artemis_ui_kit.dart';
+import 'package:brs_panel/core/abstracts/device_info_service_abs.dart';
 import 'package:brs_panel/core/classes/user_class.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
@@ -236,23 +237,25 @@ class _MyWebViewState extends State<MyWebView> {
   @override
   void initState() {
     super.initState();
-    task();
-  }
-
-  Future<void> task() async {
-    await webViewController.init(
+    webViewController.init(
       context: context,
-      uri: Uri.parse(
-        // "https://www.google.com/",
-        "https://flutter.dev",
-      ),
-      setState: (void Function() fn) {},
+      setState: setState,
+      uri: Uri.parse("https://www.ldoceonline.com/"),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: FloatingActionButton(
+          onPressed: () {
+            webViewController.goBackSync();
+            Navigator.pop(context);
+          },
+          child: Icon(Icons.arrow_back_rounded),
+        ),
+      ),
       body: WebView(
         controller: webViewController,
       ),

@@ -3,6 +3,7 @@ import 'package:brs_panel/screens/airline_ulds/airline_ulds_view.dart';
 import 'package:brs_panel/screens/airlines/airlines_view.dart';
 import 'package:brs_panel/screens/airport_carts/airport_carts_view.dart';
 import 'package:brs_panel/screens/airports/airports_view.dart';
+import 'package:brs_panel/screens/barcode_generator/barcode_generator_view.dart';
 import 'package:brs_panel/screens/bsm/bsm_view.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_view.dart';
 import 'package:brs_panel/screens/flight_summary/flight_summary_view.dart';
@@ -186,6 +187,15 @@ class RouterNotifier extends AutoDisposeAsyncNotifier<void> implements Listenabl
 
           pageBuilder: (context, state) {
             return NoTransitionPage<void>(key: state.pageKey, child: const BsmView());
+          },
+        ),
+        MyRoute(
+          // controller: RouteNames.home.controller,
+          name: RouteNames.barcodeGenerator.name,
+          path: RouteNames.barcodeGenerator.path,
+
+          pageBuilder: (context, state) {
+            return NoTransitionPage<void>(key: state.pageKey, child: BarcodeGeneratorView());
           },
         ),
       ];

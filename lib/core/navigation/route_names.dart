@@ -17,6 +17,7 @@ enum RouteNames {
   airportCarts,
   airportSections,
   bsm,
+  barcodeGenerator,
   webView,
 }
 
@@ -58,6 +59,7 @@ extension RouteNamesDetails on RouteNames {
       RouteNames.airports,
       RouteNames.aircrafts,
       RouteNames.bsm,
+      RouteNames.barcodeGenerator,
       // RouteNames.users,
     ].contains(this);
   }

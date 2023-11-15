@@ -9,6 +9,7 @@ import 'package:brs_panel/screens/aircrafts/aircrafts_controller.dart';
 import 'package:brs_panel/screens/airlines/airlines_controller.dart';
 import 'package:brs_panel/screens/airport_carts/airport_carts_controller.dart';
 import 'package:brs_panel/screens/airports/airports_controller.dart';
+import 'package:brs_panel/screens/barcode_generator/barcode_generator_controller.dart';
 import 'package:brs_panel/screens/bsm/bsm_controller.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_controller.dart';
 import 'package:brs_panel/screens/flight_summary/flight_summary_controller.dart';
@@ -79,6 +80,7 @@ initControllers() {
   AirportCartsController airportCartsController = AirportCartsController();
   AirportSectionsController airportSectionsController = AirportSectionsController();
   BsmController bsmController = BsmController();
+  BarcodeGeneratorController barcodeGeneratorController = BarcodeGeneratorController();
   FlightSummaryController flightSummaryController = FlightSummaryController();
 
   getIt.registerSingleton(loginController);
@@ -94,6 +96,7 @@ initControllers() {
   getIt.registerSingleton(airportSectionsController);
   getIt.registerSingleton(bsmController);
   getIt.registerSingleton(flightSummaryController);
+  getIt.registerSingleton(barcodeGeneratorController);
 
   ns.registerControllers({
     RouteNames.login: loginController,
@@ -108,6 +111,7 @@ initControllers() {
     RouteNames.airportCarts: airportCartsController,
     RouteNames.airportSections: airportSectionsController,
     RouteNames.bsm: bsmController,
+    RouteNames.barcodeGenerator: barcodeGeneratorController,
     RouteNames.flightDetails: flightSummaryController,
   });
 }
