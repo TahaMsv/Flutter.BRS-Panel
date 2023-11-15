@@ -895,7 +895,7 @@ class PositionSection {
   factory PositionSection.fromJson(Map<String, dynamic> json) => PositionSection(
         offset: json["Offset"],
         count: json["Count"],
-        color: json["Color"],
+        color: json["Color"]??"0a1a82",
       );
 
   Color get getColor => HexColor(color);

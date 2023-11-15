@@ -530,7 +530,7 @@ class Flight {
     destList: json["DestList"],
     route: json["Route"],
     isTest: json["IsTest"],
-    flightType: json["FlightType"],
+    flightType: json["FlightType"]??1,
     totalBagPCs: json["TotalBagPCs"],
     totalBagWeight: json["TotalBagWeight"],
     isFinalized: json["IsFinalized"],

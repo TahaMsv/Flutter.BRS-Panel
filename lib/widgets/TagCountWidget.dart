@@ -85,7 +85,7 @@ class TagCountWidget extends StatelessWidget {
           child: SizedBox(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: sections.where((element) =>element.count!=0 &&  element.offset==3)
+              children: sections.where((element) =>element.count!=0 &&  element.offset==2)
                   .map(
                     (e) => Container(
                   height: 18,
@@ -109,7 +109,7 @@ class TagCountWidget extends StatelessWidget {
           child: SizedBox(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: sections.where((element) =>element.count!=0 && element.offset==4)
+              children: sections.where((element) =>element.count!=0 && element.offset==3)
                   .map(
                     (e) => Container(
                   height: 18,
@@ -133,7 +133,7 @@ class TagCountWidget extends StatelessWidget {
           child: SizedBox(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: sections.where((element) =>element.count!=0 && element.offset==6)
+              children: sections.where((element) =>element.count!=0 && element.offset==4)
                   .map(
                     (e) => Container(
                   height: 18,
@@ -157,7 +157,7 @@ class TagCountWidget extends StatelessWidget {
           child: SizedBox(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: sections.where((element) =>element.count!=0 && element.offset==5)
+              children: sections.where((element) =>element.count!=0 && element.offset==6)
                   .map(
                     (e) => Container(
                   height: 18,
@@ -181,7 +181,7 @@ class TagCountWidget extends StatelessWidget {
           child: SizedBox(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: sections.where((element) =>element.count!=0 && element.offset==2)
+              children: sections.where((element) =>element.count!=0 && element.offset==5)
                   .map(
                     (e) => Container(
                   height: 18,
@@ -200,6 +200,7 @@ class TagCountWidget extends StatelessWidget {
             ),
           ),
         ),
+        
       ],
     );
   }
