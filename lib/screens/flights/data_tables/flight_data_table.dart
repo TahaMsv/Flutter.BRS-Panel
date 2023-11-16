@@ -198,13 +198,13 @@ class FlightDataSource extends DataGridSource {
                         //   ),
                         // ),
                       ],
-                      onChanged: (value) async{
+                      onChanged: (value) async {
                         WidgetRef ref = getIt<WidgetRef>();
                         bool loading = ref.watch(flightActionHandlingProvider).contains(f.id);
-                        if(loading) return;
+                        if (loading) return;
                         ref.read(flightActionHandlingProvider.notifier).update((state) => (state + [f.id]).toSet().toList());
                         await flightsController.handleActions(value as MenuItem, f);
-                        ref.read(flightActionHandlingProvider.notifier).update((state) => state.where((element) => element!=f.id).toList());
+                        ref.read(flightActionHandlingProvider.notifier).update((state) => state.where((element) => element != f.id).toList());
                         // MenuItems.onChanged(navigator!.context, value! as MenuItem);
                       },
                       customButton: Consumer(
@@ -266,10 +266,11 @@ class MenuItem {
 }
 
 abstract class MenuItems {
-  static const List<MenuItem> firstItems = [flightSummary, assignContainer];
+  static const List<MenuItem> firstItems = [flightSummary, assignContainer, openWebView];
 
   static const flightSummary = MenuItem(text: 'Flight Summary', icon: Icons.home);
   static const assignContainer = MenuItem(text: 'Assign Container', icon: Icons.share);
+  static const openWebView = MenuItem(text: 'Open WebView', icon: Icons.open_in_browser);
 
   static Widget buildItem(MenuItem item) {
     return Row(
@@ -295,6 +296,8 @@ abstract class MenuItems {
         break;
       case MenuItems.flightSummary:
         //Do something
+        break;
+      case MenuItems.openWebView:
         break;
     }
   }

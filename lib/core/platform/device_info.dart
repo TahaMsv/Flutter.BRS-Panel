@@ -19,7 +19,7 @@ class DeviceInfoService extends DeviceInfoServiceInterface {
       BuildContext context = navigationService.context;
       ScreenType screenType = ScreenType.phone;
       if(kIsWeb){
-        screenType = ScreenType.desktop;
+        screenType = ScreenType.web;
       }else if (Platform.isIOS || Platform.isAndroid) {
         if (context.isPhone) {
           screenType = ScreenType.phone;

@@ -113,6 +113,6 @@ class LoginController extends MainController {
   }
 
   void showStimulPreview() {
-    nav.dialog(StimulPreviewDialog(url: "http://www.google.com"));
+    // nav.dialog(StimulPreviewDialog(url: "http://www.google.com"));
   }
 }

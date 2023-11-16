@@ -1,7 +1,9 @@
 import 'package:artemis_ui_kit/artemis_ui_kit.dart';
-import 'package:brs_panel/core/classes/login_user_class.dart';
+import 'package:brs_panel/core/abstracts/device_info_service_abs.dart';
+import 'package:brs_panel/core/classes/user_class.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
+import 'package:brs_panel/widgets/MyDropDown.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -18,6 +20,12 @@ import '../../widgets/MyTextField.dart';
 import 'data_tables/flight_data_table.dart';
 import 'flights_controller.dart';
 import 'flights_state.dart';
+// import "package:webview_universal/webview_universal.dart";
+import 'package:desktop_webview_window/desktop_webview_window.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+
 
 class FlightsView extends StatelessWidget {
   static FlightsController myFlightsController = getIt<FlightsController>();
@@ -209,7 +217,7 @@ class FlightListWidget extends ConsumerWidget {
                 .map(
                   (e) => GridColumn(
                     columnName: e.name,
-                    label: Center(child: Text(e.name.capitalizeFirst!)),
+                    label: Center(child: Text(e.name.capitalizeFirst ?? "")),
                     width: e.width * width,
                   ),
                 )
@@ -218,3 +226,4 @@ class FlightListWidget extends ConsumerWidget {
     );
   }
 }
+

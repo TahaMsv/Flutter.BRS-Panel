@@ -17,6 +17,8 @@ enum RouteNames {
   airportCarts,
   airportSections,
   bsm,
+  barcodeGenerator,
+  webView,
 }
 
 extension RouteNamesDetails on RouteNames {
@@ -36,6 +38,8 @@ extension RouteNamesDetails on RouteNames {
         return 'airportCarts';
       case RouteNames.airportSections:
         return 'airportSections';
+      case RouteNames.webView:
+        return '/webview';
       default:
         return "/$name";
     }
@@ -55,6 +59,7 @@ extension RouteNamesDetails on RouteNames {
       RouteNames.airports,
       RouteNames.aircrafts,
       RouteNames.bsm,
+      RouteNames.barcodeGenerator,
       RouteNames.users,
     ].contains(this);
   }
