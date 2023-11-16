@@ -198,8 +198,8 @@
 //   @override
 //   Widget build(BuildContext context) {
 //     ThemeData theme = Theme.of(context);
-//     double width = Get.width;
-//     double height = Get.height;
+//     double width = MediaQuery.of(context).sizewidth;
+//     double height = MediaQuery.of(context).sizeheight;
 //
 //     return Dialog(
 //       insetPadding: EdgeInsets.symmetric(horizontal: width * 0.15),

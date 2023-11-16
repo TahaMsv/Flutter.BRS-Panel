@@ -6,6 +6,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../core/constants/ui.dart';
 import '../../core/util/basic_class.dart';
 import '../../initialize.dart';
+import '../../widgets/DotButton.dart';
 import '../../widgets/LoadingListView.dart';
 import '../../widgets/MyTextField.dart';
 import 'aircrafts_controller.dart';
@@ -41,6 +42,11 @@ class AircraftsPanel extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       child: Row(
         children: [
+          DotButton(
+              size: 35,
+              onPressed: () => myAirlinesController.goAddAircraft(),
+              icon: Icons.add,
+              color: Colors.blueAccent),
           const SizedBox(width: 12),
           Expanded(
               flex: 2,

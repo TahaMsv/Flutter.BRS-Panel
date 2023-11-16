@@ -54,9 +54,7 @@ class FlightsPanel extends ConsumerWidget {
         children: [
           DotButton(
             size: 35,
-            onPressed: () {
-              myFlightsController.goAddFlight();
-            },
+            onPressed: () => myFlightsController.goAddFlight(),
             icon: Icons.add,
             color: Colors.blueAccent,
           ),

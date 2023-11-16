@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../../../core/classes/airport_section_class.dart';
 import '../../../core/classes/login_user_class.dart';
 import '../../../core/constants/ui.dart';
@@ -35,11 +34,30 @@ class _AddUpdateAirportCartDialogState extends State<AddSectionDialog> {
     super.initState();
   }
 
+  double getOffsetDouble(int offset, isFromTop) {
+    switch (offset) {
+      case 1:
+        return isFromTop ? 0 : 0;
+      case 2:
+        return isFromTop ? 0 : 40;
+      case 3:
+        return isFromTop ? 0 : 80;
+      case 4:
+        return isFromTop ? 40 : 0;
+      case 5:
+        return isFromTop ? 40 : 40;
+      case 6:
+        return isFromTop ? 40 : 80;
+      default:
+        return isFromTop ? 0 : 0;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final NavigationService ns = getIt<NavigationService>();
     ThemeData theme = Theme.of(context);
-    double width = Get.width;
+    double width = MediaQuery.of(context).size.width;
     List<Position> positionList = BasicClass.systemSetting.positions;
     List<int> offsetList = [1, 2, 3, 4, 5, 6];
     return Dialog(
@@ -134,6 +152,36 @@ class _AddUpdateAirportCartDialogState extends State<AddSectionDialog> {
                       itemToString: (i) => i.toString(),
                       onSelect: (i) => setState(() => selectedOffset = i),
                       value: selectedOffset)),
+              const SizedBox(width: 30),
+              const Text("Preview", style: TextStyle(color: MyColors.brownGrey)),
+              const SizedBox(width: 20),
+              if (selectedPosition != null)
+                Stack(
+                  children: [
+                    Container(
+                      height: 40,
+                      width: 80,
+                      alignment: Alignment.center,
+                      margin: const EdgeInsets.all(9),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: selectedPosition!.getColor)),
+                      child: Text(selectedPosition!.title, style: TextStyle(color: selectedPosition!.getColor)),
+                    ),
+                    if (selectedOffset != null)
+                      Positioned(
+                          top: getOffsetDouble(selectedOffset!, true),
+                          left: getOffsetDouble(selectedOffset!, false),
+                          child: Container(
+                            height: 18,
+                            width: 18,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                                color: selectedPosition!.getColor, borderRadius: BorderRadius.circular(4)),
+                            child: Text(selectedOffset.toString(), style: const TextStyle(color: MyColors.white3)),
+                          )),
+                  ],
+                ),
             ],
           ),
           const Divider(height: 1, color: MyColors.lineColor2),

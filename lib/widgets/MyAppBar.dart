@@ -158,8 +158,8 @@ class UserIndicatorWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     LoginUser? u = ref.watch(userProvider);
     ThemeData theme = Theme.of(context);
-    // double width = Get.width;
-    // double height = Get.height;
+    // double width = MediaQuery.of(context).sizewidth;
+    // double height = MediaQuery.of(context).sizeheight;
     double avatarRadius = 18;
     if (u == null) return const SizedBox();
     return Container(

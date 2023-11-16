@@ -50,8 +50,8 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
 
-    double width = Get.width;
-    double height = Get.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     List<int> blockedPositions = tag.actionsHistory.isEmpty ? [] : tag.actionsHistory.first.blockedPosition;
 
     TagStatus status = tag.status;
@@ -68,7 +68,7 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                 : MyColors.black1);
     FlightInfo? fInfo = widget.moreDetails.flightInfo;
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: width*0.1,vertical: height*0.05),
+      margin: EdgeInsets.symmetric(horizontal: width * 0.1, vertical: height * 0.05),
       child: Material(
         child: Container(
           constraints: BoxConstraints(
@@ -76,20 +76,25 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
             // minHeight: height * 0.9,
             maxHeight: height * 0.7,
           ),
-          decoration:  BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8)
-            // borderRadius: BorderRadius.only(
-            //   topLeft: Radius.circular(25),
-            //   topRight: Radius.circular(25),
-            // ),
-          ),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)
+              // borderRadius: BorderRadius.only(
+              //   topLeft: Radius.circular(25),
+              //   topRight: Radius.circular(25),
+              // ),
+              ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(height: 8),
-              TagWidget(tag: tag, index: 1, total: 1, hasBinLine: false, fd: null,inDetails: true,),
+              TagWidget(
+                tag: tag,
+                index: 1,
+                total: 1,
+                hasBinLine: false,
+                fd: null,
+                inDetails: true,
+              ),
               const Divider(thickness: 1, height: 1),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -131,9 +136,14 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                                   // Expanded(flex: 2, child: CardField(title: "Route", value: fInfo.route, scale: 0.7)),
                                   Expanded(
                                     flex: 3,
-                                    child: CardField(title: "Date Time", value: "${fInfo.flightDate.format_ddMMM} ${fInfo.std}", scale: 0.7),
+                                    child: CardField(
+                                        title: "Date Time",
+                                        value: "${fInfo.flightDate.format_ddMMM} ${fInfo.std}",
+                                        scale: 0.7),
                                   ),
-                                  Expanded(flex: 2, child: CardField(title: "Registration", value: fInfo.register ?? "", scale: 0.7)),
+                                  Expanded(
+                                      flex: 2,
+                                      child: CardField(title: "Registration", value: fInfo.register ?? "", scale: 0.7)),
                                 ],
                               ),
                             ],
@@ -161,13 +171,13 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                       child: Wrap(runAlignment: WrapAlignment.start, alignment: WrapAlignment.start, children: [
                         ...photosBytes.map((photo) {
                           int index = photosBytes.indexOf(photo);
-                          Position? p = index >= widget.moreDetails.tagPhotos.length ? BasicClass.getPositionById(tag.currentPosition) : BasicClass.getPositionById(widget.moreDetails.tagPhotos[index].positionID);
+                          Position? p = index >= widget.moreDetails.tagPhotos.length
+                              ? BasicClass.getPositionById(tag.currentPosition)
+                              : BasicClass.getPositionById(widget.moreDetails.tagPhotos[index].positionID);
                           return Padding(
                             padding: const EdgeInsets.only(right: 8, top: 8, bottom: 8),
                             child: GestureDetector(
-                              onTap: () {
-                                // Get.dialog(PhotoPreviewDialog(imageFileBytes: photo, pos: p));
-                              },
+                              onTap: () {},
                               child: Column(
                                 children: [
                                   ClipRRect(
@@ -245,8 +255,8 @@ class TagSSRListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = Get.width;
-    double height = Get.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     if (ssrs.isEmpty) return const SizedBox();
     return MyExpansionTile2(
       initiallyExpanded: true,
@@ -269,7 +279,8 @@ class TagSSRListWidget extends StatelessWidget {
                 .map((e) => Container(
                       margin: const EdgeInsets.only(right: 4),
                       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                      decoration: BoxDecoration(color: MyColors.myGreen.withOpacity(0.4), borderRadius: BorderRadius.circular(8)),
+                      decoration: BoxDecoration(
+                          color: MyColors.myGreen.withOpacity(0.4), borderRadius: BorderRadius.circular(8)),
                       child: Text(
                         e.name,
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
@@ -291,8 +302,8 @@ class TagInboundListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = Get.width;
-    double height = Get.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     if (inLeg == null) return const SizedBox();
     return MyExpansionTile2(
       title: const Row(
@@ -330,8 +341,8 @@ class TagOutboundsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = Get.width;
-    double height = Get.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     if (outLegs.isEmpty) return const SizedBox();
     return MyExpansionTile2(
       title: const Row(
@@ -378,8 +389,8 @@ class TagPositionHistoryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = Get.width;
-    double height = Get.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     if (positions.isEmpty) return const SizedBox();
     return MyExpansionTile2(
       title: const Text("Positions Log", style: TextStyle(fontWeight: FontWeight.bold)),
@@ -401,17 +412,24 @@ class TagPositionHistoryWidget extends StatelessWidget {
           // DateTime? scanTime = scanTimeUtc?.toLocal();
           DateTime? scanTime = BasicClass.getTimeFromUTC(scanTimeUtc);
           Position tagPos = BasicClass.getPositionById(tp.positionId)!;
-          AirportPositionSection? sec = BasicClass.getAllAirportSections().firstWhereOrNull((element) => element.id == tp.sectionID);
+          AirportPositionSection? sec =
+              BasicClass.getAllAirportSections().firstWhereOrNull((element) => element.id == tp.sectionID);
           if (sec == null) return Container();
           return Container(
             color: index % 2 == 0 ? MyColors.paleGrey : Colors.white,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(flex: 4, child: Text("${scanTime.format_HHmmss}", style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: "Signika"))),
+                Expanded(
+                    flex: 4,
+                    child: Text("${scanTime.format_HHmmss}",
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: "Signika"))),
                 Expanded(flex: 5, child: Text("${tp.username}", overflow: TextOverflow.ellipsis)),
                 // Expanded(flex: 3, child: Text("${tp.indexInPosition}")),
-                Expanded(flex: 9, child: Text("${sec.label} / ${tp.indexInPosition}", style: const TextStyle(fontWeight: FontWeight.bold))),
+                Expanded(
+                    flex: 9,
+                    child: Text("${sec.label} / ${tp.indexInPosition}",
+                        style: const TextStyle(fontWeight: FontWeight.bold))),
                 // Expanded(flex: 4, child: Text("${tp.positionId}")),
                 Expanded(flex: 4, child: Text("${tp.containerCode}")),
               ],
@@ -431,8 +449,8 @@ class TagActionHistoryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = Get.width;
-    double height = Get.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     if (actions.isEmpty) return const SizedBox();
     return MyExpansionTile2(
       title: const Text("Status Log", style: TextStyle(fontWeight: FontWeight.bold)),
@@ -443,13 +461,17 @@ class TagActionHistoryWidget extends StatelessWidget {
           DateTime? scanTimeUtc = ah.actionTime.tryDateTimeUTC;
           DateTime? scanTime = scanTimeUtc?.toLocal();
           // TagAction tagAction = model.loginUser!.systemSettings.statusActionList.firstWhere((element) => element.id == ah.actionId);
-          TagAction? tagAction = BasicClass.systemSetting.actions.firstWhereOrNull((element) => element.id == ah.actionId);
+          TagAction? tagAction =
+              BasicClass.systemSetting.actions.firstWhereOrNull((element) => element.id == ah.actionId);
           return Container(
             color: index % 2 == 0 ? MyColors.paleGrey : Colors.white,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(flex: 5, child: Text("${scanTime.format_HHmmss}", style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: "Signika"))),
+                Expanded(
+                    flex: 5,
+                    child: Text("${scanTime.format_HHmmss}",
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontFamily: "Signika"))),
                 Expanded(
                     flex: 4,
                     child: Text(
@@ -457,7 +479,10 @@ class TagActionHistoryWidget extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     )),
                 Expanded(flex: 3, child: Text("${ah.id}")),
-                Expanded(flex: 8, child: Text("${tagAction?.actionTitle??''}", style: const TextStyle(fontWeight: FontWeight.bold))),
+                Expanded(
+                    flex: 8,
+                    child:
+                        Text("${tagAction?.actionTitle ?? ''}", style: const TextStyle(fontWeight: FontWeight.bold))),
               ],
             ),
           );
@@ -475,8 +500,8 @@ class DcsInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = Get.width;
-    double height = Get.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     if (info == null)
       return const Row(children: [
         Expanded(flex: 4, child: CardField(title: "Pax", value: "-")),
@@ -491,12 +516,11 @@ class DcsInfoWidget extends StatelessWidget {
             title: "Pax",
             widgetPadding: EdgeInsets.zero,
             valueWidget: GestureDetector(
-              onTap: () {
-                // Get.dialog(PaxInfoDialog(info: info!));
-              },
+              onTap: () {},
               child: Text(
                 "${info!.paxName}",
-                style: const TextStyle(color: Colors.blueAccent, decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                    color: Colors.blueAccent, decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
               ),
             ),
           )),
@@ -515,8 +539,8 @@ class TagLogsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = Get.width;
-    double height = Get.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     if (logs.every((element) => element.title.trim().isEmpty)) return const SizedBox();
     return MyExpansionTile2(
       title: const Text("Logs", style: TextStyle(fontWeight: FontWeight.bold)),
@@ -552,8 +576,8 @@ class TagBsmsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = Get.width;
-    double height = Get.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     if (bsmList.isEmpty) return const SizedBox();
     return MyExpansionTile2(
       title: const Text("BSM ", style: TextStyle(fontWeight: FontWeight.bold)),

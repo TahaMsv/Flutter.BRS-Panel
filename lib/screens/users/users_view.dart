@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../core/constants/ui.dart';
 import '../../initialize.dart';
+import '../../widgets/DotButton.dart';
 import '../../widgets/LoadingListView.dart';
 import '../../widgets/MyAppBar.dart';
 import '../../widgets/MyTextField.dart';
@@ -57,15 +58,11 @@ class UsersPanel extends ConsumerWidget {
             child: Row(
               children: [
                 const Spacer(),
-                IconButton(
-                  style: IconButton.styleFrom(
-                      fixedSize: const Size(20, 20),
-                      visualDensity: const VisualDensity(horizontal: -2, vertical: -2),
-                      backgroundColor: MyColors.mainColor,
-                      foregroundColor: MyColors.white3),
-                  onPressed: ()=>controller.addUpdateUser(null),
-                  icon: const Icon(Icons.add, size: 16),
-                ),
+                DotButton(
+                    size: 35,
+                    onPressed: () => controller.addUpdateUser(null),
+                    icon: Icons.add,
+                    color: Colors.blueAccent),
               ],
             ),
           ),
