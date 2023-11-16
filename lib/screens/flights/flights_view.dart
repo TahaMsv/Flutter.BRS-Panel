@@ -1,13 +1,11 @@
 import 'package:artemis_ui_kit/artemis_ui_kit.dart';
-import 'package:brs_panel/core/abstracts/device_info_service_abs.dart';
-import 'package:brs_panel/core/classes/user_class.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
-import 'package:brs_panel/widgets/MyDropDown.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import '../../core/classes/login_user_class.dart';
 import '../../core/constants/ui.dart';
 import '../../core/enums/flight_type_filter_enum.dart';
 import '../../core/util/basic_class.dart';
@@ -20,12 +18,6 @@ import '../../widgets/MyTextField.dart';
 import 'data_tables/flight_data_table.dart';
 import 'flights_controller.dart';
 import 'flights_state.dart';
-// import "package:webview_universal/webview_universal.dart";
-import 'package:desktop_webview_window/desktop_webview_window.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
-
 
 class FlightsView extends StatelessWidget {
   static FlightsController myFlightsController = getIt<FlightsController>();
@@ -144,7 +136,7 @@ class FlightsPanel extends ConsumerWidget {
                             return SizedBox(
                               height: 35,
                               child: MyFieldPicker<String>(
-                                itemToString: (a) => "$a",
+                                itemToString: (a) => a,
                                 label: 'Airline',
                                 items: BasicClass.airlineList,
                                 onChange: (v) {

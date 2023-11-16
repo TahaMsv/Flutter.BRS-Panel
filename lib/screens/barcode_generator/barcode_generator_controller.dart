@@ -13,7 +13,7 @@ class BarcodeGeneratorController extends MainController {
   late BarcodeGeneratorState bgmState = ref.read(bgProvider);
 
   void generateBarcodes() {
-    print(bgmState.barcodes);
+    // print(bgmState.barcodes);
     bgmState.barcodes = [];
     int start = int.parse(bgmState.startController.text);
     int end = int.parse(bgmState.endController.text);
@@ -32,7 +32,7 @@ class BarcodeGeneratorController extends MainController {
         ),
       );
     }
-    print(bgmState.barcodes);
+    // print(bgmState.barcodes);
     bgmState.setState();
   }
 }

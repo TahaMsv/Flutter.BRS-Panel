@@ -14,6 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/abstracts/device_info_service_abs.dart';
 import '../../core/classes/flight_class.dart';
+import '../../core/classes/login_user_class.dart';
 import '../../core/classes/tag_container_class.dart';
 import '../../core/platform/device_info.dart';
 import '../../core/util/basic_class.dart';
