@@ -6,4 +6,8 @@ final bgProvider = ChangeNotifierProvider<BarcodeGeneratorState>((_) => BarcodeG
 
 class BarcodeGeneratorState extends ChangeNotifier {
   void setState() => notifyListeners();
-  }
+
+  final TextEditingController startController = TextEditingController();
+  final TextEditingController endController = TextEditingController();
+  List<Widget> barcodes = [];
+}
