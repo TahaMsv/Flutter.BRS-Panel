@@ -81,15 +81,6 @@ class RouterNotifier extends AutoDisposeAsyncNotifier<void> implements Listenabl
           },
         ),
         MyRoute(
-          // controller: RouteNames.login.controller,
-          name: RouteNames.webView.name,
-          path: RouteNames.webView.path,
-          pageBuilder: (context, state) {
-            // LoginController loginController = getIt<LoginController>();
-            return NoTransitionPage<void>(key: state.pageKey, child: const MyWebView());
-          },
-        ),
-        MyRoute(
           // controller: RouteNames.home.controller,
           name: RouteNames.home.name,
           path: RouteNames.home.path,

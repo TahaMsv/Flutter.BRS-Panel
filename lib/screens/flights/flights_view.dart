@@ -20,7 +20,12 @@ import '../../widgets/MyTextField.dart';
 import 'data_tables/flight_data_table.dart';
 import 'flights_controller.dart';
 import 'flights_state.dart';
-import "package:webview_universal/webview_universal.dart";
+// import "package:webview_universal/webview_universal.dart";
+import 'package:desktop_webview_window/desktop_webview_window.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+
 
 class FlightsView extends StatelessWidget {
   static FlightsController myFlightsController = getIt<FlightsController>();
@@ -218,46 +223,6 @@ class FlightListWidget extends ConsumerWidget {
                   ),
                 )
                 .toList()),
-      ),
-    );
-  }
-}
-
-class MyWebView extends StatefulWidget {
-  const MyWebView({Key? key}) : super(key: key);
-
-  @override
-  State<MyWebView> createState() => _MyWebViewState();
-}
-
-class _MyWebViewState extends State<MyWebView> {
-
-  WebViewController webViewController = WebViewController();
-
-  @override
-  void initState() {
-    super.initState();
-    webViewController.init(
-      context: context,
-      setState: setState,
-      uri: Uri.parse("https://www.ldoceonline.com/"),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: FloatingActionButton(
-          onPressed: () {
-            webViewController.goBackSync();
-            Navigator.pop(context);
-          },
-          child: Icon(Icons.arrow_back_rounded),
-        ),
-      ),
-      body: WebView(
-        controller: webViewController,
       ),
     );
   }

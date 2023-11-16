@@ -4,10 +4,10 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   connectivity_plus
+  desktop_webview_window
   objectbox_flutter_libs
   screen_retriever
   url_launcher_windows
-  webview_universal
   window_manager
 )
 

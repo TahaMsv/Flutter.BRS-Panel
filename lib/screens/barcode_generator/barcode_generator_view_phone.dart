@@ -47,7 +47,6 @@ class BarcodeGeneratorViewPhone extends ConsumerWidget {
                   height: 50,
                   width: 250,
                   label: "End: ",
-
                   controller: state.endController,
                   // showClearButton: true,
                 ),

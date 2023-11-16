@@ -3,10 +3,10 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  desktop_webview_window
   objectbox_flutter_libs
   screen_retriever
   url_launcher_linux
-  webview_universal
   window_manager
 )
 

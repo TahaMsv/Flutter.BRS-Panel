@@ -52,8 +52,9 @@ dependencies:
   barcode_widget: ^2.0.4
 #  webview_all: ^0.3.7
 #  webview_windows: ^0.3.0
-  webview_universal: ^0.0.5
+#  webview_universal: ^0.0.5
   url_launcher: ^6.2.1
+  desktop_webview_window: ^0.2.3
 
 
 dev_dependencies:
