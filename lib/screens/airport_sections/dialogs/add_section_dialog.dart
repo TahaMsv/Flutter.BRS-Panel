@@ -161,10 +161,10 @@ class _AddUpdateAirportCartDialogState extends State<AddSectionDialog> {
                 const SizedBox(width: 12),
                 MyButton(
                   onPressed: () {
-                    //todo validate!
                     ns.pop(Section(
                       id: null,
                       label: nameC.text,
+                      code: codeC.text,
                       position: selectedPosition!.id,
                       offset: selectedOffset!,
                       isMainSection: isMain,

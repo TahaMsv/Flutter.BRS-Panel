@@ -1,3 +1,4 @@
+import 'package:brs_panel/widgets/MyButton.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/utils.dart';
@@ -9,21 +10,28 @@ import '../../widgets/MyAppBar.dart';
 import 'airport_sections_controller.dart';
 import 'airport_sections_state.dart';
 
-class AirportSectionsView extends StatelessWidget {
+class AirportSectionsView extends ConsumerWidget {
   const AirportSectionsView({super.key});
 
   static AirportSectionsController controller = getIt<AirportSectionsController>();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(airportSectionsProvider);
     return Scaffold(
       appBar: const MyAppBar(),
       body: const AirportSectionBody(),
-      floatingActionButton: ElevatedButton(
-        style: ElevatedButton.styleFrom(foregroundColor: MyColors.white3, backgroundColor: MyColors.mainColor),
-        onPressed: controller.updateSectionsRequest,
-        child: const Text("Save Changes"),
-      ),
+      floatingActionButton: state.areSectionsUpdated
+          ? Container()
+          : SizedBox(
+              height: 30,
+              width: 120,
+              child: MyButton(
+                style: ElevatedButton.styleFrom(foregroundColor: MyColors.white3, backgroundColor: MyColors.mainColor),
+                onPressed: () async => await controller.updateSectionsRequest(),
+                label: "Save Changes",
+              ),
+            ),
     );
   }
 }
@@ -70,7 +78,7 @@ class SectionsWidget extends ConsumerWidget {
                 label: sections[i].label,
                 isSelected: selectedCategories.contains(sections[i]),
                 onTap: () => controller.onTapSection(sections[i]),
-          onDelete: () => controller.onDeleteSection(sections[i]),
+                onDelete: () => controller.onDeleteSection(sections[i]),
               ),
       ),
     );

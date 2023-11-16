@@ -15,10 +15,14 @@ import '../../core/classes/login_user_class.dart';
 import '../../core/util/basic_class.dart';
 import '../../widgets/DotButton.dart';
 import '../../widgets/MyExpansionTile.dart';
+import '../../widgets/MyExpansionTile2.dart';
 import '../../widgets/MySegment.dart';
 import '../../widgets/MyTextField.dart';
 import 'flight_details_controller.dart';
 import 'flight_details_state.dart';
+import 'widgets/expandable_list_sections/airport_section.dart';
+import 'widgets/expandable_list_sections/bin_section.dart';
+import 'widgets/expandable_list_sections/container_section.dart';
 
 class FlightDetailsView extends StatefulWidget {
   final int flightID;
@@ -189,14 +193,15 @@ class DetailsWidget extends ConsumerStatefulWidget {
 }
 
 class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTickerProviderStateMixin {
-  late TabController controller;
+  static FlightDetailsController controller = getIt<FlightDetailsController>();
+  late TabController tabController;
   late List<Position> posList;
 
   @override
   void initState() {
     // posList = BasicClass.systemSetting.positions.where((pos) => widget.details.tagList.any((element) => element.currentPosition == pos.id)).toList();
     posList = widget.posList;
-    controller = TabController(
+    tabController = TabController(
       length: posList.length,
       vsync: this,
     );
@@ -208,27 +213,29 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
     Position selectedPos = ref.watch(selectedPosInDetails)!;
     String searched = ref.watch(tagSearchProvider);
     List<FlightTag> filteredTag = widget.details.tagList.where((e) => e.validateSearch(searched, selectedPos)).toList();
-    List<ContainerSection> cons = widget.details.containerList
-        .where((element) => element.positionID == selectedPos.id)
-        .map((e) => ContainerSection(con: e, allTags: filteredTag, ref: ref))
+    List<TagContainer> cons = widget.details.containerList
+        .where((e) => e.positionID == selectedPos.id && filteredTag.any((f) => f.containerID == e.id))
         .toList();
-    List<ContainerSection> bulks = widget.posList
-        .map((e) => ContainerSection(con: TagContainer.bulk(e.id), allTags: filteredTag, ref: ref))
+    List<TagContainer> bulks = widget.posList
+        .map((e) => TagContainer.bulk(e.id))
+        .where((e) => filteredTag.any((f) => f.containerID == e.id))
         .toList();
-    cons = cons +
-        bulks.where((element) => (element.con.positionID == selectedPos.id) && element.items.isNotEmpty).toList();
-    List<TagContainer> filteredCons = widget.details.containerList
-        .where((element) => filteredTag.any((tag) => tag.getContainerID == element.id))
-        .toList();
-    List<BinSection> bins = widget.details.binList
-        .map((b) => BinSection(bin: b, allCons: filteredCons, ref: ref, fd: widget.details))
-        .toList();
+    cons = cons + bulks.where((b) => (b.positionID == selectedPos.id) /* && element.items.isNotEmpty */).toList();
+    List<Bin> bins = widget.details.binList.where((e) => filteredTag.any((c) => c.binID == e.id)).toList();
     //assigning sections
     final List<AirportPositionSection> positionSections = BasicClass.getAllAirportSections();
-    List<AirportPositionSection> filteredSections =
-        positionSections.where((s) => filteredCons.any((con) => con.sectionID == s.id)).toList();
-    final List<AirportSectionSection> sectionSections = filteredSections
-        .map((e) => AirportSectionSection(airportPositionSection: e, cons: filteredCons, ref: ref))
+    List<AirportPositionSection> filteredSections = positionSections
+        .where((s) => selectedPos.binRequired
+            ? bins.any((bin) => bin.sectionID == s.id)
+            : cons.any((con) => con.sectionID == s.id))
+        .toList();
+    final List<AirportSectionContainerSection> sectionSectionsCon = filteredSections
+        .map((e) => AirportSectionContainerSection(airportPositionSection: e, cons: cons, ref: ref))
+        .where((e) => e.cons.isNotEmpty)
+        .toList();
+    final List<AirportSectionBinSection> sectionSectionsBin = filteredSections
+        .map((e) => AirportSectionBinSection(airportPositionSection: e, bins: bins, ref: ref))
+        .where((e) => e.bins.isNotEmpty)
         .toList();
     return Column(
       children: [
@@ -238,210 +245,175 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
           child: Row(
             children: [
               Expanded(
-                  flex: dataTableFlexes[0],
-                  child: DataCellWidget(
-                      child: Row(
-                    children: [
-                      const SizedBox(width: 12),
-                      Container(
-                          width: 40,
-                          alignment: Alignment.center,
-                          child: Text(
-                            '#',
-                            style: TextStyle(color: MyColors.indexColor.withOpacity(0.3), fontWeight: FontWeight.bold),
-                          )),
-                      const SizedBox(width: 48),
-                      const Spacer(),
-                      const Padding(
+                flex: dataTableFlexes[0],
+                child: DataCellWidget(
+                  child: Row(children: [
+                    const SizedBox(width: 12),
+                    Container(
+                      width: 40,
+                      alignment: Alignment.center,
+                      child: Text('#',
+                          style: TextStyle(color: MyColors.indexColor.withOpacity(0.3), fontWeight: FontWeight.bold)),
+                    ),
+                    const SizedBox(width: 48),
+                    const Spacer(),
+                    const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        child: Text(
-                          'Tag Number',
-                          style: TextStyles.tagListHeader,
-                        ),
-                      ),
-                    ],
-                  ))),
+                        child: Text('Tag Number', style: TextStyles.tagListHeader)),
+                  ]),
+                ),
+              ),
               Expanded(
-                  flex: dataTableFlexes[1],
-                  child: const DataCellWidget(
-                      child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: Text('Sec.', style: TextStyles.tagListHeader),
-                  ))),
+                flex: dataTableFlexes[1],
+                child: const DataCellWidget(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        child: Text('Sec.', style: TextStyles.tagListHeader))),
+              ),
               Expanded(
-                  flex: dataTableFlexes[2],
-                  child: const DataCellWidget(
-                      child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: Text('Pax Name', style: TextStyles.tagListHeader),
-                  ))),
+                flex: dataTableFlexes[2],
+                child: const DataCellWidget(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        child: Text('Pax Name', style: TextStyles.tagListHeader))),
+              ),
               Expanded(
-                  flex: dataTableFlexes[3],
-                  child: const DataCellWidget(
-                      child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: Text('Time', style: TextStyles.tagListHeader),
-                  ))),
+                flex: dataTableFlexes[3],
+                child: const DataCellWidget(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        child: Text('Time', style: TextStyles.tagListHeader))),
+              ),
               Expanded(
-                  flex: dataTableFlexes[4],
-                  child: const DataCellWidget(
-                      child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    child: Text('Agent', style: TextStyles.tagListHeader),
-                  ))),
+                flex: dataTableFlexes[4],
+                child: const DataCellWidget(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        child: Text('Agent', style: TextStyles.tagListHeader))),
+              ),
               Expanded(
-                  flex: dataTableFlexes[5],
-                  child: const DataCellWidget(
-                      child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 2, vertical: 8),
-                    child: Text('Weight', style: TextStyles.tagListHeader),
-                  ))),
+                flex: dataTableFlexes[5],
+                child: const DataCellWidget(
+                    child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 2, vertical: 8),
+                        child: Text('Weight', style: TextStyles.tagListHeader))),
+              ),
             ],
           ),
         ),
         selectedPos.binRequired
             ? Flexible(
                 child: ExpandableListView(
-                  builder: SliverExpandableChildDelegate<TagContainer, BinSection>(
-                      sectionList: bins,
+                  builder: SliverExpandableChildDelegate<Bin, AirportSectionBinSection>(
+                      sectionList: sectionSectionsBin,
                       headerBuilder: (context, sectionIndex, index) {
-                        Bin bin = bins[sectionIndex].bin;
-                        // int count = List.generate(sectionIndex, (index) => cons[index].items.length).sum as int;
-                        // bool isFirstSec = index == (count-sectionIndex);
-                        List<FlightTag> tags = filteredTag
-                            .where((element) => element.tagPositions.first.binID == bins[sectionIndex].bin.id)
-                            .toList();
-                        return BinTileWidget(
-                          tagCount: tags.length,
-                          isFirstSec: false,
-                          bin: bin,
-                          sec: bins[sectionIndex],
-                        );
+                        final AirportSectionBinSection sec = sectionSectionsBin[sectionIndex];
+                        final AirportPositionSection airportPositionSection = sec.airportPositionSection;
+                        return SectionTileWidget(secCon: null, secBin: sectionSectionsBin[sectionIndex]);
                       },
                       itemBuilder: (context, sectionIndex, itemIndex, index) {
-                        TagContainer con = bins[sectionIndex].items[itemIndex];
-                        bool isLastCon = bins[sectionIndex].items.length == itemIndex + 1;
-                        List<FlightTag> thisConTags = filteredTag
-                            .where((element) =>
-                                (element.getContainerID == con.id || (element.getContainerID == null && con.isCart)) &&
-                                element.tagPositions.first.binID == bins[sectionIndex].bin.id)
-                            .toList();
-
-                        // if(thisConTags.isEmpty) return const SizedBox();
-                        return con.type != "ULD"
-                            ? Column(
-                                children: thisConTags
-                                    .map((e) => TagWidget(
-                                          tag: e,
-                                          fd: widget.details,
-                                          total: thisConTags.length,
-                                          index: thisConTags.indexOf(e),
-                                          hasBinLine: !isLastCon,
-                                          isLast: thisConTags.last == e,
-                                        ))
-                                    .toList())
-                            : MyExpansionTile(
-                                tilePadding: EdgeInsets.zero,
-                                headerTileColor: MyColors.containerGreen,
-                                iconColor: MyColors.brownGrey3,
-                                collapsedIconColor: MyColors.brownGrey3,
-                                title: ContainerTileWidget(
-                                  index: index,
-                                  isLast: isLastCon,
-                                  binLines: true,
-                                  con: con,
-                                  sec: ContainerSection(con: con, allTags: filteredTag, ref: ref),
-                                  isFirstSec: false,
-                                  tagCount: thisConTags.length,
-                                ),
-                                children: thisConTags
-                                    .map((e) => TagWidget(
-                                          tag: e,
-                                          fd: widget.details,
-                                          total: thisConTags.length,
-                                          index: thisConTags.indexOf(e),
-                                          hasBinLine: !isLastCon,
-                                          isLast: thisConTags.last == e,
-                                        ))
-                                    .toList(),
-                              );
+                        Bin bin = sectionSectionsBin[sectionIndex].items[itemIndex];
+                        List<TagContainer> thisBinCons = controller.getBinContainers(bin, cons, widget.details, false);
+                        List<FlightTag> tags = filteredTag.where((e) => e.tagPositions.first.binID == bin.id).toList();
+                        return MyExpansionTile2(
+                          title: BinTileWidget(tagCount: tags.length, isFirstSec: false, bin: bin, items: thisBinCons),
+                          showIcon: false,
+                          showLeadingIcon: true,
+                          iconColor: MyColors.white3,
+                          collapsedIconColor: MyColors.white3,
+                          childrenPadding: EdgeInsets.zero,
+                          backgroundColor: index.isEven ? MyColors.binGrey : MyColors.binGrey2,
+                          children: thisBinCons.map((e) {
+                            TagContainer con = e;
+                            bool isLastCon = (e == thisBinCons.last);
+                            List<FlightTag> thisConTags = controller.getContainerTags(con, tags);
+                            return con.type != "ULD"
+                                ? Column(
+                                    children: thisConTags
+                                        .map((e) => TagWidget(
+                                              tag: e,
+                                              fd: widget.details,
+                                              total: thisConTags.length,
+                                              index: thisConTags.indexOf(e),
+                                              hasBinLine: !isLastCon,
+                                              isLast: thisConTags.last == e,
+                                            ))
+                                        .toList())
+                                : MyExpansionTile2(
+                                    title: ContainerTileWidget(
+                                      isLast: isLastCon,
+                                      binLines: true,
+                                      con: con,
+                                      items: thisConTags,
+                                      isFirstSec: false,
+                                      tagCount: thisConTags.length,
+                                    ),
+                                    showIcon: false,
+                                    showLeadingIcon: true,
+                                    iconColor: MyColors.white3,
+                                    collapsedIconColor: MyColors.white3,
+                                    childrenPadding: EdgeInsets.zero,
+                                    backgroundColor: index.isEven ? MyColors.containerGreen : MyColors.containerGreen2,
+                                    children: thisConTags
+                                        .map((e) => TagWidget(
+                                              tag: e,
+                                              fd: widget.details,
+                                              total: thisConTags.length,
+                                              index: thisConTags.indexOf(e),
+                                              hasBinLine: !isLastCon,
+                                              isLast: thisConTags.last == e,
+                                            ))
+                                        .toList(),
+                                  );
+                          }).toList(),
+                        );
                       }),
                 ),
               )
             : selectedPos.containerRequired
                 ? Flexible(
                     child: ExpandableListView(
-                      //todo here!
-                      builder: SliverExpandableChildDelegate<FlightTag, ContainerSection>(
-                          sectionList: cons,
+                      builder: SliverExpandableChildDelegate<TagContainer, AirportSectionContainerSection>(
+                          sectionList: sectionSectionsCon,
                           headerBuilder: (context, sectionIndex, index) {
-                            TagContainer con = cons[sectionIndex].con;
-                            return ContainerTileWidget(
-                              index: index,
-                              isFirstSec: false,
-                              binLines: false,
-                              con: con,
-                              sec: cons[sectionIndex],
-                              isLast: false,
-                              tagCount: cons[sectionIndex].items.length,
-                            );
+                            return SectionTileWidget(secCon: sectionSectionsCon[sectionIndex], secBin: null);
                           },
                           itemBuilder: (context, sectionIndex, itemIndex, index) {
-                            FlightTag tag = cons[sectionIndex].items[itemIndex];
-                            bool isLastTag = cons[sectionIndex].items.length == itemIndex + 1;
-                            return TagWidget(
-                              tag: tag,
-                              fd: widget.details,
-                              total: cons[sectionIndex].items.length,
-                              index: itemIndex,
-                              hasBinLine: false,
-                              isLast: isLastTag,
+                            TagContainer con = sectionSectionsCon[sectionIndex].items[itemIndex];
+                            List<FlightTag> thisConTags = filteredTag
+                                .where((element) => (element.getContainerID == con.id ||
+                                    (element.getContainerID == null &&
+                                        con.isCart)) /*&& element.tagPositions.first.binID == bins[sectionIndex].bin.id*/)
+                                .toList();
+                            return MyExpansionTile2(
+                              title: ContainerTileWidget(
+                                isFirstSec: false,
+                                binLines: false,
+                                con: con,
+                                items: thisConTags,
+                                isLast: false,
+                                tagCount: thisConTags.length,
+                              ),
+                              showLeadingIcon: true,
+                              showIcon: false,
+                              childrenPadding: EdgeInsets.zero,
+                              iconColor: MyColors.brownGrey5,
+                              collapsedIconColor: MyColors.brownGrey5,
+                              backgroundColor: index.isEven ? MyColors.containerGreen : MyColors.containerGreen2,
+                              children: thisConTags
+                                  .map((e) => TagWidget(
+                                      tag: e,
+                                      fd: widget.details,
+                                      total: thisConTags.length,
+                                      index: thisConTags.indexOf(e),
+                                      hasBinLine: false,
+                                      isLast: thisConTags.last == e))
+                                  .toList(),
                             );
                           }),
                     ),
                   )
-                /*
-                ? ExpandableListView(
-                    shrinkWrap: true,
-                    builder: SliverExpandableChildDelegate<TagContainer, AirportSectionSection>(
-                        sectionList: sectionSections,
-                        headerBuilder: (context, sectionIndex, index) {
-                          return Container(color: Colors.red, height: 20);
-                        },
-                        itemBuilder: (context, sectionIndex, itemIndex, index) {
-                          return ExpandableListView(
-                            shrinkWrap: true,
-                            builder: SliverExpandableChildDelegate<FlightTag, ContainerSection>(
-                                sectionList: cons,
-                                headerBuilder: (context, sectionIndex, index) {
-                                  TagContainer con = cons[sectionIndex].con;
-                                  print(con.sectionID);
-                                  print("con.sectionID");
-                                  return ContainerTileWidget(
-                                    index: index,
-                                    isFirstSec: false,
-                                    binLines: false,
-                                    con: con,
-                                    sec: cons[sectionIndex],
-                                    isLast: false,
-                                    tagCount: cons[sectionIndex].items.length,
-                                  );
-                                },
-                                itemBuilder: (context, sectionIndex, itemIndex, index) {
-                                  FlightTag tag = cons[sectionIndex].items[itemIndex];
-                                  bool isLastTag = cons[sectionIndex].items.length == itemIndex + 1;
-                                  return TagWidget(
-                                    tag: tag,
-                                    fd: widget.details,
-                                    total: cons[sectionIndex].items.length,
-                                    index: itemIndex,
-                                    hasBinLine: false,
-                                    isLast: isLastTag,
-                                  );
-                                }),
-                          );
-                        }),
-                  )*/
+                // */
                 : Flexible(
                     child: ListView.builder(
                         itemCount: filteredTag.length,
@@ -459,167 +431,37 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
   }
 }
 
-class ContainerTileWidget extends StatelessWidget {
-  final FlightDetailsController controller = getIt<FlightDetailsController>();
-  final ContainerSection sec;
-  final TagContainer con;
-  final bool isFirstSec;
-  final bool isLast;
-  final bool binLines;
-  final int tagCount;
-  final int index;
+class SectionTileWidget extends StatelessWidget {
+  const SectionTileWidget({super.key, required this.secCon, required this.secBin});
 
-  ContainerTileWidget({
-    Key? key,
-    required this.con,
-    required this.sec,
-    required this.isFirstSec,
-    required this.isLast,
-    required this.binLines,
-    required this.tagCount,
-    required this.index,
-  }) : super(key: key);
+  final AirportSectionContainerSection? secCon;
+  final AirportSectionBinSection? secBin;
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    return AbsorbPointer(
-      absorbing: binLines,
-      child: GestureDetector(
-        onTap: () {
-          sec.setSectionExpanded(!sec.isSectionExpanded());
-        },
-        child: Container(
-          height: 50,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: index.isEven ? MyColors.containerGreen : MyColors.containerGreen2,
-          ),
-          padding: const EdgeInsets.only(right: 12),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              binLines ? Container(width: 1.5, height: isLast ? 20 : 40, color: MyColors.binGrey) : const SizedBox(),
-              Expanded(
-                child: SizedBox(
-                  height: 40,
-                  child: Row(
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Container(width: 45, height: 1, color: binLines ? MyColors.binGrey : Colors.transparent),
-                          con.getImg
-                        ],
-                      ),
-                      const Icon(Icons.circle, color: MyColors.binGrey, size: 8),
-                      const SizedBox(width: 8),
-                      Text("${con.title} ${con.code}"),
-                      const SizedBox(width: 8),
-                      con.allowedTagTypesWidgetMini,
-                      const Spacer(),
-                      MyButton(
-                        label: "PDF",
-                        height: 25,
-                        onPressed: () async => await controller.getContainerPDF(con),
-                        child: const Row(
-                          children: [
-                            SizedBox(width: 10),
-                            Icon(Icons.picture_as_pdf_outlined, size: 16),
-                            SizedBox(width: 5),
-                            Text("PDF", style: TextStyle(fontSize: 12)),
-                            SizedBox(width: 12),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Container(
-                        height: 25,
-                        width: 100,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(color: MyColors.black3.withOpacity(0.5))),
-                        child: Text(
-                          "Tags: $tagCount",
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class BinTileWidget extends StatelessWidget {
-  final BinSection sec;
-  final Bin bin;
-  final bool isFirstSec;
-  final int tagCount;
-
-  const BinTileWidget(
-      {Key? key, required this.bin, required this.sec, required this.isFirstSec, required this.tagCount})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
     return InkWell(
-      onTap: () {
-        sec.setSectionExpanded(!sec.isSectionExpanded());
-      },
+      onTap: () => secCon == null
+          ? secBin!.setSectionExpanded(!secBin!.isSectionExpanded())
+          : secCon!.setSectionExpanded(!secCon!.isSectionExpanded()),
       child: Container(
-        height: 50,
-        decoration: const BoxDecoration(color: MyColors.binGrey),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+        color: MyColors.sectionGrey,
+        height: 60,
+        width: double.infinity,
+        alignment: Alignment.centerLeft,
         child: Row(
           children: [
             IconButton(
-                onPressed: () {
-                  sec.setSectionExpanded(!sec.isSectionExpanded());
-                },
+                onPressed: () => secCon == null
+                    ? secBin!.setSectionExpanded(!secBin!.isSectionExpanded())
+                    : secCon!.setSectionExpanded(!secCon!.isSectionExpanded()),
                 icon: Icon(
-                  sec.isSectionExpanded() ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                  (secCon == null ? secBin!.isSectionExpanded() : secCon!.isSectionExpanded())
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down,
                   color: Colors.white,
                 )),
-            const SizedBox(width: 12),
-            const SizedBox(width: 8),
-            Text(
-              "Bin ${bin.bin} ${sec.items.length}",
-              style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const Spacer(),
-            if (!sec.items.any((e) => e.type == "ULD"))
-              Container(
-                height: 25,
-                width: 100,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(color: MyColors.white3.withOpacity(0.5))),
-                child: Text(
-                  "Tags: $tagCount",
-                  style: const TextStyle(fontSize: 12, color: MyColors.white3),
-                ),
-              ),
-            const SizedBox(width: 8),
-            Container(
-              height: 25,
-              width: 100,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15), border: Border.all(color: MyColors.white3.withOpacity(0.5))),
-              child: Text(
-                "Containers: ${sec.items.length}",
-                style: const TextStyle(fontSize: 12, color: MyColors.white3),
-              ),
-            )
+            Text(secCon == null ? secBin!.airportPositionSection.label : secCon!.airportPositionSection.label,
+                style: const TextStyle(color: MyColors.white3, fontSize: 16, fontWeight: FontWeight.bold)),
           ],
         ),
       ),
@@ -627,141 +469,151 @@ class BinTileWidget extends StatelessWidget {
   }
 }
 
-class AirportSectionSection extends ExpandableListSection<TagContainer> {
-  final WidgetRef ref;
-  final AirportPositionSection airportPositionSection;
-  final List<TagContainer> cons;
-
-  AirportSectionSection({required this.airportPositionSection, required this.cons, required this.ref});
-
-  @override
-  List<TagContainer>? getItems() {
-    List<TagContainer> items = cons.where((c) => c.sectionID == airportPositionSection.id).toList();
-    return items;
-  }
-
-  @override
-  bool isSectionExpanded() {
-    List<int> expandeds = ref.watch(expandedAirportSections);
-    return !expandeds.contains(airportPositionSection.id);
-  }
-
-  @override
-  void setSectionExpanded(bool expanded) {
-    final expandeds = ref.watch(expandedAirportSections.notifier);
-    if (!expanded) {
-      expandeds.state = expandeds.state + [airportPositionSection.id];
-    } else {
-      expandeds.state = expandeds.state.where((element) => element != airportPositionSection.id).toList();
-    }
-  }
-
-  List<TagContainer> get items {
-    return getItems() ?? [];
-  }
-}
-
-class ContainerSection extends ExpandableListSection<FlightTag> {
-  final WidgetRef ref;
+class ContainerTileWidget extends StatelessWidget {
+  final FlightDetailsController controller = getIt<FlightDetailsController>();
   final TagContainer con;
-  final List<FlightTag> allTags;
+  final List<FlightTag> items;
+  final bool isFirstSec;
+  final bool isLast;
+  final bool binLines;
+  final int tagCount;
 
-  ContainerSection({required this.con, required this.allTags, required this.ref});
-
-  @override
-  List<FlightTag>? getItems() {
-    Position? selectedPos = ref.watch(selectedPosInDetails);
-
-    List<FlightTag> itms =
-        allTags.where((element) => selectedPos == null || selectedPos.id == element.currentPosition).where((element) {
-      return ((selectedPos == null || element.currentPosition == selectedPos.id) &&
-              element.tagPositions.first.container?.id == con.id) ||
-          (element.tagPositions.first.container?.id == null && con.isCart);
-    }).toList();
-    return itms;
-  }
-
-  @override
-  bool isSectionExpanded() {
-    List<int> expandeds = ref.watch(expandedContainers);
-    return !expandeds.contains(con.id);
-  }
+  ContainerTileWidget({
+    Key? key,
+    required this.con,
+    required this.items,
+    required this.isFirstSec,
+    required this.isLast,
+    required this.binLines,
+    required this.tagCount,
+  }) : super(key: key);
 
   @override
-  void setSectionExpanded(bool expanded) {
-    final expandeds = ref.watch(expandedContainers.notifier);
-    if (!expanded) {
-      expandeds.state = expandeds.state + [con.id!];
-    } else {
-      expandeds.state = expandeds.state.where((element) => element != con.id).toList();
-    }
+  Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    return Container(
+      height: 50,
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(right: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(width: 10),
+          binLines ? Container(width: 1.5, height: isLast ? 20 : 40, color: MyColors.binGrey) : const SizedBox(),
+          Expanded(
+            child: SizedBox(
+              height: 40,
+              child: Row(
+                children: [
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(width: 45, height: 1, color: binLines ? MyColors.binGrey : Colors.transparent),
+                      con.getImg
+                    ],
+                  ),
+                  const Icon(Icons.circle, color: MyColors.binGrey, size: 8),
+                  const SizedBox(width: 8),
+                  Text("${con.title} ${con.code}"),
+                  const SizedBox(width: 8),
+                  con.allowedTagTypesWidgetMini,
+                  const Spacer(),
+                  MyButton(
+                    label: "PDF",
+                    height: 25,
+                    onPressed: () async => await controller.getContainerPDF(con),
+                    child: const Row(
+                      children: [
+                        SizedBox(width: 10),
+                        Icon(Icons.picture_as_pdf_outlined, size: 16),
+                        SizedBox(width: 5),
+                        Text("PDF", style: TextStyle(fontSize: 12)),
+                        SizedBox(width: 12),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Container(
+                    height: 25,
+                    width: 100,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: MyColors.black3.withOpacity(0.5))),
+                    child: Text(
+                      "Tags: $tagCount",
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
-
-  List<FlightTag> get items {
-    Position? selectedPos = ref.watch(selectedPosInDetails);
-    return allTags.where((element) {
-      // if(element.tagPositions.first.container?.id==null){
-      //   return con.isBulk;
-      // }else{
-      //   element.tagPositions.first.container!.id == con.id;
-      // }
-      return (selectedPos == null || selectedPos.id == element.currentPosition) &&
-              element.tagPositions.first.container?.id == con.id ||
-          (element.tagPositions.first.container?.id == null && con.isCart);
-    }).toList();
-  }
-
-  bool get isBulk => con.isCart;
 }
 
-class BinSection extends ExpandableListSection<TagContainer> {
-  final WidgetRef ref;
+class BinTileWidget extends StatelessWidget {
   final Bin bin;
-  final List<TagContainer> allCons;
-  final FlightDetails fd;
+  final List<TagContainer> items;
+  final bool isFirstSec;
+  final int tagCount;
 
-  BinSection({required this.bin, required this.allCons, required this.ref, required this.fd});
-
-  @override
-  List<TagContainer>? getItems() {
-    List<TagContainer> results = [];
-    if (fd.tagList.any((element) => element.getContainerID == null && element.tagPositions.first.binID == bin.id)) {
-      results = allCons
-              .where((element) => element.getTags(fd).where((t) => t.tagPositions.first.binID == bin.id).isNotEmpty)
-              .toList() +
-          [TagContainer.bulk(2)];
-    } else {
-      results = allCons
-          .where((element) => element.getTags(fd).where((t) => t.tagPositions.first.binID == bin.id).isNotEmpty)
-          .toList();
-    }
-
-    // results =  results.where((e) =>(e.isBulk || e.getTags(fd).isNotEmpty) && e.getTags(fd).any((element) {
-    //   // print(element.tagPositions.first.binID==bin.id);
-    //   return true;
-    //   return   element.tagPositions.first.binID==bin.id;
-    // })).toList();
-    return results;
-  }
+  const BinTileWidget(
+      {Key? key, required this.bin, required this.items, required this.isFirstSec, required this.tagCount})
+      : super(key: key);
 
   @override
-  bool isSectionExpanded() {
-    List<int> expandeds = ref.watch(expandedBins);
-    return !expandeds.contains(bin.id);
-  }
-
-  @override
-  void setSectionExpanded(bool expanded) {
-    final expandeds = ref.watch(expandedBins.notifier);
-    if (!expanded) {
-      expandeds.state = expandeds.state + [bin.id!];
-    } else {
-      expandeds.state = expandeds.state.where((element) => element != bin.id).toList();
-    }
-  }
-
-  List<TagContainer> get items {
-    return getItems()!;
+  Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    return Container(
+      height: 50,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+      child: Row(
+        children: [
+          // IconButton(
+          //     onPressed: () {
+          //       sec.setSectionExpanded(!sec.isSectionExpanded());
+          //     },
+          //     icon: Icon(
+          //       sec.isSectionExpanded() ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+          //       color: Colors.white,
+          //     )),
+          const SizedBox(width: 20),
+          Text(
+            "Bin ${bin.bin} ${items.length}",
+            style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          const Spacer(),
+          if (!items.any((e) => e.type == "ULD"))
+            Container(
+              height: 25,
+              width: 100,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15), border: Border.all(color: MyColors.white3.withOpacity(0.5))),
+              child: Text(
+                "Tags: $tagCount",
+                style: const TextStyle(fontSize: 12, color: MyColors.white3),
+              ),
+            ),
+          const SizedBox(width: 8),
+          Container(
+            height: 25,
+            width: 100,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15), border: Border.all(color: MyColors.white3.withOpacity(0.5))),
+            child: Text(
+              "Containers: ${items.length}",
+              style: const TextStyle(fontSize: 12, color: MyColors.white3),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
 

@@ -102,7 +102,7 @@ class LoginController extends MainController {
       // print("Found ${r.servers.length} Servers");
       nav.dialog(ServerSelectDialog(servers: servers, currentServer: servers.firstWhereOrNull((e)=>e.address==NetworkManager().currentBaseUrl),)).then((value){
         if(value is Server) {
-          // print("Selected Server is ${value.address}");
+          print("Selected Server is ${value.address}");
 
           // NetworkManager().currentBaseUrl;
           initNetworkManager(value.address);

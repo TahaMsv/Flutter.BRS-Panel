@@ -38,6 +38,7 @@ class AirportSections {
 class Section {
   final int? id;
   final String label;
+  final String code;
   final int position;
   final int offset;
   final bool isMainSection;
@@ -50,6 +51,7 @@ class Section {
   const Section({
     required this.id,
     required this.label,
+    required this.code,
     required this.position,
     required this.offset,
     required this.isMainSection,
@@ -63,6 +65,7 @@ class Section {
   Section copyWith({
     int? id,
     String? label,
+    String? code,
     int? position,
     int? offset,
     bool? isMainSection,
@@ -75,6 +78,7 @@ class Section {
       Section(
         id: id ?? this.id,
         label: label ?? this.label,
+        code: code ?? this.code,
         position: position ?? this.position,
         offset: offset ?? this.offset,
         isMainSection: isMainSection ?? this.isMainSection,
@@ -88,6 +92,7 @@ class Section {
   factory Section.fromJson(Map<String, dynamic> json) => Section(
         id: json["ID"],
         label: json["Label"],
+        code: json["Code"],
         position: json["Position"],
         offset: json["Offset"],
         isMainSection: json["IsMainSection"],
@@ -101,6 +106,7 @@ class Section {
   Map<String, dynamic> toJson() => {
         "ID": id,
         "Label": label,
+        "Code": code,
         "Position": position,
         "Offset": offset,
         "IsMainSection": isMainSection,

@@ -7,7 +7,7 @@ final airportSectionsProvider = ChangeNotifierProvider<AirportSectionsState>((_)
 class AirportSectionsState extends ChangeNotifier {
   void setState() => notifyListeners();
 
-  ///bool loading = false;
+  bool areSectionsUpdated = true;
 }
 
 // final selectedAirportProvider = StateProvider<Airport?>((ref) => null);

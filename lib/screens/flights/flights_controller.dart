@@ -59,7 +59,8 @@ class FlightsController extends MainController {
     final spP = ref.read(selectedPosInDetails.notifier);
     spP.state = BasicClass.getPositionByID(selectedPos?.id??f.positions.first.id)!;
     nav.pushNamed(RouteNames.flightDetails, pathParameters: {"flightID": f.id.toString()}).then((value) {
-      flightList(DateTime.now());
+      DateTime current = ref.read(flightDateProvider);
+      flightList(current);
     });
   }
 

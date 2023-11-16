@@ -1,13 +1,14 @@
-import 'package:brs_panel/initialize.dart';
-
 import '../../core/abstracts/controller_abs.dart';
+import '../../core/abstracts/success_abs.dart';
 import '../../core/classes/airport_section_class.dart';
 import '../../core/classes/login_user_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
+import '../../core/util/handlers/success_handler.dart';
 import '../airport_carts/airport_carts_state.dart';
 import 'airport_sections_state.dart';
 import 'dialogs/add_section_dialog.dart';
 import 'usecase/airport_get_sections_usecase.dart';
+import 'usecase/airport_update_sections_usecase.dart';
 
 class AirportSectionsController extends MainController {
   late AirportSectionsState airportSectionsState = ref.read(airportSectionsProvider);
@@ -39,7 +40,7 @@ class AirportSectionsController extends MainController {
     List<Section> sc0 = sectionsP.state?.sections ?? [];
     final selectedSectionsP = ref.read(selectedSectionsProvider.notifier);
     List<Section> ssc0 = selectedSectionsP.state;
-    if (sc0.any((e) => e == section)) {
+    if (sc0.contains(section)) {
       sc0.remove(section);
       if (ssc0.contains(section)) initSelection();
     } else {
@@ -48,11 +49,13 @@ class AirportSectionsController extends MainController {
           ssc0[i].sections.remove(section);
           if (ssc0.contains(section)) {
             ssc0 = ssc0.sublist(0, ssc0.indexOf(section));
+            selectedSectionsP.state = ssc0;
             if (ssc0.isNotEmpty) setFirstSections(ssc0.last.sections);
           }
         }
       }
     }
+    setIsSectionUpdated(false);
     airportSectionsState.setState();
   }
 
@@ -88,6 +91,7 @@ class AirportSectionsController extends MainController {
         }
       }
     }
+    setIsSectionUpdated(false);
     airportSectionsState.setState();
   }
 
@@ -102,15 +106,32 @@ class AirportSectionsController extends MainController {
     final fOrR = await airportGetSectionsUseCase(request: airportGetSectionsRequest);
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => airportGetSections()), (r) {
       sections = r.airportSections;
+      setIsSectionUpdated(true);
     });
     return sections;
   }
 
   updateSectionsRequest() async {
-    // initSelection();
+    final sectionsP = ref.read(sectionsProvider.notifier);
+    AirportSections? sections = sectionsP.state;
+    if (sectionsP.state == null) return null;
+    AirportUpdateSectionsUseCase airportUpdateSectionsUseCase = AirportUpdateSectionsUseCase();
+    AirportUpdateSectionsRequest airportUpdateSectionsRequest = AirportUpdateSectionsRequest(sections: sections!);
+    final fOrR = await airportUpdateSectionsUseCase(request: airportUpdateSectionsRequest);
+    fOrR.fold((f) => FailureHandler.handle(f, retry: () => airportGetSections()), (r) {
+      sectionsP.state = r.airportSections;
+      SuccessHandler.handle(ServerSuccess(code: 1, msg: "Changes Saved Successfully!"));
+      setIsSectionUpdated(true);
+    });
+    return;
   }
 
   /// Core -------------------------------------------------------------------------------------------------------------
+
+  setIsSectionUpdated(bool b) {
+    airportSectionsState.areSectionsUpdated = b;
+    airportSectionsState.setState();
+  }
 
   initSelection() {
     final selectedSectionsP = ref.read(selectedSectionsProvider.notifier);

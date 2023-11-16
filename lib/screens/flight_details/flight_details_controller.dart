@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import '../../core/classes/login_user_class.dart';
 import 'example/dummy_class.dart' if (dart.library.js) 'dart:html' as html;
 import 'package:flutter/foundation.dart';
 import 'package:open_file_plus/open_file_plus.dart';
@@ -20,6 +21,31 @@ import 'usecases/get_container_pdf_usecase.dart';
 class FlightDetailsController extends MainController {
   late FlightDetailsState flightDetailsState = ref.read(flightDetailsProvider);
 
+  /// View Helper ------------------------------------------------------------------------------------------------------
+
+  List<TagContainer> getBinContainers(Bin bin, List<TagContainer> allCons, FlightDetails fd, bool countEmpty) {
+    List<TagContainer> results = [];
+    if (fd.tagList.any((e) => e.getContainerID == null && e.tagPositions.first.binID == bin.id)) {
+      results =
+          allCons.where((e) => e.getTags(fd).where((t) => t.tagPositions.first.binID == bin.id).isNotEmpty).toList() +
+              [TagContainer.bulk(2)];
+    } else {
+      results =
+          allCons.where((e) => e.getTags(fd).where((t) => t.tagPositions.first.binID == bin.id).isNotEmpty).toList();
+    }
+    return results;
+  }
+
+  List<FlightTag> getContainerTags(TagContainer con, List<FlightTag> allTags) {
+    Position? selectedPos = ref.watch(selectedPosInDetails);
+    return allTags.where((e) {
+      return (selectedPos == null || selectedPos.id == e.currentPosition) &&
+              e.tagPositions.first.container?.id == con.id ||
+          (e.tagPositions.first.container?.id == null && con.isCart);
+    }).toList();
+  }
+
+  /// Core -------------------------------------------------------------------------------------------------------------
   getContainerPDF(TagContainer container) async {
     GetContainerReportUseCase getContainerReportUseCase = GetContainerReportUseCase();
     GetContainerReportRequest getContainerReportRequest =
