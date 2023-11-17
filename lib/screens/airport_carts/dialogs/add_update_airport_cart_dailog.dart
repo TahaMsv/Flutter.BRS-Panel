@@ -1,18 +1,12 @@
-import 'dart:io';
 import 'package:brs_panel/core/abstracts/success_abs.dart';
-import 'package:brs_panel/core/classes/airport_cart_class.dart';
 import 'package:brs_panel/core/util/handlers/success_handler.dart';
 import 'package:brs_panel/screens/airport_carts/airport_carts_controller.dart';
 import 'package:brs_panel/screens/airport_carts/airport_carts_state.dart';
-import 'package:brs_panel/screens/flight_details/flight_details_state.dart';
 import 'package:brs_panel/widgets/MyTextField.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../../../../widgets/MyButton.dart';
-
 import '../../../../core/constants/ui.dart';
 import '../../../../core/navigation/navigation_service.dart';
-import '../../../core/classes/flight_details_class.dart';
 import '../../../core/classes/tag_container_class.dart';
 import '../../../initialize.dart';
 
@@ -44,8 +38,8 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateAirportCartDialog>
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = Get.width;
-    double height = Get.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     bool editMode = widget.editingCart != null;
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: width * 0.4),

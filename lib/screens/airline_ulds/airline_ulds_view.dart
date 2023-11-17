@@ -1,16 +1,11 @@
-import 'package:brs_panel/core/classes/airline_uld_class.dart';
 import 'package:brs_panel/widgets/DotButton.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import '../../core/classes/flight_details_class.dart';
 import '../../core/classes/tag_container_class.dart';
 import '../../core/constants/ui.dart';
-import '../../core/util/basic_class.dart';
 import '../../initialize.dart';
 import '../../widgets/MyTextField.dart';
 import 'airline_ulds_controller.dart';
@@ -102,7 +97,7 @@ class AirlineUldListWidget extends ConsumerWidget {
         ),
         itemCount: uldList.length,
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: Get.width / 8,
+          maxCrossAxisExtent: MediaQuery.of(context).size.width / 8,
           mainAxisSpacing: 12,
           crossAxisSpacing: 12,
         ),

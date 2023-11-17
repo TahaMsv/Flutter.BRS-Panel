@@ -1,23 +1,25 @@
-import 'package:brs_panel/core/classes/login_user_class.dart';
+import 'dart:io';
 import 'package:brs_panel/core/navigation/route_names.dart';
 import 'package:brs_panel/core/util/pickers.dart';
 import 'package:brs_panel/initialize.dart';
-import 'package:brs_panel/screens/airline_ulds/airline_ulds_controller.dart';
-import 'package:brs_panel/screens/airlines/airlines_controller.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_state.dart';
 import 'package:brs_panel/screens/flights/data_tables/flight_data_table.dart';
 import 'package:brs_panel/screens/flights/dialogs/flight_container_list_dialog.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_add_remove_container_usecase.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_get_container_list_usecase.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_list_usecase.dart';
-
+import 'package:desktop_webview_window/desktop_webview_window.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../core/abstracts/controller_abs.dart';
+import '../../core/abstracts/device_info_service_abs.dart';
 import '../../core/classes/flight_class.dart';
-import '../../core/classes/flight_details_class.dart';
+import '../../core/classes/login_user_class.dart';
 import '../../core/classes/tag_container_class.dart';
+import '../../core/platform/device_info.dart';
 import '../../core/util/basic_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
-
+import 'package:path/path.dart' as p;
 import 'flights_state.dart';
 
 class FlightsController extends MainController {
@@ -59,7 +61,8 @@ class FlightsController extends MainController {
     final spP = ref.read(selectedPosInDetails.notifier);
     spP.state = BasicClass.getPositionByID(selectedPos?.id??f.positions.first.id)!;
     nav.pushNamed(RouteNames.flightDetails, pathParameters: {"flightID": f.id.toString()}).then((value) {
-      flightList(DateTime.now());
+      DateTime current = ref.read(flightDateProvider);
+      flightList(current);
     });
   }
 
@@ -119,6 +122,7 @@ class FlightsController extends MainController {
   }
 
   Future<void> handleActions(MenuItem value,Flight flight) async{
+    late final FlightsController flightsController = getIt<FlightsController>();
     switch (value) {
       case MenuItems.flightSummary:
         goSummary(flight);
@@ -126,8 +130,67 @@ class FlightsController extends MainController {
       case MenuItems.assignContainer:
         await editContainers(flight);
         return;
+      case MenuItems.openWebView:
+        if (flightsController.isDesktop()) {
+          // nav.pushNamed(RouteNames.webView);
+          openWebViewWindows();
+
+        } else {
+          print("here136");
+          _launchUrl(Uri.parse('https://www.ldoceonline.com/'));
+          print("here138");
+
+        }
+        return;
       default:
         return;
+    }
+  }
+
+  Future<String> _getWebViewPath() async {
+    final document = await getApplicationDocumentsDirectory();
+    return p.join(
+      document.path,
+      'desktop_webview_window',
+    );
+  }
+
+
+  void openWebViewWindows() async {
+    final webview = await WebviewWindow.create(
+      configuration: CreateConfiguration(
+        userDataFolderWindows: await _getWebViewPath(),
+        titleBarTopPadding: Platform.isMacOS ? 20 : 0,
+      ),
+    );
+    webview
+      // ..setBrightness(Brightness.dark)
+      ..setApplicationNameForUserAgent(" WebviewExample/1.0.0")
+      ..launch('https://pub.dev')
+      ..addOnUrlRequestCallback((url) {
+        // debugPrint('url: $url');
+        final uri = Uri.parse(url);
+        if (uri.path == '/login_success') {
+          // debugPrint('login success. token: ${uri.queryParameters['token']}');
+          webview.close();
+        }
+      })
+      ..onClose.whenComplete(() {
+        // debugPrint("on close");
+      });
+    await Future.delayed(const Duration(seconds: 2));
+  }
+
+
+  bool isDesktop() {
+    DeviceInfoService deviceInfoService = getIt<DeviceInfoService>();
+    DeviceInfo deviceInfo = deviceInfoService.getInfo();
+    return deviceInfo.screenType == ScreenType.desktop;
+  }
+
+  Future<void> _launchUrl(Uri url) async {
+    if (!await launchUrl(url)) {
+      throw Exception('Could not launch $url');
     }
   }
 }

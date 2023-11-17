@@ -1,6 +1,4 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../../initialize.dart';
 import '../../widgets/MyButton.dart';
 import '../constants/ui.dart';
@@ -49,18 +47,16 @@ extension OperationTypeDetails on OperationType {
   }
 
   IconData get icon {
-    switch(this){
-
+    switch (this) {
       case OperationType.success:
         return Icons.check_box;
       case OperationType.warning:
-       return Icons.warning;
+        return Icons.warning;
       case OperationType.error:
         return Icons.error;
     }
   }
 }
-
 
 class ConfirmOperationDialog extends StatelessWidget {
   final Operation operation;
@@ -71,9 +67,7 @@ class ConfirmOperationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = Get.width;
-    double height = Get.height;
-
+    double width = MediaQuery.of(context).size.width;
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: width * 0.35),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
@@ -83,14 +77,15 @@ class ConfirmOperationDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            decoration:
-            BoxDecoration(color: operation.type.color, borderRadius: const BorderRadius.vertical(top: Radius.circular(5))),
+            decoration: BoxDecoration(
+                color: operation.type.color, borderRadius: const BorderRadius.vertical(top: Radius.circular(5))),
             child: Row(
               children: [
                 const SizedBox(width: 18),
                 Icon(operation.type.icon, color: Colors.white),
                 const SizedBox(width: 8),
-                Text(operation.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.white)),
+                Text(operation.title,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.white)),
                 const Spacer(),
                 IconButton(
                     onPressed: () {
@@ -125,7 +120,7 @@ class ConfirmOperationDialog extends StatelessWidget {
                 ),
                 const SizedBox(width: 12),
                 MyButton(
-                  onPressed: () => navigationService.popDialog( result: true),
+                  onPressed: () => navigationService.popDialog(result: true),
                   label: operation.trueLabel,
                   color: theme.primaryColor,
                   // isFlat: true,

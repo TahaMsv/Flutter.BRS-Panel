@@ -88,6 +88,8 @@ class MyColors {
   static const containerGreen = Color(0xffe1eae6);
   static const containerGreen2 = Color(0xffCDDDD6);
   static const binGrey = Color(0xff687A89);
+  static const binGrey2 = Color(0xff646E7D);
+  static const sectionGrey = Color(0xff3E3E3E);
   static const sectionSelected = Color(0xffF7F8FF);
   static const evenRow = Color(0xfff8f8f8);
   static const oddRow = Color(0xffffffff);

@@ -7,6 +7,7 @@ import 'interfaces/airport_sections_repository_interface.dart';
 import 'data_sources/airport_sections_local_ds.dart';
 import 'data_sources/airport_sections_remote_ds.dart';
 import 'usecase/airport_get_sections_usecase.dart';
+import 'usecase/airport_update_sections_usecase.dart';
 
 class AirportSectionsRepository implements AirportSectionsRepositoryInterface {
   final AirportSectionsRemoteDataSource airportSectionsRemoteDataSource = AirportSectionsRemoteDataSource();
@@ -25,6 +26,22 @@ class AirportSectionsRepository implements AirportSectionsRepositoryInterface {
         sectionsResponse = await airportSectionsLocalDataSource.airportGetSections(request: request);
       }
       return Right(sectionsResponse);
+    } on AppException catch (e) {
+      return Left(ServerFailure.fromAppException(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AirportUpdateSectionsResponse>> airportUpdateSections(
+      AirportUpdateSectionsRequest request) async {
+    try {
+      AirportUpdateSectionsResponse sectionsUpdateResponse;
+      if (await networkInfo.isConnected) {
+        sectionsUpdateResponse = await airportSectionsRemoteDataSource.airportUpdateSections(request: request);
+      } else {
+        sectionsUpdateResponse = await airportSectionsLocalDataSource.airportUpdateSections(request: request);
+      }
+      return Right(sectionsUpdateResponse);
     } on AppException catch (e) {
       return Left(ServerFailure.fromAppException(e));
     }

@@ -34,6 +34,7 @@ class MyTextField extends StatefulWidget {
   final bool locked;
   final bool required;
   final double height;
+  final double width;
 
   const MyTextField({
     Key? key,
@@ -43,6 +44,7 @@ class MyTextField extends StatefulWidget {
     this.maxLength,
     this.placeholder,
     this.height = 40,
+    this.width = double.infinity,
     this.fontSize = 14,
     this.keyboardType,
     this.inputFormatters,
@@ -216,6 +218,8 @@ class _MyTextFieldState extends State<MyTextField> {
     }
     return SizedBox(
       height: widget.height,
+      width: widget.width,
+
       child: IntrinsicHeight(
         child: Stack(
           children: [

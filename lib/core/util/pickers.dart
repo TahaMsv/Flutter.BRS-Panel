@@ -1,11 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../../initialize.dart';
-import '../abstracts/device_info_service_abs.dart';
 import '../constants/ui.dart';
 import '../navigation/navigation_service.dart';
-import '../platform/device_info.dart';
 
 class Pickers {
   Pickers._();
@@ -71,20 +68,16 @@ class _ListPickerDialogState<T> extends State<ListPickerDialog<T>> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    searchC.addListener(() {
-      searched = searchC.text;
-      setState(() {});
-    });
+    searchC.addListener(() => setState(() => searched = searchC.text));
   }
 
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     NavigationService navigationService = getIt<NavigationService>();
-    double width = Get.width;
-    double height = Get.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     List<T> items = widget.items
         .where(
           (element) =>

@@ -13,16 +13,14 @@ class FlightDetailsState extends ChangeNotifier {
   void setState() => notifyListeners();
 
   ///bool loading = false;
-
 }
 
-final expandedAirportSections = StateProvider<List<int>>((ref) => []);
-final expandedContainers = StateProvider<List<int>>((ref) => []);
-final expandedBins = StateProvider<List<int>>((ref) => []);
+final expandedAirportSectionsContainer = StateProvider<List<int>>((ref) => []);
+final expandedAirportSectionsBin = StateProvider<List<int>>((ref) => []);
+// final expandedContainers = StateProvider<List<int>>((ref) => []);
+// final expandedBins = StateProvider<List<int>>((ref) => []);
 final tagSearchProvider = StateProvider<String>((ref) => "");
 final selectedPosInDetails = StateProvider<Position?>((ref) => null);
-
-
 
 final selectedFlightProvider = StateProvider<Flight?>((ref) => null);
 // final detailsProvider =StateNotifierProvider<FlightDetailsNotifier, FlightDetails?>((ref) => FlightDetailsNotifier(ref));
@@ -53,9 +51,9 @@ final selectedFlightProvider = StateProvider<Flight?>((ref) => null);
 
 // final detailsProvider = StateNotifierProvider.autoDispose((ref) => FlightDetailsNotifier(const AsyncValue.data(null)));
 
-final detailsProvider = FutureProvider.autoDispose<FlightDetails?>((ref){
+final detailsProvider = FutureProvider.autoDispose<FlightDetails?>((ref) {
   final sfP = ref.watch(selectedFlightProvider);
-  if(sfP==null)return null;
+  if (sfP == null) return null;
   return getIt<FlightDetailsController>().flightGetDetails(sfP.id);
 });
 
@@ -80,5 +78,3 @@ final detailsProvider = FutureProvider.autoDispose<FlightDetails?>((ref){
 //     state = await getIt<FlightDetailsController>().flightGetDetails(id);
 //   }
 // }
-
-

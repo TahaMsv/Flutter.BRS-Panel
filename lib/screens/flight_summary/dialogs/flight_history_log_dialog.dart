@@ -1,12 +1,9 @@
-import 'dart:io';
 import 'package:artemis_utils/artemis_utils.dart';
 import 'package:brs_panel/core/classes/history_log_class.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import '../../../core/util/basic_class.dart';
 import '../../../initialize.dart';
 import '../../../widgets/MyButton.dart';
-
 import '../../../core/constants/ui.dart';
 import '../../../core/navigation/navigation_service.dart';
 import '../../../widgets/MyExpansionTile.dart';
@@ -19,8 +16,8 @@ class FlightHistoryLogDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = Get.width;
-    double height = Get.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     const TextStyle tileHeaderStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 18);
 
     return Dialog(

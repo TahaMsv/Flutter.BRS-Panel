@@ -56,11 +56,10 @@ class MyExpansionTile2 extends StatefulWidget {
       this.icon,
       this.collapsedIconColor,
       this.showIcon = true,
+      this.showLeadingIcon = false,
       this.noTrailing = false,
       this.headerDivider})
-      : assert(initiallyExpanded != null),
-        assert(maintainState != null),
-        assert(
+      : assert(
           expandedCrossAxisAlignment != CrossAxisAlignment.baseline,
           'CrossAxisAlignment.baseline is not supported since the expanded children '
           'are aligned in a column, not a row. Try to use another constant.',
@@ -90,6 +89,7 @@ class MyExpansionTile2 extends StatefulWidget {
   final Color? textColor;
   final Color? collapsedTextColor;
   final bool showIcon;
+  final bool showLeadingIcon;
   final bool noTrailing;
   final Widget? headerDivider;
 
@@ -128,7 +128,7 @@ class _MyExpansionTile2State extends State<MyExpansionTile2> with SingleTickerPr
     _iconColor = _controller.drive(_iconColorTween.chain(_easeInTween));
     _backgroundColor = _controller.drive(_backgroundColorTween.chain(_easeOutTween));
 
-    _isExpanded = PageStorage.of(context)?.readState(context) as bool? ?? widget.initiallyExpanded;
+    _isExpanded = PageStorage.of(context).readState(context) as bool? ?? widget.initiallyExpanded;
     if (_isExpanded) _controller.value = 1.0;
   }
 
@@ -151,7 +151,7 @@ class _MyExpansionTile2State extends State<MyExpansionTile2> with SingleTickerPr
           });
         });
       }
-      PageStorage.of(context)?.writeState(context, _isExpanded);
+      PageStorage.of(context).writeState(context, _isExpanded);
     });
     widget.onExpansionChanged?.call(_isExpanded);
   }
@@ -167,41 +167,39 @@ class _MyExpansionTile2State extends State<MyExpansionTile2> with SingleTickerPr
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           widget.noTrailing
-              ? GestureDetector(
-                  onTap: _handleTap,
-                  child: widget.title,
-                )
+              ? InkWell(onTap: _handleTap, child: widget.title)
               : Container(
-                padding: widget.tilePadding,
-                // color: widget.backgroundColor,
-
-                child: InkWell(
-                    // style: TextButton.styleFrom(
-                    //   primary: MyColors.black1,
-                    //   padding: widget.tilePadding ?? EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                    // ),
+                  padding: widget.tilePadding,
+                  child: InkWell(
                     onTap: _handleTap,
-                    child: widget.noTrailing
-                        ? widget.title
-                        : Row(
-                            children: [
-                              Expanded(child: widget.title),
-                              widget.trailing ?? Container(),
-                              SizedBox(width: 4),
-                              widget.showIcon
-                                  ? RotationTransition(
-                                      turns: _iconTurns,
-                                      child: widget.icon ??
-                                          Padding(
-                                            padding: const EdgeInsets.all(4.0),
-                                            child: const Icon(Icons.expand_more),
-                                          ),
-                                    )
-                                  : Container(),
-                            ],
-                          ),
+                    child: Row(
+                      children: [
+                        widget.showLeadingIcon
+                            ? RotationTransition(
+                                turns: _iconTurns,
+                                child: widget.icon ??
+                                    Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Icon(Icons.expand_more, color: _iconColor.value),
+                                    ),
+                              )
+                            : Container(),
+                        Expanded(child: widget.title),
+                        widget.trailing ?? Container(),
+                        widget.showIcon
+                            ? RotationTransition(
+                                turns: _iconTurns,
+                                child: widget.icon ??
+                                    Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Icon(Icons.expand_more, color: _iconColor.value),
+                                    ),
+                              )
+                            : Container(),
+                      ],
+                    ),
                   ),
-              ),
+                ),
           widget.headerDivider ?? Container(),
           //
           // ListTileTheme.merge(
@@ -221,8 +219,7 @@ class _MyExpansionTile2State extends State<MyExpansionTile2> with SingleTickerPr
           // ),
           ClipRect(
             child: Padding(
-
-              padding: widget.childrenPadding??EdgeInsets.symmetric(horizontal: 12),
+              padding: widget.childrenPadding ?? const EdgeInsets.symmetric(horizontal: 12),
               child: Align(
                 alignment: widget.expandedAlignment ?? Alignment.center,
                 heightFactor: _heightFactor.value,
@@ -258,7 +255,9 @@ class _MyExpansionTile2State extends State<MyExpansionTile2> with SingleTickerPr
     final bool shouldRemoveChildren = closed && !widget.maintainState;
 
     final Widget result = Offstage(
+      offstage: closed,
       child: TickerMode(
+        enabled: !closed,
         child: Container(
           padding: widget.childrenPadding ?? EdgeInsets.zero,
           child: Column(
@@ -266,9 +265,7 @@ class _MyExpansionTile2State extends State<MyExpansionTile2> with SingleTickerPr
             children: widget.children,
           ),
         ),
-        enabled: !closed,
       ),
-      offstage: closed,
     );
 
     return AnimatedBuilder(

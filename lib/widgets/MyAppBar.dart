@@ -59,25 +59,33 @@ class _MyAppBarState extends State<MyAppBar> {
                         const SizedBox(width: 8),
                         ...RouteNames.values
                             .where((element) => router.location.split("/").contains(element.name))
-                            .map((e) => DecoratedBox(
-                                  decoration: const BoxDecoration(
-                                    border: Border(right: BorderSide(color: MyColors.lightIshBlue, width: 4)),
+                            .map((e) {
+                          bool isLast = [...RouteNames.values]
+                                  .where((element) => router.location.split("/").contains(element.name))
+                                  .toList()
+                                  .last
+                                  .path ==
+                              e.path;
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 0.0, top: 0),
+                                child: TextButton(
+                                  onPressed: () {
+                                    NavigationService ns = getIt<NavigationService>();
+                                    ns.pushNamed(e);
+                                  },
+                                  child: Text(
+                                    e.title,
+                                    style: const TextStyle(fontWeight: FontWeight.w500),
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 0.0, top: 0),
-                                    child: TextButton(
-                                      onPressed: () {
-                                        NavigationService ns = getIt<NavigationService>();
-                                        ns.pushNamed(e);
-                                      },
-                                      child: Text(
-                                        e.title,
-                                        style: const TextStyle(fontWeight: FontWeight.w500),
-                                      ),
-                                    ),
-                                  ),
-                                ))
-                            .toList(),
+                                ),
+                              ),
+                              if (!isLast) const Icon(Icons.keyboard_arrow_right, color: MyColors.lightIshBlue)
+                            ],
+                          );
+                        }).toList(),
                         const Spacer(),
                         UserIndicatorWidget(),
                       ],
@@ -150,11 +158,12 @@ class UserIndicatorWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     LoginUser? u = ref.watch(userProvider);
     ThemeData theme = Theme.of(context);
-    double width = Get.width;
-    double height = Get.height;
+    // double width = MediaQuery.of(context).sizewidth;
+    // double height = MediaQuery.of(context).sizeheight;
     double avatarRadius = 18;
     if (u == null) return const SizedBox();
     return Container(
+      width: 300,
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [

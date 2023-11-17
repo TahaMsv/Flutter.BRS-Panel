@@ -1,11 +1,11 @@
 import 'package:artemis_ui_kit/artemis_ui_kit.dart';
-import 'package:brs_panel/core/classes/login_user_class.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import '../../core/classes/login_user_class.dart';
 import '../../core/constants/ui.dart';
 import '../../core/enums/flight_type_filter_enum.dart';
 import '../../core/util/basic_class.dart';
@@ -54,9 +54,7 @@ class FlightsPanel extends ConsumerWidget {
         children: [
           DotButton(
             size: 35,
-            onPressed: () {
-              myFlightsController.goAddFlight();
-            },
+            onPressed: () => myFlightsController.goAddFlight(),
             icon: Icons.add,
             color: Colors.blueAccent,
           ),
@@ -136,7 +134,7 @@ class FlightsPanel extends ConsumerWidget {
                             return SizedBox(
                               height: 35,
                               child: MyFieldPicker<String>(
-                                itemToString: (a) => "$a",
+                                itemToString: (a) => a,
                                 label: 'Airline',
                                 items: BasicClass.airlineList,
                                 onChange: (v) {
@@ -209,7 +207,7 @@ class FlightListWidget extends ConsumerWidget {
                 .map(
                   (e) => GridColumn(
                     columnName: e.name,
-                    label: Center(child: Text(e.name.capitalizeFirst!)),
+                    label: Center(child: Text(e.name.capitalizeFirst ?? "")),
                     width: e.width * width,
                   ),
                 )
@@ -218,3 +216,4 @@ class FlightListWidget extends ConsumerWidget {
     );
   }
 }
+

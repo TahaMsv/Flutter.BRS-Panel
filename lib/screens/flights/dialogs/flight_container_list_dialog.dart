@@ -1,24 +1,18 @@
-import 'dart:io';
 import 'package:artemis_ui_kit/artemis_ui_kit.dart';
 import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:brs_panel/screens/flights/data_tables/assigned_containers_data_table.dart';
 import 'package:brs_panel/screens/flights/data_tables/available_containers_data_table.dart';
 import 'package:brs_panel/widgets/DotButton.dart';
 import 'package:brs_panel/widgets/MyCheckBoxButton.dart';
-import 'package:brs_panel/widgets/MyFieldPicker.dart';
-import 'package:brs_panel/widgets/MyRadioButton.dart';
 import 'package:brs_panel/widgets/MyTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../../core/classes/flight_class.dart';
-import '../../../core/classes/flight_details_class.dart';
 import '../../../core/classes/tag_container_class.dart';
 import '../../../core/classes/login_user_class.dart';
 import '../../../initialize.dart';
 import '../../../widgets/MyButton.dart';
-
 import '../../../core/constants/ui.dart';
 import '../../../core/navigation/navigation_service.dart';
 import '../flights_controller.dart';
@@ -73,8 +67,8 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = Get.width;
-    double height = Get.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     List<TagContainer> assignedList = assigned.where((element) => element.validateSearch(assignedSearchC.text)).toList();
     List<TagContainer> availableList = available.where((element) => element.validateSearch(availableSearchC.text)).toList();
     return Dialog(
@@ -421,8 +415,8 @@ class AvailableContainerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = Get.width;
-    double height = Get.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(color: index.isEven ? MyColors.evenRow : MyColors.oddRow),
@@ -458,8 +452,8 @@ class AssignedContainerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = Get.width;
-    double height = Get.height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(color: index.isEven ? MyColors.evenRow : MyColors.oddRow),
