@@ -15,6 +15,7 @@ class FlightDetailsState extends ChangeNotifier {
   ///bool loading = false;
 }
 
+final expandedAirportSectionsTag = StateProvider<List<int>>((ref) => []);
 final expandedAirportSectionsContainer = StateProvider<List<int>>((ref) => []);
 final expandedAirportSectionsBin = StateProvider<List<int>>((ref) => []);
 // final expandedContainers = StateProvider<List<int>>((ref) => []);

@@ -14,15 +14,12 @@ import '../../core/classes/tag_container_class.dart';
 import '../../core/classes/login_user_class.dart';
 import '../../core/util/basic_class.dart';
 import '../../widgets/DotButton.dart';
-import '../../widgets/MyExpansionTile.dart';
 import '../../widgets/MyExpansionTile2.dart';
 import '../../widgets/MySegment.dart';
 import '../../widgets/MyTextField.dart';
 import 'flight_details_controller.dart';
 import 'flight_details_state.dart';
 import 'widgets/expandable_list_sections/airport_section.dart';
-import 'widgets/expandable_list_sections/bin_section.dart';
-import 'widgets/expandable_list_sections/container_section.dart';
 
 class FlightDetailsView extends StatefulWidget {
   final int flightID;
@@ -112,8 +109,8 @@ class FlightDetailsPanel extends ConsumerWidget {
           DotButton(
             icon: Icons.refresh,
             onPressed: () async {
-              final sfp = ref.read(selectedFlightProvider);
-              final fdP = ref.read(detailsProvider);
+              // final sfp = ref.read(selectedFlightProvider);
+              // final fdP = ref.read(detailsProvider);
               ref.refresh(detailsProvider);
               // FlightsController flightsController = getIt<FlightsController>();
               // flightsController.flightList(ref.read(flightDateProvider));
@@ -214,20 +211,25 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
     String searched = ref.watch(tagSearchProvider);
     List<FlightTag> filteredTag = widget.details.tagList.where((e) => e.validateSearch(searched, selectedPos)).toList();
     List<TagContainer> cons = widget.details.containerList
-        .where((e) => e.positionID == selectedPos.id && filteredTag.any((f) => f.containerID == e.id))
+        .where((e) => e.positionID == selectedPos.id /* && filteredTag.any((f) => f.containerID == e.id) */)
         .toList();
     List<TagContainer> bulks = widget.posList
-        .map((e) => TagContainer.bulk(e.id))
-        .where((e) => filteredTag.any((f) => f.containerID == e.id))
+        .map((e) => TagContainer.bulk(e.id)) /*.where((e) => filteredTag.any((f) => f.containerID == e.id))*/
         .toList();
     cons = cons + bulks.where((b) => (b.positionID == selectedPos.id) /* && element.items.isNotEmpty */).toList();
-    List<Bin> bins = widget.details.binList.where((e) => filteredTag.any((c) => c.binID == e.id)).toList();
+    List<Bin> bins = widget.details.binList /*.where((e) => filteredTag.any((c) => c.binID == e.id))*/ .toList();
     //assigning sections
     final List<AirportPositionSection> positionSections = BasicClass.getAllAirportSections();
     List<AirportPositionSection> filteredSections = positionSections
         .where((s) => selectedPos.binRequired
             ? bins.any((bin) => bin.sectionID == s.id)
-            : cons.any((con) => con.sectionID == s.id))
+            : selectedPos.containerRequired
+                ? cons.any((con) => con.sectionID == s.id)
+                : filteredTag.any((t) => t.sectionID == s.id))
+        .toList();
+    final List<AirportSectionTagSection> sectionSectionsTag = filteredSections
+        .map((e) => AirportSectionTagSection(airportPositionSection: e, tags: filteredTag, ref: ref))
+        .where((e) => e.items.isNotEmpty)
         .toList();
     final List<AirportSectionContainerSection> sectionSectionsCon = filteredSections
         .map((e) => AirportSectionContainerSection(airportPositionSection: e, cons: cons, ref: ref))
@@ -307,9 +309,7 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
                   builder: SliverExpandableChildDelegate<Bin, AirportSectionBinSection>(
                       sectionList: sectionSectionsBin,
                       headerBuilder: (context, sectionIndex, index) {
-                        final AirportSectionBinSection sec = sectionSectionsBin[sectionIndex];
-                        final AirportPositionSection airportPositionSection = sec.airportPositionSection;
-                        return SectionTileWidget(secCon: null, secBin: sectionSectionsBin[sectionIndex]);
+                        return SectionTileWidget(secTag: null, secCon: null, secBin: sectionSectionsBin[sectionIndex]);
                       },
                       itemBuilder: (context, sectionIndex, itemIndex, index) {
                         Bin bin = sectionSectionsBin[sectionIndex].items[itemIndex];
@@ -376,7 +376,8 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
                       builder: SliverExpandableChildDelegate<TagContainer, AirportSectionContainerSection>(
                           sectionList: sectionSectionsCon,
                           headerBuilder: (context, sectionIndex, index) {
-                            return SectionTileWidget(secCon: sectionSectionsCon[sectionIndex], secBin: null);
+                            return SectionTileWidget(
+                                secTag: null, secCon: sectionSectionsCon[sectionIndex], secBin: null);
                           },
                           itemBuilder: (context, sectionIndex, itemIndex, index) {
                             TagContainer con = sectionSectionsCon[sectionIndex].items[itemIndex];
@@ -413,18 +414,26 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
                           }),
                     ),
                   )
-                // */
                 : Flexible(
-                    child: ListView.builder(
-                        itemCount: filteredTag.length,
-                        itemBuilder: (c, i) => TagWidget(
-                              tag: filteredTag[i],
-                              index: i,
+                    child: ExpandableListView(
+                      builder: SliverExpandableChildDelegate<FlightTag, AirportSectionTagSection>(
+                          sectionList: sectionSectionsTag,
+                          headerBuilder: (context, sectionIndex, index) {
+                            return SectionTileWidget(
+                                secTag: sectionSectionsTag[sectionIndex], secCon: null, secBin: null);
+                          },
+                          itemBuilder: (context, sectionIndex, itemIndex, index) {
+                            FlightTag tag = sectionSectionsTag[sectionIndex].items[itemIndex];
+                            return TagWidget(
+                              tag: tag,
+                              index: itemIndex,
                               fd: widget.details,
                               total: filteredTag.length,
                               hasBinLine: false,
                               hasTagLine: false,
-                            )),
+                            );
+                          }),
+                    ),
                   ),
       ],
     );
@@ -432,17 +441,20 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
 }
 
 class SectionTileWidget extends StatelessWidget {
-  const SectionTileWidget({super.key, required this.secCon, required this.secBin});
+  const SectionTileWidget({super.key, required this.secTag, required this.secCon, required this.secBin});
 
+  final AirportSectionTagSection? secTag;
   final AirportSectionContainerSection? secCon;
   final AirportSectionBinSection? secBin;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => secCon == null
+      onTap: () => secBin != null
           ? secBin!.setSectionExpanded(!secBin!.isSectionExpanded())
-          : secCon!.setSectionExpanded(!secCon!.isSectionExpanded()),
+          : secCon != null
+              ? secCon!.setSectionExpanded(!secCon!.isSectionExpanded())
+              : secTag!.setSectionExpanded(!secTag!.isSectionExpanded()),
       child: Container(
         color: MyColors.sectionGrey,
         height: 60,
@@ -451,16 +463,27 @@ class SectionTileWidget extends StatelessWidget {
         child: Row(
           children: [
             IconButton(
-                onPressed: () => secCon == null
+                onPressed: () => secBin != null
                     ? secBin!.setSectionExpanded(!secBin!.isSectionExpanded())
-                    : secCon!.setSectionExpanded(!secCon!.isSectionExpanded()),
+                    : secCon != null
+                        ? secCon!.setSectionExpanded(!secCon!.isSectionExpanded())
+                        : secTag!.setSectionExpanded(!secTag!.isSectionExpanded()),
                 icon: Icon(
-                  (secCon == null ? secBin!.isSectionExpanded() : secCon!.isSectionExpanded())
+                  (secBin != null
+                          ? secBin!.isSectionExpanded()
+                          : secCon != null
+                              ? secCon!.isSectionExpanded()
+                              : secTag!.isSectionExpanded())
                       ? Icons.keyboard_arrow_up
                       : Icons.keyboard_arrow_down,
                   color: Colors.white,
                 )),
-            Text(secCon == null ? secBin!.airportPositionSection.label : secCon!.airportPositionSection.label,
+            Text(
+                secBin != null
+                    ? secBin!.airportPositionSection.label
+                    : secCon != null
+                        ? secCon!.airportPositionSection.label
+                        : secTag!.airportPositionSection.label,
                 style: const TextStyle(color: MyColors.white3, fontSize: 16, fontWeight: FontWeight.bold)),
           ],
         ),

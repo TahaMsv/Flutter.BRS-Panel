@@ -5,6 +5,40 @@ import '../../../../core/classes/login_user_class.dart';
 import '../../../../core/classes/tag_container_class.dart';
 import '../../flight_details_state.dart';
 
+class AirportSectionTagSection extends ExpandableListSection<FlightTag> {
+  final WidgetRef ref;
+  final AirportPositionSection airportPositionSection;
+  final List<FlightTag> tags;
+
+  AirportSectionTagSection({required this.airportPositionSection, required this.tags, required this.ref});
+
+  @override
+  List<FlightTag>? getItems() {
+    List<FlightTag> items = tags.where((c) => c.sectionID == airportPositionSection.id).toList();
+    return items;
+  }
+
+  @override
+  bool isSectionExpanded() {
+    List<int> expandeds = ref.watch(expandedAirportSectionsTag);
+    return !expandeds.contains(airportPositionSection.id);
+  }
+
+  @override
+  void setSectionExpanded(bool expanded) {
+    final expandeds = ref.watch(expandedAirportSectionsTag.notifier);
+    if (!expanded) {
+      expandeds.state = expandeds.state + [airportPositionSection.id];
+    } else {
+      expandeds.state = expandeds.state.where((element) => element != airportPositionSection.id).toList();
+    }
+  }
+
+  List<FlightTag> get items {
+    return getItems() ?? [];
+  }
+}
+
 class AirportSectionContainerSection extends ExpandableListSection<TagContainer> {
   final WidgetRef ref;
   final AirportPositionSection airportPositionSection;
