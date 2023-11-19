@@ -6,6 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   connectivity_plus
   desktop_webview_window
   objectbox_flutter_libs
+  printing
   screen_retriever
   syncfusion_pdfviewer_windows
   url_launcher_windows
