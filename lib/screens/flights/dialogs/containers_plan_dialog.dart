@@ -75,6 +75,23 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
               ],
             ),
             const Divider(height: 1),
+            plan.statustics.isEmpty
+                ? const SizedBox()
+                : Container(
+                    margin: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: MyColors.black3),
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.blueAccent.withOpacity(0.1)
+                    ),
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
+                      children: [
+                        Expanded(
+                            child: Text(plan.statustics))
+                      ],
+                    ),
+                  ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -318,8 +335,8 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                   ),
                   const SizedBox(width: 24),
                   MyButton(
-                    onPressed: () async{
-                     await myFlightsController.flightSavePlans(flight: widget.flight,newPlan:plan);
+                    onPressed: () async {
+                      await myFlightsController.flightSavePlans(flight: widget.flight, newPlan: plan);
                     },
                     label: "Save",
                     color: theme.primaryColor,
