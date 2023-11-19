@@ -1,7 +1,10 @@
 import 'dart:developer';
 import 'package:brs_panel/screens/flights/usecases/flight_add_remove_container_usecase.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_get_container_list_usecase.dart';
+import 'package:brs_panel/screens/flights/usecases/flight_get_containers_plan_usecase.dart';
+import 'package:brs_panel/screens/flights/usecases/flight_get_plan_file.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_list_usecase.dart';
+import 'package:brs_panel/screens/flights/usecases/flight_save_containers_plan_usecase.dart';
 
 import '../../../core/abstracts/exception_abs.dart';
 import '../../../core/abstracts/local_data_base_abs.dart';
@@ -33,6 +36,24 @@ class FlightsLocalDataSource implements FlightsDataSourceInterface {
   @override
   Future<FlightAddRemoveContainerResponse> flightAddRemoveContainer({required FlightAddRemoveContainerRequest request}) {
     // TODO: implement flightAddRemoveContainer
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<FlightGetContainersPlanResponse> flightGetContainersPlan({required FlightGetContainersPlanRequest request}) {
+    // TODO: implement flightGetContainersPlan
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<FlightGetPlanFileResponse> flightGetPlanFile({required FlightGetPlanFileRequest request}) {
+    // TODO: implement flightGetPlanFile
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<FlightSaveContainersPlanResponse> flightSaveContainersPlan({required FlightSaveContainersPlanRequest request}) {
+    // TODO: implement flightSaveContainersPlan
     throw UnimplementedError();
   }
 

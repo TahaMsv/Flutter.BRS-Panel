@@ -32,15 +32,17 @@ class _PDFPreviewDialogState extends State<PDFPreviewDialog> {
     final NavigationService ns = getIt<NavigationService>();
     final FlightDetailsController controller = getIt<FlightDetailsController>();
     return Dialog(
+      insetPadding: const EdgeInsets.symmetric(vertical: 100),
+      backgroundColor: Colors.transparent,
       child: Container(
         width: 600,
         padding: const EdgeInsets.all(10),
-        margin: const EdgeInsets.all(0),
         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
+            widget.con==null?const SizedBox():
             Padding(
               padding: const EdgeInsets.only(left: 12, top: 0),
               child: Row(

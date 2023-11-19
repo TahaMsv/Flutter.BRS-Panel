@@ -85,6 +85,10 @@ class BasicClass {
     return systemSetting.classTypeList.firstWhereOrNull((e) => e.id == id);
   }
 
+  static TagType? getTagTypeByID(int id) {
+    return systemSetting.tagTypeList.firstWhereOrNull((e) => e.id == id);
+  }
+
   static ClassType? getClassTypeByCode(String code) {
     return systemSetting.classTypeList.firstWhereOrNull((e) => e.abbreviation == code);
   }

@@ -266,11 +266,12 @@ class MenuItem {
 }
 
 abstract class MenuItems {
-  static const List<MenuItem> firstItems = [flightSummary, assignContainer, openWebView];
+  static const List<MenuItem> firstItems = [flightSummary, assignContainer, openWebView,containersPlan];
 
   static const flightSummary = MenuItem(text: 'Flight Summary', icon: Icons.home);
   static const assignContainer = MenuItem(text: 'Assign Container', icon: Icons.share);
   static const openWebView = MenuItem(text: 'Open WebView', icon: Icons.open_in_browser);
+  static const containersPlan = MenuItem(text: 'Containers Plan', icon: Icons.queue_play_next);
 
   static Widget buildItem(MenuItem item) {
     return Row(
