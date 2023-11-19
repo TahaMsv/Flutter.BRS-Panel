@@ -266,7 +266,12 @@ class MenuItem {
 }
 
 abstract class MenuItems {
-  static const List<MenuItem> firstItems = [flightSummary, assignContainer, openWebView,containersPlan];
+  static const List<MenuItem> firstItems = [
+    flightSummary,
+    assignContainer,
+    // openWebView,
+    containersPlan,
+  ];
 
   static const flightSummary = MenuItem(text: 'Flight Summary', icon: Icons.home);
   static const assignContainer = MenuItem(text: 'Assign Container', icon: Icons.share);

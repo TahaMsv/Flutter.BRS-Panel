@@ -78,6 +78,7 @@ class _PDFPreviewDialogState extends State<PDFPreviewDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
+              widget.con ==null ?SizedBox():
               Padding(
                 padding: const EdgeInsets.only(left: 12, top: 0),
                 child: Row(
@@ -111,50 +112,6 @@ class _PDFPreviewDialogState extends State<PDFPreviewDialog> {
                       label: const Text(kIsWeb ? "Download" : "Open"),
                       icon: const Icon(Icons.picture_as_pdf),
                     ),
-    return Dialog(
-      insetPadding: const EdgeInsets.symmetric(vertical: 100),
-      backgroundColor: Colors.transparent,
-      child: Container(
-        width: 600,
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(24)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            widget.con==null?const SizedBox():
-            Padding(
-              padding: const EdgeInsets.only(left: 12, top: 0),
-              child: Row(
-                children: [
-                  Text("PDF Preview ${widget.con?.title ?? ''}", style: theme.textTheme.headlineMedium),
-                  const SizedBox(width: 12),
-                  Padding(padding: const EdgeInsets.symmetric(horizontal: 4), child: widget.con!.getImgMini),
-                  Text(widget.con!.code, style: const TextStyle(fontSize: 16)),
-                  const Spacer(),
-                  IconButton(onPressed: () => ns.pop(), icon: const Icon(Icons.close, color: MyColors.brownGrey)),
-                ],
-              ),
-            ),
-            const Divider(),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
-                child: SfPdfViewer.memory(
-                  widget.pdfFileBytes,
-                  onDocumentLoadFailed: (f) {},
-                  pageLayoutMode: PdfPageLayoutMode.single,
-                ),
-              ),
-            ),
-            const Divider(),
-            Row(
-              children: [
-                Expanded(
-                  child: TextButton.icon(
-                    onPressed: () => controller.openPDFFile(widget.pdfFileBytes, widget.con!),
-                    label: const Text(kIsWeb ? "Download" : "Open"),
-                    icon: const Icon(Icons.picture_as_pdf),
                   ),
                   Expanded(
                     child: TextButton.icon(

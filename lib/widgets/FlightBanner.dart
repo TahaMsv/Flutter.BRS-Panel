@@ -32,7 +32,7 @@ class FlightBanner extends StatelessWidget {
                       border: Border.all(color: MyColors.veryLightPink),
                       borderRadius: BorderRadius.circular(5)),
                   child: SizedBox(
-                      width: 350,
+                      width: 400,
 
                       height: 30,
                       child:  Row(
@@ -42,6 +42,7 @@ class FlightBanner extends StatelessWidget {
                                   child: AirlineLogo(flight.al, size: 28, key: const Key("1")),
                                 ),
                                 const SizedBox(width: 4),
+                                Text("${flight.flightNumber}"),
                                 const SizedBox(width: 12),
                                 Text("${flight.from} - ${flight.to}"),
                                 const SizedBox(width: 12),
