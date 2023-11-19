@@ -58,6 +58,7 @@ dependencies:
   open_file_plus: ^3.4.1
   crypto: ^3.0.3
   dropdown_search: ^5.0.6
+  printing: ^5.11.1
 
 dependency_overrides:
   http: ^1.1.0
