@@ -190,7 +190,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                                             icon: Icons.picture_as_pdf,
                                             color: Colors.red,
                                             onPressed: () async {
-                                              await getIt<FlightsController>().flightGetPlanFile(flight: widget.flight, typeID: e.tagTypeId);
+                                              await getIt<FlightsController>().flightGetPlanFile(flight: widget.flight, type: type);
                                             },
                                           ),
                                           const SizedBox(width: 24),

@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../../core/classes/login_user_class.dart';
 import 'example/dummy_class.dart' if (dart.library.js) 'dart:html' as html;
 import 'package:flutter/foundation.dart';
@@ -69,25 +71,38 @@ class FlightDetailsController extends MainController {
   }
 
 
-  openPDFFile(Uint8List bytes, TagContainer con) async {
-    if (kIsWeb) {
-      final blob = html.Blob([bytes], 'application/pdf');
-      final url = html.Url.createObjectUrlFromBlob(blob);
-      final anchor = html.document.createElement('a') as html.AnchorElement
-        ..href = url
-        ..style.display = 'none'
-        ..download = 'report.pdf';
-      html.document.body?.children.add(anchor);
-      anchor.click();
-    } else {
-      Directory path = await getTemporaryDirectory();
-      final String filePath = "${path.path}/${con.id}.pdf";
-      final Uri uri = Uri.file(filePath);
-      await File.fromUri(uri).writeAsBytes(bytes);
-      if (!File(uri.toFilePath()).existsSync()) {
-        throw Exception('$uri does not exist!');
+  openPDFFile(Uint8List bytes, String name) async {
+    try {
+      if (kIsWeb) {
+        final blob = html.Blob([bytes], 'application/pdf');
+        final url = html.Url.createObjectUrlFromBlob(blob);
+        final anchor = html.document.createElement('a') as html.AnchorElement
+          ..href = url
+          ..style.display = 'none'
+          ..download = 'report.pdf';
+        html.document.body?.children.add(anchor);
+        anchor.click();
+      } else {
+
+        Directory path = await getApplicationDocumentsDirectory();
+        print("asdas");
+        final String filePath = "${path.path}\\${name}.pdf".replaceAll(" ", "");
+        print("asdas2$filePath");
+        final Uri uri = Uri.file(filePath);
+        print("asdas3");
+        await File.fromUri(uri).writeAsBytes(bytes);
+        print("asdas4");
+        // if (!File(uri.toFilePath()).existsSync()) {
+        //   print("asdas");
+        //   throw Exception('$uri does not exist!');
+        // }else{
+        //   print("not exist ${uri.toFilePath()}");
+        // }
+        launchUrl(uri);
+        // await OpenFile.open(uri.path,type: "pdf");
       }
-      OpenFile.open(uri.path);
+    }catch (e){
+      print(e);
     }
     // if (!await launchUrl(uri)) {
     // throw Exception('Could not launch $uri');

@@ -13,8 +13,9 @@ class PDFPreviewDialog extends StatefulWidget {
   final String? pdfURL;
   final Uint8List pdfFileBytes;
   final TagContainer? con;
+  final String? name;
 
-  const PDFPreviewDialog({Key? key, required this.pdfFileBytes, required this.con, required this.pdfURL})
+  const PDFPreviewDialog({Key? key, required this.pdfFileBytes, required this.con, required this.pdfURL,this.name ='pdf'})
       : super(key: key);
 
   @override
@@ -108,7 +109,7 @@ class _PDFPreviewDialogState extends State<PDFPreviewDialog> {
                 children: [
                   Expanded(
                     child: TextButton.icon(
-                      onPressed: () => controller.openPDFFile(widget.pdfFileBytes, widget.con!),
+                      onPressed: () => controller.openPDFFile(widget.pdfFileBytes, widget.con?.code??widget.name??'pdf'),
                       label: const Text(kIsWeb ? "Download" : "Open"),
                       icon: const Icon(Icons.picture_as_pdf),
                     ),
