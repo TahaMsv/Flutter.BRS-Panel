@@ -131,6 +131,14 @@ class BasicClass {
     return secs;
   }
 
+  static List<AirportPositionSection> getAllAirportSections4() {
+    List<AirportPositionSection> secs = [];
+    for (var s in userSetting.hierarchy) {
+      secs = secs + s.subSections.map((e) => e.copyWith(address: "${e.address}${e.label}")).toList();
+    }
+    return secs;
+  }
+
   static AirportPositionSection? getAirportSectionByID(int sectionID) {
     return BasicClass.getAllAirportSections().firstWhereOrNull((element) => element.id == sectionID);
   }

@@ -472,6 +472,11 @@ class Flight {
 
   Aircraft? get getAircraft => BasicClass.getAircraftByID(aircraftId);
 
+  bool get isArrival => flightType==1;
+
+  List<int> get validPositions => isArrival?[4,5,6]:[1,2,3];
+  List<int> get validAssignContainerPositions => isArrival?[4,5]:[2];
+
   Flight copyWith({
     int? id,
     int? aircraftId,

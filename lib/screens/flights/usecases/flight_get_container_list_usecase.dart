@@ -7,6 +7,7 @@ import '../../../core/abstracts/usecase_abs.dart';
 import '../../../core/classes/flight_class.dart';
 import '../../../core/classes/tag_container_class.dart';
 import '../../../core/classes/login_user_class.dart';
+import '../../../core/util/basic_class.dart';
 import '../flights_repository.dart';
 
 class FlightGetContainerListUseCase extends UseCase<FlightGetContainerListResponse,FlightGetContainerListRequest> {
@@ -31,7 +32,10 @@ class FlightGetContainerListRequest extends Request {
       "Execution": "FlightContainerList2",
       "Token":token,
       "Request": {
-        "FlightScheduleID": f.id
+        "FlightScheduleID": f.id,
+        "Airport": BasicClass.airport.code,
+        "Available": true,
+        "Assigned": true,
       }
     }
   };

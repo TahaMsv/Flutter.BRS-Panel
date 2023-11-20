@@ -21,13 +21,13 @@ extension FlightDataTableColumnDetails on AssignedContainerDataTableColumn {
       case AssignedContainerDataTableColumn.name:
         return 0.23;
       case AssignedContainerDataTableColumn.position:
-        return 0.12;
-      case AssignedContainerDataTableColumn.tagCount:
-        return 0.12;
-      case AssignedContainerDataTableColumn.tagTypes:
-        return 0.45;
-      case AssignedContainerDataTableColumn.actions:
         return 0.1;
+      case AssignedContainerDataTableColumn.tagCount:
+        return 0.1;
+      case AssignedContainerDataTableColumn.tagTypes:
+        return 0.25;
+      case AssignedContainerDataTableColumn.actions:
+        return 0.12;
       case AssignedContainerDataTableColumn.id:
         return 0.08;
     }
@@ -73,6 +73,7 @@ class AssignedContainerDataSource extends DataGridSource {
   DataGridRowAdapter? buildRow(DataGridRow row) {
     final int index = rows.indexOf(row);
     final TagContainer con = _dataList[index];
+
     return DataGridRowAdapter(
         color: index.isEven?MyColors.evenRow:MyColors.oddRow,
         cells: row.getCells().map<Widget>((dataGridCell) {

@@ -20,7 +20,9 @@ class MyCheckBoxButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      style: TextButton.styleFrom(padding: EdgeInsets.zero, backgroundColor: Colors.white, foregroundColor: MyColors.black),
+      style: TextButton.styleFrom(padding: EdgeInsets.zero, backgroundColor: Colors.white, foregroundColor: MyColors.black,shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8)
+      )),
       onPressed: () {
         onChanged(!value);
       },

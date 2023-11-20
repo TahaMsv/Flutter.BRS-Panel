@@ -1,9 +1,11 @@
+import 'flight_class.dart';
+
 class ContainersPlan {
   final int flightId;
   final String statustics;
   final int cartCap;
   final int uldCap;
-  final LastFligt lastFligt;
+  final Flight? lastFligt;
   final List<PlanDatum> lastFlightPlanData;
   final List<PlanDatum> planData;
 
@@ -22,7 +24,7 @@ class ContainersPlan {
     String? statustics,
     int? cartCap,
     int? uldCap,
-    LastFligt? lastFligt,
+    Flight? lastFligt,
     List<PlanDatum>? lastFlightPlanData,
     List<PlanDatum>? planData,
   }) =>
@@ -41,7 +43,7 @@ class ContainersPlan {
     statustics: json["Statustics"],
     cartCap: json["CartCap"],
     uldCap: json["ULDCap"],
-    lastFligt: LastFligt.fromJson(json["LastFligt"]),
+    lastFligt:json["LastFligt"]==null?null: Flight.fromJson(json["LastFligt"]),
     lastFlightPlanData: List<PlanDatum>.from(json["LastFlightPlanData"].map((x) => PlanDatum.fromJson(x))),
     planData: List<PlanDatum>.from(json["PlanData"].map((x) => PlanDatum.fromJson(x))),
   );
@@ -51,7 +53,7 @@ class ContainersPlan {
     "Statustics": statustics,
     "CartCap": cartCap,
     "ULDCap": uldCap,
-    "LastFligt": lastFligt.toJson(),
+    "LastFligt": lastFligt?.toJson(),
     "LastFlightPlanData": List<dynamic>.from(lastFlightPlanData.map((x) => x.toJson())),
     "PlanData": List<dynamic>.from(planData.map((x) => x.toJson())),
   };

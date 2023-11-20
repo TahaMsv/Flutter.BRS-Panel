@@ -145,6 +145,8 @@ class FlightDataSource extends DataGridSource {
               child: Row(
                 children: [
                   ...BasicClass.systemSetting.positions.map((p) {
+                    if(f.isArrival && [1,2,3].contains(p.id)) return const SizedBox();
+                    if(!f.isArrival && [4,5,6].contains(p.id)) return const SizedBox();
                     return Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -281,6 +283,7 @@ abstract class MenuItems {
   static Widget buildItem(MenuItem item) {
     return Row(
       children: [
+
         Icon(item.icon, color: Colors.black, size: 20),
         const SizedBox(width: 8),
         Expanded(

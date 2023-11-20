@@ -1,8 +1,11 @@
 import 'package:artemis_ui_kit/artemis_ui_kit.dart';
+import 'package:brs_panel/core/abstracts/warning_abs.dart';
 import 'package:brs_panel/core/util/basic_class.dart';
+import 'package:brs_panel/core/util/handlers/warning_handler.dart';
 import 'package:brs_panel/screens/flights/data_tables/assigned_containers_data_table.dart';
 import 'package:brs_panel/screens/flights/data_tables/available_containers_data_table.dart';
 import 'package:brs_panel/widgets/DotButton.dart';
+import 'package:brs_panel/widgets/FlightBanner.dart';
 import 'package:brs_panel/widgets/MyCheckBoxButton.dart';
 import 'package:brs_panel/widgets/MyTextField.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +18,7 @@ import '../../../initialize.dart';
 import '../../../widgets/MyButton.dart';
 import '../../../core/constants/ui.dart';
 import '../../../core/navigation/navigation_service.dart';
+import '../../../widgets/MyFieldPicker.dart';
 import '../flights_controller.dart';
 
 class FlightContainerListDialog extends StatefulWidget {
@@ -44,7 +48,8 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
 
   // List<Airport?> availableDests = [];
   List<String?> availableDests = [];
-
+  Spot? spot;
+  AirportPositionSection? airportPositionSection;
   @override
   void initState() {
     // dest = BasicClass.getAirportByCode(widget.flight.from)!;
@@ -69,7 +74,7 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
     ThemeData theme = Theme.of(context);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    List<TagContainer> assignedList = assigned.where((element) => element.validateSearch(assignedSearchC.text)).toList();
+    List<TagContainer> assignedList = assigned.where((element) =>  element.validateSearch(assignedSearchC.text)).toList();
     List<TagContainer> availableList = available.where((element) => element.validateSearch(availableSearchC.text)).toList();
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: width * 0.1, vertical: height * 0.2),
@@ -83,6 +88,8 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
               children: [
                 const SizedBox(width: 18),
                 const Text("Flight Container List", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                const SizedBox(width: 12),
+                FlightBanner(flight: widget.flight),
                 const Spacer(),
                 IconButton(
                     onPressed: () {
@@ -117,17 +124,19 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                       ),
                     ),
                   ),
+
                   Expanded(
+                    flex: 2,
                     child: Container(
                       height: 50,
                       alignment: Alignment.center,
                       color: MyColors.evenRow,
-                      child: const Text("Tag Types", style: TextStyles.styleBold16Grey),
+                      child: const Text("Section & TagType", style: TextStyles.styleBold16Grey),
                     ),
                   ),
                   // const SizedBox(width: 12),
                   Expanded(
-                    flex: 6,
+                    flex: 5,
                     child: Row(
                       children: [
                         const SizedBox(width: 12),
@@ -170,9 +179,24 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                 source: AvailableContainerDataSource(
                                   cons: availableList,
                                   onAdd: (e) async {
-                                    // TagContainer e = availableList[i];
-                                    // e = e.copyWith(destination: dest, destList: destList.join(","), classList: classes.map((e) => e.abbreviation).join(","));
+                                    if(typeList.isEmpty){
+                                      WarningHandler.handle(OperationWarning(code: 1, msg: "Select Valid Types for Container!"));
+                                      return;
+                                    }
+                                    if(airportPositionSection == null){
+                                      WarningHandler.handle(OperationWarning(code: 1, msg: "Section is Required!"));
+                                      return;
+                                    }
+                                    if(airportPositionSection!.spotRequired && spot==null){
+                                      WarningHandler.handle(OperationWarning(code: 1, msg: "Selected Section Requires Spot!"));
+                                      return;
+                                    }
+
+
+
                                     e.tagTypeIds = typeList.map((e) => e.id.toString()).join(",");
+                                    e.sectionID = airportPositionSection!.id;
+                                    e.spotID = spot?.id;
                                     final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, true);
                                     if (a != null) {
                                       available.removeWhere((element) => element.id == a.id);
@@ -223,7 +247,7 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                   ),
                   // const SizedBox(width: 12),
                   Expanded(
-                      flex: 1,
+                      flex: 2,
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                         decoration: const BoxDecoration(
@@ -234,35 +258,74 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: GridView(
-                                  shrinkWrap: true,
-                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1, childAspectRatio: 3),
-                                  children: BasicClass.systemSetting.tagTypeList
-                                      .where((element) => element.label.isNotEmpty)
-                                      .map(
-                                        (e) => SizedBox(
-                                          width: double.infinity,
-                                          child: MyCheckBoxButton(
-                                              value: typeList.contains(e),
-                                              onChanged: (v) {
-                                                if (v) {
-                                                  typeList.add(e);
-                                                } else if (typeList.length > 1 || true) {
-                                                  typeList.remove(e);
-                                                }
-                                                setState(() {});
-                                              },
-                                              label: e.label),
-                                        ),
-                                      )
-                                      .toList()),
+                            GridView(
+                                shrinkWrap: true,
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 2,crossAxisSpacing: 8,mainAxisSpacing: 8),
+                                children: BasicClass.systemSetting.tagTypeList
+                                    .where((element) => element.label.isNotEmpty)
+                                    .map(
+                                      (e) => SizedBox(
+                                    width: double.infinity,
+                                    child: MyCheckBoxButton(
+                                        value: typeList.contains(e),
+                                        onChanged: (v) {
+                                          if (v) {
+                                            typeList.add(e);
+                                          } else if (typeList.length > 1 || true) {
+                                            typeList.remove(e);
+                                          }
+                                          setState(() {});
+                                        },
+                                        label: e.label),
+                                  ),
+                                )
+                                    .toList()),
+                            const SizedBox(height: 12),
+                            const Divider(height: 24),
+                            const SizedBox(height: 12),
+                            MyFieldPicker<AirportPositionSection>(
+                              items: BasicClass.getAllAirportSections4().where((element) =>
+                              widget.flight.validAssignContainerPositions.contains(element.position) &&
+                              element.canHaveContainer).toList(),
+                              label: "Airport Section",
+                              itemToString: (item) => "${item.label}",
+                              value: airportPositionSection,
+                              onChange: (as) {
+                                airportPositionSection = as;
+                                if(as ==null || !as.spotRequired){
+                                  spot =null;
+                                }
+                                if(as!=null && as.spotRequired){
+                                  spot = (BasicClass.userSetting.shootList.firstWhereOrNull((element) => element.id == airportPositionSection?.id)?.spotList??[]).firstWhereOrNull((element) => !assigned.map((e) => e.spotID).contains(element.id));
+                                }
+                                setState(() {});
+                              },
                             ),
+                            (airportPositionSection?.spotRequired ?? false)
+                                ? Padding(
+                                  padding: const EdgeInsets.only(top: 24),
+                                  child: MyFieldPicker<Spot>(
+                                    items: BasicClass.userSetting.shootList.firstWhereOrNull((element) => element.id == airportPositionSection?.id)?.spotList??[],
+                                    // items: [],
+                                    label: "Spot",
+
+
+                                    itemToString: (item) => item.spot + (assignedList.any((element) => element.spotID == item.id) ? "  (Used)" : ""),
+                                    value: spot,
+                                    onChange: (s) {
+                                      spot = s;
+                                      setState(() {});
+                                    },
+                                  ),
+                                )
+                                : SizedBox(),
+                            const SizedBox(height: 12),
+
                           ],
                         ),
                       )),
                   Expanded(
-                    flex: 6,
+                    flex: 5,
                     child: SfDataGrid(
                         horizontalScrollPhysics: const NeverScrollableScrollPhysics(),
                         headerGridLinesVisibility: GridLinesVisibility.both,
@@ -274,7 +337,8 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                         allowSorting: true,
                         headerRowHeight: 35,
                         source: AssignedContainerDataSource(
-                          cons: assignedList,
+                          cons: assignedList.where((element) => element.flightID==widget.flight.id).toList(),
+
                           onDelete: (e) async {
                             final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, false);
                             if (a != null) {
