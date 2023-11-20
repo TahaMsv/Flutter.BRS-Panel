@@ -220,6 +220,26 @@ class FlightTag {
         ])),
   );
 
+  Widget getTahaWidget(String myText,Color myColor) => Container(
+    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+    decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: myColor.withOpacity(0.3) ?? Colors.transparent),
+    child: Center(
+      child: Row(
+        children: [
+          Icon(getStatus.getIcon, color:myColor, size: 12),
+          RichText(
+              text: TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
+                TextSpan(
+                  // text: "${getType.label}",
+                  text: myText,
+                  style: TextStyle(color: myColor),
+                ),
+              ])),
+        ],
+      ),
+    ),
+  );
+
   TagStatus? get exception => BasicClass.getTagStatusById(currentStatus);
 
   String get getAddress => BasicClass.getAirportSectionByID(sectionID)?.label?? tagPositions.first.container?.code ?? (tagPositions.first.bin.isEmpty ? getSection.label : tagPositions.first.bin);

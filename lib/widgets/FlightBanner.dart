@@ -8,8 +8,9 @@ import 'AirlineLogo.dart';
 
 class FlightBanner extends StatelessWidget {
   final Flight flight;
-  const FlightBanner({super.key,required this.flight});
+  final Color bgColor;
 
+  const FlightBanner({super.key, required this.flight, this.bgColor = Colors.white});
 
   @override
   Widget build(BuildContext context) {
@@ -17,50 +18,48 @@ class FlightBanner extends StatelessWidget {
     return Material(
       key: const Key("1"),
       borderRadius: BorderRadius.circular(5),
-      color: Colors.white,
+      color: bgColor,
       child: Focus(
         descendantsAreTraversable: false,
         child: InkWell(
           borderRadius: BorderRadius.circular(5),
           splashColor: theme.primaryColor.withOpacity(0.3),
           onTap: null,
-          child:  Container(
-                  key: Key(flight.al),
-                  padding: const EdgeInsets.symmetric(horizontal: 2),
-                  decoration: BoxDecoration(
-                      // color: Colors.white,
-                      border: Border.all(color: MyColors.veryLightPink),
-                      borderRadius: BorderRadius.circular(5)),
-                  child: SizedBox(
-                      width: 400,
-
-                      height: 30,
-                      child:  Row(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 2),
-                                  child: AirlineLogo(flight.al, size: 28, key: const Key("1")),
-                                ),
-                                const SizedBox(width: 4),
-                                Text("${flight.flightNumber}"),
-                                const SizedBox(width: 12),
-                                Text("${flight.from} - ${flight.to}"),
-                                const SizedBox(width: 12),
-                                Text(flight.std),
-                                const SizedBox(width: 6),
-                                Text(
-                                  DateFormat("dd MMM, EEE").format(flight.flightDate),
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                                const SizedBox(width: 12),
-                                Text(flight.getAircraft?.registration ?? ""),
-                                const Spacer(),
-                              ],
-                            )),
-                ),
+          child: Container(
+            key: Key(flight.al),
+            padding: const EdgeInsets.symmetric(horizontal: 2),
+            decoration: BoxDecoration(
+                // color: Colors.white,
+                border: Border.all(color: MyColors.veryLightPink),
+                borderRadius: BorderRadius.circular(5)),
+            child: SizedBox(
+                width: 400,
+                height: 30,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2),
+                      child: AirlineLogo(flight.al, size: 28, key: const Key("1")),
+                    ),
+                    const SizedBox(width: 4),
+                    Text("${flight.flightNumber}"),
+                    const SizedBox(width: 12),
+                    Text("${flight.from} - ${flight.to}"),
+                    const SizedBox(width: 12),
+                    Text(flight.std),
+                    const SizedBox(width: 6),
+                    Text(
+                      DateFormat("dd MMM, EEE").format(flight.flightDate),
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(flight.getAircraft?.registration ?? ""),
+                    const Spacer(),
+                  ],
+                )),
+          ),
         ),
       ),
     );
   }
 }
-

@@ -17,7 +17,17 @@ class CardField extends StatelessWidget {
   final TextStyle? valueStyle;
 
   const CardField(
-      {Key? key, required this.title, this.valueFormatter, this.value = "", this.titleSuffix, this.valueWidget, this.rightAlight = false, this.valueColor = MyColors.black, this.widgetPadding, this.valueStyle, this.scale = 1.0})
+      {Key? key,
+      required this.title,
+      this.valueFormatter,
+      this.value = "",
+      this.titleSuffix,
+      this.valueWidget,
+      this.rightAlight = false,
+      this.valueColor = MyColors.black,
+      this.widgetPadding,
+      this.valueStyle,
+      this.scale = 1.0})
       : super(key: key);
 
   @override
@@ -39,7 +49,67 @@ class CardField extends StatelessWidget {
                 padding: widgetPadding ?? EdgeInsets.symmetric(vertical: 4),
                 child: valueWidget,
               )
-            : Text(valueFormatter == null ? value : formatValue(valueFormatter!, value), overflow: TextOverflow.ellipsis, style: valueStyle ?? TextStyle(color: valueColor, fontSize: 16 * scale, fontWeight: FontWeight.w600)),
+            : Text(valueFormatter == null ? value : formatValue(valueFormatter!, value),
+                overflow: TextOverflow.ellipsis, style: valueStyle ?? TextStyle(color: valueColor, fontSize: 16 * scale, fontWeight: FontWeight.w600)),
+      ],
+    );
+  }
+
+  String formatValue(NumberFormat formatter, String value) {
+    if (double.tryParse(value) == null) {
+      return value;
+    } else {
+      String formatted = formatter.format(double.tryParse(value));
+      return formatted;
+    }
+  }
+}
+
+class HorizontalCardField extends StatelessWidget {
+  final String title;
+  final String value;
+  final String? titleSuffix;
+  final Color valueColor;
+  final double scale;
+  final NumberFormat? valueFormatter;
+  final bool rightAlight;
+  final Widget? valueWidget;
+  final EdgeInsetsGeometry? widgetPadding;
+  final TextStyle? valueStyle;
+
+  const HorizontalCardField(
+      {Key? key,
+      required this.title,
+      this.valueFormatter,
+      this.value = "",
+      this.titleSuffix,
+      this.valueWidget,
+      this.rightAlight = false,
+      this.valueColor = MyColors.black,
+      this.widgetPadding,
+      this.valueStyle,
+      this.scale = 1.0})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(title, style: TextStyle(color: MyColors.brownGrey, fontSize: 12 * scale)),
+            Text(titleSuffix == null ? "" : "  $titleSuffix", style: TextStyle(color: Colors.red, fontSize: 12 * scale, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        SizedBox(width: 5),
+        valueWidget != null
+            ? valueWidget!
+            : Text(valueFormatter == null ? value : formatValue(valueFormatter!, value),
+                overflow: TextOverflow.ellipsis, style: valueStyle ?? TextStyle(color: valueColor, fontSize: 16 * scale, fontWeight: FontWeight.w600)),
       ],
     );
   }
