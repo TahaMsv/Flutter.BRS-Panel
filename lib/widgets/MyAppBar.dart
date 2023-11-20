@@ -163,9 +163,10 @@ class UserIndicatorWidget extends ConsumerWidget {
     double avatarRadius = 18;
     if (u == null) return const SizedBox();
     return Container(
-      width: 300,
+      // width: 300,
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           GestureDetector(
             onTap: () {
@@ -182,7 +183,12 @@ class UserIndicatorWidget extends ConsumerWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Text("Hello, ${u.username}"),
+          Column(
+            children: [
+              Text("Hello, ${u.username}"),
+              Text(ref.watch(selectedServer)?.name??"",style: const TextStyle(fontSize: 8),)
+            ],
+          ),
           const SizedBox(width: 8),
           IconButton(
               onPressed: () {

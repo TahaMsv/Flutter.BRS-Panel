@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:brs_panel/core/abstracts/local_data_base_abs.dart';
 import 'package:brs_panel/core/platform/encryptor.dart';
 import 'package:brs_panel/core/platform/network_manager.dart';
@@ -25,7 +27,7 @@ class LoginController extends MainController {
 
   @override
   onCreate() {
-    loadPreferences();
+    // loadPreferences();
   }
 
   Future<LoginUser?> login() async {
@@ -72,10 +74,19 @@ class LoginController extends MainController {
     String pass = prefs.getString(SpKeys.password) ?? "";
     String al = prefs.getString(SpKeys.airline) ?? "";
     String? server = prefs.getString(SpKeys.server);
+    String? serverJson = prefs.getString(SpKeys.serverJson);
     loginState.usernameC.text = user;
     loginState.passwordC.text = pass;
     loginState.alC.text = al;
-    initNetworkManager(server);
+    if (serverJson != null) {
+      Server s = Server.fromJson(jsonDecode(serverJson));
+      ref.read(selectedServer.notifier).update((state) => s);
+      initNetworkManager(s.address);
+    }else{
+      initNetworkManager(server);
+    }
+
+
   }
 
   void logout([bool force = false]) async {
@@ -85,8 +96,17 @@ class LoginController extends MainController {
     } else {
       bool conf = await ConfirmOperation.getConfirm(Operation(message: "Are you sure?", title: "Logout?", actions: ["Confirm", 'Cancel']));
       if (conf) {
+        String? serverJson = prefs.getString(SpKeys.serverJson);
+        if (serverJson != null) {
+          Server s = Server.fromJson(jsonDecode(serverJson));
+          ref.read(selectedServer.notifier).update((state) => s);
+          print("saved server ${s.name}: ${s.address}");
+          initNetworkManager(s.address);
+        }
+
         final userP = ref.read(userProvider.notifier);
         userP.state = null;
+
       }
     }
   }
@@ -100,15 +120,26 @@ class LoginController extends MainController {
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => getServers()), (r) {
       servers = r.servers;
       // print("Found ${r.servers.length} Servers");
-      nav.dialog(ServerSelectDialog(servers: servers, currentServer: servers.firstWhereOrNull((e)=>e.address==NetworkManager().currentBaseUrl),)).then((value){
-        if(value is Server) {
+      print(r.servers.map((e) => e.address).toList().join("\n"));
+      print("CUrrent network: ${NetworkManager().currentBaseUrl}");
+      final s  = ref.read(selectedServer);
+      nav
+          .dialog(ServerSelectDialog(
+        servers: servers,
+        currentServer: servers.firstWhereOrNull((e) => e.address.toLowerCase() == (s?.address.toLowerCase()??NetworkManager().currentBaseUrl)),
+      ))
+          .then((value) {
+        if (value is Server) {
+          if(value == null) return;
           print("Selected Server is ${value.address}");
-
+          ref.read(selectedServer.notifier).update((state) => value);
+          prefs.setString(SpKeys.serverJson, jsonEncode(value.toJson()));
           // NetworkManager().currentBaseUrl;
           initNetworkManager(value.address);
         }
       });
     });
+
     return servers;
   }
 

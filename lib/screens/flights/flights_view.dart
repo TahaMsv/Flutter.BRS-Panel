@@ -207,7 +207,7 @@ class FlightListWidget extends ConsumerWidget {
                 .map(
                   (e) => GridColumn(
                     columnName: e.name,
-                    label: Center(child: Text(e.name.capitalizeFirst ?? "")),
+                    label: Center(child: Text(e.label ?? "")),
                     width: e.width * width,
                   ),
                 )

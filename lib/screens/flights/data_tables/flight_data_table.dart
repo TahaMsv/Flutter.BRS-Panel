@@ -21,7 +21,7 @@ enum FlightDataTableColumn {
   flight,
   status,
   route,
-  time,
+  std,
   aircraft,
   register,
   actions,
@@ -36,7 +36,7 @@ extension FlightDataTableColumnDetails on FlightDataTableColumn {
         return 0.43;
       case FlightDataTableColumn.route:
         return 0.08;
-      case FlightDataTableColumn.time:
+      case FlightDataTableColumn.std:
         return 0.08;
       case FlightDataTableColumn.aircraft:
         return 0.08;
@@ -44,6 +44,14 @@ extension FlightDataTableColumnDetails on FlightDataTableColumn {
         return 0.1;
       case FlightDataTableColumn.actions:
         return 0.1;
+    }
+  }
+  String get label {
+    switch (this) {
+      case FlightDataTableColumn.std:
+        return "STD";
+        default:
+        return name.capitalizeFirst!;
     }
   }
 }
@@ -61,7 +69,7 @@ class FlightDataSource extends DataGridSource {
               DataGridCell<String>(columnName: FlightDataTableColumn.flight.name, value: e.flightNumber),
               DataGridCell<int>(columnName: FlightDataTableColumn.status.name, value: 1),
               DataGridCell<String>(columnName: FlightDataTableColumn.route.name, value: e.from),
-              DataGridCell<String>(columnName: FlightDataTableColumn.time.name, value: e.std),
+              DataGridCell<String>(columnName: FlightDataTableColumn.std.name, value: e.std),
               DataGridCell<int>(columnName: FlightDataTableColumn.aircraft.name, value: e.getAircraft?.id),
               DataGridCell<String>(columnName: FlightDataTableColumn.register.name, value: e.getAircraft?.registration),
               DataGridCell<String>(columnName: FlightDataTableColumn.actions.name, value: ''),
@@ -117,7 +125,7 @@ class FlightDataSource extends DataGridSource {
               child: Text('${f.from}-${f.to}'),
             );
           }
-          if (dataGridCell.columnName == FlightDataTableColumn.time.name) {
+          if (dataGridCell.columnName == FlightDataTableColumn.std.name) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.centerLeft,

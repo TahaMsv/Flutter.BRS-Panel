@@ -128,6 +128,7 @@ void initFullScreen() async {
 
 initNetworkManager([String? baseUrl]) {
   String base = baseUrl ?? BasicClass.config.baseURL;
+  print("INITING NM With ${base}");
   // log("Setting Base URL to $baseUrl");
   NetworkOption.initialize(
       timeout: Duration(days: 1),
