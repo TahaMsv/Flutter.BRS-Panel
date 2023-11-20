@@ -539,7 +539,7 @@ class Flight {
     totalBagPCs: json["TotalBagPCs"],
     totalBagWeight: json["TotalBagWeight"],
     isFinalized: json["IsFinalized"],
-    positions: List<PositionData>.from(json["Positions"].map((x) => PositionData.fromJson(x))),
+    positions: List<PositionData>.from((json["Positions"]??[]).map((x) => PositionData.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -621,7 +621,7 @@ class PositionData {
     id: json["ID"],
     tagCount: json["TagCount"],
     order: json["Order"],
-    excTagCount: json["ExcTagCount"],
+    excTagCount: json["ExcTagCount"]??1,
     sections: List<PositionSection>.from((json["Sections"]??[]).map((x) => PositionSection.fromJson(x))),
   );
 
@@ -630,7 +630,6 @@ class PositionData {
     "TagCount": tagCount,
     "Order": order,
     "ExcTagCount": excTagCount,
-    "ExcTagCount": sections,
     "Sections": List<dynamic>.from(sections.map((x) => x.toJson())),
   };
 

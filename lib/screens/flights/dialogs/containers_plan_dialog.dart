@@ -52,7 +52,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     double width = MediaQuery.of(context).size.width;
-    const TextStyle headerStyles = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
+    const TextStyle headerStyles = TextStyle(fontSize: 15, fontWeight: FontWeight.bold);
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: width * 0.1),
       backgroundColor: Colors.white,
@@ -453,7 +453,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                       navigationService.popDialog();
                     },
                     label: "Cancel",
-                    color: theme.primaryColor,
+                    color: Colors.grey,
                   ),
                   const SizedBox(width: 24),
                   MyButton(
