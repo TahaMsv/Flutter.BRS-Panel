@@ -281,12 +281,14 @@ abstract class MenuItems {
     assignContainer,
     // openWebView,
     containersPlan,
+    flightReport,
   ];
 
   static const flightSummary = MenuItem(text: 'Flight Summary', icon: Icons.home);
   static const assignContainer = MenuItem(text: 'Assign Container', icon: Icons.share);
   static const openWebView = MenuItem(text: 'Open WebView', icon: Icons.open_in_browser);
   static const containersPlan = MenuItem(text: 'Containers Plan', icon: Icons.queue_play_next);
+  static const flightReport = MenuItem(text: 'Flight Report', icon: Icons.text_snippet_outlined);
 
   static Widget buildItem(MenuItem item) {
     return Row(

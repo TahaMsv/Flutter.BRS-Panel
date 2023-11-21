@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 import '../../../../core/classes/flight_details_class.dart';
@@ -37,6 +38,10 @@ class AirportSectionTagSection extends ExpandableListSection<FlightTag> {
   List<FlightTag> get items {
     return getItems() ?? [];
   }
+
+  bool get isShow {
+    return items.isNotEmpty || airportPositionSection.showEmpty;
+  }
 }
 
 class AirportSectionContainerSection extends ExpandableListSection<TagContainer> {
@@ -45,6 +50,8 @@ class AirportSectionContainerSection extends ExpandableListSection<TagContainer>
   final List<TagContainer> cons;
 
   AirportSectionContainerSection({required this.airportPositionSection, required this.cons, required this.ref});
+
+
 
   @override
   List<TagContainer>? getItems() {
@@ -71,6 +78,8 @@ class AirportSectionContainerSection extends ExpandableListSection<TagContainer>
   List<TagContainer> get items {
     return getItems() ?? [];
   }
+
+  bool get isShow => cons.isNotEmpty  || airportPositionSection.showEmpty;
 }
 
 class AirportSectionBinSection extends ExpandableListSection<Bin> {
@@ -79,6 +88,8 @@ class AirportSectionBinSection extends ExpandableListSection<Bin> {
   final List<Bin> bins;
 
   AirportSectionBinSection({required this.airportPositionSection, required this.bins, required this.ref});
+
+
 
   @override
   List<Bin>? getItems() {
@@ -105,4 +116,6 @@ class AirportSectionBinSection extends ExpandableListSection<Bin> {
   List<Bin> get items {
     return getItems() ?? [];
   }
+
+  bool get isShow => bins.isNotEmpty || airportPositionSection.showEmpty;
 }

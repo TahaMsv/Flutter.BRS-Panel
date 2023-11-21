@@ -5,8 +5,10 @@ import '../usecases/flight_add_remove_container_usecase.dart';
 import '../usecases/flight_get_container_list_usecase.dart';
 import '../usecases/flight_get_containers_plan_usecase.dart';
 import '../usecases/flight_get_plan_file.dart';
+import '../usecases/flight_get_report_usecase.dart';
 import '../usecases/flight_list_usecase.dart';
 import '../usecases/flight_save_containers_plan_usecase.dart';
+import '../usecases/flight_send_report_usecase.dart';
 import 'flights_local_ds.dart';
 
 class FlightsRemoteDataSource implements FlightsDataSourceInterface {
@@ -45,11 +47,23 @@ class FlightsRemoteDataSource implements FlightsDataSourceInterface {
     return FlightGetPlanFileResponse.fromResponse(res);
   }
 
-    @override
-      Future<FlightSaveContainersPlanResponse> flightSaveContainersPlan({required FlightSaveContainersPlanRequest request}) async {
-        Response res = await networkManager.post(request);
-        FlightSaveContainersPlanResponse response =  FlightSaveContainersPlanResponse.fromResponse(res);
-        return response;
-      }
+  @override
+  Future<FlightSaveContainersPlanResponse> flightSaveContainersPlan({required FlightSaveContainersPlanRequest request}) async {
+    Response res = await networkManager.post(request);
+    FlightSaveContainersPlanResponse response = FlightSaveContainersPlanResponse.fromResponse(res);
+    return response;
+  }
 
+  @override
+  Future<FlightGetReportResponse> flightGetReport({required FlightGetReportRequest request}) async {
+    Response res = await networkManager.post(request);
+    FlightGetReportResponse response = FlightGetReportResponse.fromResponse(res);
+    return response;
+  }
+  @override
+  Future<FlightSendReportResponse> flightSendReport({required FlightSendReportRequest request}) async {
+    Response res = await networkManager.post(request);
+    FlightSendReportResponse response = FlightSendReportResponse.fromResponse(res);
+    return response;
+  }
 }

@@ -12,7 +12,9 @@ import 'usecases/flight_add_remove_container_usecase.dart';
 import 'usecases/flight_get_container_list_usecase.dart';
 import 'usecases/flight_get_containers_plan_usecase.dart';
 import 'usecases/flight_get_plan_file.dart';
+import 'usecases/flight_get_report_usecase.dart';
 import 'usecases/flight_list_usecase.dart';
+import 'usecases/flight_send_report_usecase.dart';
 
 class FlightsRepository implements FlightsRepositoryInterface {
   final FlightsRemoteDataSource flightsRemoteDataSource = FlightsRemoteDataSource();
@@ -105,6 +107,36 @@ class FlightsRepository implements FlightsRepositoryInterface {
         flightSaveContainersPlanResponse = await flightsLocalDataSource.flightSaveContainersPlan(request: request);
       }
       return Right(flightSaveContainersPlanResponse);
+    } on AppException catch (e) {
+      return Left(ServerFailure.fromAppException(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, FlightGetReportResponse>> flightGetReport(FlightGetReportRequest request) async {
+    try {
+      FlightGetReportResponse flightGetReportResponse;
+      if (await networkInfo.isConnected) {
+        flightGetReportResponse = await flightsRemoteDataSource.flightGetReport(request: request);
+      } else {
+        flightGetReportResponse = await flightsLocalDataSource.flightGetReport(request: request);
+      }
+      return Right(flightGetReportResponse);
+    } on AppException catch (e) {
+      return Left(ServerFailure.fromAppException(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, FlightSendReportResponse>> flightSendReport(FlightSendReportRequest request) async {
+    try {
+      FlightSendReportResponse flightSendReportResponse;
+      if (await networkInfo.isConnected) {
+        flightSendReportResponse = await flightsRemoteDataSource.flightSendReport(request: request);
+      } else {
+        flightSendReportResponse = await flightsLocalDataSource.flightSendReport(request: request);
+      }
+      return Right(flightSendReportResponse);
     } on AppException catch (e) {
       return Left(ServerFailure.fromAppException(e));
     }

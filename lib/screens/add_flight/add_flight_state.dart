@@ -1,3 +1,4 @@
+import 'package:artemis_utils/artemis_utils.dart';
 import 'package:brs_panel/core/classes/login_user_class.dart';
 import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:brs_panel/screens/add_flight/usecases/add_flight_usecase.dart';
@@ -11,7 +12,7 @@ class AddFlightState extends ChangeNotifier {
   void setState() => notifyListeners();
 
   DateTime fromDate = DateTime.now();
-  DateTime? toDate;
+  DateTime? toDate = DateTime.now();
   TimeOfDay? std;
   TimeOfDay? sta;
   Airport? airport;
@@ -23,6 +24,8 @@ class AddFlightState extends ChangeNotifier {
   int? barcodeLength;
   int flightTypeID = 0;
   bool isTest = false;
+  bool isSchedule = false;
+  Map<String, TimeOfDay?> weekTimes = {};
 
   AddFlightRequest createAddFlightRequest() => AddFlightRequest(
         flnb: flnbC.text,
@@ -38,6 +41,11 @@ class AddFlightState extends ChangeNotifier {
         barcodeLength: 10,
         flightTypeID: flightTypeID,
         isTest: isTest,
+        isSchedule: isSchedule,
+        weekDaysTime: weekTimes.map((key, value) => MapEntry(key, {
+          "STD":value.format_HHmm,
+          "STA":value!.add(Duration(hours: 1)).format_HHmm
+        })),
       );
 
   bool get validateAddFlight => std == null || from == null || to == null || al == null;

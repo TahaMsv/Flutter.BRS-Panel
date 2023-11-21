@@ -36,6 +36,8 @@ class AddFlightRequest extends Request {
   final int barcodeLength;
   final int flightTypeID;
   final bool isTest;
+  final bool isSchedule;
+  final Map<String, Map<String,String>> weekDaysTime;
 
   AddFlightRequest({
     required this.flnb,
@@ -51,6 +53,8 @@ class AddFlightRequest extends Request {
     required this.barcodeLength,
     required this.flightTypeID,
     required this.isTest,
+    required this.isSchedule,
+    required this.weekDaysTime,
 });
 
   @override
@@ -72,6 +76,9 @@ class AddFlightRequest extends Request {
         "FlightType": flightTypeID,
         "AircraftID":aircraft?.id,
         "IsTest":isTest,
+        "ToDate": toDate.format_yyyyMMdd,
+        "IsSchedule": isSchedule,
+        "WeekDaysTime": weekDaysTime
       }
     }
   };

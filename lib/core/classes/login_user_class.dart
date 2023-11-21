@@ -1277,6 +1277,9 @@ class AirportPositionSection {
   }
 
 // int get count => 0;
+
+  bool get showEmpty => (label=="Checkin") || (label.contains("Deliver")) || (label=="Aircraft" && position==4) || true;
+
 }
 
 class Shoot {

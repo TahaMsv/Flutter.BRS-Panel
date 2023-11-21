@@ -18,6 +18,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:network_manager/network_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
@@ -43,6 +44,8 @@ Future<void> init() async {
   initFullScreen();
   await initDataBase();
   await loadConfigFile();
+  await  initializeDateFormatting();
+
 
   getIt.allowReassignment = true;
 

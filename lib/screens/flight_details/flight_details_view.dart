@@ -221,23 +221,21 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
     //assigning sections
     final List<AirportPositionSection> positionSections = BasicClass.getAllAirportSections();
     List<AirportPositionSection> filteredSections = positionSections
-        .where((s) => selectedPos.binRequired
-            ? bins.any((bin) => bin.sectionID == s.id)
-            : selectedPos.containerRequired
-                ? cons.any((con) => con.sectionID == s.id)
-                : filteredTag.any((t) => t.sectionID == s.id))
-        .toList();
+    .where((element) => element.position == selectedPos.id
+        && element.subs.isEmpty
+        && AirportSectionTagSection(airportPositionSection: element, tags: filteredTag, ref: ref).isShow).toList();
+
     final List<AirportSectionTagSection> sectionSectionsTag = filteredSections
         .map((e) => AirportSectionTagSection(airportPositionSection: e, tags: filteredTag, ref: ref))
-        .where((e) => e.items.isNotEmpty)
+        .where((e) => e.isShow)
         .toList();
     final List<AirportSectionContainerSection> sectionSectionsCon = filteredSections
         .map((e) => AirportSectionContainerSection(airportPositionSection: e, cons: cons, ref: ref))
-        .where((e) => e.cons.isNotEmpty)
+        .where((e) => e.isShow)
         .toList();
     final List<AirportSectionBinSection> sectionSectionsBin = filteredSections
         .map((e) => AirportSectionBinSection(airportPositionSection: e, bins: bins, ref: ref))
-        .where((e) => e.bins.isNotEmpty)
+        .where((e) => e.isShow)
         .toList();
     return Column(
       children: [
@@ -376,6 +374,7 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
                       builder: SliverExpandableChildDelegate<TagContainer, AirportSectionContainerSection>(
                           sectionList: sectionSectionsCon,
                           headerBuilder: (context, sectionIndex, index) {
+                            print(sectionIndex);
                             return SectionTileWidget(
                                 secTag: null, secCon: sectionSectionsCon[sectionIndex], secBin: null);
                           },
@@ -419,6 +418,7 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
                       builder: SliverExpandableChildDelegate<FlightTag, AirportSectionTagSection>(
                           sectionList: sectionSectionsTag,
                           headerBuilder: (context, sectionIndex, index) {
+                            print(sectionIndex);
                             return SectionTileWidget(
                                 secTag: sectionSectionsTag[sectionIndex], secCon: null, secBin: null);
                           },

@@ -16,11 +16,11 @@ class AddFlightController extends MainController {
   late AddFlightState addFlightState = ref.read(addFlightProvider);
 
   Future<Flight?> addFlight() async {
+
     Flight? flight;
     AddFlightUseCase addFlightUsecase = AddFlightUseCase();
     AddFlightRequest addFlightRequest = addFlightState.createAddFlightRequest();
     final fOrR = await addFlightUsecase(request: addFlightRequest);
-
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => addFlight()), (r) {
       flight = r.flights.first;
       final flightList = ref.read(flightListProvider.notifier);
@@ -41,7 +41,20 @@ class AddFlightController extends MainController {
       final newDate = await Pickers.pickDate(nav.context, addFlightState.fromDate);
       if (newDate == null) return;
       addFlightState.fromDate = newDate;
+
     }
+    addFlightState.setState();
+  }
+  setToDate(int? i) async {
+    if (i != null) {
+      addFlightState.toDate = addFlightState.toDate?.add(Duration(days: i));
+    } else {
+      final newDate = await Pickers.pickDate(nav.context, addFlightState.toDate??DateTime.now());
+      if (newDate == null) return;
+      addFlightState.toDate = newDate;
+
+    }
+    addFlightState.setState();
   }
 
   // UseCase UseCase = UseCase(repository: Repository());
@@ -65,6 +78,16 @@ class AddFlightController extends MainController {
     Pickers.pickTime(nav.context, addFlightState.sta ?? TimeOfDay.now()).then((value) {
       if (value != null) {
         addFlightState.sta = value;
+        addFlightState.setState();
+      }
+    });
+  }
+
+  void setDayStd(int dayId) {
+    // TimeOfDay time = TimeOfDay.
+    Pickers.pickTime(nav.context, addFlightState.weekTimes[dayId] ?? TimeOfDay.now()).then((value) {
+      if (value != null) {
+        addFlightState.weekTimes["$dayId"] = value;
         addFlightState.setState();
       }
     });

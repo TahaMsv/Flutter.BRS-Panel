@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:brs_panel/core/abstracts/failures_abs.dart';
 import 'package:brs_panel/core/abstracts/success_abs.dart';
 import 'package:brs_panel/core/navigation/route_names.dart';
 import 'package:brs_panel/core/util/handlers/success_handler.dart';
@@ -8,12 +9,15 @@ import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_state.dart';
 import 'package:brs_panel/screens/flights/data_tables/flight_data_table.dart';
 import 'package:brs_panel/screens/flights/dialogs/flight_container_list_dialog.dart';
+import 'package:brs_panel/screens/flights/dialogs/flight_report_dialog.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_add_remove_container_usecase.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_get_container_list_usecase.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_get_containers_plan_usecase.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_get_plan_file.dart';
+import 'package:brs_panel/screens/flights/usecases/flight_get_report_usecase.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_list_usecase.dart';
 import 'package:brs_panel/screens/flights/usecases/flight_save_containers_plan_usecase.dart';
+import 'package:brs_panel/screens/flights/usecases/flight_send_report_usecase.dart';
 import 'package:desktop_webview_window/desktop_webview_window.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -21,6 +25,7 @@ import '../../core/abstracts/controller_abs.dart';
 import '../../core/abstracts/device_info_service_abs.dart';
 import '../../core/classes/containers_plan_class.dart';
 import '../../core/classes/flight_class.dart';
+import '../../core/classes/flight_report_class.dart';
 import '../../core/classes/login_user_class.dart';
 import '../../core/classes/tag_container_class.dart';
 import '../../core/platform/device_info.dart';
@@ -142,6 +147,9 @@ class FlightsController extends MainController {
       case MenuItems.containersPlan:
         await flightEditContainersPlanDialog(flight);
         return;
+      case MenuItems.flightReport:
+        await flightGetReport(flight);
+        return;
       case MenuItems.openWebView:
         if (flightsController.isDesktop()) {
           // nav.pushNamed(RouteNames.webView);
@@ -155,12 +163,10 @@ class FlightsController extends MainController {
     }
   }
 
-  flightEditContainersPlanDialog(Flight flight) async{
+  flightEditContainersPlanDialog(Flight flight) async {
     ContainersPlan? plan = await flightGetContainersPlan(flight);
-    if(plan == null) return;
-    nav.dialog(FlightContainersPlanDialog(flight: flight,plan: plan)).then((value){
-
-    });
+    if (plan == null) return;
+    nav.dialog(FlightContainersPlanDialog(flight: flight, plan: plan)).then((value) {});
   }
 
   Future<ContainersPlan?> flightGetContainersPlan(Flight flight) async {
@@ -175,20 +181,60 @@ class FlightsController extends MainController {
     return plan;
   }
 
-    Future<void> flightGetPlanFile({required Flight flight,required TagType type}) async {
-        void da;
-        FlightGetPlanFileUseCase flightGetPlanFileUsecase = FlightGetPlanFileUseCase();
-        FlightGetPlanFileRequest flightGetPlanFileRequest = FlightGetPlanFileRequest(flightID: flight.id, typeID: type.id);
-        final fOrR = await flightGetPlanFileUsecase(request: flightGetPlanFileRequest);
+  Future<void> flightGetPlanFile({required Flight flight, required TagType type}) async {
+    void da;
+    FlightGetPlanFileUseCase flightGetPlanFileUsecase = FlightGetPlanFileUseCase();
+    FlightGetPlanFileRequest flightGetPlanFileRequest = FlightGetPlanFileRequest(flightID: flight.id, typeID: type.id);
+    final fOrR = await flightGetPlanFileUsecase(request: flightGetPlanFileRequest);
 
-        fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightGetPlanFile(flight: flight, type:type )), (r) {
-          final bytes = base64Decode(r.data);
-          nav.dialog(PDFPreviewDialog(pdfFileBytes: bytes, con: null, pdfURL: null,name: "Plan ${type.label}",));
-        });
-        return da;
+    fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightGetPlanFile(flight: flight, type: type)), (r) {
+      final bytes = base64Decode(r.data);
+      nav.dialog(PDFPreviewDialog(
+        pdfFileBytes: bytes,
+        con: null,
+        pdfURL: null,
+        name: "Plan ${type.label}",
+      ));
+    });
+    return da;
+  }
+
+  Future<FlightReport?> flightGetReport(Flight flight) async {
+    FlightReport? report;
+    FlightGetReportUseCase flightGetReportUsecase = FlightGetReportUseCase();
+    FlightGetReportRequest flightGetReportRequest = FlightGetReportRequest(flightID: flight.id);
+    final fOrR = await flightGetReportUsecase(request: flightGetReportRequest);
+    fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightGetReport(flight)), (r) {
+      report = r.report;
+      print("Report ${r.report.reportText}");
+      nav.dialog(FlightReportDialog(flightReport: r.report, flight: flight));
+    });
+    return report;
+  }
+
+  Future<void> flightSendReport({required String email, required String typeB, required Flight flight, required bool attachment}) async {
+    if (email.trim().isNotEmpty) {
+      List<String> invalidEmails = email.split(",").where((element) =>element.isNotEmpty && !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(element.trim())).toList();
+      if(invalidEmails.isNotEmpty){
+        FailureHandler.handle(ValidationFailure(code: 1, msg: "${invalidEmails.join(",")} ${invalidEmails.length>1?'are':'is'} not a valid email address", traceMsg: ""));
+        return;
       }
+    }
+    if (typeB.trim().isNotEmpty) {
+      List<String> invalidTypeB = typeB.split(",").where((element) =>element.isNotEmpty && element.trim().length!=7).toList();
+      if(invalidTypeB.isNotEmpty){
+        FailureHandler.handle(ValidationFailure(code: 1, msg: "${invalidTypeB.join(",")} ${invalidTypeB.length>1?'are':'is'} not a valid type-b address", traceMsg: ""));
+        return;
+      }
+    }
+    FlightSendReportUseCase flightSendReportUsecase = FlightSendReportUseCase();
+    FlightSendReportRequest flightSendReportRequest = FlightSendReportRequest(typeB: typeB, email: email, flight: flight, attachment: attachment);
+    final fOrR = await flightSendReportUsecase(request: flightSendReportRequest);
 
-
+    fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightSendReport(email: email, typeB: typeB, flight: flight, attachment: attachment)), (r) {
+      SuccessHandler.handle(ServerSuccess(code: 1, msg: "Report Sent Successfully!"));
+    });
+  }
 
   Future<String> _getWebViewPath() async {
     final document = await getApplicationDocumentsDirectory();
@@ -235,21 +281,19 @@ class FlightsController extends MainController {
     }
   }
 
-  savePlans({required Flight flight, required ContainersPlan newPlan}) {
+  savePlans({required Flight flight, required ContainersPlan newPlan}) {}
 
+  Future<ContainersPlan?> flightSavePlans({required Flight flight, required ContainersPlan newPlan}) async {
+    ContainersPlan? plans;
+    FlightSaveContainersPlanUseCase flightSavePlansUsecase = FlightSaveContainersPlanUseCase();
+    FlightSaveContainersPlanRequest flightSaveContainersPlanRequest = FlightSaveContainersPlanRequest(flight: flight, plan: newPlan);
+    final fOrR = await flightSavePlansUsecase(request: flightSaveContainersPlanRequest);
+
+    fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightSavePlans(flight: flight, newPlan: newPlan)), (r) {
+      // plans = r.plan;
+      SuccessHandler.handle(ServerSuccess(code: 1, msg: "Plan Saved Successfully!"));
+    });
+
+    return plans;
   }
-
-    Future<ContainersPlan?> flightSavePlans({required Flight flight, required ContainersPlan newPlan}) async {
-        ContainersPlan? plans;
-        FlightSaveContainersPlanUseCase flightSavePlansUsecase = FlightSaveContainersPlanUseCase();
-        FlightSaveContainersPlanRequest flightSaveContainersPlanRequest = FlightSaveContainersPlanRequest(flight: flight, plan: newPlan);
-        final fOrR = await flightSavePlansUsecase(request: flightSaveContainersPlanRequest);
-
-        fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightSavePlans(flight: flight,newPlan: newPlan)), (r) {
-          // plans = r.plan;
-          SuccessHandler.handle(ServerSuccess(code: 1, msg: "Plan Saved Successfully!"));
-        });
-
-        return plans;
-      }
 }
