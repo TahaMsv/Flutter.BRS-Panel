@@ -1,3 +1,4 @@
+import 'package:artemis_utils/artemis_utils.dart';
 import 'package:brs_panel/core/util/pickers.dart';
 import 'package:brs_panel/screens/add_flight/usecases/add_flight_usecase.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +16,15 @@ import 'add_flight_state.dart';
 class AddFlightController extends MainController {
   late AddFlightState addFlightState = ref.read(addFlightProvider);
 
-  Future<Flight?> addFlight() async {
+  @override
+  onInit(){
+    print("onInit");
+    addFlightState.clear();
+    addFlightState.setState();
+    super.onInit();
+  }
 
+  Future<Flight?> addFlight() async {
     Flight? flight;
     AddFlightUseCase addFlightUsecase = AddFlightUseCase();
     AddFlightRequest addFlightRequest = addFlightState.createAddFlightRequest();
@@ -24,12 +32,21 @@ class AddFlightController extends MainController {
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => addFlight()), (r) {
       flight = r.flights.first;
       final flightList = ref.read(flightListProvider.notifier);
-      flightList.addFlight(flight!);
-      nav.goBack(
-          result: r,
-          onPop: () {
-            SuccessHandler.handle(ServerSuccess(code: 1, msg: "Done\nFlight ${flight!.flightNumber} Added Successfully"));
-          });
+      if (ref.read(flightDateProvider).format_yyyyMMdd == flight!.flightDate.format_yyyyMMdd) {
+        flightList.addFlight(flight!);
+        nav.goBack(
+            result: r,
+            onPop: () {
+              SuccessHandler.handle(ServerSuccess(code: 1, msg: "Done\nFlight ${flight!.flightNumber} Added Successfully"));
+            });
+      } else {
+        nav.goBack(
+
+            result: r,
+            onPop: () {
+              SuccessHandler.handle(ServerSuccess(code: 1, msg: "Done\nFlight ${flight!.flightNumber} Added Successfully on ${flight!.flightDate.format_ddMMMEEE}"));
+            });
+      }
     });
     return flight;
   }
@@ -41,18 +58,17 @@ class AddFlightController extends MainController {
       final newDate = await Pickers.pickDate(nav.context, addFlightState.fromDate);
       if (newDate == null) return;
       addFlightState.fromDate = newDate;
-
     }
     addFlightState.setState();
   }
+
   setToDate(int? i) async {
     if (i != null) {
       addFlightState.toDate = addFlightState.toDate?.add(Duration(days: i));
     } else {
-      final newDate = await Pickers.pickDate(nav.context, addFlightState.toDate??DateTime.now());
+      final newDate = await Pickers.pickDate(nav.context, addFlightState.toDate ?? DateTime.now());
       if (newDate == null) return;
       addFlightState.toDate = newDate;
-
     }
     addFlightState.setState();
   }
@@ -68,11 +84,6 @@ class AddFlightController extends MainController {
     });
   }
 
-  @override
-  void onInit() {
-
-    super.onInit();
-  }
 
   void setSTA() {
     Pickers.pickTime(nav.context, addFlightState.sta ?? TimeOfDay.now()).then((value) {

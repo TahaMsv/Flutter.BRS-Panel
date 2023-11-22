@@ -25,13 +25,13 @@ class AddFlightUseCase extends UseCase<AddFlightResponse,AddFlightRequest> {
 class AddFlightRequest extends Request {
   final DateTime fromDate;
   final DateTime toDate;
-  final TimeOfDay std;
+  final TimeOfDay? std;
   final TimeOfDay? sta;
   final Airport? airport;
-  final Airport from;
-  final Airport to;
+  final Airport? from;
+  final Airport? to;
   final String flnb;
-  final String al;
+  final String? al;
   final Aircraft? aircraft;
   final int barcodeLength;
   final int flightTypeID;
@@ -53,6 +53,7 @@ class AddFlightRequest extends Request {
     required this.barcodeLength,
     required this.flightTypeID,
     required this.isTest,
+
     required this.isSchedule,
     required this.weekDaysTime,
 });
@@ -67,8 +68,8 @@ class AddFlightRequest extends Request {
         "STD": std.format_HHmm,
         "STA": sta.format_HHmm,
         "Airport": BasicClass.userSetting.airport,
-        "ToCity": to.code,
-        "FromCity": from.code,
+        "ToCity": to?.code,
+        "FromCity": from?.code,
         "FLNB": flnb,
         "AL": al,
         "Registration": aircraft?.registration,
@@ -84,6 +85,25 @@ class AddFlightRequest extends Request {
   };
 
   Failure? validate(){
+    if(flnb.isEmpty){
+      return ValidationFailure(code: 1, msg: "Flight Number is Required!", traceMsg: '');
+    }
+    if(from==null){
+      return ValidationFailure(code: 1, msg: "From is Required!", traceMsg: '');
+    }
+    if(to==null){
+      return ValidationFailure(code: 1, msg: "To is Required!", traceMsg: '');
+    }
+    if(al==null){
+      return ValidationFailure(code: 1, msg: "Airline is Required!", traceMsg: '');
+    }
+    if(std==null){
+      return ValidationFailure(code: 1, msg: "STD is Required!", traceMsg: '');
+    }
+    if(sta==null){
+      return ValidationFailure(code: 1, msg: "STA is Required!", traceMsg: '');
+    }
+
     return null;
   }
 }
