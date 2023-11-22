@@ -11,7 +11,7 @@ class AddFlightState extends ChangeNotifier {
   void setState() => notifyListeners();
 
   DateTime fromDate = DateTime.now();
-  DateTime? toDate = DateTime.now();
+  DateTime toDate = DateTime.now();
   TimeOfDay? std;
   TimeOfDay? sta;
   Airport? airport;
@@ -24,12 +24,13 @@ class AddFlightState extends ChangeNotifier {
   int flightTypeID = 0;
   bool isTest = false;
   bool isSchedule = false;
-  Map<String, TimeOfDay?> weekTimes = {};
+  Map<String, List<TimeOfDay?>> weekTimes = {};
+  // Map<String, TimeOfDay?> weekTimesSTA = {};
 
   AddFlightRequest createAddFlightRequest() => AddFlightRequest(
         flnb: flnbC.text,
         fromDate: fromDate,
-        toDate: fromDate,
+        toDate: toDate,
         std: std,
         sta: sta,
         airport: airport,
@@ -42,8 +43,8 @@ class AddFlightState extends ChangeNotifier {
         isTest: isTest,
         isSchedule: isSchedule,
         weekDaysTime: weekTimes.map((key, value) => MapEntry(key, {
-          "STD":value.format_HHmm,
-          "STA":value!.add(Duration(hours: 1)).format_HHmm
+          "STD":value[0].format_HHmm,
+          "STA": value[1].format_HHmm,
         })),
       );
 
@@ -63,6 +64,7 @@ class AddFlightState extends ChangeNotifier {
     isTest = false;
     isSchedule = false;
     weekTimes = {};
+    // weekTimesSTA = {};
   }
 
   bool get validateAddFlight => std == null || from == null || to == null || al == null;

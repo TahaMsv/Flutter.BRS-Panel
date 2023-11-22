@@ -64,14 +64,16 @@ class AddFlightController extends MainController {
 
   setToDate(int? i) async {
     if (i != null) {
-      addFlightState.toDate = addFlightState.toDate?.add(Duration(days: i));
+      addFlightState.toDate = addFlightState.toDate.add(Duration(days: i));
     } else {
       final newDate = await Pickers.pickDate(nav.context, addFlightState.toDate ?? DateTime.now());
       if (newDate == null) return;
       addFlightState.toDate = newDate;
     }
     addFlightState.setState();
+
   }
+
 
   // UseCase UseCase = UseCase(repository: Repository());
 
@@ -96,9 +98,19 @@ class AddFlightController extends MainController {
 
   void setDayStd(int dayId) {
     // TimeOfDay time = TimeOfDay.
-    Pickers.pickTime(nav.context, addFlightState.weekTimes[dayId] ?? TimeOfDay.now()).then((value) {
+    Pickers.pickTime(nav.context, addFlightState.weekTimes[dayId]?[0] ?? TimeOfDay.now()).then((value) {
       if (value != null) {
-        addFlightState.weekTimes["$dayId"] = value;
+        addFlightState.weekTimes["$dayId"]![0] = value;
+        addFlightState.weekTimes["$dayId"]![1] = value.add(const Duration(hours: 1,minutes: 30));
+        addFlightState.setState();
+      }
+    });
+  }
+  void setDaySta(int dayId) {
+    // TimeOfDay time = TimeOfDay.
+    Pickers.pickTime(nav.context, addFlightState.weekTimes[dayId]?[1] ?? TimeOfDay.now()).then((value) {
+      if (value != null) {
+        addFlightState.weekTimes["$dayId"]![1] = value;
         addFlightState.setState();
       }
     });

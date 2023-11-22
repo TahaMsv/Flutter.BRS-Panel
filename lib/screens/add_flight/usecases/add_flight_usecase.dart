@@ -1,5 +1,6 @@
 import 'package:artemis_utils/artemis_utils.dart';
 import 'package:brs_panel/core/classes/flight_class.dart';
+import 'package:brs_panel/core/enums/week_days_enum.dart';
 import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
@@ -98,7 +99,17 @@ class AddFlightRequest extends Request {
       return ValidationFailure(code: 1, msg: "Airline is Required!", traceMsg: '');
     }
     if(std==null){
-      return ValidationFailure(code: 1, msg: "STD is Required!", traceMsg: '');
+      if(isSchedule){
+        if(weekDaysTime.values.any((element) => (element["STA"]??'').isEmpty || (element["STD"]??'').isEmpty)){
+          int id = int.parse(weekDaysTime.entries.firstWhere((element) =>  (element.value["STA"]??'').isEmpty || (element.value["STD"]??'').isEmpty).key);
+          return ValidationFailure(code: 1, msg: "${WeekDays.values[id-1].label} ${(weekDaysTime[id.toString()]!["STD"]??'').isEmpty?'STD':'STA'} is Required!", traceMsg: '');
+        }else{
+          return null;
+        }
+      }else{
+        return ValidationFailure(code: 1, msg: "STD is Required!", traceMsg: '');
+      }
+
     }
     if(sta==null){
       return ValidationFailure(code: 1, msg: "STA is Required!", traceMsg: '');
