@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 import '../core/classes/flight_class.dart';
 import '../core/classes/flight_details_class.dart';
 import '../core/classes/tag_more_details_class.dart';
@@ -15,6 +16,7 @@ import '../core/classes/login_user_class.dart';
 import '../core/constants/ui.dart';
 import '../screens/flight_details/flight_details_controller.dart';
 import '../screens/flight_details/flight_details_state.dart';
+import '../screens/flight_details/widgets/expandable_list_sections/airport_section.dart';
 import 'AirlineLogo.dart';
 import 'CardField.dart';
 import 'DotButton.dart';
@@ -52,16 +54,18 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
 
   @override
   Widget build(BuildContext context) {
+    List<TahaSectionBinSection> secList = [
+      TahaSectionBinSection(label: "Specials", ref: ref, position: 0),
+      TahaSectionBinSection(label: "Inbound", ref: ref, position: 1),
+      TahaSectionBinSection(label: "onward", ref: ref, position: 2),
+      TahaSectionBinSection(label: "Position Log", ref: ref, position: 3),
+      TahaSectionBinSection(label: "Status Log", ref: ref, position: 4),
+      TahaSectionBinSection(label: "BSM", ref: ref, position: 5),
+    ];
     ThemeData theme = Theme.of(context);
 
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     List<int> blockedPositions = tag.actionsHistory.isEmpty ? [] : tag.actionsHistory.first.blockedPosition;
 
     TagStatus status = tag.status;
@@ -74,8 +78,8 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
         color: tag.isForced
             ? MyColors.havaPrime
             : tag.currentStatus > 0
-            ? tag.exception?.getColor
-            : MyColors.black1);
+                ? tag.exception?.getColor
+                : MyColors.black1);
     FlightInfo? fInfo = widget.moreDetails.flightInfo;
     return Container(
       // margin: EdgeInsets.symmetric(horizontal: width * 0.1, vertical: height * 0.05),
@@ -88,11 +92,11 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
             maxHeight: height * 0.7,
           ),
           decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)
-            // borderRadius: BorderRadius.only(
-            //   topLeft: Radius.circular(25),
-            //   topRight: Radius.circular(25),
-            // ),
-          ),
+              // borderRadius: BorderRadius.only(
+              //   topLeft: Radius.circular(25),
+              //   topRight: Radius.circular(25),
+              // ),
+              ),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 10),
             child: Column(
@@ -132,23 +136,15 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                         // const SizedBox(width: 5),
                         const Row(
                           children: [
-                            Icon(
-                              size: 15,
-                              Icons.shield,
-                              color: Colors.grey,
-                            ),
-                            Text("14"),
+                            Icon(size: 12, Icons.shield, color: Colors.grey),
+                            Text("14", style: TextStyle(fontSize: 10)),
                           ],
                         ),
                         const SizedBox(width: 5),
                         const Row(
                           children: [
-                            Icon(
-                              size: 15,
-                              Icons.shopping_bag,
-                              color: Colors.grey,
-                            ),
-                            Text("5"),
+                            Icon(size: 12, Icons.shopping_bag, color: Colors.grey),
+                            Text("5", style: TextStyle(fontSize: 10)),
                           ],
                         ),
                       ],
@@ -178,27 +174,6 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                         ),
                       ],
                     )
-
-                    // inDetails
-                    //     ? const SizedBox()
-                    //     : SizedBox(
-                    //   height: 40,
-                    //   child: Column(
-                    //     mainAxisAlignment: MainAxisAlignment.center,
-                    //     children: [
-                    //       DotButton(
-                    //         icon: Icons.info,
-                    //         size: 20,
-                    //         onPressed: () async {
-                    //           FlightDetailsController fd = getIt<FlightDetailsController>();
-                    //           await fd.flightGetTagMoreDetails(tag.flightScheduleId, tag);
-                    //         },
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // const SizedBox(width: 8),
-                    // const SizedBox(width: 12),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -207,143 +182,165 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                 DcsInfoWidget(info: tag.dcsInfo),
                 SizedBox(height: 20),
                 const Divider(thickness: 2, height: 1),
-
-                // const Divider(thickness: 1, height: 1),
-                // fInfo == null
-                //     ? const SizedBox()
-                //     : Row(
-                //         children: [
-                //           AirlineLogo(fInfo.al, size: 75),
-                //           Expanded(
-                //             child: Column(
-                //               children: [
-                //                 Row(
-                //                   children: [
-                //                     Expanded(
-                //                       flex: 3,
-                //                       child: Text(
-                //                         fInfo.flightNumber,
-                //                         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                //                       ),
-                //                     ),
-                //                     Expanded(flex: 2, child: CardField(title: "Route", value: fInfo.route, scale: 0.7)),
-                //                   ],
-                //                 ),
-                //                 const SizedBox(height: 8),
-                //                 Row(
-                //                   children: [
-                //                     // Expanded(flex: 2, child: CardField(title: "Route", value: fInfo.route, scale: 0.7)),
-                //                     Expanded(
-                //                       flex: 3,
-                //                       child: CardField(
-                //                           title: "Date Time",
-                //                           value: "${fInfo.flightDate.format_ddMMM} ${fInfo.std}",
-                //                           scale: 0.7),
-                //                     ),
-                //                     Expanded(
-                //                         flex: 2,
-                //                         child: CardField(title: "Registration", value: fInfo.register ?? "", scale: 0.7)),
-                //                   ],
-                //                 ),
-                //               ],
-                //             ),
-                //           ),
-                //         ],
-                //       ),
-                // const Divider(height: 1),
-                // Expanded(
-                //     child: Padding(
-                //   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                //   child: Column(
-                //     children: [
-                //       // Row(
-                //       //   children: [
-                //       //     Expanded(flex: 3, child: CardField(title: "Position / Order", value: "${currentP.title} / ${tag.tagPositions.first.indexInPosition}")),
-                //       //     // Expanded(child: CardField(title: "Seq. Flight", value: "${tag.indexInFlight}")),
-                //       //     Expanded(child: CardField(title: "Pax Seq", value: "${tag.dcsInfo?.securityCode ?? '-'}")),
-                //       //   ],
-                //       // ),
-                //       // Divider(),
-
-                //       SizedBox(
-                //         width: width,
-                //         child: Wrap(runAlignment: WrapAlignment.start, alignment: WrapAlignment.start, children: [
-                //           ...photosBytes.map((photo) {
-                //             int index = photosBytes.indexOf(photo);
-                //             Position? p = index >= widget.moreDetails.tagPhotos.length
-                //                 ? BasicClass.getPositionById(tag.currentPosition)
-                //                 : BasicClass.getPositionById(widget.moreDetails.tagPhotos[index].positionID);
-                //             return Padding(
-                //               padding: const EdgeInsets.only(right: 8, top: 8, bottom: 8),
-                //               child: GestureDetector(
-                //                 onTap: () {},
-                //                 child: Column(
-                //                   children: [
-                //                     ClipRRect(
-                //                       borderRadius: BorderRadius.circular(8),
-                //                       child: Container(
-                //                         color: Colors.grey,
-                //                         width: 44,
-                //                         height: 44,
-                //                         child: Image.memory(photo),
-                //                       ),
-                //                     ),
-                //                     Text(
-                //                       p?.title ?? '',
-                //                       style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-                //                     )
-                //                   ],
-                //                 ),
-                //               ),
-                //             );
-                //           }).toList(),
-                //         ]),
-                //       ),
-                //
-                //       const Divider(height: 8),
-                //       Expanded(
-                //           flex: 3,
-                //           child: SingleChildScrollView(
-                //             child: Column(
-                //               children: [
-                //                 TagSSRListWidget(ssrs: tag.tagSsrs),
-                //                 TagInboundListWidget(inLeg: tag.inboundLeg),
-                //                 TagOutboundsWidget(
-                //                   outLegs: tag.outboundLegs,
-                //                 ),
-                //                 TagPositionHistoryWidget(positions: tag.tagPositions),
-                //                 TagActionHistoryWidget(actions: tag.actionsHistory),
-                //                 TagLogsWidget(logs: widget.moreDetails.logs),
-                //                 TagBsmsWidget(bsmList: widget.moreDetails.bsmList),
-                //               ],
-                //             ),
-                //           )),
-                //       // Divider(height: 8),
-                //       // Expanded(flex: 2, child: TagActionHistoryWidget(actions: tag.actionsHistory)),
-                //     ],
-                //   ),
-                // )),
-                // Row(
-                //   children: [
-                //     Spacer(),
-                //     const SizedBox(width: 8),
-                //     MyButton(
-                //       fontSize: 13,
-                //       onPressed: () async {
-                //         Navigator.of(context).pop();
-                //       },
-                //       label: "OK",
-                //     ),
-                //     const SizedBox(width: 12),
-                //   ],
-                // ),
-                // const SizedBox(height: 12),
+                SizedBox(height: 20),
+                Flexible(
+                  child: ExpandableListView(
+                    builder: SliverExpandableChildDelegate<int, TahaSectionBinSection>(
+                        sectionList: secList,
+                        headerBuilder: (context, sectionIndex, index) {
+                          return SectionTileWidget2(
+                            secTag: secList[sectionIndex],
+                            iconData: Icons.star_border_rounded,
+                            tag: tag,
+                            f: f,
+                          );
+                        },
+                        itemBuilder: (context, sectionIndex, itemIndex, index) {
+                          return Text("test");
+                        }),
+                  ),
+                ),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+class DcsInfoWidget extends StatelessWidget {
+  final DcsInfo? info;
+
+  const DcsInfoWidget({Key? key, required this.info}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    if (info == null)
+      return const Row(children: [
+        HorizontalCardField(title: "Pax", value: "-"),
+        SizedBox(width: 70),
+        HorizontalCardField(title: "PNR", value: "-"),
+        SizedBox(width: 70),
+        HorizontalCardField(title: "P/W", value: "-"),
+        SizedBox(width: 70),
+        HorizontalCardField(title: "Dest", value: "-"),
+        SizedBox(width: 70),
+        HorizontalCardField(title: "Photo", valueWidget: Icon(Icons.camera_alt, color: Colors.blue), value: "-"),
+      ]);
+    return Row(children: [
+      HorizontalCardField(
+        title: "Pax",
+        widgetPadding: EdgeInsets.zero,
+        valueWidget: GestureDetector(
+          onTap: () {},
+          child: Text(
+            "${info!.paxName}",
+            style: const TextStyle(color: Colors.blueAccent, decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+      SizedBox(width: 70),
+      HorizontalCardField(title: "PNR", value: info!.pnr),
+      SizedBox(width: 70),
+      HorizontalCardField(title: "P/W", value: "${info!.count}/${info!.weight}"),
+      SizedBox(width: 70),
+      HorizontalCardField(title: "Dest", value: "${info!.dest}"),
+      SizedBox(width: 70),
+      HorizontalCardField(title: "Photo", valueWidget: Icon(Icons.add_a_photo_outlined, color: Colors.blue), value: "-"),
+    ]);
+  }
+}
+
+class SectionTileWidget2 extends StatelessWidget {
+  const SectionTileWidget2({
+    super.key,
+    required this.iconData,
+    required this.secTag,
+    required this.tag,
+    required this.f,
+  });
+
+  final IconData iconData;
+  final TahaSectionBinSection? secTag;
+  final FlightTag tag;
+  final Flight f;
+
+  @override
+  Widget build(BuildContext context) {
+    return secTag!.position == 0
+        ? SizedBox(
+            height: 60,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(iconData),
+                ),
+                Text(secTag!.label, style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+                const SizedBox(width: 80),
+                SizedBox(height: 20, child: tag.getTypeWidget),
+                const SizedBox(width: 12),
+                SizedBox(height: 25, child: tag.getTahaWidget("Inbound", Colors.green)),
+                const SizedBox(width: 12),
+                SizedBox(height: 25, child: tag.getTahaWidget("Inbound", Colors.green)),
+              ],
+            ),
+          )
+        : secTag!.position == 2
+            ? SizedBox(
+                height: 60,
+                child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(iconData),
+                  ),
+                  Text(secTag!.label, style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+                  const SizedBox(width: 80),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    child: AirlineLogo(
+                      f.al,
+                      size: 50,
+                    ),
+                  ),
+                  SizedBox(width: 70),
+                  HorizontalCardField(title: "AL", value: "FZ"),
+                  SizedBox(width: 70),
+                  HorizontalCardField(title: "FLNB", value: "047"),
+                  SizedBox(width: 70),
+                  HorizontalCardField(title: "Date", value: "23 November"),
+                  SizedBox(width: 70),
+                  HorizontalCardField(title: "City", value: "MCT"),
+                ]),
+              )
+            : InkWell(
+                onTap: () {
+                  // if (position == secTag?.position) {
+                  secTag?.setSectionExpanded(!secTag!.isSectionExpanded());
+                  // }
+                },
+                child: Container(
+                  color: secTag!.position % 2 == 0 ? MyColors.oddRow : MyColors.evenRow,
+                  height: 60,
+                  width: double.infinity,
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    children: [
+                      Icon(secTag!.isSectionExpanded() ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, color: Colors.black),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(iconData),
+                      ),
+                      Text(secTag!.label, style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+              );
   }
 }
 
@@ -355,14 +352,8 @@ class TagSSRListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     if (ssrs.isEmpty) return const SizedBox();
     return MyExpansionTile2(
       initiallyExpanded: true,
@@ -382,16 +373,15 @@ class TagSSRListWidget extends StatelessWidget {
             alignment: WrapAlignment.start,
             runSpacing: 4,
             children: ssrs
-                .map((e) =>
-                Container(
-                  margin: const EdgeInsets.only(right: 4),
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                  decoration: BoxDecoration(color: MyColors.myGreen.withOpacity(0.4), borderRadius: BorderRadius.circular(8)),
-                  child: Text(
-                    e.name,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                  ),
-                ))
+                .map((e) => Container(
+                      margin: const EdgeInsets.only(right: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                      decoration: BoxDecoration(color: MyColors.myGreen.withOpacity(0.4), borderRadius: BorderRadius.circular(8)),
+                      child: Text(
+                        e.name,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                      ),
+                    ))
                 .toList(),
           ),
         ),
@@ -408,14 +398,8 @@ class TagInboundListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     if (inLeg == null) return const SizedBox();
     return MyExpansionTile2(
       title: const Row(
@@ -434,9 +418,9 @@ class TagInboundListWidget extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
               child: CardField(
-                title: "FLNB",
-                value: inLeg!.flnb,
-              )),
+            title: "FLNB",
+            value: inLeg!.flnb,
+          )),
           Expanded(child: CardField(title: "Date", value: inLeg!.flightDate.format_ddMMM, scale: 0.8)),
           Expanded(child: CardField(title: "City", value: inLeg!.city, scale: 0.8)),
         ]),
@@ -453,14 +437,8 @@ class TagOutboundsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     if (outLegs.isEmpty) return const SizedBox();
     return MyExpansionTile2(
       title: const Row(
@@ -472,8 +450,7 @@ class TagOutboundsWidget extends StatelessWidget {
       children: [
         ...outLegs
             .map(
-              (e) =>
-              Row(children: [
+              (e) => Row(children: [
                 AirlineLogo(e.al),
                 CardField(
                   title: "AL",
@@ -482,18 +459,18 @@ class TagOutboundsWidget extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                     child: CardField(
-                      title: "FLNB",
-                      value: e.flnb,
-                    )),
+                  title: "FLNB",
+                  value: e.flnb,
+                )),
                 Expanded(
                     child: CardField(
-                      title: "Date",
-                      value: e.flightDate.format_ddMMM,
-                      scale: 0.8,
-                    )),
+                  title: "Date",
+                  value: e.flightDate.format_ddMMM,
+                  scale: 0.8,
+                )),
                 Expanded(child: CardField(title: "City", value: e.city, scale: 0.8)),
               ]),
-        )
+            )
             .toList()
       ],
     );
@@ -508,14 +485,8 @@ class TagPositionHistoryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     if (positions.isEmpty) return const SizedBox();
     return MyExpansionTile2(
       title: const Text("Positions Log", style: TextStyle(fontWeight: FontWeight.bold)),
@@ -567,14 +538,8 @@ class TagActionHistoryWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     if (actions.isEmpty) return const SizedBox();
     return MyExpansionTile2(
       title: const Text("Status Log", style: TextStyle(fontWeight: FontWeight.bold)),
@@ -609,58 +574,6 @@ class TagActionHistoryWidget extends StatelessWidget {
   }
 }
 
-class DcsInfoWidget extends StatelessWidget {
-  final DcsInfo? info;
-
-  const DcsInfoWidget({Key? key, required this.info}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    if (info == null)
-      return const Row(children: [
-        HorizontalCardField(title: "Pax", value: "-"),
-        SizedBox(width: 70),
-        HorizontalCardField(title: "PNR", value: "-"),
-        SizedBox(width: 70),
-        HorizontalCardField(title: "P/W", value: "-"),
-        SizedBox(width: 70),
-        HorizontalCardField(title: "Dest", value: "-"),
-        SizedBox(width: 70),
-        HorizontalCardField(title: "Photo", valueWidget: Icon(Icons.camera_alt, color: Colors.blue), value: "-"),
-      ]);
-    return Row(children: [
-      HorizontalCardField(
-        title: "Pax",
-        widgetPadding: EdgeInsets.zero,
-        valueWidget: GestureDetector(
-          onTap: () {},
-          child: Text(
-            "${info!.paxName}",
-            style: const TextStyle(color: Colors.blueAccent, decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-      SizedBox(width: 70),
-      HorizontalCardField(title: "PNR", value: info!.pnr),
-      SizedBox(width: 70),
-      HorizontalCardField(title: "P/W", value: "${info!.count}/${info!.weight}"),
-      SizedBox(width: 70),
-      HorizontalCardField(title: "Dest", value: "${info!.dest}"),
-      SizedBox(width: 70),
-      HorizontalCardField(title: "Photo", valueWidget: Icon(Icons.camera_alt, color: Colors.blue), value: "-"),
-    ]);
-  }
-}
-
 class TagLogsWidget extends StatelessWidget {
   final List<TagLog> logs;
 
@@ -669,18 +582,9 @@ class TagLogsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    if (logs.every((element) =>
-    element.title
-        .trim()
-        .isEmpty)) return const SizedBox();
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    if (logs.every((element) => element.title.trim().isEmpty)) return const SizedBox();
     return MyExpansionTile2(
       title: const Text("Logs", style: TextStyle(fontWeight: FontWeight.bold)),
       children: [
@@ -690,16 +594,15 @@ class TagLogsWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: logs
-                .map((e) =>
-                Row(
-                  children: [
-                    Expanded(
-                        child: Text(
+                .map((e) => Row(
+                      children: [
+                        Expanded(
+                            child: Text(
                           e.title,
                           style: GoogleFonts.inconsolata(fontSize: 16),
                         )),
-                  ],
-                ))
+                      ],
+                    ))
                 .toList(),
           ),
         )
@@ -716,14 +619,8 @@ class TagBsmsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     if (bsmList.isEmpty) return const SizedBox();
     return MyExpansionTile2(
       title: const Text("BSM ", style: TextStyle(fontWeight: FontWeight.bold)),
@@ -734,45 +631,79 @@ class TagBsmsWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: bsmList
-                .map((e) =>
-                Container(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black54))),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Expanded(
-                          child: Text(
+                .map((e) => Container(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: Colors.black54))),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
+                              child: Text(
                             e.bsmMessage,
                             style: GoogleFonts.inconsolata(fontSize: 16),
                           )),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          DotButton(
-                            size: 40,
-                            onPressed: () async {
-                              await Clipboard.setData(ClipboardData(text: e.bsmMessage));
-                            },
-                            icon: Icons.copy,
-                            color: Colors.blue,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            BasicClass
-                                .getTimeFromUTC(e.bsmTime)
-                                .format_HHmmss,
-                            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              DotButton(
+                                size: 40,
+                                onPressed: () async {
+                                  await Clipboard.setData(ClipboardData(text: e.bsmMessage));
+                                },
+                                icon: Icons.copy,
+                                color: Colors.blue,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                BasicClass.getTimeFromUTC(e.bsmTime).format_HHmmss,
+                                style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          )
                         ],
-                      )
-                    ],
-                  ),
-                ))
+                      ),
+                    ))
                 .toList(),
           ),
         )
       ],
     );
+  }
+}
+
+class TahaSectionBinSection extends ExpandableListSection<int> {
+  final WidgetRef ref;
+  String label;
+  final int position;
+
+  TahaSectionBinSection({
+    required this.ref,
+    required this.label,
+    required this.position,
+  });
+
+  @override
+  List<int>? getItems() {
+    return [0, 1, 2];
+  }
+
+  @override
+  bool isSectionExpanded() {
+    List<int> expandeds = ref.watch(expandedTagDetailsDialog);
+    return !expandeds.contains(position);
+  }
+
+  @override
+  void setSectionExpanded(bool expanded) {
+    final expandeds = ref.watch(expandedTagDetailsDialog.notifier);
+    if (!expanded) {
+      expandeds.state = expandeds.state + [position];
+    } else {
+      expandeds.state = expandeds.state.where((element) => element != position).toList();
+    }
+  }
+
+  List<int> get items {
+    return getItems() ?? [];
   }
 }
