@@ -84,7 +84,7 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
     FlightInfo? fInfo = widget.moreDetails.flightInfo;
     return Container(
       // margin: EdgeInsets.symmetric(horizontal: width * 0.1, vertical: height * 0.05),
-      margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       child: Material(
         child: Container(
           constraints: BoxConstraints(
@@ -111,10 +111,7 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          tag.numString,
-                          style: tagNumStyle,
-                        ),
+                        Text(tag.numString, style: tagNumStyle),
                         const SizedBox(width: 15),
                         SizedBox(
                           height: 20,
@@ -179,60 +176,127 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                 ),
                 const SizedBox(height: 20),
                 const Divider(thickness: 2, height: 1),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 DcsInfoWidget(info: tag.dcsInfo),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 const Divider(thickness: 2, height: 1),
-                SizedBox(height: 20),
-
+                const SizedBox(height: 20),
                 Flexible(
                   child: ListView.builder(
                     itemCount: secList.length,
                     itemBuilder: (context, index) {
                       return MyExpansionTile(
-                        // contentPadding: EdgeInsets.all(0),
-                        // minVerticalPadding: 0,
-                        disableOnTap: index == 0 || index == 2,
-                        trailing: Container(),
-                        headerTileColor: index % 2 == 0 ? MyColors.oddRow : MyColors.evenRow,
-                        title: SectionTileWidget2(
-                          secTag: secList[index],
-                          iconData: Icons.star_border_rounded,
-                          tag: tag,
-                          f: f,
-                        ),
-                        onExpansionChanged: (bool e) {
-                          print("Here");
-                        },
-                        children: [
-                          Text("Data"),
-                        ],
-                        // subtitle: Text("Data"),
-                      );
+                          disableOnTap: index == 0 || index == 2,
+                          trailing: Container(),
+                          onExpansionChanged: (bool isExpanded) {
+                            secList[index].setSectionExpanded(isExpanded);
+                          },
+                          headerTileColor: index % 2 == 0 ? MyColors.oddRow : MyColors.evenRow,
+                          title: Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(width: 1.0, color: Colors.grey),
+                              ),
+                            ),
+                            child: SectionTileWidget2(
+                              secTag: secList[index],
+                              iconData: Icons.star_border_rounded,
+                              tag: tag,
+                              f: f,
+                            ),
+                          ),
+                          children: index == 1
+                              ? []
+                              : index == 3
+                                  ? [
+                                      const ExpansionListItem(
+                                        texts: ["Time", "User", "Position/Order", "Details"],
+                                        isBold: true,
+                                        bgColor: MyColors.evenRow,
+                                      ),
+                                      const ExpansionListItem(texts: ["18:41:22", "System", "Checkin / 105", "-"], isBold: false, bgColor: MyColors.oddRow),
+                                    ]
+                                  : index == 4
+                                      ? [
+                                          const ExpansionListItem(
+                                            texts: ["Time", "User", "Number", "Status"],
+                                            isBold: true,
+                                            bgColor: MyColors.evenRow,
+                                          ),
+                                          const ExpansionListItem(texts: ["18:41:22", "System", "Checkin / 105", "Normal"], isBold: false, bgColor: MyColors.oddRow),
+                                          const ExpansionListItem(texts: ["18:41:22", "System", "Checkin / 105", "Normal"], isBold: false, bgColor: MyColors.evenRow),
+                                        ]
+                                      : [
+                                          SizedBox(height: 5),
+                                          Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: Container(
+                                                height: 50,
+                                                padding: const EdgeInsets.all(10.0),
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(7), // radius of 10
+                                                  color: MyColors.greyishBrown,
+                                                ),
+                                                child: const Row(
+                                                  children: [
+                                                    Text(
+                                                      "BSM",
+                                                      style: TextStyle(color: MyColors.green),
+                                                    ),
+                                                  ],
+                                                )),
+                                          ),
+                                        ]
+                          // subtitle: Text("Data"),
+                          );
                     },
                   ),
                 ),
-                // Flexible(
-                //   child: ExpandableListView(
-                //     builder: SliverExpandableChildDelegate<int, TahaSectionBinSection>(
-                //         sectionList: secList,
-                //         headerBuilder: (context, sectionIndex, index) {
-                //           return SectionTileWidget2(
-                //             secTag: secList[sectionIndex],
-                //             iconData: Icons.star_border_rounded,
-                //             tag: tag,
-                //             f: f,
-                //           );
-                //         },
-                //         itemBuilder: (context, sectionIndex, itemIndex, index) {
-                //           return Text("test");
-                //         }),
-                //   ),
-                // ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class ExpansionListItem extends StatelessWidget {
+  const ExpansionListItem({
+    super.key,
+    required this.texts,
+    required this.isBold,
+    required this.bgColor,
+  });
+
+  final List<String> texts;
+  final bool isBold;
+  final Color bgColor;
+
+  @override
+  Widget build(BuildContext context) {
+    FontWeight fw = isBold ? FontWeight.bold : FontWeight.w600;
+    return Container(
+      color: bgColor,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            width: 800,
+            height: 50,
+            // color: bgColor,
+            // padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(flex: 1, child: Center(child: Text(texts[0], style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
+                Expanded(flex: 1, child: Center(child: Text(texts[1], style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
+                Expanded(flex: 1, child: Center(child: Text(texts[2], style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
+                Expanded(flex: 1, child: Center(child: Text(texts[3], style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -272,14 +336,14 @@ class DcsInfoWidget extends StatelessWidget {
           ),
         ),
       ),
-      SizedBox(width: 70),
+      const SizedBox(width: 70),
       HorizontalCardField(title: "PNR", value: info!.pnr),
-      SizedBox(width: 70),
+      const SizedBox(width: 70),
       HorizontalCardField(title: "P/W", value: "${info!.count}/${info!.weight}"),
-      SizedBox(width: 70),
+      const SizedBox(width: 70),
       HorizontalCardField(title: "Dest", value: "${info!.dest}"),
-      SizedBox(width: 70),
-      HorizontalCardField(title: "Photo", valueWidget: Icon(Icons.add_a_photo_outlined, color: Colors.blue), value: "-"),
+      const SizedBox(width: 70),
+      const HorizontalCardField(title: "Photo", valueWidget: Icon(Icons.add_a_photo_outlined, color: Colors.blue), value: "-"),
     ]);
   }
 }
@@ -337,32 +401,32 @@ class SectionTileWidget2 extends StatelessWidget {
                       size: 50,
                     ),
                   ),
-                  SizedBox(width: 70),
-                  HorizontalCardField(title: "AL", value: "FZ"),
-                  SizedBox(width: 70),
-                  HorizontalCardField(title: "FLNB", value: "047"),
-                  SizedBox(width: 70),
-                  HorizontalCardField(title: "Date", value: "23 November"),
-                  SizedBox(width: 70),
-                  HorizontalCardField(title: "City", value: "MCT"),
+                  const SizedBox(width: 70),
+                  const HorizontalCardField(title: "AL", value: "FZ"),
+                  const SizedBox(width: 70),
+                  const HorizontalCardField(title: "FLNB", value: "047"),
+                  const SizedBox(width: 70),
+                  const HorizontalCardField(title: "Date", value: "23 November"),
+                  const SizedBox(width: 70),
+                  const HorizontalCardField(title: "City", value: "MCT"),
                 ]),
               )
             : Container(
-              color: secTag!.position % 2 == 0 ? MyColors.oddRow : MyColors.evenRow,
-              height: 60,
-              width: double.infinity,
-              alignment: Alignment.centerLeft,
-              child: Row(
-                children: [
-                  // Icon(secTag!.isSectionExpanded() ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, color: Colors.black),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(iconData),
-                  ),
-                  Text(secTag!.label, style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
-                ],
-              ),
-            );
+                color: secTag!.position % 2 == 0 ? MyColors.oddRow : MyColors.evenRow,
+                height: 60,
+                width: double.infinity,
+                alignment: Alignment.centerLeft,
+                child: Row(
+                  children: [
+                    Icon(secTag!.isSectionExpanded() ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, color: Colors.black),
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(iconData),
+                    ),
+                    Text(secTag!.label, style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+              );
   }
 }
 
