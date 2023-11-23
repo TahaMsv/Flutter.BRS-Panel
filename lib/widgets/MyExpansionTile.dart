@@ -223,6 +223,7 @@ class MyExpansionTile extends StatefulWidget {
     this.trailing,
     this.initiallyExpanded = false,
     this.headerTileColor = Colors.grey,
+    this.disableOnTap = false,
     this.maintainState = false,
     this.tilePadding,
     this.expandedCrossAxisAlignment,
@@ -253,6 +254,7 @@ class MyExpansionTile extends StatefulWidget {
   /// may replace the rotating expansion arrow icon.
   final Widget? leading;
   final Color? headerTileColor;
+  final bool disableOnTap;
 
   /// The primary content of the list item.
   ///
@@ -603,21 +605,21 @@ class _MyExpansionTileState extends State<MyExpansionTile> with SingleTickerProv
         );
     final Clip clipBehavior = widget.clipBehavior ?? expansionTileTheme.clipBehavior ?? Clip.none;
 
-    return Container(
-      clipBehavior: clipBehavior,
-      decoration: ShapeDecoration(
-        color: widget.headerTileColor,
-        // color: _backgroundColor.value ?? expansionTileTheme.backgroundColor ?? Colors.transparent,
-        shape: expansionTileBorder,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          ListTileTheme.merge(
-              iconColor: _iconColor.value ?? expansionTileTheme.iconColor,
-              textColor: _headerColor.value,
-              child: InkWell(
-                onTap: _handleTap,
+    return InkWell(
+      onTap: widget.disableOnTap ? null : _handleTap,
+      child: Container(
+        clipBehavior: clipBehavior,
+        decoration: ShapeDecoration(
+          color: widget.headerTileColor,
+          // color: _backgroundColor.value ?? expansionTileTheme.backgroundColor ?? Colors.transparent,
+          shape: expansionTileBorder,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            ListTileTheme.merge(
+                iconColor: _iconColor.value ?? expansionTileTheme.iconColor,
+                textColor: _headerColor.value,
                 child: Row(
                   children: [
                     widget.trailing ?? _buildTrailingIcon(context)!,
@@ -625,25 +627,25 @@ class _MyExpansionTileState extends State<MyExpansionTile> with SingleTickerProv
                       child: widget.title,
                     )
                   ],
+                )
+                // ListTile(
+                //   onTap: _handleTap,
+                //   contentPadding: widget.tilePadding ?? expansionTileTheme.tilePadding,
+                //   leading: widget.leading ?? _buildLeadingIcon(context),
+                //   title: widget.title,
+                //   subtitle: widget.subtitle,
+                //   trailing: widget.trailing ?? _buildTrailingIcon(context),
+                // ),
                 ),
-              )
-              // ListTile(
-              //   onTap: _handleTap,
-              //   contentPadding: widget.tilePadding ?? expansionTileTheme.tilePadding,
-              //   leading: widget.leading ?? _buildLeadingIcon(context),
-              //   title: widget.title,
-              //   subtitle: widget.subtitle,
-              //   trailing: widget.trailing ?? _buildTrailingIcon(context),
-              // ),
+            ClipRect(
+              child: Align(
+                alignment: widget.expandedAlignment ?? expansionTileTheme.expandedAlignment ?? Alignment.center,
+                heightFactor: _heightFactor.value,
+                child: child,
               ),
-          ClipRect(
-            child: Align(
-              alignment: widget.expandedAlignment ?? expansionTileTheme.expandedAlignment ?? Alignment.center,
-              heightFactor: _heightFactor.value,
-              child: child,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -652,8 +654,7 @@ class _MyExpansionTileState extends State<MyExpansionTile> with SingleTickerProv
   void didChangeDependencies() {
     final ThemeData theme = Theme.of(context);
     final ExpansionTileThemeData expansionTileTheme = ExpansionTileTheme.of(context);
-    final ExpansionTileThemeData defaults =
-        theme.useMaterial3 ? _ExpansionTileDefaultsM3(context) : _ExpansionTileDefaultsM2(context);
+    final ExpansionTileThemeData defaults = theme.useMaterial3 ? _ExpansionTileDefaultsM3(context) : _ExpansionTileDefaultsM2(context);
     _borderTween
       ..begin = widget.collapsedShape ??
           expansionTileTheme.collapsedShape ??
