@@ -203,9 +203,85 @@ class FlightTag {
 
   TagStatus get getStatus => BasicClass.systemSetting.statusList.firstWhere((element) => element.id == currentStatus);
 
-  Widget get getStatusWidget => Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: Icon(getStatus.getIcon, color: getStatus.getColor, size: 15),
+  Widget get getStatusWidget => Container(
+        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: getStatus.getColor.withOpacity(0.3)),
+        child: Center(
+          child: Row(
+            children: [
+              Icon(getStatus.getIcon, color: getStatus.getColor, size: 12),
+              RichText(
+                  text: TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
+                TextSpan(
+                  // text: "${getType.label}",
+                  text: getStatus.title,
+                  style: TextStyle(color: getStatus.getColor),
+                ),
+              ])),
+            ],
+          ),
+        ),
+      );
+
+  Widget? get getInboundWidget => inboundLeg == null
+      ? null
+      : Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: Colors.green.withOpacity(0.3)),
+          child: Center(
+            child: Row(
+              children: [
+                const Icon(Icons.flight_land, color: Colors.green, size: 12),
+                RichText(
+                    text: const TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
+                  TextSpan(
+                    text: "Inbound",
+                    style: TextStyle(color: Colors.green),
+                  ),
+                ])),
+              ],
+            ),
+          ),
+        );
+
+  Widget? get getOutboundWidget => outboundLegs.isEmpty
+      ? null
+      : Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: Colors.blue.withOpacity(0.3)),
+          child: Center(
+            child: Row(
+              children: [
+                const Icon(Icons.flight_takeoff, color: Colors.blue, size: 12),
+                RichText(
+                    text: const TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
+                  TextSpan(
+                    text: "Onward",
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ])),
+              ],
+            ),
+          ),
+        );
+
+  Widget? getTagSsrsWidget(String text) => Container(
+    height: 25,
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: Colors.green.withOpacity(0.3)),
+        child: Center(
+          child: Row(
+            children: [
+              RichText(
+                  text: TextSpan(style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
+                TextSpan(
+                  text: text,
+                  style: const TextStyle(color: Colors.green),
+                ),
+              ])),
+            ],
+          ),
+        ),
       );
 
   TagType? get getType {
@@ -226,19 +302,19 @@ class FlightTag {
         ])),
       );
 
-  Widget getTahaWidget(String myText, Color myColor) => Container(
-        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: myColor.withOpacity(0.3) ?? Colors.transparent),
+  Widget get getGateWidget => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: Colors.green.withOpacity(0.3) ?? Colors.transparent),
         child: Center(
           child: Row(
             children: [
-              Icon(AbomisIconPack.denyLoad, color: myColor, size: myText == "GATE" ? 0 : 12),
+              const Icon(AbomisIconPack.denyLoad, color: Colors.green, size: 0),
               RichText(
-                  text: TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
+                  text: const TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
                 TextSpan(
                   // text: "${getType.label}",
-                  text: myText,
-                  style: TextStyle(color: myColor),
+                  text: "GATE",
+                  style: TextStyle(color: Colors.green),
                 ),
               ])),
             ],

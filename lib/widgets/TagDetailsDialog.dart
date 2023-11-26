@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 import '../core/classes/flight_class.dart';
 import '../core/classes/flight_details_class.dart';
@@ -40,6 +41,7 @@ class TagDetailsDialog extends ConsumerStatefulWidget {
 
 class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
   late FlightTag tag;
+  late TagMoreDetails moreDetails;
   List<TagPhoto> photos = [];
   int loadingAction = -1;
   bool showActions = true;
@@ -48,27 +50,28 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
   @override
   void initState() {
     tag = widget.tag;
+    moreDetails = widget.moreDetails;
     photos = widget.moreDetails.tagPhotos;
     photosBytes = photos.map((e) => base64Decode(e.photo)).toList();
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    List<TahaSectionBinSection> secList = [
-      TahaSectionBinSection(label: "Specials", ref: ref, position: 0),
-      TahaSectionBinSection(label: "Inbound", ref: ref, position: 1),
-      TahaSectionBinSection(label: "onward", ref: ref, position: 2),
-      TahaSectionBinSection(label: "Position Log", ref: ref, position: 3),
-      TahaSectionBinSection(label: "Status Log", ref: ref, position: 4),
-      TahaSectionBinSection(label: "BSM", ref: ref, position: 5),
+    List<NewSection> secList = [
+      NewSection(label: "Specials", ref: ref, position: 0),
+      NewSection(label: "Inbound", ref: ref, position: 1),
+      NewSection(label: "onward", ref: ref, position: 2),
+      NewSection(label: "Position Log", ref: ref, position: 3),
+      NewSection(label: "Status Log", ref: ref, position: 4),
+      NewSection(label: "BSM", ref: ref, position: 5),
     ];
     ThemeData theme = Theme.of(context);
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     List<int> blockedPositions = tag.actionsHistory.isEmpty ? [] : tag.actionsHistory.first.blockedPosition;
-
     TagStatus status = tag.status;
     Flight f = ref.watch(selectedFlightProvider)!;
     FlightDetailsController myFlightDetailsController = getIt<FlightDetailsController>();
@@ -82,6 +85,8 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                 ? tag.exception?.getColor
                 : MyColors.black1);
     FlightInfo? fInfo = widget.moreDetails.flightInfo;
+    // print(tag.inboundLeg);
+    // print(tag.outboundLegs.map((e) => e.type));
     return Container(
       // margin: EdgeInsets.symmetric(horizontal: width * 0.1, vertical: height * 0.05),
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -92,12 +97,7 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
             // minHeight: height * 0.9,
             maxHeight: height * 0.7,
           ),
-          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)
-              // borderRadius: BorderRadius.only(
-              //   topLeft: Radius.circular(25),
-              //   topRight: Radius.circular(25),
-              // ),
-              ),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 10),
             child: Column(
@@ -118,20 +118,27 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                           child: tag.getTypeWidget,
                         ),
                         const SizedBox(width: 12),
-                        tag.getTahaWidget(
-                          "Deny Load",
-                          Colors.red,
+                        SizedBox(
+                          height: 25,
+                          child: tag.getStatusWidget,
                         ),
                         const SizedBox(width: 20),
-                        tag.getTahaWidget("Inbound", Colors.green),
-                        const SizedBox(width: 12),
-                        tag.getTahaWidget("Onward", Colors.blue),
-                        const SizedBox(width: 30),
-                        Transform.rotate(
-                          angle: -90 * math.pi / 180,
-                          child: tag.getTahaWidget("GATE", Colors.green),
+                        SizedBox(
+                          height: 25,
+                          child: tag.getInboundWidget,
                         ),
-                        // const SizedBox(width: 5),
+                        const SizedBox(width: 12),
+                        SizedBox(
+                          height: 25,
+                          child: tag.getOutboundWidget,
+                        ),
+                        const SizedBox(width: 30),
+                        if (tag.isGateTag)
+                          Transform.rotate(
+                            angle: -90 * math.pi / 180,
+                            child: tag.getGateWidget,
+                          ),
+                        const SizedBox(width: 5),
                         const Row(
                           children: [
                             Icon(size: 12, Icons.shield, color: Colors.grey),
@@ -155,7 +162,10 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                           bgColor: Colors.black12,
                         ),
                         const SizedBox(width: 10),
-                        const Text("Checkb-in (76)", style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(
+                          "${tag.getAddress} (${tag.tagPositions.first.indexInPosition})",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                         const SizedBox(width: 10),
                         Text(tag.tagPositions.first.getTime()),
                         const SizedBox(width: 10),
@@ -186,69 +196,68 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                     itemCount: secList.length,
                     itemBuilder: (context, index) {
                       return MyExpansionTile(
-                          disableOnTap: index == 0 || index == 2,
-                          trailing: Container(),
-                          onExpansionChanged: (bool isExpanded) {
-                            secList[index].setSectionExpanded(isExpanded);
-                          },
-                          headerTileColor: index % 2 == 0 ? MyColors.oddRow : MyColors.evenRow,
-                          title: Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(width: 1.0, color: Colors.grey),
-                              ),
-                            ),
-                            child: SectionTileWidget2(
-                              secTag: secList[index],
-                              iconData: Icons.star_border_rounded,
-                              tag: tag,
-                              f: f,
+                        disableOnTap: index == 0 || index == 2,
+                        trailing: Container(),
+                        onExpansionChanged: (bool isExpanded) {
+                          secList[index].setSectionExpanded(isExpanded);
+                        },
+                        headerTileColor: index % 2 == 0 ? MyColors.oddRow : MyColors.evenRow,
+                        title: Container(
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(width: 1.0, color: Colors.grey),
                             ),
                           ),
-                          children: index == 1
-                              ? []
-                              : index == 3
-                                  ? [
+                          child: SectionTileWidget2(
+                            secTag: secList[index],
+                            iconData: Icons.star_border_rounded,
+                            tag: tag,
+                            f: f,
+                          ),
+                        ),
+                        children: index == 1
+                            ? []
+                            : index == 3
+                                ? [
                                       const ExpansionListItem(
                                         texts: ["Time", "User", "Position/Order", "Details"],
                                         isBold: true,
                                         bgColor: MyColors.evenRow,
-                                      ),
-                                      const ExpansionListItem(texts: ["18:41:22", "System", "Checkin / 105", "-"], isBold: false, bgColor: MyColors.oddRow),
-                                    ]
-                                  : index == 4
-                                      ? [
+                                      )
+                                    ] +
+                                    tag.tagPositions.asMap().entries.map((t) {
+                                      var index = t.key;
+                                      TagPosition value = t.value;
+
+                                      return ExpansionListItem(
+                                          texts: [value.dateUtc.format_yyyyMMdd.toString(), value.username, value.positionId.toString(), value.positionDesc ?? '-'],
+                                          isBold: false,
+                                          bgColor: index % 2 == 0 ? MyColors.oddRow : MyColors.evenRow); //todo correct values?
+                                    }).toList()
+                                : index == 4
+                                    ? [
                                           const ExpansionListItem(
                                             texts: ["Time", "User", "Number", "Status"],
                                             isBold: true,
                                             bgColor: MyColors.evenRow,
-                                          ),
-                                          const ExpansionListItem(texts: ["18:41:22", "System", "Checkin / 105", "Normal"], isBold: false, bgColor: MyColors.oddRow),
-                                          const ExpansionListItem(texts: ["18:41:22", "System", "Checkin / 105", "Normal"], isBold: false, bgColor: MyColors.evenRow),
-                                        ]
-                                      : [
-                                          SizedBox(height: 5),
-                                          Padding(
-                                            padding: const EdgeInsets.all(10.0),
-                                            child: Container(
-                                                height: 50,
-                                                padding: const EdgeInsets.all(10.0),
-                                                decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.circular(7), // radius of 10
-                                                  color: MyColors.greyishBrown,
-                                                ),
-                                                child: const Row(
-                                                  children: [
-                                                    Text(
-                                                      "BSM",
-                                                      style: TextStyle(color: MyColors.green),
-                                                    ),
-                                                  ],
-                                                )),
-                                          ),
-                                        ]
-                          // subtitle: Text("Data"),
-                          );
+                                          )
+                                        ] + //todo correct values?
+                                        tag.actionsHistory.asMap().entries.map((t) {
+                                          var index = t.key;
+                                          ActionHistory value = t.value;
+                                          return ExpansionListItem(
+                                              texts: [value.actionTime, value.username, value.positionId.toString(), BasicClass.getTagStatusByID(value.tagStatus)?.title ?? ""],
+                                              isBold: false,
+                                              bgColor: index % 2 == 0 ? MyColors.oddRow : MyColors.evenRow);
+                                        }).toList()
+                                    : moreDetails.bsmList.asMap().entries.map((t) {
+                                        var index = t.key;
+                                        Bsm value = t.value;
+                                        return BSMMessage(bsm: value);
+                                      }).toList(),
+
+                        // subtitle: Text("Data"),
+                      );
                     },
                   ),
                 ),
@@ -257,6 +266,42 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class BSMMessage extends StatelessWidget {
+  const BSMMessage({
+    super.key,
+    required this.bsm,
+  });
+
+  final Bsm bsm;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(height: 5),
+        Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: Container(
+              // height: 50,
+              padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(7), // radius of 10
+                color: MyColors.greyishBrown,
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    bsm.bsmMessage,
+                    style: const TextStyle(color: MyColors.green),
+                  ),
+                ],
+              )),
+        ),
+      ],
     );
   }
 }
@@ -312,18 +357,19 @@ class DcsInfoWidget extends StatelessWidget {
     ThemeData theme = Theme.of(context);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    if (info == null)
-      return const Row(children: [
-        HorizontalCardField(title: "Pax", value: "-"),
-        SizedBox(width: 70),
-        HorizontalCardField(title: "PNR", value: "-"),
-        SizedBox(width: 70),
-        HorizontalCardField(title: "P/W", value: "-"),
-        SizedBox(width: 70),
-        HorizontalCardField(title: "Dest", value: "-"),
-        SizedBox(width: 70),
-        HorizontalCardField(title: "Photo", valueWidget: Icon(Icons.camera_alt, color: Colors.blue), value: "-"),
+    if (info == null) {
+      return Row(children: [
+        HorizontalCardField(title: "Pax", value: info!.paxId.toString()),
+        const SizedBox(width: 70),
+        HorizontalCardField(title: "PNR", value: info!.pnr),
+        const SizedBox(width: 70),
+        HorizontalCardField(title: "P/W", value: "${info!.count}/${info!.weight}"),
+        const SizedBox(width: 70),
+        HorizontalCardField(title: "Dest", value: info!.dest),
+        const SizedBox(width: 70),
+        const HorizontalCardField(title: "Photo", valueWidget: Icon(Icons.camera_alt, color: Colors.blue), value: "-"),
       ]);
+    }
     return Row(children: [
       HorizontalCardField(
         title: "Pax",
@@ -358,7 +404,7 @@ class SectionTileWidget2 extends StatelessWidget {
   });
 
   final IconData iconData;
-  final TahaSectionBinSection? secTag;
+  final NewSection? secTag;
   final FlightTag tag;
   final Flight f;
 
@@ -370,46 +416,54 @@ class SectionTileWidget2 extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(iconData),
-                ),
-                Text(secTag!.label, style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
-                const SizedBox(width: 80),
-                SizedBox(height: 20, child: tag.getTypeWidget),
-                const SizedBox(width: 12),
-                SizedBox(height: 25, child: tag.getTahaWidget("Inbound", Colors.green)),
-                const SizedBox(width: 12),
-                SizedBox(height: 25, child: tag.getTahaWidget("Inbound", Colors.green)),
-              ],
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(iconData),
+                    ),
+                    Text(secTag!.label, style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(width: 80),
+                    SizedBox(height: 20, child: tag.getTypeWidget),
+                    const SizedBox(width: 12),
+                  ] +
+                  tag.tagSsrs.asMap().entries.map((t) {
+                    var index = t.key;
+                    TagSSR value = t.value;
+                    return tag.getTagSsrsWidget(value.name)!;
+                  }).toList(),
             ),
           )
         : secTag!.position == 2
             ? SizedBox(
                 height: 60,
-                child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(iconData),
-                  ),
-                  Text(secTag!.label, style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
-                  const SizedBox(width: 80),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2),
-                    child: AirlineLogo(
-                      f.al,
-                      size: 50,
-                    ),
-                  ),
-                  const SizedBox(width: 70),
-                  const HorizontalCardField(title: "AL", value: "FZ"),
-                  const SizedBox(width: 70),
-                  const HorizontalCardField(title: "FLNB", value: "047"),
-                  const SizedBox(width: 70),
-                  const HorizontalCardField(title: "Date", value: "23 November"),
-                  const SizedBox(width: 70),
-                  const HorizontalCardField(title: "City", value: "MCT"),
-                ]),
+                child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(iconData),
+                          ),
+                          Text(secTag!.label, style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+                          const SizedBox(width: 80),
+                        ] +
+                        (tag.outboundLegs.isEmpty
+                            ? []
+                            : [
+                                Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 2),
+                                  child: AirlineLogo(
+                                    tag.outboundLegs.first.al,
+                                    size: 50,
+                                  ),
+                                ),
+                                const SizedBox(width: 70),
+                                HorizontalCardField(title: "AL", value: tag.outboundLegs.first.al),
+                                const SizedBox(width: 70),
+                                HorizontalCardField(title: "FLNB", value: tag.outboundLegs.first.flnb),
+                                const SizedBox(width: 70),
+                                HorizontalCardField(title: "Date", value: DateFormat("dd MMM").format(tag.outboundLegs.first.flightDate)),
+                                const SizedBox(width: 70),
+                                HorizontalCardField(title: "City", value: tag.outboundLegs.first.city),
+                              ])),
               )
             : Container(
                 color: secTag!.position % 2 == 0 ? MyColors.oddRow : MyColors.evenRow,
@@ -430,12 +484,12 @@ class SectionTileWidget2 extends StatelessWidget {
   }
 }
 
-class TahaSectionBinSection {
+class NewSection {
   final WidgetRef ref;
   String label;
   final int position;
 
-  TahaSectionBinSection({
+  NewSection({
     required this.ref,
     required this.label,
     required this.position,
