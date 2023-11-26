@@ -3,6 +3,7 @@ import 'package:brs_panel/core/abstracts/local_data_base_abs.dart';
 import 'package:brs_panel/core/constants/assest.dart';
 import 'package:flutter/material.dart';
 
+import '../constants/abomis_pack_icons.dart';
 import '../util/basic_class.dart';
 import 'tag_container_class.dart';
 import 'login_user_class.dart';
@@ -162,8 +163,7 @@ class FlightTag {
         isRush: json["IsRush"] ?? false,
         exceptionActionsStr: json["ExcActStr"] ?? "",
         deadline: json["Deadline"] ?? 1000,
-        typeID: json["TypeID"]??1,
-
+        typeID: json["TypeID"] ?? 1,
         dcsInfo: json["DCSInfo"] == null ? null : DcsInfo.fromJson(json["DCSInfo"]),
         tagPositions: List<TagPosition>.from(json["TagPositions"].map((x) => TagPosition.fromJson(x))),
         actionsHistory: List<ActionHistory>.from((json["ActionsHistory"] ?? []).map((x) => ActionHistory.fromJson(x))),
@@ -182,10 +182,18 @@ class FlightTag {
 
   int? get getContainerID => tagPositions.first.container?.id;
 
-  Widget get weight => dcsInfo==null?SizedBox():Row(mainAxisSize: MainAxisSize.min, children: [
-    Text('${dcsInfo!.weight}'),
-    Text("KG",style: TextStyle(fontSize: 8),)
-  ],);
+  Widget get weight => dcsInfo == null
+      ? SizedBox()
+      : Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('${dcsInfo!.weight}'),
+            Text(
+              "KG",
+              style: TextStyle(fontSize: 8),
+            )
+          ],
+        );
 
   int? get containerID => tagPositions.first.container?.id;
 
@@ -193,36 +201,130 @@ class FlightTag {
 
   bool get isFree => binID == null && containerID == null;
 
-
   TagStatus get getStatus => BasicClass.systemSetting.statusList.firstWhere((element) => element.id == currentStatus);
 
-  Widget get getStatusWidget => Padding(
-    padding: const EdgeInsets.all(4.0),
-    child: Icon(getStatus.getIcon, color: getStatus.getColor, size: 15),
-  );
+  Widget get getStatusWidget => Container(
+        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: getStatus.getColor.withOpacity(0.3)),
+        child: Center(
+          child: Row(
+            children: [
+              Icon(getStatus.getIcon, color: getStatus.getColor, size: 12),
+              RichText(
+                  text: TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
+                TextSpan(
+                  // text: "${getType.label}",
+                  text: getStatus.title,
+                  style: TextStyle(color: getStatus.getColor),
+                ),
+              ])),
+            ],
+          ),
+        ),
+      );
+
+  Widget? get getInboundWidget => inboundLeg == null
+      ? null
+      : Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: Colors.green.withOpacity(0.3)),
+          child: Center(
+            child: Row(
+              children: [
+                const Icon(Icons.flight_land, color: Colors.green, size: 12),
+                RichText(
+                    text: const TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
+                  TextSpan(
+                    text: "Inbound",
+                    style: TextStyle(color: Colors.green),
+                  ),
+                ])),
+              ],
+            ),
+          ),
+        );
+
+  Widget? get getOutboundWidget => outboundLegs.isEmpty
+      ? null
+      : Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: Colors.blue.withOpacity(0.3)),
+          child: Center(
+            child: Row(
+              children: [
+                const Icon(Icons.flight_takeoff, color: Colors.blue, size: 12),
+                RichText(
+                    text: const TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
+                  TextSpan(
+                    text: "Onward",
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ])),
+              ],
+            ),
+          ),
+        );
+
+  Widget? getTagSsrsWidget(String text) => Container(
+    height: 25,
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: Colors.green.withOpacity(0.3)),
+        child: Center(
+          child: Row(
+            children: [
+              RichText(
+                  text: TextSpan(style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
+                TextSpan(
+                  text: text,
+                  style: const TextStyle(color: Colors.green),
+                ),
+              ])),
+            ],
+          ),
+        ),
+      );
 
   TagType? get getType {
     // print("looking for ${typeID} in ${BasicClass.settings.systemSettings.tagTypeList.map((e) => e.id).toList()}");
     return typeID == null ? BasicClass.systemSetting.tagTypeList.first : BasicClass.systemSetting.tagTypeList.firstWhereOrNull((element) => element.id == typeID);
   }
 
-
   Widget get getTypeWidget => Container(
-    padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-    decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: getType?.getColor.withOpacity(1) ?? Colors.transparent),
-    child: RichText(
-        text: TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
+        padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: getType?.getColor.withOpacity(1) ?? Colors.transparent),
+        child: RichText(
+            text: TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
           TextSpan(
             // text: "${getType.label}",
             text: "${getType?.label ?? ''}",
             style: TextStyle(color: getType?.getTextColor),
           ),
         ])),
-  );
+      );
+
+  Widget get getGateWidget => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: Colors.green.withOpacity(0.3) ?? Colors.transparent),
+        child: Center(
+          child: Row(
+            children: [
+              const Icon(AbomisIconPack.denyLoad, color: Colors.green, size: 0),
+              RichText(
+                  text: const TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
+                TextSpan(
+                  // text: "${getType.label}",
+                  text: "GATE",
+                  style: TextStyle(color: Colors.green),
+                ),
+              ])),
+            ],
+          ),
+        ),
+      );
 
   TagStatus? get exception => BasicClass.getTagStatusById(currentStatus);
 
-  String get getAddress => BasicClass.getAirportSectionByID(sectionID)?.label?? tagPositions.first.container?.code ?? (tagPositions.first.bin.isEmpty ? getSection.label : tagPositions.first.bin);
+  String get getAddress => BasicClass.getAirportSectionByID(sectionID)?.label ?? tagPositions.first.container?.code ?? (tagPositions.first.bin.isEmpty ? getSection.label : tagPositions.first.bin);
 
   AirportPositionSection get getSection {
     try {
@@ -260,7 +362,8 @@ class FlightTag {
       };
 
   bool validateSearch(String searched, Position? selectedPosition) {
-    return (selectedPosition==null || currentPosition==selectedPosition.id) && ("${dcsInfo?.securityCode??''} ${dcsInfo?.paxName??''} $tagNumber ".toLowerCase().contains(searched.toLowerCase()) || searched == "");
+    return (selectedPosition == null || currentPosition == selectedPosition.id) &&
+        ("${dcsInfo?.securityCode ?? ''} ${dcsInfo?.paxName ?? ''} $tagNumber ".toLowerCase().contains(searched.toLowerCase()) || searched == "");
   }
 
   List<int> get deniedPosIDs => actionsHistory.isEmpty ? [] : (actionsHistory.first.blockedPosition);
@@ -329,12 +432,12 @@ class TagSSR {
       );
 
   factory TagSSR.fromJson(Map<String, dynamic> json) => TagSSR(
-    name: json["Name"],
-  );
+        name: json["Name"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "Name": name,
-  };
+        "Name": name,
+      };
 }
 
 class TagLeg {
@@ -368,27 +471,26 @@ class TagLeg {
       );
 
   factory TagLeg.fromJson(Map<String, dynamic> json) => TagLeg(
-    al: json["AL"],
-    flnb: json["FLNB"],
-    flightDate: DateTime.parse(json["FlightDate"]),
-    city: json["City"],
-    type: json["Type"],
-  );
+        al: json["AL"],
+        flnb: json["FLNB"],
+        flightDate: DateTime.parse(json["FlightDate"]),
+        city: json["City"],
+        type: json["Type"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "AL": al,
-    "FLNB": flnb,
-    "FlightDate": "${flightDate.year.toString().padLeft(4, '0')}-${flightDate.month.toString().padLeft(2, '0')}-${flightDate.day.toString().padLeft(2, '0')}",
-    "City": city,
-    "Type": type,
-  };
+        "AL": al,
+        "FLNB": flnb,
+        "FlightDate": "${flightDate.year.toString().padLeft(4, '0')}-${flightDate.month.toString().padLeft(2, '0')}-${flightDate.day.toString().padLeft(2, '0')}",
+        "City": city,
+        "Type": type,
+      };
 
   @override
   bool operator ==(Object other) {
     return other is TagLeg && other.flnb == flnb && other.al == al;
   }
 }
-
 
 @immutable
 class TagPosition {

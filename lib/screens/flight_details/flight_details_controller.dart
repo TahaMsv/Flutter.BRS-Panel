@@ -133,7 +133,8 @@ class FlightDetailsController extends MainController {
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightGetTagMoreDetails(flightID, tag)), (r) {
       moreDetails = r.details;
       print(r.details.toJson());
-      nav.dialog(TagDetailsDialog(
+      nav.dialog(
+          TagDetailsDialog(
         tag: tag,
         moreDetails: r.details,
       ));

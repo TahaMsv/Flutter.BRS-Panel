@@ -1,16 +1,15 @@
-import 'package:artemis_ui_kit/artemis_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import '../core/classes/flight_class.dart';
 import '../core/constants/ui.dart';
 import 'AirlineLogo.dart';
 
 class FlightBanner extends StatelessWidget {
   final Flight flight;
+  final Color bgColor;
   final bool mini;
 
-  const FlightBanner({super.key, required this.flight, this.mini = false});
+  const FlightBanner({super.key, required this.flight, this.bgColor = Colors.white, this.mini = false});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +17,7 @@ class FlightBanner extends StatelessWidget {
     return Material(
       key: const Key("1"),
       borderRadius: BorderRadius.circular(5),
-      color: Colors.white,
+      color: bgColor,
       child: Focus(
         descendantsAreTraversable: false,
         child: InkWell(
@@ -85,3 +84,4 @@ class FlightBanner extends StatelessWidget {
     );
   }
 }
+

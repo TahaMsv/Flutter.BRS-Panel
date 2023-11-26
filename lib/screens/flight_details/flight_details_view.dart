@@ -374,7 +374,6 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
                       builder: SliverExpandableChildDelegate<TagContainer, AirportSectionContainerSection>(
                           sectionList: sectionSectionsCon,
                           headerBuilder: (context, sectionIndex, index) {
-                            print(sectionIndex);
                             return SectionTileWidget(
                                 secTag: null, secCon: sectionSectionsCon[sectionIndex], secBin: null);
                           },
@@ -418,7 +417,6 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
                       builder: SliverExpandableChildDelegate<FlightTag, AirportSectionTagSection>(
                           sectionList: sectionSectionsTag,
                           headerBuilder: (context, sectionIndex, index) {
-                            print(sectionIndex);
                             return SectionTileWidget(
                                 secTag: sectionSectionsTag[sectionIndex], secCon: null, secBin: null);
                           },
@@ -688,49 +686,49 @@ class TagWidget extends StatelessWidget {
                 children: [
                   const SizedBox(width: 12),
 
-                  Container(
-                      width: 40,
-                      height: 40,
-                      alignment: Alignment.center,
-                      child: Text(
-                        '${total - index}',
-                        style: TextStyle(color: MyColors.indexColor.withOpacity(0.3), fontWeight: FontWeight.bold),
-                      )),
-                  const SizedBox(width: 8),
-                  (hasBinLine && !inDetails)
-                      ? Container(width: 2, height: 40, color: MyColors.binGrey)
-                      : const SizedBox(
-                          width: 10,
-                        ),
-                  (hasTagLine && !inDetails)
-                      ? Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(width: 2, height: isLast ? 20 : 40, color: MyColors.containerGreen),
-                            Container(
-                              width: 10,
-                              height: 2,
-                              color: MyColors.containerGreen,
-                              margin: const EdgeInsets.only(top: 19),
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(top: 16.0),
-                              child: Icon(Icons.circle, color: MyColors.containerGreen, size: 8),
-                            ),
-                          ],
-                        )
-                      : const SizedBox(width: 10),
-                  IndexedStack(
-                    index: tag.inboundLeg == null ? 0 : 1,
-                    children: [
-                      const SizedBox(),
-                      Container(
-                        height: 40,
-                        padding: const EdgeInsets.only(left: 2),
-                        child: const Icon(Icons.flight_land, color: MyColors.green, size: 20),
-                      )
-                    ],
-                  ),
+                  // Container(
+                  //     width: 40,
+                  //     height: 40,
+                  //     alignment: Alignment.center,
+                  //     child: Text(
+                  //       '${total - index}',
+                  //       style: TextStyle(color: MyColors.indexColor.withOpacity(0.3), fontWeight: FontWeight.bold),
+                  //     )),
+                  // const SizedBox(width: 8),
+                  // (hasBinLine && !inDetails)
+                  //     ? Container(width: 2, height: 40, color: MyColors.binGrey)
+                  //     : const SizedBox(
+                  //         width: 10,
+                  //       ),
+                  // (hasTagLine && !inDetails)
+                  //     ? Row(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           Container(width: 2, height: isLast ? 20 : 40, color: MyColors.containerGreen),
+                  //           Container(
+                  //             width: 10,
+                  //             height: 2,
+                  //             color: MyColors.containerGreen,
+                  //             margin: const EdgeInsets.only(top: 19),
+                  //           ),
+                  //           const Padding(
+                  //             padding: EdgeInsets.only(top: 16.0),
+                  //             child: Icon(Icons.circle, color: MyColors.containerGreen, size: 8),
+                  //           ),
+                  //         ],
+                  //       )
+                  //     : const SizedBox(width: 10),
+                  // IndexedStack(
+                  //   index: tag.inboundLeg == null ? 0 : 1,
+                  //   children: [
+                  //     const SizedBox(),
+                  //     Container(
+                  //       height: 40,
+                  //       padding: const EdgeInsets.only(left: 2),
+                  //       child: const Icon(Icons.flight_land, color: MyColors.green, size: 20),
+                  //     )
+                  //   ],
+                  // ),
                   IndexedStack(
                     index: tag.outboundLegs.isEmpty ? 0 : 1,
                     children: [
