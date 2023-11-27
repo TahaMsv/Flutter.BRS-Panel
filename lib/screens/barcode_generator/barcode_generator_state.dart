@@ -2,6 +2,8 @@ import 'package:brs_panel/core/classes/bsm_result_class.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../core/classes/barcode_config.dart';
+
 final bgProvider = ChangeNotifierProvider<BarcodeGeneratorState>((_) => BarcodeGeneratorState());
 
 class BarcodeGeneratorState extends ChangeNotifier {
@@ -10,4 +12,7 @@ class BarcodeGeneratorState extends ChangeNotifier {
   final TextEditingController startController = TextEditingController();
   final TextEditingController endController = TextEditingController();
   List<Widget> barcodes = [];
+  bool isRangeMode = true;
+  bool showRangeMode = true;
+  final BarcodeConf conf = BarcodeConf();
 }

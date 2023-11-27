@@ -1,7 +1,9 @@
+import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import '../core/constants/ui.dart';
+import 'package:flutter/services.dart';
 
 class MyTextField extends StatefulWidget {
   final FocusNode? focusNode;
@@ -18,6 +20,7 @@ class MyTextField extends StatefulWidget {
   final String? label;
   final TextEditingController? controller;
   final String? Function(String v)? validator;
+  final FormFieldValidator<String>?  formValidator;
   final double? fontSize;
   final int? maxLength;
   final int? maxLines;
@@ -61,6 +64,7 @@ class MyTextField extends StatefulWidget {
     this.locked = false,
     this.required = false,
     this.validator,
+    this.formValidator,
     this.prefix,
     this.prefixIcon,
     this.suffixIcon,
@@ -109,6 +113,7 @@ class _MyTextFieldState extends State<MyTextField> {
         child: Stack(
           children: [
             TextFormField(
+              validator: widget.formValidator,
               enabled: !widget.locked,
               onFieldSubmitted: widget.onSubmit,
               inputFormatters: widget.inputFormatters,
@@ -118,6 +123,7 @@ class _MyTextFieldState extends State<MyTextField> {
               obscureText: obscureText,
               maxLines: widget.maxLines,
               // onChanged: widget.onChanged,
+
               decoration: InputDecoration(
                 fillColor: Colors.white,
                 filled: true,
@@ -380,3 +386,6 @@ class UpperCaseTextFormatter extends TextInputFormatter {
     );
   }
 }
+
+
+
