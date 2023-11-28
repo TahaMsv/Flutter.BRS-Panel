@@ -1,12 +1,10 @@
-import 'dart:io';
-
 import 'package:artemis_utils/artemis_utils.dart';
 import 'package:brs_panel/core/classes/login_user_class.dart';
 import 'package:brs_panel/core/enums/week_days_enum.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
 import 'package:brs_panel/widgets/MyButton.dart';
-import 'package:brs_panel/widgets/MyDropDown.dart';
+import 'package:brs_panel/widgets/MyCheckBox.dart';
 import 'package:brs_panel/widgets/MyFieldPicker.dart';
 import 'package:brs_panel/widgets/MySegment.dart';
 import 'package:brs_panel/widgets/MySwitchButton.dart';
@@ -14,7 +12,6 @@ import 'package:brs_panel/widgets/MyTImeField.dart';
 import 'package:brs_panel/widgets/MyTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import '../../core/constants/ui.dart';
 import '../../core/util/basic_class.dart';
 import '../../widgets/MyButtonPanel.dart';
@@ -31,182 +28,232 @@ class AddFlightView extends StatefulWidget {
 }
 
 class _AddFlightViewState extends State<AddFlightView> {
-  bool isSchedule = false;
-  static AddFlightController myAddFlightController = getIt<AddFlightController>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: const MyAppBar(),
-        body: Column(
-          children: [
-            const AddFlightPanel(),
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                children: [
-                  const Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(child: AddFlightFLNBWidget()),
-                      SizedBox(width: 24),
-                      Expanded(child: AddFlightAirlineWidget()),
-                      SizedBox(width: 24),
-                      Expanded(child: AddFlightFromWidget()),
-                      SizedBox(width: 24),
-                      Expanded(child: AddFlightToWidget()),
-                      SizedBox(width: 24),
-                      Expanded(child: AddFlightAircraftWidget()),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Expanded(flex:1,child: AddFlightDateWidget()),
-                      const SizedBox(width: 24),
-                      Expanded(
-                        flex: 1,
-                        child: Consumer(
-                          builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                            AddFlightState state = ref.watch(addFlightProvider);
-                        
-                            return state.isSchedule
-                                ? Row(
-                                    children: [
-                                      // const Expanded(
-                                      //   child: Row(
-                                      //     mainAxisAlignment:MainAxisAlignment.end,
-                                      //     children: [
-                                      //       Text("To Date"),
-                                      //       SizedBox(width: 12),
-                                      //     ],
-                                      //   ),
-                                      // ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Stack(
-                                          alignment: Alignment.topCenter,
-                                          children: [
-                                            MyButtonPanel(
-                                              size: 48,
-                                              leftWidget: const Icon(Icons.chevron_left, size: 20, color: MyColors.black3),
-                                              rightWidget: const Icon(Icons.chevron_right, size: 20, color: MyColors.black3),
-                                              centerWidget: Text(
-                                                state.toDate.format_ddMMMEEE,
-                                                style: const TextStyle(
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: MyColors.black3,
-                                                ),
-                                              ),
-                                              leftAction: () => myAddFlightController.setToDate(-1),
-                                              rightAction: () => myAddFlightController.setToDate(1),
-                                              centerAction: () => myAddFlightController.setToDate(null),
-                                            ),
-                                            state.isSchedule?const Text("To Date",style: TextStyle(fontSize: 10),):SizedBox(),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : const Row(
-                                  children: [
-                                    Expanded(child: AddFlightSTDWidget()),
-                                    SizedBox(width: 24),
-                                    Expanded(child: AddFlightSTAWidget()),
-                                    
-                                  ],
-                                );
-                          },
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const AddFlightPanel(),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 24.0),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Expanded(
+                          child: AddFlightStage(label: "Flight Dates", items: [
+                            SizedBox(
+                                width: 250,
+                                height: 40,
+                                child: AddFlightDateWidget(
+                                  isFromDate: true,
+                                )),
+                            SizedBox(width: 20),
+                            SizedBox(width: 260, child: AddFlightSetScheduleWidget()),
+                            SizedBox(width: 20),
+                          ]),
                         ),
-                      ),
-                      // Expanded(
-                      //   child: Row(
-                      //     children: [
-                      //       const Expanded(child: AddFlightSTDWidget()),
-                      //       const SizedBox(width: 24),
-                      //       const Expanded(child: AddFlightSTAWidget()),
-                      //       const SizedBox(width: 24),
-                      //     ],
-                      //   ),
-                      // ),
-
-                      Expanded(
-                          flex: 3,
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Consumer(
-                                  builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                                    AddFlightState state = ref.watch(addFlightProvider);
-                                    return Row(
-                                      children: [
-                                        const SizedBox(width: 24),
-                                        MySwitchButton(
-                                            value: state.isTest,
-                                            onChange: (v) {
-                                              state.isTest = v;
-                                              state.setState();
-                                            },
-                                            label: 'Is Test'),
-                                        const SizedBox(width: 24),
-                                        MySwitchButton(
-                                            value: state.isSchedule,
-                                            onChange: (v) {
-                                              state.isSchedule = v;
-                                              state.setState();
-                                            },
-                                            label: "Schedule"),
-                                      ],
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          )),
-                      const SizedBox(width: 24),
-                      const SizedBox(width: 24),
-                      const SizedBox(width: 24),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 2,
-                        child: Consumer(
-                          builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                        Expanded(
+                          child: Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
                             AddFlightState state = ref.watch(addFlightProvider);
                             return Visibility(
                               visible: state.isSchedule,
-                              child: const AddFlightToDateWidget(),
+                              child: const AddFlightStage(label: "End Date", items: [
+                                SizedBox(
+                                    width: 250,
+                                    height: 40,
+                                    child: AddFlightDateWidget(
+                                      isFromDate: false,
+                                    )),
+                                SizedBox(width: 300),
+                              ]),
                             );
-                          },
+                          }),
                         ),
-                      ),
-                      const Expanded(
-                        flex: 3,
-                        child: SizedBox(
-                          height: 50,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [],
-                          ),
+                      ],
+                    ),
+                    Consumer(
+                      builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                        List<WeekDays> days = WeekDays.values;
+                        AddFlightState state = ref.watch(addFlightProvider);
+                        return Visibility(
+                          visible: state.isSchedule,
+                          child: AddFlightStage(label: "Days", height: 100, items: <Widget>[
+                            Expanded(
+                              child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(mainAxisSize: MainAxisSize.min, children: [
+                                    const AddFlightDayElementWidget(id: 0, label: "All", b: true, hasTime: false),
+                                    ...days
+                                        .map((e) =>
+                                            AddFlightDayElementWidget(id: e.index + 1, label: e.labelMini, b: true))
+                                        .toList()
+                                  ])),
+                            ),
+                          ]),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    Row(
+                      children: [
+                        const Expanded(
+                          child: AddFlightStage(label: "Flight Number", items: [
+                            SizedBox(width: 180, height: 40, child: AddFlightFLNBWidget()),
+                          ]),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      const SizedBox(width: 24),
-                    ],
-                  ),
-                ],
-              ),
-            )
-          ],
+                        Expanded(
+                          child: AddFlightStage(label: "Airline", items: [
+                            const SizedBox(width: 180, height: 40, child: AddFlightAirlineWidget()),
+                            const Spacer(),
+                            Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                              AddFlightState state = ref.watch(addFlightProvider);
+                              return MySwitchButton(
+                                  value: state.isTest,
+                                  onChange: (v) {
+                                    state.isTest = v;
+                                    state.setState();
+                                  },
+                                  label: ' Test Flight');
+                            }),
+                            const SizedBox(width: 24),
+                          ]),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    const AddFlightStage(label: "Aircraft", items: [
+                      SizedBox(width: 180, height: 40, child: AddFlightAirlineWidget()),
+                      SizedBox(width: 8),
+                      SizedBox(width: 300, height: 40, child: AddFlightAircraftWidget()),
+                    ]),
+                    const Row(
+                      children: [
+                        Expanded(
+                          child: AddFlightStage(label: "Departure", items: [
+                            SizedBox(width: 300, height: 40, child: AddFlightFromWidget()),
+                          ]),
+                        ),
+                        Expanded(
+                          child: AddFlightStage(label: "Arrival", items: [
+                            SizedBox(width: 300, height: 40, child: AddFlightToWidget()),
+                          ]),
+                        ),
+                      ],
+                    ),
+                    const Row(
+                      children: [
+                        Expanded(
+                          child: AddFlightStage(label: "STD", items: [
+                            SizedBox(width: 150, height: 40, child: AddFlightSTDWidget()),
+                          ]),
+                        ),
+                        Expanded(
+                          child: AddFlightStage(label: "STA", items: [
+                            SizedBox(width: 150, height: 40, child: AddFlightSTAWidget()),
+                          ]),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
         ));
+  }
+}
+
+class AddFlightStage extends StatelessWidget {
+  const AddFlightStage({super.key, required this.label, required this.items, this.height = 70});
+
+  final String label;
+  final double height;
+  final List<Widget> items;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(border: Border.all(color: MyColors.lineColor2, width: 1)),
+      child: Row(children: [
+        Container(
+            width: 150,
+            height: height,
+            color: MyColors.evenRow2,
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.only(left: 10),
+            child: Text(label, style: const TextStyle(fontSize: 16))),
+        const SizedBox(width: 16),
+        ...items
+      ]),
+    );
+  }
+}
+
+class AddFlightSetScheduleWidget extends StatelessWidget {
+  const AddFlightSetScheduleWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    const double buttonSize = 120;
+    return Container(
+      decoration: BoxDecoration(
+          color: MyColors.evenRow2,
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: MyColors.borderColor)),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
+            AddFlightState state = ref.watch(addFlightProvider);
+            return InkWell(
+                onTap: !state.isSchedule
+                    ? null
+                    : () {
+                        state.isSchedule = false;
+                        state.setState();
+                      },
+                child: Container(
+                    height: 32,
+                    width: buttonSize,
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                        color: !state.isSchedule ? MyColors.lightIshBlue : Colors.transparent,
+                        borderRadius: BorderRadius.circular(4)),
+                    child: Text("Non Schedule",
+                        style: TextStyle(
+                            color: !state.isSchedule ? MyColors.white3 : MyColors.black,
+                            fontWeight: !state.isSchedule ? FontWeight.bold : FontWeight.normal))));
+          }),
+          Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
+            AddFlightState state = ref.watch(addFlightProvider);
+            return InkWell(
+                onTap: state.isSchedule
+                    ? null
+                    : () {
+                        state.isSchedule = true;
+                        state.setState();
+                      },
+                child: Container(
+                    height: 32,
+                    width: buttonSize,
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                        color: state.isSchedule ? MyColors.lightIshBlue : Colors.transparent,
+                        borderRadius: BorderRadius.circular(4)),
+                    child: Text("Schedule",
+                        style: TextStyle(
+                            color: state.isSchedule ? MyColors.white3 : MyColors.black,
+                            fontWeight: state.isSchedule ? FontWeight.bold : FontWeight.normal))));
+          }),
+        ],
+      ),
+    );
   }
 }
 
@@ -215,7 +262,7 @@ class AddFlightFLNBWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: Consumer(
+    return Consumer(
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
         AddFlightState state = ref.watch(addFlightProvider);
         return Row(
@@ -224,13 +271,14 @@ class AddFlightFLNBWidget extends StatelessWidget {
               child: MyTextField(
                 height: 50,
                 label: "Flight Number",
+                labelStyle: const TextStyle(color: MyColors.brownGrey8, fontSize: 14),
                 controller: state.flnbC,
               ),
             ),
           ],
         );
       },
-    ));
+    );
   }
 }
 
@@ -306,8 +354,9 @@ class AddFlightAircraftWidget extends StatelessWidget {
 
 class AddFlightDateWidget extends StatelessWidget {
   static AddFlightController myAddFlightController = getIt<AddFlightController>();
+  final bool isFromDate;
 
-  const AddFlightDateWidget({Key? key}) : super(key: key);
+  const AddFlightDateWidget({Key? key, required this.isFromDate}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -316,17 +365,6 @@ class AddFlightDateWidget extends StatelessWidget {
         AddFlightState state = ref.watch(addFlightProvider);
         return Row(
           children: [
-            // state.isSchedule
-            //     ? const Expanded(
-            //         child: Row(
-            //           mainAxisAlignment: MainAxisAlignment.end,
-            //           children: [
-            //             Text("From Date"),
-            //             SizedBox(width: 24),
-            //           ],
-            //         ),
-            //       )
-            //     : const SizedBox(),
             Expanded(
               flex: 3,
               child: Stack(
@@ -337,18 +375,19 @@ class AddFlightDateWidget extends StatelessWidget {
                     leftWidget: const Icon(Icons.chevron_left, size: 20, color: MyColors.black3),
                     rightWidget: const Icon(Icons.chevron_right, size: 20, color: MyColors.black3),
                     centerWidget: Text(
-                      state.fromDate.format_ddMMMEEE,
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: MyColors.black3,
-                      ),
+                      !isFromDate ? state.toDate.format_ddMMMEEE : state.fromDate.format_ddMMMEEE,
+                      style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: MyColors.black3),
                     ),
-                    leftAction: () => myAddFlightController.setFromDate(-1),
-                    rightAction: () => myAddFlightController.setFromDate(1),
-                    centerAction: () => myAddFlightController.setFromDate(null),
+                    leftAction: () =>
+                        !isFromDate ? myAddFlightController.setToDate(-1) : myAddFlightController.setFromDate(-1),
+                    rightAction: () =>
+                        !isFromDate ? myAddFlightController.setToDate(1) : myAddFlightController.setFromDate(1),
+                    centerAction: () =>
+                        !isFromDate ? myAddFlightController.setToDate(null) : myAddFlightController.setFromDate(null),
                   ),
-                  state.isSchedule?const Text("From Date",style: TextStyle(fontSize: 10),):SizedBox(),
+                  state.isSchedule
+                      ? Text(!isFromDate ? "To Date" : "From Date", style: const TextStyle(fontSize: 10))
+                      : const SizedBox(),
                 ],
               ),
             ),
@@ -359,132 +398,73 @@ class AddFlightDateWidget extends StatelessWidget {
   }
 }
 
-class AddFlightToDateWidget extends StatelessWidget {
-  static AddFlightController myAddFlightController = getIt<AddFlightController>();
+class AddFlightDayElementWidget extends StatelessWidget {
+  const AddFlightDayElementWidget(
+      {super.key, required this.id, required this.label, this.hasTime = true, required this.b});
 
-  const AddFlightToDateWidget({Key? key}) : super(key: key);
+  static AddFlightController myAddFlightController = getIt<AddFlightController>();
+  final int id;
+  final String label;
+  final bool hasTime;
+  final bool b;
 
   @override
   Widget build(BuildContext context) {
-    var days = WeekDays.values.map((e) => e.labelMini).toList();
-    // var days = oldDays.sublist(1);
-    // days.add(oldDays.first);
-    return Consumer(
-      builder: (BuildContext context, WidgetRef ref, Widget? child) {
-        AddFlightState state = ref.watch(addFlightProvider);
-        return Row(
+    return Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
+      AddFlightState state = ref.watch(addFlightProvider);
+      return Container(
+        height: 100,
+        width: id == 0 ? 50 : 120,
+        padding: const EdgeInsets.only(top: 16),
+        margin: EdgeInsets.only(right: id == 7 ? 0 : 50),
+        child: Column(
           children: [
-            Expanded(
-              flex: 3,
-              child: Column(
-                children: [
-                  // Row(
-                  //   children: [
-                  //     const Expanded(
-                  //       child: Row(
-                  //         children: [
-                  //           Text("To Date"),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //     Expanded(
-                  //       flex: 3,
-                  //       child: MyButtonPanel(
-                  //         size: 48,
-                  //         leftWidget: const Icon(Icons.chevron_left, size: 20, color: MyColors.black3),
-                  //         rightWidget: const Icon(Icons.chevron_right, size: 20, color: MyColors.black3),
-                  //         centerWidget: Text(
-                  //           state.toDate.format_ddMMMEEE,
-                  //           style: const TextStyle(
-                  //             fontSize: 13,
-                  //             fontWeight: FontWeight.w600,
-                  //             color: MyColors.black3,
-                  //           ),
-                  //         ),
-                  //         leftAction: () => myAddFlightController.setToDate(-1),
-                  //         rightAction: () => myAddFlightController.setToDate(1),
-                  //         centerAction: () => myAddFlightController.setToDate(null),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                  ...days.map((e) {
-                    int id = days.indexOf(e) + 1;
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 12, left: 8),
-                      child: Row(
-                        children: [
-                          Expanded(
-                              child: Row(
-                            children: [
-                              MySwitchButton(
-                                  value: state.weekTimes.keys.contains("$id") || state.weekTimes.keys.contains("$id"),
-                                  onChange: (v) {
-                                    if (state.weekTimes.keys.contains("$id")) {
-                                      state.weekTimes.remove("$id");
-                                    } else {
-                                      state.weekTimes.putIfAbsent("$id", () => [null,null]);
-                                    }
-                                    // if (state.weekTimesSTA.keys.contains("$id")) {
-                                    //   state.weekTimesSTA.remove("$id");
-                                    // } else {
-                                    //   state.weekTimesSTA.putIfAbsent("$id", () => null);
-                                    // }
-                                    state.setState();
-                                  },
-                                  label: e),
-                            ],
-                          )),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            flex: 2,
-                            child: MyTimeField(
-                              label: "STD",
-                              locked: !state.weekTimes.keys.contains("$id"),
-                              value: state.weekTimes["$id"]?[0].format_HHmm,
-                              onChange: () => myAddFlightController.setDayStd(id),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList()
-                ],
-              ),
+            Row(
+              children: [
+                MyCheckBox(
+                  value: id == 0
+                      ? WeekDays.values.every((w) => state.weekTimes.keys.contains("${w.index + 1}"))
+                      : state.weekTimes.keys.contains("$id") || state.weekTimes.keys.contains("$id"),
+                  onChanged: (v) {
+                    //it's all!
+                    if (id == 0) {
+                      if (WeekDays.values.every((w) => state.weekTimes.keys.contains("${w.index + 1}"))) {
+                        for (var w in WeekDays.values) {
+                          state.weekTimes.remove("${w.index + 1}");
+                        }
+                      } else {
+                        for (var w in WeekDays.values) {
+                          state.weekTimes.putIfAbsent("${w.index + 1}", () => [null, null]);
+                        }
+                      }
+                    } else if (state.weekTimes.keys.contains("$id")) {
+                      state.weekTimes.remove("$id");
+                    } else {
+                      state.weekTimes.putIfAbsent("$id", () => [null, null]);
+                    }
+                    state.setState();
+                  },
+                ),
+                const SizedBox(width: 8),
+                Text(label),
+              ],
             ),
-            const SizedBox(width: 24),
-            Expanded(
-              flex: 2,
-              child: Column(
-                children: [
-                  ...days.map((e) {
-                    int id = days.indexOf(e) + 1;
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 12, left: 8),
-                      child: Row(
-
-                        children: [
-                          const SizedBox(width: 12),
-                          Expanded(
-                            flex: 1,
-                            child: MyTimeField(
-                              label: "STA",
-                              locked: !state.weekTimes.keys.contains("$id"),
-                              value: state.weekTimes["$id"]?[1].format_HHmm,
-                              onChange: () => myAddFlightController.setDaySta(id),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList()
-                ],
+            const SizedBox(height: 12),
+            if (hasTime)
+              SizedBox(
+                height: 33,
+                child: MyTimeField(
+                  label: "STD",
+                  locked: !state.weekTimes.keys.contains("$id"),
+                  value: state.weekTimes["$id"]?[0].format_HHmm,
+                  onChange: () => myAddFlightController.setDayStd(id),
+                ),
               ),
-            ),
+            const SizedBox(height: 12),
           ],
-        );
-      },
-    );
+        ),
+      );
+    });
   }
 }
 

@@ -11,6 +11,7 @@ class MyTextField extends StatefulWidget {
   final TextCapitalization textCapitalization;
   final TextInputAction? textInputAction;
   final TextStyle? style;
+  final TextStyle? labelStyle;
   final StrutStyle? strutStyle;
   final TextDirection? textDirection;
   final TextAlign textAlign;
@@ -55,6 +56,7 @@ class MyTextField extends StatefulWidget {
     this.textCapitalization = TextCapitalization.none,
     this.textInputAction,
     this.style,
+    this.labelStyle,
     this.maxLines = 1,
     this.strutStyle,
     this.textDirection,
@@ -163,12 +165,12 @@ class _MyTextFieldState extends State<MyTextField> {
                         ? Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(widget.label ?? ''),
+                              Text(widget.label ?? '', style: widget.labelStyle),
                               const SizedBox(width: 4),
                               const Icon(Icons.circle, color: Colors.red, size: 7.5),
                             ],
                           )
-                        : Text(widget.label!),
+                        : Text(widget.label!, style: widget.labelStyle),
                 // hintText: widget.label,
                 errorText: null,
                 // border: OutlineInputBorder(),
@@ -278,12 +280,12 @@ class _MyTextFieldState extends State<MyTextField> {
                         ? Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(widget.label ?? ''),
+                              Text(widget.label ?? '', style: widget.labelStyle),
                               const SizedBox(width: 4),
                               const Icon(Icons.circle, color: Colors.red, size: 7.5),
                             ],
                           )
-                        : Text(widget.label!),
+                        : Text(widget.label!, style: widget.labelStyle),
                 // hintText: widget.label,
                 errorText: null,
                 // border: OutlineInputBorder(),

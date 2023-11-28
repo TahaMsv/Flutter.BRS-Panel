@@ -29,7 +29,7 @@ class MyColors {
   static const greyishBrown = Color(0xff484848);
   static const greyBlue = Color.fromRGBO(129, 185, 171, 1);
   static const paleGreyTwo = Color.fromRGBO(239, 249, 255, 1);
-  static const lightIshBlue = Color.fromRGBO(77, 111, 255, 1);
+  static const lightIshBlue = Color.fromRGBO(77, 111, 255, 1); //#4D6FFF
   static const veryLightBlue = Color.fromRGBO(230, 236, 255, 1);
   static const lightBlue = Color.fromRGBO(142, 219, 230, 1);
   static const lightBlueGrey = Color(0xffcbd1d8);
@@ -46,6 +46,7 @@ class MyColors {
   static const brownGrey5 = Color.fromRGBO(130, 130, 130, 1);
   static const brownGrey6 = Color.fromRGBO(178, 178, 178, 1);
   static const brownGrey7 = Color.fromRGBO(175, 175, 175, 1);
+  static const brownGrey8 = Color.fromRGBO(149, 149, 149, 1); //#959595
   static const pinkishGrey = Color.fromRGBO(206, 206, 206, 1);
   static const paleGreyThree = Color.fromRGBO(241, 244, 255, 1);
   static const veryLightRed = Color(0xfffff2f2);
@@ -91,7 +92,10 @@ class MyColors {
   static const binGrey2 = Color(0xff646E7D);
   static const sectionGrey = Color(0xff3E3E3E);
   static const sectionSelected = Color(0xffF7F8FF);
+  static const borderColor = Color(0xffD6D6D6);
+  static const borderColor2 = Color(0xffEAEAEA);
   static const evenRow = Color(0xfff8f8f8);
+  static const evenRow2 = Color(0xfff7f7f7);
   static const oddRow = Color(0xffffffff);
   static const indexColor = Color(0xff3b3b3b);
 

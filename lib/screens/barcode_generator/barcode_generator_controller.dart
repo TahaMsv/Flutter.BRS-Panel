@@ -1,14 +1,7 @@
 import 'package:barcode_widget/barcode_widget.dart';
-import 'package:brs_panel/screens/bsm/usecases/add_bsm_usecase.dart';
-import 'package:brs_panel/screens/bsm/usecases/bsm_list_usecase.dart';
-import 'package:flutter/services.dart';
-
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/abstracts/failures_abs.dart';
-import '../../core/classes/bsm_result_class.dart';
-import '../../core/util/basic_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
-
 import 'barcode_generator_state.dart';
 
 class BarcodeGeneratorController extends MainController {
@@ -31,7 +24,8 @@ class BarcodeGeneratorController extends MainController {
     String end = bgmState.endController.text;
     if (bgmState.isRangeMode) {
       if (start.length < bgmState.conf.minLength) {
-        FailureHandler.handle(ValidationFailure(code: 1, msg: 'Start length must be greater than ${bgmState.conf.minLength - 1} characters', traceMsg: ""));
+        FailureHandler.handle(ValidationFailure(
+            code: 1, msg: 'Start length must be greater than ${bgmState.conf.minLength - 1} characters', traceMsg: ""));
         return;
       }
       if (!isValidBarcode(start)) {
@@ -39,7 +33,8 @@ class BarcodeGeneratorController extends MainController {
         return;
       }
       if (end.length < bgmState.conf.minLength) {
-        FailureHandler.handle(ValidationFailure(code: 1, msg: 'End length must be greater than ${bgmState.conf.minLength - 1} characters', traceMsg: ""));
+        FailureHandler.handle(ValidationFailure(
+            code: 1, msg: 'End length must be greater than ${bgmState.conf.minLength - 1} characters', traceMsg: ""));
         return;
       }
       if (!isValidBarcode(end)) {
@@ -48,7 +43,10 @@ class BarcodeGeneratorController extends MainController {
       }
     } else {
       if (start.length < bgmState.conf.minLength) {
-        FailureHandler.handle(ValidationFailure(code: 1, msg: 'Barcode length must be greater than ${bgmState.conf.minLength - 1} characters', traceMsg: ""));
+        FailureHandler.handle(ValidationFailure(
+            code: 1,
+            msg: 'Barcode length must be greater than ${bgmState.conf.minLength - 1} characters',
+            traceMsg: ""));
         return;
       }
       if (!isValidBarcode(start)) {
@@ -121,17 +119,21 @@ class BarcodeGeneratorController extends MainController {
   }
 
   bool isValidBarcode(String input) {
-    String charSetString = String.fromCharCodes(bgmState.conf.barcode.charSet);
-    // Escape special characters in the charSetString
-    charSetString = RegExp.escape(charSetString);
+    try {
+      String charSetString = String.fromCharCodes(bgmState.conf.barcode.charSet);
+      // Escape special characters in the charSetString
+      charSetString = RegExp.escape(charSetString);
 
-    // Create a RegExp pattern from the charSetString
-    String pattern = '^[$charSetString]*\$';
+      // Create a RegExp pattern from the charSetString
+      String pattern = '^[$charSetString]*\$';
 
-    // Create a RegExp instance
-    RegExp regex = RegExp(pattern);
+      // Create a RegExp instance
+      RegExp regex = RegExp(pattern);
 
-    // Test the input string against the regex
-    return regex.hasMatch(input);
+      // Test the input string against the regex
+      return regex.hasMatch(input);
+    } catch (e) {
+      return false;
+    }
   }
 }
