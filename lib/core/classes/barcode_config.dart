@@ -10,6 +10,16 @@ class BarcodeConf extends ChangeNotifier {
 
   late Barcode _barcode;
 
+  String normalizedData(String data) {
+    if (barcode is BarcodeEan && barcode.name != 'UPC E') {
+      // ignore: avoid_as
+      final ean = barcode as BarcodeEan;
+      return ean.normalize(data);
+    }
+
+    return data;
+  }
+
   late BarcodeType _type;
 
   Barcode get barcode => _barcode;

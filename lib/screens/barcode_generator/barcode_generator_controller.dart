@@ -24,8 +24,7 @@ class BarcodeGeneratorController extends MainController {
     String end = bgmState.endController.text;
     if (bgmState.isRangeMode) {
       if (start.length < bgmState.conf.minLength) {
-        FailureHandler.handle(ValidationFailure(
-            code: 1, msg: 'Start length must be greater than ${bgmState.conf.minLength - 1} characters', traceMsg: ""));
+        FailureHandler.handle(ValidationFailure(code: 1, msg: 'Start length must be from ${bgmState.conf.minLength} to ${bgmState.conf.maxLength} characters', traceMsg: ""));
         return;
       }
       if (!isValidBarcode(start)) {
@@ -33,8 +32,7 @@ class BarcodeGeneratorController extends MainController {
         return;
       }
       if (end.length < bgmState.conf.minLength) {
-        FailureHandler.handle(ValidationFailure(
-            code: 1, msg: 'End length must be greater than ${bgmState.conf.minLength - 1} characters', traceMsg: ""));
+        FailureHandler.handle(ValidationFailure(code: 1, msg: 'End length must be from ${bgmState.conf.minLength} to ${bgmState.conf.maxLength} characters', traceMsg: ""));
         return;
       }
       if (!isValidBarcode(end)) {
@@ -43,10 +41,7 @@ class BarcodeGeneratorController extends MainController {
       }
     } else {
       if (start.length < bgmState.conf.minLength) {
-        FailureHandler.handle(ValidationFailure(
-            code: 1,
-            msg: 'Barcode length must be greater than ${bgmState.conf.minLength - 1} characters',
-            traceMsg: ""));
+        FailureHandler.handle(ValidationFailure(code: 1, msg: 'Barcode length must be from ${bgmState.conf.minLength} to ${bgmState.conf.maxLength} characters', traceMsg: ""));
         return;
       }
       if (!isValidBarcode(start)) {
@@ -54,44 +49,51 @@ class BarcodeGeneratorController extends MainController {
         return;
       }
     }
+
     print(bgmState.conf.barcode);
     bgmState.barcodes = [];
-    if (bgmState.showRangeMode && bgmState.isRangeMode) {
-      int startInt = int.parse(start);
-      int endInt = int.parse(end);
+    try {
+      if (bgmState.showRangeMode && bgmState.isRangeMode) {
+        int startInt = int.parse(start);
+        int endInt = int.parse(end);
 
-      if (startInt > endInt) {
-        int temp = startInt;
-        startInt = endInt;
-        endInt = temp;
+        if (startInt > endInt) {
+          int temp = startInt;
+          startInt = endInt;
+          endInt = temp;
 
-        String tempS = start;
-        start = end;
-        end = tempS;
-      }
+          String tempS = start;
+          start = end;
+          end = tempS;
+        }
 
-      for (int i = startInt; i <= endInt; i++) {
+        for (int i = startInt; i <= endInt; i++) {
+          bgmState.barcodes.add(
+            BarcodeWidget(
+              barcode: bgmState.conf.barcode,
+              data: i.toString().padLeft(start.length, '0'),
+              width: 50,
+              height: 50,
+            ),
+          );
+        }
+      } else {
+        bgmState.barcodes = [];
+        String barcode = bgmState.startController.text;
+
+        print("here 83");
         bgmState.barcodes.add(
           BarcodeWidget(
             barcode: bgmState.conf.barcode,
-            data: i.toString().padLeft(start.length, '0'),
+            data: bgmState.conf.normalizedData(barcode),
             width: 50,
             height: 50,
           ),
         );
+        print("here 92");
       }
-    } else {
-      bgmState.barcodes = [];
-      String barcode = bgmState.startController.text;
-
-      bgmState.barcodes.add(
-        BarcodeWidget(
-          barcode: Barcode.code128(),
-          data: barcode,
-          width: 50,
-          height: 50,
-        ),
-      );
+    } on BarcodeException catch (e) {
+      FailureHandler.handle(ValidationFailure(code: 1, msg: e.message, traceMsg: ""));
     }
     // print(bgmState.barcodes);
     bgmState.setState();
@@ -120,18 +122,25 @@ class BarcodeGeneratorController extends MainController {
 
   bool isValidBarcode(String input) {
     try {
-      String charSetString = String.fromCharCodes(bgmState.conf.barcode.charSet);
+      // String charSetString = String.fromCharCodes(bgmState.conf.barcode.charSet);
+      final charset = StringBuffer();
+      for (var c in bgmState.conf.barcode.charSet) {
+        if (c > 0x20) {
+          charset.write('${String.fromCharCode(c)} ');
+        } else {
+          charset.write('0x${c.toRadixString(16)} ');
+        }
+      }
+
+      String charSetString = '[$charset]';
       // Escape special characters in the charSetString
       charSetString = RegExp.escape(charSetString);
 
       // Create a RegExp pattern from the charSetString
       String pattern = '^[$charSetString]*\$';
-
-      // Create a RegExp instance
       RegExp regex = RegExp(pattern);
 
-      // Test the input string against the regex
-      return regex.hasMatch(input);
+      return bgmState.conf.normalizedData(input) == input && regex.hasMatch(input);
     } catch (e) {
       return false;
     }
