@@ -22,6 +22,7 @@ class AddFlightRepository implements AddFlightRepositoryInterface {
       AddFlightResponse addFlightResponse;
       if (await networkInfo.isConnected) {
         addFlightResponse = await addFlightRemoteDataSource.addFlight(request: request);
+        //update local
       } else {
         addFlightResponse = await addFlightLocalDataSource.addFlight(request: request);
       }
