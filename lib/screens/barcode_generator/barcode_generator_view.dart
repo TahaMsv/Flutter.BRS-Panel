@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../widgets/MyDropDown.dart';
 import '../../widgets/MySwitchButton.dart';
+import '../flight_details/flight_details_controller.dart';
 import 'barcode_generator_controller.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'barcode_generator_state.dart';
@@ -18,6 +19,7 @@ class BarcodeGeneratorView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     BarcodeGeneratorState state = ref.watch(bgProvider);
+    final FlightDetailsController flightDetailsController = getIt<FlightDetailsController>();
 
     return Scaffold(
       appBar: const MyAppBar(),
@@ -41,11 +43,7 @@ class BarcodeGeneratorView extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    if (state.showRangeMode)
-                      MySwitchButton(
-                          value: state.isRangeMode,
-                          onChange: (v) => myBgController.toggleRangeMode(),
-                          label: "Range Mode"),
+                    if (state.showRangeMode) MySwitchButton(value: state.isRangeMode, onChange: (v) => myBgController.toggleRangeMode(), label: "Range Mode"),
                     const SizedBox(width: 40),
                     MyTextField(
                       height: 50,
@@ -84,6 +82,14 @@ class BarcodeGeneratorView extends ConsumerWidget {
                   fontSize: 12,
                   onPressed: myBgController.generateBarcodes,
                 ),
+                const SizedBox(width: 40),
+                TextButton.icon(
+                  onPressed: () {
+                    myBgController.printBarcodesRange();
+                  },
+                  label: const Text("Print Barcodes"),
+                  icon: const Icon(Icons.print_rounded),
+                ),
               ],
             ),
             const SizedBox(height: 60),
@@ -92,13 +98,36 @@ class BarcodeGeneratorView extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 80),
                 child: GridView.builder(
                   padding: const EdgeInsets.all(12),
-                  itemBuilder: (c, i) => state.barcodes[i],
+                  itemBuilder: (c, i) => SizedBox(
+                    child: Column(
+                      children: [
+                        SizedBox(height: 100, width: 200, child: state.barcodes[i]),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              children: [
+                                Text(state.barcodesValue[i]),
+                                TextButton.icon(
+                                  onPressed: () {
+                                    myBgController.printBarcode(i);
+                                  },
+                                  label: const Text(""),
+                                  icon: const Icon(Icons.print_rounded),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                   itemCount: state.barcodes.length,
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 200,
-                    childAspectRatio: 2,
+                    childAspectRatio: 1,
                     mainAxisSpacing: 30,
-                    crossAxisSpacing: 80,
+                    crossAxisSpacing: 150,
                   ),
                 ),
               ),

@@ -214,16 +214,17 @@ class FlightsController extends MainController {
 
   Future<void> flightSendReport({required String email, required String typeB, required Flight flight, required bool attachment}) async {
     if (email.trim().isNotEmpty) {
-      List<String> invalidEmails = email.split(",").where((element) =>element.isNotEmpty && !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(element.trim())).toList();
-      if(invalidEmails.isNotEmpty){
-        FailureHandler.handle(ValidationFailure(code: 1, msg: "${invalidEmails.join(",")} ${invalidEmails.length>1?'are':'is'} not a valid email address", traceMsg: ""));
+      List<String> invalidEmails =
+          email.split(",").where((element) => element.isNotEmpty && !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(element.trim())).toList();
+      if (invalidEmails.isNotEmpty) {
+        FailureHandler.handle(ValidationFailure(code: 1, msg: "${invalidEmails.join(",")} ${invalidEmails.length > 1 ? 'are' : 'is'} not a valid email address", traceMsg: ""));
         return;
       }
     }
     if (typeB.trim().isNotEmpty) {
-      List<String> invalidTypeB = typeB.split(",").where((element) =>element.isNotEmpty && element.trim().length!=7).toList();
-      if(invalidTypeB.isNotEmpty){
-        FailureHandler.handle(ValidationFailure(code: 1, msg: "${invalidTypeB.join(",")} ${invalidTypeB.length>1?'are':'is'} not a valid type-b address", traceMsg: ""));
+      List<String> invalidTypeB = typeB.split(",").where((element) => element.isNotEmpty && element.trim().length != 7).toList();
+      if (invalidTypeB.isNotEmpty) {
+        FailureHandler.handle(ValidationFailure(code: 1, msg: "${invalidTypeB.join(",")} ${invalidTypeB.length > 1 ? 'are' : 'is'} not a valid type-b address", traceMsg: ""));
         return;
       }
     }

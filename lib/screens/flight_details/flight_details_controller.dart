@@ -66,6 +66,7 @@ class FlightDetailsController extends MainController {
     print("Here 83");
     final doc = pw.Document();
     print("Here 97");
+    print(bytes);
     // await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => doc.save(),);
     await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => bytes,);
   }
