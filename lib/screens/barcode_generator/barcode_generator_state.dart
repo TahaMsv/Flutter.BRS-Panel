@@ -12,7 +12,9 @@ class BarcodeGeneratorState extends ChangeNotifier {
   final TextEditingController startController = TextEditingController();
   final TextEditingController endController = TextEditingController();
   List<Widget> barcodes = [];
+  List<String> barcodesValue = [];
+  final BarcodeConf conf = BarcodeConf();
+
   bool isRangeMode = true;
   bool showRangeMode = true;
-  final BarcodeConf conf = BarcodeConf();
 }

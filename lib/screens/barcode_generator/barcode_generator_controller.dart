@@ -1,8 +1,12 @@
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:flutter/material.dart';
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/abstracts/failures_abs.dart';
 import '../../core/util/handlers/failure_handler.dart';
 import 'barcode_generator_state.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 
 class BarcodeGeneratorController extends MainController {
   late BarcodeGeneratorState bgmState = ref.read(bgProvider);
@@ -17,6 +21,89 @@ class BarcodeGeneratorController extends MainController {
     bgmState.showRangeMode = getShowRangeMode(bgmState.conf.type);
     // bgmState.rangeMode = bgmState.conf.getBarcodeInputFormatter(bgmState.conf.type) == FilteringTextInputFormatter.digitsOnly;
     bgmState.setState();
+  }
+
+  printBarcode(int i) async {
+    final doc = pw.Document();
+    doc.addPage(pw.Page(build: (pw.Context context) {
+      return pw.Center(
+        child: pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.center,
+          children: [
+            pw.SizedBox(
+              height: 100,
+              width: 200,
+              child: pw.BarcodeWidget(
+                data: bgmState.barcodesValue[i],
+                barcode: bgmState.conf.barcode,
+                textStyle: pw.TextStyle(fontSize: 0),
+              ),
+            ),
+            pw.SizedBox(height: 5),
+            pw.Text(bgmState.barcodesValue[i])
+          ],
+        ),
+      );
+    }));
+    // await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => doc.save(),);
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => doc.save(),
+    );
+  }
+
+  Future<void> printBarcodesRange() async {
+    final doc = pw.Document();
+    final barcodesPerPage = 20; // Number of barcodes per page
+    final barcodesPerRow = 4; // Number of barcodes per page
+    final totalPages = (bgmState.barcodes.length / barcodesPerPage).ceil();
+
+    for (var page = 0; page < totalPages; page++) {
+      final startIndex = page * barcodesPerPage;
+      final endIndex = (startIndex + barcodesPerPage < bgmState.barcodes.length) ? startIndex + barcodesPerPage : bgmState.barcodes.length;
+
+      doc.addPage(
+        pw.Page(
+          build: (pw.Context context) {
+            final rows = <pw.Widget>[];
+
+            for (var i = startIndex; i < endIndex; i += barcodesPerRow) {
+              final rowChildren = <pw.Widget>[];
+              final rowEndIndex = (i + barcodesPerRow < endIndex) ? i + barcodesPerRow : endIndex;
+
+              for (var j = i; j < rowEndIndex; j++) {
+                rowChildren.add(pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.center, children: [
+                  pw.Container(
+                    margin: const pw.EdgeInsets.only(right: 15),
+                    height: 50,
+                    width: 100,
+                    child: pw.BarcodeWidget(
+                      data: bgmState.barcodesValue[j],
+                      barcode: bgmState.conf.barcode,
+                      textStyle: pw.TextStyle(fontSize: 0),
+                    ),
+                  ),
+                  pw.SizedBox(height: 5),
+                  pw.Text(bgmState.barcodesValue[j])
+                ]));
+              }
+
+              rows.add(pw.Container(
+                margin: pw.EdgeInsets.symmetric(vertical: 25),
+                child: pw.Row(
+                  children: rowChildren,
+                ),
+              ));
+            }
+
+            return pw.Column(
+              children: rows,
+            );
+          },
+        ),
+      );
+    }
+
+    await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => doc.save());
   }
 
   void generateBarcodes() {
@@ -52,6 +139,7 @@ class BarcodeGeneratorController extends MainController {
 
     print(bgmState.conf.barcode);
     bgmState.barcodes = [];
+    bgmState.barcodesValue = [];
     try {
       if (bgmState.showRangeMode && bgmState.isRangeMode) {
         int startInt = int.parse(start);
@@ -74,23 +162,25 @@ class BarcodeGeneratorController extends MainController {
               data: i.toString().padLeft(start.length, '0'),
               width: 50,
               height: 50,
+              style: TextStyle(color: Colors.transparent, fontSize: 0),
             ),
           );
+          bgmState.barcodesValue.add(i.toString().padLeft(start.length, '0'));
         }
       } else {
         bgmState.barcodes = [];
+        bgmState.barcodesValue = [];
         String barcode = bgmState.startController.text;
-
-        print("here 83");
         bgmState.barcodes.add(
           BarcodeWidget(
             barcode: bgmState.conf.barcode,
-            data: bgmState.conf.normalizedData(barcode),
+            data: barcode,
             width: 50,
             height: 50,
+            style: TextStyle(color: Colors.transparent, fontSize: 0),
           ),
         );
-        print("here 92");
+        bgmState.barcodesValue.add(barcode);
       }
     } on BarcodeException catch (e) {
       FailureHandler.handle(ValidationFailure(code: 1, msg: e.message, traceMsg: ""));
