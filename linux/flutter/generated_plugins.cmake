@@ -4,7 +4,6 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   desktop_webview_window
-  objectbox_flutter_libs
   printing
   screen_retriever
   url_launcher_linux

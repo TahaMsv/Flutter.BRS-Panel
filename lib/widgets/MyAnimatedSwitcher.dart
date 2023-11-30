@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class MyAnimatedSwitcher extends StatelessWidget {
+class MyAnimatedSwitcher extends StatefulWidget {
   final bool value;
   final Widget firstChild;
   final Widget secondChild;
@@ -19,11 +19,17 @@ class MyAnimatedSwitcher extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<MyAnimatedSwitcher> createState() => _MyAnimatedSwitcherState();
+}
+
+class _MyAnimatedSwitcherState extends State<MyAnimatedSwitcher> {
+  @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 200),
-      transitionBuilder: (child, animation) => SizeTransition(axis: direction, axisAlignment: axisAlignment, sizeFactor: animation, child: child),
-      child: Container(padding: padding,child: value ? firstChild : secondChild,),
+      transitionBuilder: (child, animation) => SizeTransition(
+          axis: widget.direction, axisAlignment: widget.axisAlignment, sizeFactor: animation, child: child),
+      child: widget.value ? widget.firstChild : widget.secondChild,
     );
   }
 }

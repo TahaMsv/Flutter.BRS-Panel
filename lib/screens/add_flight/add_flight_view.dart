@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../core/constants/ui.dart';
 import '../../core/util/basic_class.dart';
+import '../../widgets/MyAnimatedSwitcher.dart';
 import '../../widgets/MyButtonPanel.dart';
 import 'add_flight_controller.dart';
 import 'add_flight_state.dart';
@@ -45,12 +46,7 @@ class _AddFlightViewState extends State<AddFlightView> {
                       children: [
                         const Expanded(
                           child: AddFlightStage(label: "Flight Dates", items: [
-                            SizedBox(
-                                width: 250,
-                                height: 40,
-                                child: AddFlightDateWidget(
-                                  isFromDate: true,
-                                )),
+                            SizedBox(width: 250, height: 40, child: AddFlightDateWidget(isFromDate: true)),
                             SizedBox(width: 20),
                             SizedBox(width: 260, child: AddFlightSetScheduleWidget()),
                             SizedBox(width: 20),
@@ -59,17 +55,14 @@ class _AddFlightViewState extends State<AddFlightView> {
                         Expanded(
                           child: Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
                             AddFlightState state = ref.watch(addFlightProvider);
-                            return Visibility(
-                              visible: state.isSchedule,
-                              child: const AddFlightStage(label: "End Date", items: [
-                                SizedBox(
-                                    width: 250,
-                                    height: 40,
-                                    child: AddFlightDateWidget(
-                                      isFromDate: false,
-                                    )),
+                            return MyAnimatedSwitcher(
+                              value: state.isSchedule,
+                              firstChild: const AddFlightStage(label: "End Date", items: [
+                                SizedBox(width: 250, height: 40, child: AddFlightDateWidget(isFromDate: false)),
                                 SizedBox(width: 300),
                               ]),
+                              secondChild: const SizedBox(),
+                              direction: Axis.horizontal,
                             );
                           }),
                         ),
@@ -79,21 +72,15 @@ class _AddFlightViewState extends State<AddFlightView> {
                       builder: (BuildContext context, WidgetRef ref, Widget? child) {
                         List<WeekDays> days = WeekDays.values;
                         AddFlightState state = ref.watch(addFlightProvider);
-                        return Visibility(
-                          visible: state.isSchedule,
-                          child: AddFlightStage(label: "Days", height: 100, items: <Widget>[
-                            Expanded(
-                              child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(mainAxisSize: MainAxisSize.min, children: [
-                                    const AddFlightDayElementWidget(id: 0, label: "All", b: true, hasTime: false),
-                                    ...days
-                                        .map((e) =>
-                                            AddFlightDayElementWidget(id: e.index + 1, label: e.labelMini, b: true))
-                                        .toList()
-                                  ])),
-                            ),
+                        return MyAnimatedSwitcher(
+                          value: state.isSchedule,
+                          firstChild: AddFlightStage(key: UniqueKey(), label: "Days", height: 100, items: <Widget>[
+                            const AddFlightDayElementWidget(id: 0, label: "All", b: true, hasTime: false),
+                            ...days
+                                .map((e) => AddFlightDayElementWidget(id: e.index + 1, label: e.labelMini, b: true))
+                                .toList()
                           ]),
+                          secondChild: SizedBox(key: UniqueKey()),
                         );
                       },
                     ),

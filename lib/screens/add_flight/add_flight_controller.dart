@@ -17,7 +17,7 @@ class AddFlightController extends MainController {
   late AddFlightState addFlightState = ref.read(addFlightProvider);
 
   @override
-  onInit(){
+  onInit() {
     print("onInit");
     addFlightState.clear();
     addFlightState.setState();
@@ -37,14 +37,17 @@ class AddFlightController extends MainController {
         nav.goBack(
             result: r,
             onPop: () {
-              SuccessHandler.handle(ServerSuccess(code: 1, msg: "Done\nFlight ${flight!.flightNumber} Added Successfully"));
+              SuccessHandler.handle(
+                  ServerSuccess(code: 1, msg: "Done\nFlight ${flight!.flightNumber} Added Successfully"));
             });
       } else {
         nav.goBack(
-
             result: r,
             onPop: () {
-              SuccessHandler.handle(ServerSuccess(code: 1, msg: "Done\nFlight ${flight!.flightNumber} Added Successfully on ${flight!.flightDate.format_ddMMMEEE}"));
+              SuccessHandler.handle(ServerSuccess(
+                  code: 1,
+                  msg:
+                      "Done\nFlight ${flight!.flightNumber} Added Successfully on ${flight!.flightDate.format_ddMMMEEE}"));
             });
       }
     });
@@ -71,9 +74,7 @@ class AddFlightController extends MainController {
       addFlightState.toDate = newDate;
     }
     addFlightState.setState();
-
   }
-
 
   // UseCase UseCase = UseCase(repository: Repository());
 
@@ -85,7 +86,6 @@ class AddFlightController extends MainController {
       }
     });
   }
-
 
   void setSTA() {
     Pickers.pickTime(nav.context, addFlightState.sta ?? TimeOfDay.now()).then((value) {
@@ -101,11 +101,12 @@ class AddFlightController extends MainController {
     Pickers.pickTime(nav.context, addFlightState.weekTimes[dayId]?[0] ?? TimeOfDay.now()).then((value) {
       if (value != null) {
         addFlightState.weekTimes["$dayId"]![0] = value;
-        addFlightState.weekTimes["$dayId"]![1] = value.add(const Duration(hours: 1,minutes: 30));
+        addFlightState.weekTimes["$dayId"]![1] = value.add(const Duration(hours: 1, minutes: 30));
         addFlightState.setState();
       }
     });
   }
+
   void setDaySta(int dayId) {
     // TimeOfDay time = TimeOfDay.
     Pickers.pickTime(nav.context, addFlightState.weekTimes[dayId]?[1] ?? TimeOfDay.now()).then((value) {
