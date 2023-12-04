@@ -1,5 +1,6 @@
 import 'package:brs_panel/core/classes/login_user_class.dart';
 import 'package:brs_panel/screens/aircrafts/dialogs/add_aircraft_dialog.dart';
+import 'package:brs_panel/screens/aircrafts/usecases/add_aircraft_usecase.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/abstracts/controller_abs.dart';
@@ -36,7 +37,7 @@ class AircraftsController extends MainController {
     aircraftsState.setState();
   }
 
-  void addAirCraft() {
+  void addAirCraft() async {
     String al = aircraftsState.alC.text;
     String type = aircraftsState.typeC.text;
     String registration = aircraftsState.registrationC.text;
@@ -52,6 +53,12 @@ class AircraftsController extends MainController {
       FailureHandler.handle(ValidationFailure(code: 1, msg: "Registration should not be empty", traceMsg: ""));
     }
     Aircraft aircraft = Aircraft(id: 0, al: al, registration: registration, aircraftType: type, bins: bins);
+
+    AddAirCraftUseCase addAirCraftUseCase = AddAirCraftUseCase();
+    AddAirCraftRequest addAirCraftRequest = AddAirCraftRequest(aircraft: aircraft);
+    final fOrR = await addAirCraftUseCase(request: addAirCraftRequest);
+
+    fOrR.fold((f) => FailureHandler.handle(f, retry: () => addAirCraft()), (r) {});
     //todo
   }
 }
