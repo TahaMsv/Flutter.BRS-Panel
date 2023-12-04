@@ -266,7 +266,7 @@ class FlightTag {
         );
 
   Widget? getTagSsrsWidget(String text) => Container(
-    height: 25,
+        height: 25,
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: Colors.green.withOpacity(0.3)),
         child: Center(
@@ -839,7 +839,7 @@ class Bin {
   });
 
   final String bin;
-  final int sectionID;
+  final int? sectionID;
   final bool isDeleted;
   final String binNumber;
   final String compartment;
@@ -847,6 +847,18 @@ class Bin {
   final int? plannedCount;
   final int? plannedWeight;
   final int? id;
+
+  Bin copyWith({String? bin, int? sectionID, bool? isDeleted, String? binNumber, String? compartment, int? containerType, int? plannedCount, int? plannedWeight, int? id}) => Bin(
+        bin: bin ?? this.bin,
+        sectionID: sectionID ?? this.sectionID,
+        isDeleted: isDeleted ?? this.isDeleted,
+        binNumber: binNumber ?? this.binNumber,
+        compartment: compartment ?? this.compartment,
+        containerType: containerType ?? this.containerType,
+        plannedCount: plannedCount ?? this.plannedCount,
+        plannedWeight: plannedWeight ?? this.plannedWeight,
+        id: id ?? this.id,
+      );
 
   factory Bin.fromJson(Map<String, dynamic> json) => Bin(
         id: json["ID"],
@@ -859,6 +871,10 @@ class Bin {
         plannedWeight: json["PlannedWeight"],
         compartment: json["Compartment"] ?? "",
       );
+
+  factory Bin.empty() {
+    return Bin(bin: '', containerType: 1, binNumber: '', id: null, isDeleted: false, compartment: '', plannedCount: null, plannedWeight: null, sectionID: null);
+  }
 
   Map<String, dynamic> toJson() => {
         "Bin": bin,

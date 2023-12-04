@@ -36,7 +36,7 @@ class BarcodeGeneratorController extends MainController {
               child: pw.BarcodeWidget(
                 data: bgmState.barcodesValue[i],
                 barcode: bgmState.conf.barcode,
-                textStyle: pw.TextStyle(fontSize: 0),
+                textStyle: const pw.TextStyle(fontSize: 0),
               ),
             ),
             pw.SizedBox(height: 5),
@@ -79,7 +79,7 @@ class BarcodeGeneratorController extends MainController {
                     child: pw.BarcodeWidget(
                       data: bgmState.barcodesValue[j],
                       barcode: bgmState.conf.barcode,
-                      textStyle: pw.TextStyle(fontSize: 0),
+                      textStyle: const pw.TextStyle(fontSize: 0),
                     ),
                   ),
                   pw.SizedBox(height: 5),
@@ -88,7 +88,7 @@ class BarcodeGeneratorController extends MainController {
               }
 
               rows.add(pw.Container(
-                margin: pw.EdgeInsets.symmetric(vertical: 25),
+                margin: const pw.EdgeInsets.symmetric(vertical: 25),
                 child: pw.Row(
                   children: rowChildren,
                 ),
@@ -162,7 +162,7 @@ class BarcodeGeneratorController extends MainController {
               data: i.toString().padLeft(start.length, '0'),
               width: 50,
               height: 50,
-              style: TextStyle(color: Colors.transparent, fontSize: 0),
+              style: const TextStyle(color: Colors.transparent, fontSize: 0),
             ),
           );
           bgmState.barcodesValue.add(i.toString().padLeft(start.length, '0'));
@@ -177,7 +177,7 @@ class BarcodeGeneratorController extends MainController {
             data: barcode,
             width: 50,
             height: 50,
-            style: TextStyle(color: Colors.transparent, fontSize: 0),
+            style: const TextStyle(color: Colors.transparent, fontSize: 0),
           ),
         );
         bgmState.barcodesValue.add(barcode);
