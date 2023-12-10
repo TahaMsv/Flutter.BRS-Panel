@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../core/classes/flight_details_class.dart';
 import '../../core/classes/login_user_class.dart';
 import '../../core/util/basic_class.dart';
 
@@ -10,7 +11,12 @@ class AircraftsState extends ChangeNotifier {
   void setState() => notifyListeners();
 
   ///bool loading = false;
+  List<Bin> bins = [];
+  TextEditingController alC = TextEditingController();
+  TextEditingController typeC = TextEditingController();
+  TextEditingController registrationC = TextEditingController();
 
+  List<List<TextEditingController>> binsC = [];
 }
 
 final aircraftSearchProvider = StateProvider<String>((ref) => '');
@@ -23,7 +29,7 @@ final filteredAircraftListProvider = Provider<List<Aircraft>>((ref) {
   return aircrafts
       .where(
         (f) => f.validateSearch(searchFilter),
-  )
+      )
       .toList();
 });
 

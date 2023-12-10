@@ -43,7 +43,8 @@ class AircraftsPanel extends ConsumerWidget {
         children: [
           DotButton(
               size: 35,
-              onPressed: () => myAirlinesController.goAddAircraft(),
+              // onPressed: () => myAirlinesController.goAddAircraft(),
+              onPressed: () => myAirlinesController.openAddAirCraftDialog(),
               icon: Icons.add,
               color: Colors.blueAccent),
           const SizedBox(width: 12),

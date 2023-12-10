@@ -150,10 +150,8 @@ class SystemSettings {
         actions: List<TagAction>.from((json["Actions2"] ?? []).map((x) => TagAction.fromJson(x))),
         containers: List<TagContainer>.from(json["Containers"].map((x) => TagContainer.fromJson(x))),
         statusList: List<TagStatus>.from(json["StatusList"].map((x) => TagStatus.fromJson(x))),
-        exceptionStatusList:
-            List<TagAction>.from((json["ExceptionStatusList2"] ?? []).map((x) => TagAction.fromJson(x))),
-        exceptionActionList:
-            List<TagAction>.from((json["ExceptionActionList2"] ?? []).map((x) => TagAction.fromJson(x))),
+        exceptionStatusList: List<TagAction>.from((json["ExceptionStatusList2"] ?? []).map((x) => TagAction.fromJson(x))),
+        exceptionActionList: List<TagAction>.from((json["ExceptionActionList2"] ?? []).map((x) => TagAction.fromJson(x))),
         classTypeList: List<ClassType>.from(json["ClassTypeList"].map((x) => ClassType.fromJson(x))),
         handlingSetting: List<HandlingSetting>.from(json["HandlingSetting"].map((x) => HandlingSetting.fromJson(x))),
         handlingAccess: List<HandlingAccess>.from(json["HandlingAccess"].map((x) => HandlingAccess.fromJson(x))),
@@ -895,7 +893,7 @@ class PositionSection {
   factory PositionSection.fromJson(Map<String, dynamic> json) => PositionSection(
         offset: json["Offset"],
         count: json["Count"],
-        color: json["Color"]??"0a1a82",
+        color: json["Color"] ?? "0a1a82",
       );
 
   Color get getColor => HexColor(color);
@@ -988,8 +986,7 @@ class UserSettings {
         isAdmin: json["IsAdmin"],
         deadlineThreshold: json["DeadlineThreshold"],
         accessAirlines: List<String>.from((json["AccessAirlines"] ?? []).map((e) => e["AL"])),
-        hierarchy: List<AirportPositionSection>.from(
-            (json["AirportPositionSections"] ?? []).map((x) => AirportPositionSection.fromJson(x))),
+        hierarchy: List<AirportPositionSection>.from((json["AirportPositionSections"] ?? []).map((x) => AirportPositionSection.fromJson(x))),
         homepageList: List<HomepageList>.from(json["HomepageList"].map((x) => HomepageList.fromJson(x))),
         shootList: List<Shoot>.from((json["ShootList"] ?? []).map((x) => Shoot.fromJson(x))),
       );
@@ -1151,10 +1148,8 @@ class AirportPositionSection {
         // sub1: List<AirportPositionSection>.from((json["SUB1"] ?? []).map((x) => AirportPositionSection.fromJson(x))),
         // sub2: List<AirportPositionSection>.from((json["SUB2"] ?? []).map((x) => AirportPositionSection.fromJson(x))),
         // sub3: List<AirportPositionSection>.from((json["SUB3"] ?? []).map((x) => AirportPositionSection.fromJson(x))),
-        subs: List<AirportPositionSection>.from((json.entries
-                .firstWhere((element) => element.key.startsWith("SUB"), orElse: () => MapEntry("SUB", []))
-                .value)
-            .map((x) => AirportPositionSection.fromJson(x))),
+        subs: List<AirportPositionSection>.from(
+            (json.entries.firstWhere((element) => element.key.startsWith("SUB"), orElse: () => MapEntry("SUB", [])).value).map((x) => AirportPositionSection.fromJson(x))),
         address: json["Address"],
         count: json["Count"] ?? 0,
         lvl: json["LVL"] ?? 0,
@@ -1235,9 +1230,7 @@ class AirportPositionSection {
   }
 
   List<FlightTag> getTags(FlightDetails fd, {Position? pos}) {
-    return fd.tagList
-        .where((element) => (pos == null || element.currentPosition == pos.id) && subsIds.contains(element.sectionID))
-        .toList();
+    return fd.tagList.where((element) => (pos == null || element.currentPosition == pos.id) && subsIds.contains(element.sectionID)).toList();
   }
 
   List<Bin> getBins(FlightDetails fd, {Position? pos}) {
@@ -1248,11 +1241,7 @@ class AirportPositionSection {
     return fd.containerList.where((element) => subsIds.contains(element.sectionID)).toList();
   }
 
-  bool hasAnyThing(FlightDetails fd, {Position? pos}) =>
-      canHaveBin ||
-      getTags(fd, pos: pos).isNotEmpty ||
-      getBins(fd, pos: pos).isNotEmpty ||
-      getCons(fd, pos: pos).isNotEmpty;
+  bool hasAnyThing(FlightDetails fd, {Position? pos}) => canHaveBin || getTags(fd, pos: pos).isNotEmpty || getBins(fd, pos: pos).isNotEmpty || getCons(fd, pos: pos).isNotEmpty;
 
   IconData get getIcon {
     // if (icon != null) return DynamicIcons.fromValue(int.tryParse(icon!)!);
@@ -1278,8 +1267,7 @@ class AirportPositionSection {
 
 // int get count => 0;
 
-  bool get showEmpty => (label=="Checkin") || (label.contains("Deliver")) || (label=="Aircraft" && position==4) || true;
-
+  bool get showEmpty => (label == "Checkin") || (label.contains("Deliver")) || (label == "Aircraft" && position == 4) || true;
 }
 
 class Shoot {
@@ -1371,34 +1359,51 @@ class Aircraft {
   final int id;
   final String al;
   final String registration;
+  final String aircraftType;
+  final List<Bin> bins;
+  final bool isDeleted;
 
   const Aircraft({
     required this.id,
     required this.al,
     required this.registration,
+    required this.aircraftType,
+    required this.bins,
+    this.isDeleted = false
   });
 
   Aircraft copyWith({
     int? id,
     String? al,
     String? registration,
+    String? aircraftType,
+    List<Bin>? bins,
+    bool? isDeleted,
   }) =>
       Aircraft(
-        id: id ?? this.id,
-        al: al ?? this.al,
-        registration: registration ?? this.registration,
-      );
+          id: id ?? this.id,
+          aircraftType: aircraftType ?? this.aircraftType,
+          al: al ?? this.al,
+          registration: registration ?? this.registration,
+          bins: bins ?? this.bins,
+          isDeleted: isDeleted ?? this.isDeleted);
 
   factory Aircraft.fromJson(Map<String, dynamic> json) => Aircraft(
         id: json["ID"],
+        aircraftType: json["Type"] ?? '',
         al: json["AL"],
+        isDeleted: json["IsDeleted"] ?? false,
         registration: json["Registration"],
+        bins: List<Bin>.from((json["Bins"] ?? []).map((x) => Bin.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "ID": id,
+        "Type": aircraftType,
         "AL": al,
         "Registration": registration,
+        "IsDeleted": isDeleted,
+        "Bins": List<dynamic>.from(bins.map((x) => x.toJson())),
       };
 
   bool validateSearch(String s) {
