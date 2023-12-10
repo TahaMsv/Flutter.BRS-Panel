@@ -8,6 +8,7 @@ enum RouteNames {
   aircrafts,
   airports,
   users,
+  userSetting,
   addFlight,
   flightDetails,
   flightSummary,

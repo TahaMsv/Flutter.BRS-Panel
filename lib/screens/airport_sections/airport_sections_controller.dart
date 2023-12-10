@@ -35,6 +35,25 @@ class AirportSectionsController extends MainController {
     }
   }
 
+  onEditSection(Section section) async {
+    Section? newSection = await nav.dialog(AddUpdateSectionDialog(section: section));
+    if (newSection == null) return;
+    final sectionsP = ref.read(sectionsProvider.notifier);
+    List<Section> sc0 = sectionsP.state?.sections ?? [];
+    final selectedSectionsP = ref.read(selectedSectionsProvider.notifier);
+    List<Section> ssc0 = selectedSectionsP.state;
+    if (sc0.contains(section)) {
+      sc0[sc0.indexOf(section)] = newSection;
+    } else {
+      for (int i = 0; i < ssc0.length; i++) {
+        List<Section> temp = ssc0[i].sections;
+        if (temp.contains(section)) ssc0[i].sections[temp.indexOf(section)] = newSection;
+      }
+    }
+    if (ssc0.contains(section)) ssc0[ssc0.indexOf(section)] = newSection;
+    airportSectionsState.setState();
+  }
+
   onDeleteSection(Section section) {
     final sectionsP = ref.read(sectionsProvider.notifier);
     List<Section> sc0 = sectionsP.state?.sections ?? [];
@@ -60,7 +79,7 @@ class AirportSectionsController extends MainController {
   }
 
   addSection({required List<Section> subs}) async {
-    Section? newSection = await nav.dialog(const AddSectionDialog());
+    Section? newSection = await nav.dialog(const AddUpdateSectionDialog());
     if (newSection == null) return;
     final sectionsP = ref.read(sectionsProvider.notifier);
     List<Section> sc0 = sectionsP.state?.sections ?? [];

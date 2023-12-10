@@ -168,26 +168,36 @@ class UserIndicatorWidget extends ConsumerWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          GestureDetector(
-            onTap: () {
-              myLoginController.showStimulPreview();
-            },
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(avatarRadius),
-              child: Container(
-                decoration: const BoxDecoration(color: Colors.blueAccent),
-                width: avatarRadius * 2,
-                height: avatarRadius * 2,
-                child: const Icon(Icons.person),
-              ),
+          InkWell(
+            onTap: myLoginController.goToUserProfile,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                InkWell(
+                  onTap: () => myLoginController.showStimulPreview(),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(avatarRadius),
+                    child: Container(
+                      decoration: const BoxDecoration(color: Colors.blueAccent),
+                      width: avatarRadius * 2,
+                      height: avatarRadius * 2,
+                      child: const Icon(Icons.person),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Hello, ${u.username}"),
+                    Text(
+                      ref.watch(selectedServer)?.name ?? "",
+                      style: const TextStyle(fontSize: 8),
+                    )
+                  ],
+                ),
+              ],
             ),
-          ),
-          const SizedBox(width: 8),
-          Column(
-            children: [
-              Text("Hello, ${u.username}"),
-              Text(ref.watch(selectedServer)?.name??"",style: const TextStyle(fontSize: 8),)
-            ],
           ),
           const SizedBox(width: 8),
           IconButton(

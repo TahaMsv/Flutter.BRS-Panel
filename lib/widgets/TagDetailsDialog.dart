@@ -1,42 +1,35 @@
 import 'dart:convert';
 import 'package:artemis_utils/artemis_utils.dart';
-import 'package:brs_panel/core/util/basic_class.dart';
-import 'package:brs_panel/initialize.dart';
-import 'package:brs_panel/screens/flight_details/flight_details_view.dart';
-import 'package:brs_panel/widgets/MyExpansionTile.dart';
+import 'package:brs_panel/widgets/MyButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 import '../core/classes/flight_class.dart';
 import '../core/classes/flight_details_class.dart';
 import '../core/classes/tag_more_details_class.dart';
 import '../core/classes/login_user_class.dart';
 import '../core/constants/ui.dart';
+import '../core/navigation/navigation_service.dart';
+import '../core/util/basic_class.dart';
+import '../initialize.dart';
 import '../screens/flight_details/flight_details_controller.dart';
 import '../screens/flight_details/flight_details_state.dart';
-import '../screens/flight_details/widgets/expandable_list_sections/airport_section.dart';
 import 'AirlineLogo.dart';
 import 'CardField.dart';
 import 'DotButton.dart';
 import 'FlightBanner.dart';
-import 'MyButton.dart';
-import 'MyExpansionTile2.dart';
 import 'dart:math' as math;
+import 'MyExpansionTile.dart';
 
 class TagDetailsDialog extends ConsumerStatefulWidget {
   final FlightTag tag;
   final TagMoreDetails moreDetails;
 
-  // final List<TagPhoto> photos;
-
   const TagDetailsDialog({Key? key, required this.tag, required this.moreDetails}) : super(key: key);
 
   @override
-  _TagDetailsDialogState createState() => _TagDetailsDialogState();
+  ConsumerState<TagDetailsDialog> createState() => _TagDetailsDialogState();
 }
 
 class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
@@ -59,6 +52,7 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final NavigationService nav = getIt<NavigationService>();
     List<NewSection> secList = [
       NewSection(label: "Specials", ref: ref, position: 0),
       NewSection(label: "Inbound", ref: ref, position: 1),
@@ -85,21 +79,14 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                 ? tag.exception?.getColor
                 : MyColors.black1);
     FlightInfo? fInfo = widget.moreDetails.flightInfo;
-    // print(tag.inboundLeg);
-    // print(tag.outboundLegs.map((e) => e.type));
     return Container(
-      // margin: EdgeInsets.symmetric(horizontal: width * 0.1, vertical: height * 0.05),
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Material(
         child: Container(
-          constraints: BoxConstraints(
-            minWidth: width,
-            // minHeight: height * 0.9,
-            maxHeight: height * 0.7,
-          ),
+          constraints: BoxConstraints(minWidth: width, maxHeight: height * 0.7),
           decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -175,11 +162,7 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                           onPressed: () {},
                         ),
                         const SizedBox(width: 10),
-                        const Icon(
-                          size: 20,
-                          Icons.refresh,
-                          color: Colors.grey,
-                        ),
+                        IconButton(onPressed: nav.pop, icon: const Icon(Icons.close, color: MyColors.brownGrey)),
                       ],
                     )
                   ],
@@ -230,9 +213,16 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                                       TagPosition value = t.value;
 
                                       return ExpansionListItem(
-                                          texts: [value.dateUtc.format_yyyyMMdd.toString(), value.username, value.positionId.toString(), value.positionDesc ?? '-'],
+                                          texts: [
+                                            value.dateUtc.format_yyyyMMdd.toString(),
+                                            value.username,
+                                            value.positionId.toString(),
+                                            value.positionDesc ?? '-'
+                                          ],
                                           isBold: false,
-                                          bgColor: index % 2 == 0 ? MyColors.oddRow : MyColors.evenRow); //todo correct values?
+                                          bgColor: index % 2 == 0
+                                              ? MyColors.oddRow
+                                              : MyColors.evenRow); //todo correct values?
                                     }).toList()
                                 : index == 4
                                     ? [
@@ -246,7 +236,12 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                                           var index = t.key;
                                           ActionHistory value = t.value;
                                           return ExpansionListItem(
-                                              texts: [value.actionTime, value.username, value.positionId.toString(), BasicClass.getTagStatusByID(value.tagStatus)?.title ?? ""],
+                                              texts: [
+                                                value.actionTime,
+                                                value.username,
+                                                value.positionId.toString(),
+                                                BasicClass.getTagStatusByID(value.tagStatus)?.title ?? ""
+                                              ],
                                               isBold: false,
                                               bgColor: index % 2 == 0 ? MyColors.oddRow : MyColors.evenRow);
                                         }).toList()
@@ -260,6 +255,17 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                       );
                     },
                   ),
+                ),
+                // TextButton(
+                //     style: TextButton.styleFrom(foregroundColor: MyColors.brownGrey3),
+                //     onPressed: () => myFlightDetailsController.deleteTag(fInfo?.flightScheduleId ?? f.id, tag),
+                //     child: const Text("Delete Tag")),
+                MyButton(
+                  label: "Delete Tag",
+                  color: MyColors.brownGrey3,
+                  width: 100,
+                  fade: true,
+                  onPressed: () async => myFlightDetailsController.deleteTag(fInfo?.flightScheduleId ?? f.id, tag),
                 ),
               ],
             ),
@@ -334,10 +340,26 @@ class ExpansionListItem extends StatelessWidget {
             child: Row(
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(flex: 1, child: Center(child: Text(texts[0], style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
-                Expanded(flex: 1, child: Center(child: Text(texts[1], style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
-                Expanded(flex: 1, child: Center(child: Text(texts[2], style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
-                Expanded(flex: 1, child: Center(child: Text(texts[3], style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
+                Expanded(
+                    flex: 1,
+                    child: Center(
+                        child: Text(texts[0],
+                            style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
+                Expanded(
+                    flex: 1,
+                    child: Center(
+                        child: Text(texts[1],
+                            style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
+                Expanded(
+                    flex: 1,
+                    child: Center(
+                        child: Text(texts[2],
+                            style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
+                Expanded(
+                    flex: 1,
+                    child: Center(
+                        child: Text(texts[3],
+                            style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
               ],
             ),
           ),
@@ -355,8 +377,6 @@ class DcsInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     if (info == null) {
       return Row(children: [
         HorizontalCardField(title: "Pax", value: info!.paxId.toString()),
@@ -377,8 +397,9 @@ class DcsInfoWidget extends StatelessWidget {
         valueWidget: GestureDetector(
           onTap: () {},
           child: Text(
-            "${info!.paxName}",
-            style: const TextStyle(color: Colors.blueAccent, decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
+            info!.paxName,
+            style: const TextStyle(
+                color: Colors.blueAccent, decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
           ),
         ),
       ),
@@ -387,9 +408,10 @@ class DcsInfoWidget extends StatelessWidget {
       const SizedBox(width: 70),
       HorizontalCardField(title: "P/W", value: "${info!.count}/${info!.weight}"),
       const SizedBox(width: 70),
-      HorizontalCardField(title: "Dest", value: "${info!.dest}"),
+      HorizontalCardField(title: "Dest", value: info!.dest),
       const SizedBox(width: 70),
-      const HorizontalCardField(title: "Photo", valueWidget: Icon(Icons.add_a_photo_outlined, color: Colors.blue), value: "-"),
+      const HorizontalCardField(
+          title: "Photo", valueWidget: Icon(Icons.add_a_photo_outlined, color: Colors.blue), value: "-"),
     ]);
   }
 }
@@ -416,11 +438,9 @@ class SectionTileWidget2 extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(iconData),
-                    ),
-                    Text(secTag!.label, style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+                    IconButton(onPressed: () {}, icon: Icon(iconData)),
+                    Text(secTag!.label,
+                        style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(width: 80),
                     SizedBox(height: 20, child: tag.getTypeWidget),
                     const SizedBox(width: 12),
@@ -436,34 +456,31 @@ class SectionTileWidget2 extends StatelessWidget {
             ? SizedBox(
                 height: 60,
                 child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(iconData),
-                          ),
-                          Text(secTag!.label, style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
-                          const SizedBox(width: 80),
-                        ] +
-                        (tag.outboundLegs.isEmpty
-                            ? []
-                            : [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 2),
-                                  child: AirlineLogo(
-                                    tag.outboundLegs.first.al,
-                                    size: 50,
-                                  ),
-                                ),
-                                const SizedBox(width: 70),
-                                HorizontalCardField(title: "AL", value: tag.outboundLegs.first.al),
-                                const SizedBox(width: 70),
-                                HorizontalCardField(title: "FLNB", value: tag.outboundLegs.first.flnb),
-                                const SizedBox(width: 70),
-                                HorizontalCardField(title: "Date", value: DateFormat("dd MMM").format(tag.outboundLegs.first.flightDate)),
-                                const SizedBox(width: 70),
-                                HorizontalCardField(title: "City", value: tag.outboundLegs.first.city),
-                              ])),
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                        IconButton(onPressed: () {}, icon: Icon(iconData)),
+                        Text(secTag!.label,
+                            style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+                        const SizedBox(width: 80),
+                      ] +
+                      (tag.outboundLegs.isEmpty
+                          ? []
+                          : [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 2),
+                                child: AirlineLogo(tag.outboundLegs.first.al, size: 50),
+                              ),
+                              const SizedBox(width: 70),
+                              HorizontalCardField(title: "AL", value: tag.outboundLegs.first.al),
+                              const SizedBox(width: 70),
+                              HorizontalCardField(title: "FLNB", value: tag.outboundLegs.first.flnb),
+                              const SizedBox(width: 70),
+                              HorizontalCardField(
+                                  title: "Date", value: DateFormat("dd MMM").format(tag.outboundLegs.first.flightDate)),
+                              const SizedBox(width: 70),
+                              HorizontalCardField(title: "City", value: tag.outboundLegs.first.city),
+                            ]),
+                ),
               )
             : Container(
                 color: secTag!.position % 2 == 0 ? MyColors.oddRow : MyColors.evenRow,
@@ -472,12 +489,11 @@ class SectionTileWidget2 extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Row(
                   children: [
-                    Icon(secTag!.isSectionExpanded() ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, color: Colors.black),
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(iconData),
-                    ),
-                    Text(secTag!.label, style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+                    Icon(secTag!.isSectionExpanded() ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                        color: Colors.black),
+                    IconButton(onPressed: () {}, icon: Icon(iconData)),
+                    Text(secTag!.label,
+                        style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
                   ],
                 ),
               );
@@ -489,16 +505,7 @@ class NewSection {
   String label;
   final int position;
 
-  NewSection({
-    required this.ref,
-    required this.label,
-    required this.position,
-  });
-
-  // @override
-  // List<int>? getItems() {
-  //   return [0, 1, 2];
-  // }
+  NewSection({required this.ref, required this.label, required this.position});
 
   bool isSectionExpanded() {
     List<int> expandeds = ref.watch(expandedTagDetailsDialog);
@@ -513,10 +520,6 @@ class NewSection {
       expandeds.state = expandeds.state.where((element) => element != position).toList();
     }
   }
-
-// List<int> get items {
-//   return getItems() ?? [];
-// }
 }
 
 // class TagLogsWidget extends StatelessWidget {

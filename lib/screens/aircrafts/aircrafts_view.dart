@@ -18,12 +18,11 @@ class AircraftsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
         appBar: MyAppBar(),
         body: Column(
           children: [
             AircraftsPanel(),
-            Text("${BasicClass.systemSetting.aircraftList.length.toString()}"),
             AircraftListWidget()],
         ));
   }

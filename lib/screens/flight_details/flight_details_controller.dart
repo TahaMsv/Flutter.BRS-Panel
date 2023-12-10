@@ -1,11 +1,12 @@
+// ignore_for_file: unused_result
 import 'dart:convert';
 import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
-
+import '../../core/abstracts/success_abs.dart';
 import '../../core/classes/login_user_class.dart';
+import '../../core/util/handlers/success_handler.dart';
 import 'example/dummy_class.dart' if (dart.library.js) 'dart:html' as html;
 import 'package:flutter/foundation.dart';
-import 'package:open_file_plus/open_file_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/classes/flight_details_class.dart';
@@ -16,6 +17,7 @@ import '../../core/util/handlers/failure_handler.dart';
 import '../../widgets/TagDetailsDialog.dart';
 import 'dialogs/pdf_preview_dialog.dart';
 import 'flight_details_state.dart';
+import 'usecases/delete_tag_usecase.dart';
 import 'usecases/flight_get_details_usecase.dart';
 import 'usecases/flight_get_tag_details_usecase.dart';
 import 'usecases/get_container_pdf_usecase.dart';
@@ -51,6 +53,22 @@ class FlightDetailsController extends MainController {
   }
 
   /// Core -------------------------------------------------------------------------------------------------------------
+
+  deleteTag(int flightID, FlightTag tag) async {
+    DeleteTagRequest deleteTagRequest = DeleteTagRequest(flightID: flightID, tag: tag);
+    DeleteTagUseCase deleteTagUseCase = DeleteTagUseCase();
+    final fOrR = await deleteTagUseCase(request: deleteTagRequest);
+    fOrR.fold((l) => FailureHandler.handle(l), (r) {
+      nav.pop();
+      final fdP = ref.read(detailsProvider.notifier);
+      FlightDetails fd = fdP.state!;
+      fd.tagList.removeWhere((t) => t.tagId == tag.tagId);
+      fdP.update((state) => state = fd);
+      flightDetailsState.setState();
+      SuccessHandler.handle(ServerSuccess(code: 1, msg: "Done Deleting!"));
+    });
+  }
+
   getContainerPDF(TagContainer container) async {
     GetContainerReportUseCase getContainerReportUseCase = GetContainerReportUseCase();
     GetContainerReportRequest getContainerReportRequest =
@@ -62,15 +80,14 @@ class FlightDetailsController extends MainController {
     });
   }
 
-  printPDF(Uint8List bytes,) async {
-    print("Here 83");
+  printPDF(Uint8List bytes) async {
     final doc = pw.Document();
-    print("Here 97");
     print(bytes);
     // await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => doc.save(),);
-    await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => bytes,);
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => bytes,
+    );
   }
-
 
   openPDFFile(Uint8List bytes, String name) async {
     try {
@@ -84,15 +101,14 @@ class FlightDetailsController extends MainController {
         html.document.body?.children.add(anchor);
         anchor.click();
       } else {
-
         Directory path = await getApplicationDocumentsDirectory();
-        print("asdas");
-        final String filePath = "${path.path}\\${name}.pdf".replaceAll(" ", "");
-        print("asdas2$filePath");
+        // print("asdas");
+        final String filePath = "${path.path}\\$name.pdf".replaceAll(" ", "");
+        // print("asdas2$filePath");
         final Uri uri = Uri.file(filePath);
-        print("asdas3");
+        // print("asdas3");
         await File.fromUri(uri).writeAsBytes(bytes);
-        print("asdas4");
+        // print("asdas4");
         // if (!File(uri.toFilePath()).existsSync()) {
         //   print("asdas");
         //   throw Exception('$uri does not exist!');
@@ -102,7 +118,7 @@ class FlightDetailsController extends MainController {
         launchUrl(uri);
         // await OpenFile.open(uri.path,type: "pdf");
       }
-    }catch (e){
+    } catch (e) {
       print(e);
     }
     // if (!await launchUrl(uri)) {
@@ -111,21 +127,17 @@ class FlightDetailsController extends MainController {
   }
 
   Future<FlightDetails?> flightGetDetails(int flightID) async {
-    // final fdP = ref.read(detailsProvider.notifier);
     FlightDetails? flightDetails;
     FlightGetDetailsUseCase flightGetDetailsUsecase = FlightGetDetailsUseCase();
     FlightGetDetailsRequest flightGetDetailsRequest = FlightGetDetailsRequest(flightID: flightID);
     final fOrR = await flightGetDetailsUsecase(request: flightGetDetailsRequest);
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightGetDetails(flightID)), (r) {
       flightDetails = r.details;
-      // final fdP = ref.read(detailsProvider.notifier);
-      // fdP.setFlightDetails(r.details);
     });
     return flightDetails;
   }
 
   Future<TagMoreDetails?> flightGetTagMoreDetails(int flightID, FlightTag tag) async {
-    // final fdP = ref.read(detailsProvider.notifier);
     TagMoreDetails? moreDetails;
     FlightGetTagMoreDetailsUseCase flightGetTagMoreDetailsUsecase = FlightGetTagMoreDetailsUseCase();
     FlightGetTagMoreDetailsRequest flightGetTagMoreDetailsRequest =
@@ -134,13 +146,10 @@ class FlightDetailsController extends MainController {
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightGetTagMoreDetails(flightID, tag)), (r) {
       moreDetails = r.details;
       print(r.details.toJson());
-      nav.dialog(
-          TagDetailsDialog(
+      nav.dialog(TagDetailsDialog(
         tag: tag,
         moreDetails: r.details,
       ));
-      // final fdP = ref.read(detailsProvider.notifier);
-      // fdP.setFlightDetails(r.details);
     });
     return moreDetails;
   }

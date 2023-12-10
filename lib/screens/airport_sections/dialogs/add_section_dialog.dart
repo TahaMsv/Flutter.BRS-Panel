@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../core/abstracts/local_data_base_abs.dart';
 import '../../../core/classes/airport_section_class.dart';
 import '../../../core/classes/login_user_class.dart';
 import '../../../core/constants/ui.dart';
@@ -11,16 +12,18 @@ import '../../../widgets/MyDropDown.dart';
 import '../../../widgets/MySwitchButton.dart';
 import '../../../widgets/MyTextField.dart';
 
-class AddSectionDialog extends StatefulWidget {
-  const AddSectionDialog({Key? key}) : super(key: key);
+class AddUpdateSectionDialog extends StatefulWidget {
+  const AddUpdateSectionDialog({Key? key, this.section}) : super(key: key);
+  final Section? section;
 
   @override
-  State<AddSectionDialog> createState() => _AddUpdateAirportCartDialogState();
+  State<AddUpdateSectionDialog> createState() => _AddUpdateAirportCartDialogState();
 }
 
-class _AddUpdateAirportCartDialogState extends State<AddSectionDialog> {
+class _AddUpdateAirportCartDialogState extends State<AddUpdateSectionDialog> {
   final TextEditingController nameC = TextEditingController();
   final TextEditingController codeC = TextEditingController();
+  int? id;
   bool tag = true;
   bool con = true;
   bool bin = true;
@@ -28,9 +31,23 @@ class _AddUpdateAirportCartDialogState extends State<AddSectionDialog> {
   bool isMain = true;
   Position? selectedPosition;
   int? selectedOffset;
+  List<Section> sections = [];
 
   @override
   void initState() {
+    if (widget.section != null) {
+      id = widget.section!.id;
+      nameC.text = widget.section!.label;
+      codeC.text = widget.section!.code;
+      selectedPosition = BasicClass.systemSetting.positions.firstWhereOrNull((e) => e.id == widget.section!.position);
+      selectedOffset = widget.section!.offset;
+      isMain = widget.section!.isMainSection;
+      tag = widget.section!.canHaveTag;
+      con = widget.section!.canHaveContainer;
+      bin = widget.section!.canHaveBin;
+      spotRequired = widget.section!.spotRequired;
+      sections = widget.section!.sections;
+    }
     super.initState();
   }
 
@@ -72,9 +89,10 @@ class _AddUpdateAirportCartDialogState extends State<AddSectionDialog> {
           Row(
             children: [
               const SizedBox(width: 18),
-              const Text("Add Section", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
+              Text(widget.section == null ? "Add Section" : "Edit Section",
+                  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
               const Spacer(),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.close))
+              IconButton(onPressed: ns.pop, icon: const Icon(Icons.close))
             ],
           ),
           const Divider(height: 1, color: MyColors.lineColor2),
@@ -210,7 +228,7 @@ class _AddUpdateAirportCartDialogState extends State<AddSectionDialog> {
                 MyButton(
                   onPressed: () {
                     ns.pop(Section(
-                      id: null,
+                      id: id,
                       label: nameC.text,
                       code: codeC.text,
                       position: selectedPosition!.id,
@@ -220,10 +238,10 @@ class _AddUpdateAirportCartDialogState extends State<AddSectionDialog> {
                       canHaveContainer: con,
                       canHaveBin: bin,
                       spotRequired: spotRequired,
-                      sections: [],
+                      sections: sections,
                     ));
                   },
-                  label: "Add",
+                  label: "Confirm",
                   color: theme.primaryColor,
                 ),
               ],

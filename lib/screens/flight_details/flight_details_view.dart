@@ -111,7 +111,7 @@ class FlightDetailsPanel extends ConsumerWidget {
             onPressed: () async {
               // final sfp = ref.read(selectedFlightProvider);
               // final fdP = ref.read(detailsProvider);
-              ref.refresh(detailsProvider);
+              ref.refresh(refreshDetailsProvider);
               // FlightsController flightsController = getIt<FlightsController>();
               // flightsController.flightList(ref.read(flightDateProvider));
             },
@@ -129,48 +129,40 @@ class FlightDetailsWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ThemeData theme = Theme.of(context);
-    final fdP = ref.watch(detailsProvider);
+    final state = ref.watch(flightDetailsProvider);
+    final fdP = ref.watch(detailsProvider.notifier);
+    final rfdP = ref.watch(refreshDetailsProvider);
     final posListP = ref.watch(selectedFlightProvider);
     List<Position> posList = BasicClass.systemSetting.positions
         .where((pos) => posListP!.positions.map((e) => e.id).contains(pos.id))
         .toList();
     return Expanded(
       child: Container(
-        child: fdP.when(
+        child: rfdP.when(
           skipLoadingOnRefresh: false,
-          data: (d) => d == null
-              ? const Text("No Data Found")
-              : Row(
-                  children: [
-                    Expanded(
-                      flex: 42,
-                      child: DetailsWidget(
-                        details: d,
-                        posList: posList,
+          data: (d0) {
+            FlightDetails? d = fdP.state;
+            if (d == null) return const Text("No Data Found");
+            return Row(
+              children: [
+                Expanded(flex: 42, child: DetailsWidget(details: d, posList: posList)),
+                Expanded(
+                  flex: 10,
+                  child: SingleChildScrollView(
+                    child: Container(
+                      decoration: const BoxDecoration(border: Border(left: BorderSide(color: MyColors.lineColor))),
+                      child: Column(
+                        children: [
+                          DetailsChart(details: d, posList: posList),
+                          DetailsLineChart(details: d, posList: posList),
+                        ],
                       ),
                     ),
-                    Expanded(
-                      flex: 10,
-                      child: SingleChildScrollView(
-                        child: Container(
-                          decoration: const BoxDecoration(border: Border(left: BorderSide(color: MyColors.lineColor))),
-                          child: Column(
-                            children: [
-                              DetailsChart(
-                                details: d,
-                                posList: posList,
-                              ),
-                              DetailsLineChart(
-                                details: d,
-                                posList: posList,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
+              ],
+            );
+          },
           error: (e, __) => Text("$e"),
           loading: () => Spinners.spinner1,
         ),
@@ -221,9 +213,11 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
     //assigning sections
     final List<AirportPositionSection> positionSections = BasicClass.getAllAirportSections();
     List<AirportPositionSection> filteredSections = positionSections
-    .where((element) => element.position == selectedPos.id
-        && element.subs.isEmpty
-        && AirportSectionTagSection(airportPositionSection: element, tags: filteredTag, ref: ref).isShow).toList();
+        .where((element) =>
+            element.position == selectedPos.id &&
+            element.subs.isEmpty &&
+            AirportSectionTagSection(airportPositionSection: element, tags: filteredTag, ref: ref).isShow)
+        .toList();
 
     final List<AirportSectionTagSection> sectionSectionsTag = filteredSections
         .map((e) => AirportSectionTagSection(airportPositionSection: e, tags: filteredTag, ref: ref))

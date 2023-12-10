@@ -23,11 +23,9 @@ class NetworkManager implements NetworkManagerInterface {
         Response res = await compute(Response.fromJson, networkResponse.responseBody);
         return res;
       } catch (e, trace) {
-
         throw ParseException(message: e.toString(), trace: trace);
       }
     } else {
-      print("dasdad");
       print(networkResponse.responseDetails);
       throw ServerException(
         code: networkResponse.responseCode,
@@ -55,6 +53,23 @@ class NetworkManager implements NetworkManagerInterface {
       body: response.data,
     );
     return res;
+  }
+
+  Future<dio.Response> dioPost(
+      {required String api, Map<String, dynamic> request = const {}, Map<String, dynamic> header = const {}}) async {
+    try {
+      dio.Dio dd = dio.Dio(dio.BaseOptions(headers: header));
+      var formData = dio.FormData.fromMap(request);
+      final result = await dd.post(api, data: formData);
+      return result;
+    } catch (e, trace) {
+      throw ServerException(code: -1, message: "Request Failed", trace: trace);
+    }
+  }
+
+  dio.MultipartFile getImageFileFromString(Uint8List value, {required String fileName}) {
+    dio.MultipartFile file = dio.MultipartFile.fromBytes(value, filename: fileName);
+    return file;
   }
 
   String get currentBaseUrl => NetworkRequest(api: "").options.baseUrl;

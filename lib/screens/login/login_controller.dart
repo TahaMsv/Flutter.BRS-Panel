@@ -82,11 +82,9 @@ class LoginController extends MainController {
       Server s = Server.fromJson(jsonDecode(serverJson));
       ref.read(selectedServer.notifier).update((state) => s);
       initNetworkManager(s.address);
-    }else{
+    } else {
       initNetworkManager(server);
     }
-
-
   }
 
   void logout([bool force = false]) async {
@@ -94,7 +92,8 @@ class LoginController extends MainController {
       final userP = ref.read(userProvider.notifier);
       userP.state = null;
     } else {
-      bool conf = await ConfirmOperation.getConfirm(Operation(message: "Are you sure?", title: "Logout?", actions: ["Confirm", 'Cancel']));
+      bool conf = await ConfirmOperation.getConfirm(
+          Operation(message: "Are you sure?", title: "Logout?", actions: ["Confirm", 'Cancel']));
       if (conf) {
         String? serverJson = prefs.getString(SpKeys.serverJson);
         if (serverJson != null) {
@@ -106,7 +105,6 @@ class LoginController extends MainController {
 
         final userP = ref.read(userProvider.notifier);
         userP.state = null;
-
       }
     }
   }
@@ -122,15 +120,16 @@ class LoginController extends MainController {
       // print("Found ${r.servers.length} Servers");
       print(r.servers.map((e) => e.address).toList().join("\n"));
       print("CUrrent network: ${NetworkManager().currentBaseUrl}");
-      final s  = ref.read(selectedServer);
+      final s = ref.read(selectedServer);
       nav
           .dialog(ServerSelectDialog(
         servers: servers,
-        currentServer: servers.firstWhereOrNull((e) => e.address.toLowerCase() == (s?.address.toLowerCase()??NetworkManager().currentBaseUrl)),
+        currentServer: servers.firstWhereOrNull(
+            (e) => e.address.toLowerCase() == (s?.address.toLowerCase() ?? NetworkManager().currentBaseUrl)),
       ))
           .then((value) {
         if (value is Server) {
-          if(value == null) return;
+          if (value == null) return;
           print("Selected Server is ${value.address}");
           ref.read(selectedServer.notifier).update((state) => value);
           prefs.setString(SpKeys.serverJson, jsonEncode(value.toJson()));
@@ -145,5 +144,9 @@ class LoginController extends MainController {
 
   void showStimulPreview() {
     // nav.dialog(StimulPreviewDialog(url: "http://www.google.com"));
+  }
+
+  void goToUserProfile() {
+    nav.pushNamed(RouteNames.userSetting);
   }
 }

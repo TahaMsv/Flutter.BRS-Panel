@@ -21,6 +21,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:network_manager/network_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 import 'core/data_base/classes/db_user_class.dart';
 import 'core/data_base/local_data_base.dart';
@@ -33,6 +34,7 @@ import 'screens/airline_ulds/airline_ulds_controller.dart';
 import 'screens/airport_sections/airport_sections_controller.dart';
 import 'screens/home/home_controller.dart';
 import 'screens/login/login_controller.dart';
+import 'screens/user_setting/user_setting_controller.dart';
 import 'screens/users/users_controller.dart';
 
 final getIt = GetIt.instance;
@@ -41,6 +43,7 @@ Future<void> init() async {
   if (!kIsWeb) {
     WidgetsFlutterBinding.ensureInitialized();
   }
+  setPathUrlStrategy();
   initFullScreen();
   await initDataBase();
   await loadConfigFile();
@@ -78,6 +81,7 @@ initControllers() {
   AirportsController airportsController = AirportsController();
   AircraftsController aircraftsController = AircraftsController();
   UsersController usersController = UsersController();
+  UserSettingController userSettingController = UserSettingController();
   AirlineUldsController airlineUldsController = AirlineUldsController();
   AirportCartsController airportCartsController = AirportCartsController();
   AirportSectionsController airportSectionsController = AirportSectionsController();
@@ -94,6 +98,7 @@ initControllers() {
   getIt.registerSingleton(airportsController);
   getIt.registerSingleton(aircraftsController);
   getIt.registerSingleton(usersController);
+  getIt.registerSingleton(userSettingController);
   getIt.registerSingleton(airlineUldsController);
   getIt.registerSingleton(airportCartsController);
   getIt.registerSingleton(airportSectionsController);
@@ -106,11 +111,11 @@ initControllers() {
     RouteNames.home: homeController,
     RouteNames.flights: flightsController,
     RouteNames.addFlight: addFlightController,
-    RouteNames.flightDetails: addFlightController,
     RouteNames.airlines: airlinesController,
     RouteNames.airports: airportsController,
     RouteNames.aircrafts: aircraftsController,
     RouteNames.users: usersController,
+    RouteNames.userSetting: userSettingController,
     RouteNames.airlineUlds: airlineUldsController,
     RouteNames.airportCarts: airportCartsController,
     RouteNames.airportSections: airportSectionsController,

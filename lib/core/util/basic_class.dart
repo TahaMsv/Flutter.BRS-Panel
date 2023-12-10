@@ -1,10 +1,8 @@
 import 'package:brs_panel/core/abstracts/local_data_base_abs.dart';
-import 'package:brs_panel/core/classes/flight_details_class.dart';
-
 import '../abstracts/device_info_service_abs.dart';
 import '../classes/login_user_class.dart';
+import '../constants/apis.dart';
 import 'config_class.dart';
-// import 'settings_class.dart';
 
 class BasicClass {
   BasicClass._();
@@ -15,25 +13,17 @@ class BasicClass {
 
   static final BasicClass instance = BasicClass._();
   static late bool initialized;
-  String? _username;
   UserSettings? _userSettings;
   SystemSettings? _systemSettings;
   LoginUser? _userInfo;
   Airport? _airport;
-
-  // MyDeviceInfo? _deviceInfo;
   ScreenType? _deviceType;
   Config? _appConfig;
 
-  // stConfig? get config=>_appConfig;
-
   static void initialize(LoginUser user, ScreenType deviceType) {
-    // instance._settings ??= settings;
+    instance._userInfo = user;
     instance._userSettings = user.userSettings;
     instance._systemSettings = user.systemSettings;
-
-    // instance._userInfo = settings.userSettings.userInfo;
-    // instance._deviceInfo = deviceInfo;
     instance._deviceType = deviceType;
     instance._airport =
         user.systemSettings.airportList.firstWhere((element) => element.code == user.userSettings.airport);
@@ -45,7 +35,9 @@ class BasicClass {
 
   static Airport get airport => instance._airport!;
 
-  static String get username => instance._username!;
+  static String get username => instance._userInfo!.username;
+
+  static String get profileUrl => Apis.getProfileImage(instance._userInfo!.username);
 
   static List<String> get airlineList => instance._userSettings!.accessAirlines;
 
@@ -149,5 +141,9 @@ class BasicClass {
 
   static HandlingAccess? getHandlingByID(int? handlingID) {
     return BasicClass.systemSetting.handlingAccess.firstWhereOrNull((element) => element.id == handlingID);
+  }
+
+  static setAirport(Airport ap) {
+    instance._airport = ap;
   }
 }

@@ -8,6 +8,7 @@ import 'package:brs_panel/screens/bsm/bsm_view.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_view.dart';
 import 'package:brs_panel/screens/flight_summary/flight_summary_view.dart';
 import 'package:brs_panel/screens/flights/flights_view.dart';
+import 'package:brs_panel/screens/user_setting/user_setting_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -180,6 +181,15 @@ class RouterNotifier extends AutoDisposeAsyncNotifier<void> implements Listenabl
 
       pageBuilder: (context, state) {
         return NoTransitionPage<void>(key: state.pageKey, child: const UsersView());
+      },
+    ),
+    MyRoute(
+      // controller: RouteNames.home.controller,
+      name: RouteNames.userSetting.name,
+      path: RouteNames.userSetting.path,
+
+      pageBuilder: (context, state) {
+        return NoTransitionPage<void>(key: state.pageKey, child: const UserSettingView());
       },
     ),
     MyRoute(

@@ -53,10 +53,15 @@ final selectedFlightProvider = StateProvider<Flight?>((ref) => null);
 
 // final detailsProvider = StateNotifierProvider.autoDispose((ref) => FlightDetailsNotifier(const AsyncValue.data(null)));
 
-final detailsProvider = FutureProvider.autoDispose<FlightDetails?>((ref) {
+final detailsProvider = StateProvider<FlightDetails?>((ref) => null);
+
+final refreshDetailsProvider = FutureProvider.autoDispose<FlightDetails?>((ref) async {
   final sfP = ref.watch(selectedFlightProvider);
   if (sfP == null) return null;
-  return getIt<FlightDetailsController>().flightGetDetails(sfP.id);
+  final fdP = ref.watch(detailsProvider.notifier);
+  FlightDetails? d = await getIt<FlightDetailsController>().flightGetDetails(sfP.id);
+  fdP.state = d;
+  return fdP.state;
 });
 
 // final detailsProvider = FutureProvider.autoDispose<FlightDetailsNotifier>((ref){

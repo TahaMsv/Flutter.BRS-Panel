@@ -89,6 +89,19 @@ class Section {
         sections: sections ?? this.sections,
       );
 
+  factory Section.empty() => const Section(
+      id: null,
+      label: "",
+      code: "",
+      position: 0,
+      offset: 0,
+      isMainSection: true,
+      canHaveTag: true,
+      canHaveContainer: true,
+      canHaveBin: true,
+      spotRequired: true,
+      sections: []);
+
   factory Section.fromJson(Map<String, dynamic> json) => Section(
         id: json["ID"],
         label: json["Label"],

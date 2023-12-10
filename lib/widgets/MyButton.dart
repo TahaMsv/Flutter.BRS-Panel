@@ -70,6 +70,7 @@ class _MyButtonState extends State<MyButton> {
     Color c = widget.color ?? theme.primaryColor;
     return SizedBox(
       height: widget.height,
+      width: widget.width,
       child: ElevatedButton(
         onPressed: _onTap,
         onLongPress: widget.onLongPress,

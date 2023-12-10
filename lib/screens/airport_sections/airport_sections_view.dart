@@ -1,3 +1,4 @@
+import 'package:brs_panel/core/constants/abomis_pack_icons.dart';
 import 'package:brs_panel/widgets/MyButton.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -78,6 +79,7 @@ class SectionsWidget extends ConsumerWidget {
                 label: sections[i].label,
                 isSelected: selectedCategories.contains(sections[i]),
                 onTap: () => controller.onTapSection(sections[i]),
+                onEdit: () => controller.onEditSection(sections[i]),
                 onDelete: () => controller.onDeleteSection(sections[i]),
               ),
       ),
@@ -89,10 +91,16 @@ class ItemBoxWidget extends StatelessWidget {
   final bool isSelected;
   final String label;
   final void Function() onTap;
+  final void Function() onEdit;
   final void Function() onDelete;
 
   const ItemBoxWidget(
-      {super.key, required this.label, required this.isSelected, required this.onTap, required this.onDelete});
+      {super.key,
+      required this.label,
+      required this.isSelected,
+      required this.onTap,
+      required this.onEdit,
+      required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +115,8 @@ class ItemBoxWidget extends StatelessWidget {
           child: Row(
             children: [
               Expanded(child: Text(label, style: const TextStyle(color: MyColors.indexColor))),
+              IconButton(
+                  color: MyColors.lightIshBlue, onPressed: onEdit, icon: const Icon(AbomisIconPack.editFile, size: 18)),
               IconButton(color: MyColors.red2, onPressed: onDelete, icon: const Icon(Icons.delete_forever_outlined)),
               const SizedBox(width: 8),
             ],

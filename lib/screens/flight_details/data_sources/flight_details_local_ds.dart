@@ -1,3 +1,4 @@
+import 'package:brs_panel/screens/flight_details/usecases/delete_tag_usecase.dart';
 import 'package:brs_panel/screens/flight_details/usecases/flight_get_details_usecase.dart';
 import 'package:brs_panel/screens/flight_details/usecases/flight_get_tag_details_usecase.dart';
 import 'package:brs_panel/screens/flight_details/usecases/get_container_pdf_usecase.dart';
@@ -28,6 +29,12 @@ class FlightDetailsLocalDataSource implements FlightDetailsDataSourceInterface {
   @override
   Future<GetContainerReportResponse> getContainerReport({required GetContainerReportRequest request}) {
     // TODO: implement getContainerReport
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DeleteTagResponse> deleteTag({required DeleteTagRequest request}) {
+    // TODO: implement deleteTag
     throw UnimplementedError();
   }
 }
