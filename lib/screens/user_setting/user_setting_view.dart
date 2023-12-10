@@ -142,7 +142,7 @@ class UserListWidget extends ConsumerWidget {
                                 MyTextField(label: "Repeat Password", labelStyle: TextStyle(color: MyColors.brownGrey3)),
                                 SizedBox(height: 30),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     MyButton(
                                         onPressed: () {},
