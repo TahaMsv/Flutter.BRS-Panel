@@ -10,6 +10,7 @@ class UserSettingState extends ChangeNotifier {
 
   bool loading = false;
   bool updateProfile = false;
+  int editProfileDrawerIndex = 0;
 }
 
 final userSearchProvider = StateProvider<String>((ref) => '');
