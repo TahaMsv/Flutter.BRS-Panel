@@ -160,6 +160,7 @@ class UserIndicatorWidget extends ConsumerWidget {
     ThemeData theme = Theme.of(context);
     // double width = MediaQuery.of(context).sizewidth;
     // double height = MediaQuery.of(context).sizeheight;
+    final vp = ref.read(versionProvider);
     double avatarRadius = 18;
     if (u == null) return const SizedBox();
     return Container(
@@ -168,43 +169,39 @@ class UserIndicatorWidget extends ConsumerWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          InkWell(
-            onTap: myLoginController.goToUserProfile,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                InkWell(
-                  onTap: () => myLoginController.showStimulPreview(),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(avatarRadius),
-                    child: Container(
-                      decoration: const BoxDecoration(color: Colors.blueAccent),
-                      width: avatarRadius * 2,
-                      height: avatarRadius * 2,
-                      child: const Icon(Icons.person),
-                    ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (vp != null) Text("Version $vp", style: const TextStyle(color: MyColors.warmGrey, fontSize: 12)),
+              const SizedBox(width: 10),
+              InkWell(
+                // onTap: () => myLoginController.showStimulPreview(),
+                onTap: null,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(avatarRadius),
+                  child: Container(
+                    decoration: const BoxDecoration(color: Colors.blueAccent),
+                    width: avatarRadius * 2,
+                    height: avatarRadius * 2,
+                    child: const Icon(Icons.person),
                   ),
                 ),
-                const SizedBox(width: 8),
-                Column(
+              ),
+              const SizedBox(width: 8),
+              InkWell(
+                onTap: myLoginController.goToUserProfile,
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text("Hello, ${u.username}"),
-                    Text(
-                      ref.watch(selectedServer)?.name ?? "",
-                      style: const TextStyle(fontSize: 8),
-                    )
+                    Text(ref.watch(selectedServer)?.name ?? "", style: const TextStyle(fontSize: 8))
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
           const SizedBox(width: 8),
-          IconButton(
-              onPressed: () {
-                myLoginController.logout();
-              },
-              icon: const Icon(Icons.exit_to_app_outlined))
+          IconButton(onPressed: () => myLoginController.logout(), icon: const Icon(Icons.exit_to_app_outlined))
         ],
       ),
     );

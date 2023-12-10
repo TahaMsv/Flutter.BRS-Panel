@@ -1,4 +1,3 @@
-import 'package:brs_panel/core/abstracts/local_data_base_abs.dart';
 import 'package:brs_panel/core/platform/spiners.dart';
 import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:brs_panel/widgets/TagCountWidget.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-
 import '../../../core/classes/flight_class.dart';
 import '../../../core/constants/ui.dart';
 import '../../../initialize.dart';
@@ -46,11 +44,12 @@ extension FlightDataTableColumnDetails on FlightDataTableColumn {
         return 0.1;
     }
   }
+
   String get label {
     switch (this) {
       case FlightDataTableColumn.std:
         return "STD";
-        default:
+      default:
         return name.capitalizeFirst!;
     }
   }
@@ -107,7 +106,8 @@ class FlightDataSource extends DataGridSource {
                   child: Container(
                     alignment: Alignment.center,
                     padding: EdgeInsets.zero,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: f.isTest ? MyColors.red : Colors.transparent),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5), color: f.isTest ? MyColors.red : Colors.transparent),
                     child: Text(
                       f.isTest ? "Test" : "",
                       style: const TextStyle(fontSize: 10, color: Colors.white),
@@ -153,8 +153,8 @@ class FlightDataSource extends DataGridSource {
               child: Row(
                 children: [
                   ...BasicClass.systemSetting.positions.map((p) {
-                    if(f.isArrival && [1,2,3].contains(p.id)) return const SizedBox();
-                    if(!f.isArrival && [4,5,6].contains(p.id)) return const SizedBox();
+                    if (f.isArrival && [1, 2, 3].contains(p.id)) return const SizedBox();
+                    if (!f.isArrival && [4, 5, 6].contains(p.id)) return const SizedBox();
                     return Expanded(
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -212,9 +212,13 @@ class FlightDataSource extends DataGridSource {
                         WidgetRef ref = getIt<WidgetRef>();
                         bool loading = ref.watch(flightActionHandlingProvider).contains(f.id);
                         if (loading) return;
-                        ref.read(flightActionHandlingProvider.notifier).update((state) => (state + [f.id]).toSet().toList());
+                        ref
+                            .read(flightActionHandlingProvider.notifier)
+                            .update((state) => (state + [f.id]).toSet().toList());
                         await flightsController.handleActions(value as MenuItem, f);
-                        ref.read(flightActionHandlingProvider.notifier).update((state) => state.where((element) => element != f.id).toList());
+                        ref
+                            .read(flightActionHandlingProvider.notifier)
+                            .update((state) => state.where((element) => element != f.id).toList());
                         // MenuItems.onChanged(navigator!.context, value! as MenuItem);
                       },
                       customButton: Consumer(
@@ -279,21 +283,20 @@ abstract class MenuItems {
   static const List<MenuItem> firstItems = [
     flightSummary,
     assignContainer,
-    // openWebView,
     containersPlan,
     flightReport,
+    reports,
   ];
 
   static const flightSummary = MenuItem(text: 'Flight Summary', icon: Icons.home);
   static const assignContainer = MenuItem(text: 'Assign Container', icon: Icons.share);
-  static const openWebView = MenuItem(text: 'Open WebView', icon: Icons.open_in_browser);
   static const containersPlan = MenuItem(text: 'Containers Plan', icon: Icons.queue_play_next);
   static const flightReport = MenuItem(text: 'Flight Report', icon: Icons.text_snippet_outlined);
+  static const reports = MenuItem(text: 'Stimul Reports', icon: Icons.open_in_browser);
 
   static Widget buildItem(MenuItem item) {
     return Row(
       children: [
-
         Icon(item.icon, color: Colors.black, size: 20),
         const SizedBox(width: 8),
         Expanded(
@@ -316,7 +319,7 @@ abstract class MenuItems {
       case MenuItems.flightSummary:
         //Do something
         break;
-      case MenuItems.openWebView:
+      case MenuItems.reports:
         break;
     }
   }

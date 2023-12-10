@@ -28,6 +28,7 @@ import '../../core/classes/flight_class.dart';
 import '../../core/classes/flight_report_class.dart';
 import '../../core/classes/login_user_class.dart';
 import '../../core/classes/tag_container_class.dart';
+import '../../core/constants/apis.dart';
 import '../../core/platform/device_info.dart';
 import '../../core/util/basic_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
@@ -150,12 +151,12 @@ class FlightsController extends MainController {
       case MenuItems.flightReport:
         await flightGetReport(flight);
         return;
-      case MenuItems.openWebView:
+      case MenuItems.reports:
         if (flightsController.isDesktop()) {
           // nav.pushNamed(RouteNames.webView);
           openWebViewWindows();
         } else {
-          _launchUrl(Uri.parse('https://www.ldoceonline.com/'));
+          _launchUrl(Uri.parse(Apis.openWebView));
         }
         return;
       default:
@@ -212,27 +213,42 @@ class FlightsController extends MainController {
     return report;
   }
 
-  Future<void> flightSendReport({required String email, required String typeB, required Flight flight, required bool attachment}) async {
+  Future<void> flightSendReport(
+      {required String email, required String typeB, required Flight flight, required bool attachment}) async {
     if (email.trim().isNotEmpty) {
-      List<String> invalidEmails =
-          email.split(",").where((element) => element.isNotEmpty && !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(element.trim())).toList();
+      List<String> invalidEmails = email
+          .split(",")
+          .where((element) =>
+              element.isNotEmpty &&
+              !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(element.trim()))
+          .toList();
       if (invalidEmails.isNotEmpty) {
-        FailureHandler.handle(ValidationFailure(code: 1, msg: "${invalidEmails.join(",")} ${invalidEmails.length > 1 ? 'are' : 'is'} not a valid email address", traceMsg: ""));
+        FailureHandler.handle(ValidationFailure(
+            code: 1,
+            msg: "${invalidEmails.join(",")} ${invalidEmails.length > 1 ? 'are' : 'is'} not a valid email address",
+            traceMsg: ""));
         return;
       }
     }
     if (typeB.trim().isNotEmpty) {
-      List<String> invalidTypeB = typeB.split(",").where((element) => element.isNotEmpty && element.trim().length != 7).toList();
+      List<String> invalidTypeB =
+          typeB.split(",").where((element) => element.isNotEmpty && element.trim().length != 7).toList();
       if (invalidTypeB.isNotEmpty) {
-        FailureHandler.handle(ValidationFailure(code: 1, msg: "${invalidTypeB.join(",")} ${invalidTypeB.length > 1 ? 'are' : 'is'} not a valid type-b address", traceMsg: ""));
+        FailureHandler.handle(ValidationFailure(
+            code: 1,
+            msg: "${invalidTypeB.join(",")} ${invalidTypeB.length > 1 ? 'are' : 'is'} not a valid type-b address",
+            traceMsg: ""));
         return;
       }
     }
     FlightSendReportUseCase flightSendReportUsecase = FlightSendReportUseCase();
-    FlightSendReportRequest flightSendReportRequest = FlightSendReportRequest(typeB: typeB, email: email, flight: flight, attachment: attachment);
+    FlightSendReportRequest flightSendReportRequest =
+        FlightSendReportRequest(typeB: typeB, email: email, flight: flight, attachment: attachment);
     final fOrR = await flightSendReportUsecase(request: flightSendReportRequest);
 
-    fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightSendReport(email: email, typeB: typeB, flight: flight, attachment: attachment)), (r) {
+    fOrR.fold(
+        (f) => FailureHandler.handle(f,
+            retry: () => flightSendReport(email: email, typeB: typeB, flight: flight, attachment: attachment)), (r) {
       SuccessHandler.handle(ServerSuccess(code: 1, msg: "Report Sent Successfully!"));
     });
   }
@@ -287,7 +303,8 @@ class FlightsController extends MainController {
   Future<ContainersPlan?> flightSavePlans({required Flight flight, required ContainersPlan newPlan}) async {
     ContainersPlan? plans;
     FlightSaveContainersPlanUseCase flightSavePlansUsecase = FlightSaveContainersPlanUseCase();
-    FlightSaveContainersPlanRequest flightSaveContainersPlanRequest = FlightSaveContainersPlanRequest(flight: flight, plan: newPlan);
+    FlightSaveContainersPlanRequest flightSaveContainersPlanRequest =
+        FlightSaveContainersPlanRequest(flight: flight, plan: newPlan);
     final fOrR = await flightSavePlansUsecase(request: flightSaveContainersPlanRequest);
 
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightSavePlans(flight: flight, newPlan: newPlan)), (r) {

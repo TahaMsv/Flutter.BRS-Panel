@@ -11,6 +11,7 @@ class Apis {
   static const String logoUrl = "https://imagedcs.fdcs.ir/api/airlineimage/";
   static const String imageServiceToken = "0F58FF9A-C05B-4FDD-A6A5-5E8D1A102C75";
   static const String uploadProfileImage = "https://imagedcstest.abomis.com/api/profile";
+  static const String openWebView = "https://brsdev-api.abomis.com/mrt";
 
   static String getProfileImage(String username) =>
       "https://imagedcstest.abomis.com/api/imageproject/BRS/ProfilePhoto/$username";

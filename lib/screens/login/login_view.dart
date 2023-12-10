@@ -2,12 +2,8 @@ import 'package:brs_panel/core/constants/assest.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/widgets/DotButton.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-
 import '../../core/constants/ui.dart';
-import '../../core/util/version_handler.dart';
 import '../../widgets/MyButton.dart';
 import '../../widgets/MyTextField.dart';
 import 'login_controller.dart';
@@ -25,13 +21,16 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   @override
   void initState() {
-   WidgetsBinding.instance.addPostFrameCallback((timeStamp) => getIt<LoginController>().loadPreferences());
+    LoginController controller = getIt<LoginController>();
+    controller.getVersion();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) => controller.loadPreferences());
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
+        floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
         floatingActionButton: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -43,18 +42,20 @@ class _LoginViewState extends State<LoginView> {
                 size: 45,
                 icon: Icons.device_hub,
                 color: Colors.white,
-                onPressed: ()async{
+                onPressed: () async {
                   await LoginView.myLoginController.getServers();
                 },
               ),
             ),
             const SizedBox(width: 4),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color: Colors.white.withOpacity(0.4)),
-                child: Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                  return Text(ref.watch(selectedServer)?.name??'Default');
-                },))
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white.withOpacity(0.4)),
+                child: Consumer(
+                  builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                    return Text(ref.watch(selectedServer)?.name ?? 'Default');
+                  },
+                ))
           ],
         ),
         body: Container(
@@ -80,7 +81,8 @@ class LoginPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ThemeData theme = Theme.of(context);
-    LoginState state = ref.read(loginProvider);
+    LoginState state = ref.watch(loginProvider);
+    final vp = ref.watch(versionProvider);
     return Container(
       width: 430,
       height: double.infinity,
@@ -117,25 +119,12 @@ class LoginPanel extends ConsumerWidget {
               ],
             ),
           ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.end,
-          //   children: [
-          //     FutureBuilder(
-          //         future: PackageInfo.fromPlatform(),
-          //         builder: (c, snapshot) {
-          //           if (snapshot.connectionState == ConnectionState.done && snapshot.data is PackageInfo) {
-          //             PackageInfo info = (snapshot.data as PackageInfo);
-          //
-          //             String build = VersionHandler.getVersionBuild(info);
-          //             return Text(
-          //               "Version ${info.version} (${build})",
-          //               style: TextStyle(color: MyColors.brownGrey7),
-          //             );
-          //           }
-          //           return Text("");
-          //         }),
-          //   ],
-          // ),
+          if (vp != null) Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text("Version $vp"),
+            ],
+          ),
         ],
       ),
     );

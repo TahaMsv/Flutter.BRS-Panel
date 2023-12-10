@@ -19,7 +19,6 @@ class MyButton extends StatefulWidget {
   final String label;
   final bool showLoading;
   final bool fade;
-  final bool disabled;
   final Color? color;
 
   const MyButton(
@@ -34,7 +33,6 @@ class MyButton extends StatefulWidget {
       this.style,
       this.focusNode,
       this.autofocus = false,
-      this.disabled = false,
       this.statesController,
       this.showLoading = true,
       this.child,
@@ -79,27 +77,21 @@ class _MyButtonState extends State<MyButton> {
         focusNode: widget.focusNode,
         statesController: widget.statesController,
         onHover: widget.onHover,
-        style: ButtonStyle(
-          fixedSize: MaterialStatePropertyAll(Size.fromHeight(widget.height)),
-          shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
-          padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 8)),
-          shadowColor: const MaterialStatePropertyAll(Colors.transparent),
-          backgroundColor: MaterialStatePropertyAll(c.withOpacity(widget.fade ? 0.3 : 1)),
-          foregroundColor: MaterialStatePropertyAll(widget.fade ? c : Colors.white),
-        ),
+        style: widget.style ??
+            ButtonStyle(
+              fixedSize: MaterialStatePropertyAll(Size.fromHeight(widget.height)),
+              shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
+              padding: const MaterialStatePropertyAll(EdgeInsets.symmetric(horizontal: 8)),
+              shadowColor: const MaterialStatePropertyAll(Colors.transparent),
+              backgroundColor: MaterialStatePropertyAll(c.withOpacity(widget.fade ? 0.3 : 1)),
+              foregroundColor: MaterialStatePropertyAll(widget.fade ? c : Colors.white),
+            ),
         child: IndexedStack(
           alignment: Alignment.center,
           index: _loading && widget.showLoading ? 0 : 1,
           children: [
-            SpinKitThreeBounce(
-              color: widget.fade ? c : Colors.white,
-              size: 18,
-            ),
-            widget.child ??
-                Text(
-                  widget.label,
-                  style: TextStyle(fontSize: widget.fontSize),
-                )
+            SpinKitThreeBounce(color: widget.fade ? c : Colors.white, size: 18),
+            widget.child ?? Text(widget.label, style: TextStyle(fontSize: widget.fontSize))
           ],
         ),
       ),

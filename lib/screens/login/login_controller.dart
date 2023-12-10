@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:brs_panel/core/abstracts/local_data_base_abs.dart';
 import 'package:brs_panel/core/platform/encryptor.dart';
 import 'package:brs_panel/core/platform/network_manager.dart';
@@ -7,8 +6,7 @@ import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:brs_panel/core/util/confirm_operation.dart';
 import 'package:brs_panel/screens/login/usecases/server_select_usecase.dart';
 import 'package:brs_panel/widgets/ServerSelectDialog.dart';
-import 'package:brs_panel/widgets/stimul_preview_dialog.dart';
-
+import 'package:package_info_plus/package_info_plus.dart';
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/abstracts/device_info_service_abs.dart';
 import '../../core/classes/new_version_class.dart';
@@ -18,6 +16,7 @@ import '../../core/constants/share_prefrences_keys.dart';
 import '../../core/navigation/route_names.dart';
 import '../../core/platform/device_info.dart';
 import '../../core/util/handlers/failure_handler.dart';
+import '../../core/util/version_handler.dart';
 import '../../initialize.dart';
 import 'login_state.dart';
 import 'usecases/login_usecase.dart';
@@ -28,6 +27,14 @@ class LoginController extends MainController {
   @override
   onCreate() {
     // loadPreferences();
+  }
+
+  getVersion() async {
+    PackageInfo p = await PackageInfo.fromPlatform();
+    String s = VersionHandler.getVersionBuild(p);
+    final vp = ref.read(versionProvider.notifier);
+    vp.update((state) => s);
+    loginState.setState();
   }
 
   Future<LoginUser?> login() async {

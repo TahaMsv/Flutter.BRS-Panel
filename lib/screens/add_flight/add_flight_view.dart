@@ -597,7 +597,7 @@ class AddFlightPanel extends ConsumerWidget {
               AddFlightState state = ref.watch(addFlightProvider);
               return MyButton(
                 label: "Add Flight",
-                disabled: state.validateAddFlight,
+                // disabled: state.validateAddFlight,
                 onPressed: AddFlightView.addFlightController.addFlight,
               );
             },

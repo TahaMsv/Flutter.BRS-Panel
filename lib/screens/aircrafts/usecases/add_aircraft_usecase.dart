@@ -1,13 +1,10 @@
-import 'package:artemis_utils/artemis_utils.dart';
-import 'package:brs_panel/core/classes/flight_class.dart';
-import 'package:brs_panel/screens/aircrafts/aircrafts_repository.dart';
 import 'package:dartz/dartz.dart';
 import '../../../core/abstracts/failures_abs.dart';
 import '../../../core/abstracts/request_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/abstracts/usecase_abs.dart';
 import '../../../core/classes/login_user_class.dart';
-import '../../../core/classes/user_class.dart';
+import '../aircrafts_repository.dart';
 
 class AddAirCraftUseCase extends UseCase<AddAirCraftResponse, AddAirCraftRequest> {
   AddAirCraftUseCase();
@@ -27,31 +24,28 @@ class AddAirCraftRequest extends Request {
 
   @override
   Map<String, dynamic> toJson() => {
-        "Body": {
-          "Token": token,
-          "Execution": "AddUpdateAircraft",
-          "Request": aircraft.toJson(),
-        }
+        "Body": {"Token": token, "Execution": "AddUpdateAircraft", "Request": aircraft.toJson()}
       };
 
   Failure? validate() {
-    return null;
+    String msg = '';
+    if (aircraft.al.isEmpty) {
+      msg = "Al should not be empty";
+    } else if (aircraft.aircraftType.isEmpty) {
+      msg = "Type should not be empty";
+    } else if (aircraft.registration.isEmpty) {
+      msg = "Registration should not be empty";
+    }
+    return msg.isEmpty ? null : ValidationFailure(code: 1, msg: msg, traceMsg: "");
   }
 }
 
 class AddAirCraftResponse extends Response {
-  final String msg;
+  final Aircraft aircraft;
 
-  AddAirCraftResponse({required int status, required String message, required this.msg})
-      : super(
-          status: status,
-          message: message,
-          body: message,
-        );
+  AddAirCraftResponse({required int status, required String message, required this.aircraft})
+      : super(status: status, message: message, body: message);
 
   factory AddAirCraftResponse.fromResponse(Response res) => AddAirCraftResponse(
-        status: res.status,
-        message: res.message,
-        msg: res.message,
-      );
+      status: res.status, message: res.message, aircraft: Aircraft.fromJson(res.body["AircraftList"][0]));
 }

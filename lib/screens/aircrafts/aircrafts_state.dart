@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 import '../../core/classes/flight_details_class.dart';
 import '../../core/classes/login_user_class.dart';
 import '../../core/util/basic_class.dart';
@@ -12,31 +11,28 @@ class AircraftsState extends ChangeNotifier {
 
   ///bool loading = false;
   List<Bin> bins = [];
-  TextEditingController alC = TextEditingController();
+  TextEditingController alC = TextEditingController(text: BasicClass.userInfo.userSettings.al);
   TextEditingController typeC = TextEditingController();
   TextEditingController registrationC = TextEditingController();
-
   List<List<TextEditingController>> binsC = [];
 }
 
 final aircraftSearchProvider = StateProvider<String>((ref) => '');
 final filteredAircraftListProvider = Provider<List<Aircraft>>((ref) {
-  // final aircrafts = ref.watch(aircraftListProvider);
-  final aircrafts = BasicClass.systemSetting.aircraftList;
+  final aircrafts = ref.watch(aircraftListProvider);
   print("filteredAircraftListProvider ${aircrafts.length}");
   final searchFilter = ref.watch(aircraftSearchProvider);
+  return aircrafts.where((f) => f.validateSearch(searchFilter)).toList();
+});
 
-  return aircrafts
-      .where(
-        (f) => f.validateSearch(searchFilter),
-      )
-      .toList();
+final aircraftListProvider = StateNotifierProvider<AircraftListNotifier, List<Aircraft>>((ref) {
+  return AircraftListNotifier(ref);
 });
 
 class AircraftListNotifier extends StateNotifier<List<Aircraft>> {
   final StateNotifierProviderRef ref;
 
-  AircraftListNotifier(this.ref) : super([]);
+  AircraftListNotifier(this.ref) : super(BasicClass.systemSetting.aircraftList);
 
   void addAircraft(Aircraft aircraft) {
     state = [...state, aircraft];
