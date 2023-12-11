@@ -5,6 +5,7 @@ import '../usecases/delete_tag_usecase.dart';
 import '../usecases/flight_get_details_usecase.dart';
 import '../usecases/flight_get_tag_details_usecase.dart';
 import '../usecases/get_container_pdf_usecase.dart';
+import '../usecases/get_history_log_usecase.dart';
 import 'flight_details_local_ds.dart';
 
 class FlightDetailsRemoteDataSource implements FlightDetailsDataSourceInterface {
@@ -36,5 +37,13 @@ class FlightDetailsRemoteDataSource implements FlightDetailsDataSourceInterface 
   Future<DeleteTagResponse> deleteTag({required DeleteTagRequest request}) async {
     Response res = await networkManager.post(request);
     return DeleteTagResponse.fromResponse(res);
+  }
+
+  @override
+  Future<GetHistoryLogResponse> getHistoryLog({required GetHistoryLogRequest request}) async {
+    Response res = await networkManager.post(request);
+    //todo delete THis!!!
+    print(res.body);
+    return GetHistoryLogResponse.fromResponse(res);
   }
 }

@@ -33,8 +33,6 @@ class UserSettingRemoteDataSource implements UserSettingDataSourceInterface {
   @override
   Future<ChangePassResponse> changePass({required ChangePassRequest request}) async {
     Response res = await networkManager.post(request);
-    print("res.body");
-    print(res.body);
     return ChangePassResponse.fromResponse(res);
   }
 }

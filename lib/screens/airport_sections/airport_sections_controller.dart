@@ -51,6 +51,7 @@ class AirportSectionsController extends MainController {
       }
     }
     if (ssc0.contains(section)) ssc0[ssc0.indexOf(section)] = newSection;
+    setIsSectionUpdated(false);
     airportSectionsState.setState();
   }
 

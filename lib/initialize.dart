@@ -34,6 +34,7 @@ import 'screens/airline_ulds/airline_ulds_controller.dart';
 import 'screens/airport_sections/airport_sections_controller.dart';
 import 'screens/home/home_controller.dart';
 import 'screens/login/login_controller.dart';
+import 'screens/special_reports/special_reports_controller.dart';
 import 'screens/user_setting/user_setting_controller.dart';
 import 'screens/users/users_controller.dart';
 
@@ -47,8 +48,7 @@ Future<void> init() async {
   initFullScreen();
   await initDataBase();
   await loadConfigFile();
-  await  initializeDateFormatting();
-
+  await initializeDateFormatting();
 
   getIt.allowReassignment = true;
 
@@ -80,6 +80,7 @@ initControllers() {
   AirlinesController airlinesController = AirlinesController();
   AirportsController airportsController = AirportsController();
   AircraftsController aircraftsController = AircraftsController();
+  SpecialReportsController specialReportsController = SpecialReportsController();
   UsersController usersController = UsersController();
   UserSettingController userSettingController = UserSettingController();
   AirlineUldsController airlineUldsController = AirlineUldsController();
@@ -97,6 +98,7 @@ initControllers() {
   getIt.registerSingleton(airlinesController);
   getIt.registerSingleton(airportsController);
   getIt.registerSingleton(aircraftsController);
+  getIt.registerSingleton(specialReportsController);
   getIt.registerSingleton(usersController);
   getIt.registerSingleton(userSettingController);
   getIt.registerSingleton(airlineUldsController);
@@ -114,6 +116,7 @@ initControllers() {
     RouteNames.airlines: airlinesController,
     RouteNames.airports: airportsController,
     RouteNames.aircrafts: aircraftsController,
+    RouteNames.specialReports: specialReportsController,
     RouteNames.users: usersController,
     RouteNames.userSetting: userSettingController,
     RouteNames.airlineUlds: airlineUldsController,

@@ -7,6 +7,7 @@ enum RouteNames {
   airlines,
   aircrafts,
   airports,
+  specialReports,
   users,
   userSetting,
   addFlight,
@@ -62,28 +63,28 @@ extension RouteNamesDetails on RouteNames {
       RouteNames.bsm,
       RouteNames.barcodeGenerator,
       RouteNames.users,
+      RouteNames.specialReports,
     ].contains(this);
   }
 
-
-  // MainController get controller {
-  //   switch(this){
-  //     case RouteNames.splash:
-  //       return LoginController();
-  //     case RouteNames.login:
-  //       return LoginController();
-  //     case RouteNames.home:
-  //       return HomeController();
-  //     case RouteNames.flights:
-  //       return FlightsController();
-  //     case RouteNames.airlines:
-  //      return AirlinesController();
-  //     case RouteNames.aircrafts:
-  //      return AircraftsController();
-  //     case RouteNames.airports:
-  //       return AirportsController();
-  //     case RouteNames.users:
-  //       return UsersController();
-  //   }
-  // }
+// MainController get controller {
+//   switch(this){
+//     case RouteNames.splash:
+//       return LoginController();
+//     case RouteNames.login:
+//       return LoginController();
+//     case RouteNames.home:
+//       return HomeController();
+//     case RouteNames.flights:
+//       return FlightsController();
+//     case RouteNames.airlines:
+//      return AirlinesController();
+//     case RouteNames.aircrafts:
+//      return AircraftsController();
+//     case RouteNames.airports:
+//       return AirportsController();
+//     case RouteNames.users:
+//       return UsersController();
+//   }
+// }
 }

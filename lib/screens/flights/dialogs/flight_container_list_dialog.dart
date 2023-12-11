@@ -1,11 +1,7 @@
 import 'package:artemis_ui_kit/artemis_ui_kit.dart';
 import 'package:brs_panel/core/abstracts/failures_abs.dart';
-import 'package:brs_panel/core/abstracts/warning_abs.dart';
 import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:brs_panel/core/util/handlers/failure_handler.dart';
-import 'package:brs_panel/core/util/handlers/warning_handler.dart';
-import 'package:brs_panel/screens/flights/data_tables/assigned_containers_data_table.dart';
-import 'package:brs_panel/screens/flights/data_tables/available_containers_data_table.dart';
 import 'package:brs_panel/widgets/DotButton.dart';
 import 'package:brs_panel/widgets/FlightBanner.dart';
 import 'package:brs_panel/widgets/MyCheckBoxButton.dart';
@@ -21,6 +17,8 @@ import '../../../widgets/MyButton.dart';
 import '../../../core/constants/ui.dart';
 import '../../../core/navigation/navigation_service.dart';
 import '../../../widgets/MyFieldPicker.dart';
+import '../data_tables/assigned_containers_data_table.dart';
+import '../data_tables/available_containers_data_table.dart';
 import '../flights_controller.dart';
 
 class FlightContainerListDialog extends StatefulWidget {
@@ -222,7 +220,7 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                         label: Center(
                                             child: Text(
                                           e.label.capitalizeFirst!,
-                                          style: TextStyle(fontSize: 12),
+                                          style: const TextStyle(fontSize: 12),
                                         )),
                                         // columnWidthMode: ColumnWidthMode.fill
                                         width: width * 0.8 * 0.2 * e.width,
@@ -300,7 +298,7 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                       element.canHaveContainer)
                                   .toList(),
                               label: "Airport Section",
-                              itemToString: (item) => "${item.label}",
+                              itemToString: (item) => item.label,
                               value: airportPositionSection,
                               onChange: (as) {
                                 airportPositionSection = as;
@@ -339,7 +337,7 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                       },
                                     ),
                                   )
-                                : SizedBox(),
+                                : const SizedBox(),
                             const SizedBox(height: 12),
                           ],
                         ),
@@ -374,7 +372,7 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                   label: Center(
                                       child: Text(
                                     e.label.capitalizeFirst!,
-                                    style: TextStyle(fontSize: 12),
+                                    style: const TextStyle(fontSize: 12),
                                   )),
                                   // columnWidthMode: ColumnWidthMode.fill
                                   width: width * 0.8 * 0.6 * e.width),
@@ -498,9 +496,6 @@ class AvailableContainerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(color: index.isEven ? MyColors.evenRow : MyColors.oddRow),
@@ -536,9 +531,6 @@ class AssignedContainerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeData theme = Theme.of(context);
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(color: index.isEven ? MyColors.evenRow : MyColors.oddRow),
@@ -563,8 +555,8 @@ class AssignedContainerWidget extends StatelessWidget {
                 valueColor: con.getPosition?.getColor ?? Colors.black87,
               )),
           Expanded(flex: 2, child: Text(con.tagCount.toString())),
-          Expanded(flex: 6, child: Text("(${con.dest ?? ''}) ${con.destList ?? ''}")),
-          Expanded(flex: 2, child: Text(con.classTypeList.join(", ") ?? '-')),
+          Expanded(flex: 6, child: Text("(${con.dest}) ${con.destList}")),
+          Expanded(flex: 2, child: Text(con.classTypeList.join(", "))),
           Expanded(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -572,7 +564,7 @@ class AssignedContainerWidget extends StatelessWidget {
                 DotButton(
                   icon: Icons.delete,
                   color: Colors.red,
-                  onPressed: (con.tagCount ?? 0) > 0 ? null : onDelete,
+                  onPressed: (con.tagCount) > 0 ? null : onDelete,
                 )
               ],
             ),

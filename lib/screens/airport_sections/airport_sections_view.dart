@@ -26,7 +26,7 @@ class AirportSectionsView extends ConsumerWidget {
           ? Container()
           : SizedBox(
               height: 30,
-              width: 120,
+              width: 150,
               child: MyButton(
                 style: ElevatedButton.styleFrom(foregroundColor: MyColors.white3, backgroundColor: MyColors.mainColor),
                 onPressed: () async => await controller.updateSectionsRequest(),
