@@ -65,7 +65,7 @@ class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    Color c = widget.color ?? theme.primaryColor;
+    Color c = widget.onPressed==null?Colors.grey: widget.color ?? theme.primaryColor;
     return SizedBox(
       height: widget.height,
       width: widget.width,

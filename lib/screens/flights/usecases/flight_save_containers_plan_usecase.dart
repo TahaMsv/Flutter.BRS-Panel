@@ -33,13 +33,14 @@ class FlightSaveContainersPlanRequest extends Request {
           "Execution": "FlightSaveContainersPlan",
           "Token": token,
           "Request": {
-            "FlightScheduleID": f.id,
+            "FlightID": f.id,
             "SectionID": secID,
             "SpotID": spotID,
             "PlanData": plan.planData.map((e) => e.toJson()).toList(),
           }
         }
       };
+
 
   Failure? validate() {
     return secID == null ? ValidationFailure(code: 1, msg: "Section is empty!", traceMsg: '') : null;

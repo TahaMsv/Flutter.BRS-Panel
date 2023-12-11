@@ -2,7 +2,7 @@ import 'flight_class.dart';
 
 class ContainersPlan {
   final int flightId;
-  final int? sectionID;
+  final int sectionID;
   final int? spotID;
   final String statustics;
   final int cartCap;

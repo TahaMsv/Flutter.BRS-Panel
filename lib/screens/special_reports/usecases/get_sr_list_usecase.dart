@@ -4,6 +4,7 @@ import '../../../core/abstracts/request_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/abstracts/usecase_abs.dart';
 import '../../../core/classes/special_report_class.dart';
+import '../../../core/classes/special_report_data_class.dart';
 import '../special_reports_repository.dart';
 
 class GetSpecialReportListUseCase extends UseCase<GetSpecialReportListResponse, GetSpecialReportListRequest> {
@@ -27,7 +28,9 @@ class GetSpecialReportListRequest extends Request {
         "Body": {
           "Token": token,
           "Execution": "GetSpecialReportList",
-          "Request": {"GroupID": reportType}
+          "Request": {
+            "GroupID": reportType,
+          }
         }
       };
 
@@ -39,11 +42,9 @@ class GetSpecialReportListRequest extends Request {
 class GetSpecialReportListResponse extends Response {
   final SpecialReportData reportData;
 
-  GetSpecialReportListResponse({required int status, required String message, required this.reportData})
-      : super(status: status, message: message, body: {"Body": reportData.toJson()});
+  GetSpecialReportListResponse({required int status, required String message, required this.reportData}) : super(status: status, message: message, body: reportData.toJson());
 
   factory GetSpecialReportListResponse.fromResponse(Response res) {
-    return GetSpecialReportListResponse(
-        status: res.status, message: res.message, reportData: SpecialReportData.fromJson(res.body["Body"]));
+    return GetSpecialReportListResponse(status: res.status, message: res.message, reportData: SpecialReportData.fromJson(res.body));
   }
 }

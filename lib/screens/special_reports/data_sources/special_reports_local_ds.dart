@@ -1,3 +1,6 @@
+import 'package:brs_panel/screens/special_reports/usecases/get_params_options_usecase.dart';
+import 'package:brs_panel/screens/special_reports/usecases/get_special_report_result_usecase.dart';
+
 import '../../../core/abstracts/local_data_base_abs.dart';
 import '../../../core/data_base/local_data_base.dart';
 import '../../../initialize.dart';
@@ -14,6 +17,18 @@ class SpecialReportsLocalDataSource implements SpecialReportsDataSourceInterface
   @override
   Future<GetSpecialReportListResponse> getSpecialReportsList({required GetSpecialReportListRequest request}) {
     // TODO: implement getSpecialReportsList
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<GetParamsOptionsResponse> getParamsOptions({required GetParamsOptionsRequest request}) {
+    // TODO: implement getParamsOptions
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<GetSpecialReportResultResponse> getSpecialReportResult({required GetSpecialReportResultRequest request}) {
+    // TODO: implement getSpecialReportResult
     throw UnimplementedError();
   }
 }

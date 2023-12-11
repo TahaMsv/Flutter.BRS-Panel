@@ -117,7 +117,8 @@ class _MyAppBarState extends State<MyAppBar> {
                       children: RouteNames.values.where((element) => element.isMainRoute).map(
                         (e) {
                           bool selected = currentRoute == e;
-                          if (e.name == RouteNames.users.name && !BasicClass.userSetting.isAdmin) return Container();
+                          // if (e.name == RouteNames.users.name && !BasicClass.userSetting.isAdmin) return Container();
+
                           return DecoratedBox(
                             decoration: BoxDecoration(
                               border: selected

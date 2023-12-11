@@ -38,17 +38,18 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
 
   @override
   void initState() {
+    print(widget.plan.toJson());
     plan = ContainersPlan.fromJson(widget.plan.toJson());
-    airportPositionSection = BasicClass.getAllAirportSections4()
-        .where((element) =>
-            widget.flight.validAssignContainerPositions.contains(element.position) && element.canHaveContainer)
-        .toList()
-        .firstWhereOrNull((e) => e.id == plan.sectionID);
+    print("Plan sectionID ${plan.sectionID}  Plan spot ${plan.spotID}");
+    airportPositionSection = BasicClass.getAirportSectionByID(plan.sectionID);
     spot = (BasicClass.userSetting.shootList
-                .firstWhereOrNull((element) => element.id == airportPositionSection?.id)
+                .firstWhereOrNull((element) => element.id == plan.sectionID)
                 ?.spotList ??
             [])
         .firstWhereOrNull((e) => e.id == plan.spotID);
+
+    print(airportPositionSection?.id);
+    print(spot?.id);
     super.initState();
   }
 
