@@ -3,6 +3,7 @@ import '../../../core/abstracts/failures_abs.dart';
 import '../../../core/abstracts/request_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/abstracts/usecase_abs.dart';
+import '../../../core/classes/special_report_class.dart';
 import '../special_reports_repository.dart';
 
 class GetSpecialReportListUseCase extends UseCase<GetSpecialReportListResponse, GetSpecialReportListRequest> {
@@ -36,10 +37,13 @@ class GetSpecialReportListRequest extends Request {
 }
 
 class GetSpecialReportListResponse extends Response {
-  GetSpecialReportListResponse({required int status, required String message})
-      : super(status: status, message: message, body: null);
+  final SpecialReportData reportData;
+
+  GetSpecialReportListResponse({required int status, required String message, required this.reportData})
+      : super(status: status, message: message, body: {"Body": reportData.toJson()});
 
   factory GetSpecialReportListResponse.fromResponse(Response res) {
-    return GetSpecialReportListResponse(status: res.status, message: res.message);
+    return GetSpecialReportListResponse(
+        status: res.status, message: res.message, reportData: SpecialReportData.fromJson(res.body["Body"]));
   }
 }
