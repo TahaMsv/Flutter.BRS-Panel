@@ -214,4 +214,20 @@ class AbomisIconPack {
   static const IconData pax = IconData(0xe9bc, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData transfer1 = IconData(0xe9bd, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData aircraft = IconData(0xe9be, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData deny = IconData(0xe9bf, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData found = IconData(0xe9c0, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData hold = IconData(0xe9c1, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData ok = IconData(0xe9c2, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData bluetoothAccepted = IconData(0xe9c3, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData button = IconData(0xe9c4, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData click = IconData(0xe9c5, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData clickLog = IconData(0xe9c6, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData pushDown = IconData(0xe9c7, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData pushUp = IconData(0xe9c8, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData redoLog = IconData(0xe9c9, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData redoSet = IconData(0xe9ca, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData setting = IconData(0xe9cb, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData switch_icon = IconData(0xe9cc, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData star1 = IconData(0xe9cd, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData positionLog = IconData(0xe9ce, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

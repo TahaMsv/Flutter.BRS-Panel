@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:artemis_utils/artemis_utils.dart';
+import 'package:brs_panel/core/constants/abomis_pack_icons.dart';
 import 'package:brs_panel/widgets/MyButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,6 +22,7 @@ import 'DotButton.dart';
 import 'FlightBanner.dart';
 import 'dart:math' as math;
 import 'MyExpansionTile.dart';
+import 'PhotoPreviewDialog.dart';
 
 class TagDetailsDialog extends ConsumerStatefulWidget {
   final FlightTag tag;
@@ -54,12 +56,12 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
   Widget build(BuildContext context) {
     final NavigationService nav = getIt<NavigationService>();
     List<NewSection> secList = [
-      NewSection(label: "Specials", ref: ref, position: 0),
-      NewSection(label: "Inbound", ref: ref, position: 1),
-      NewSection(label: "onward", ref: ref, position: 2),
-      NewSection(label: "Position Log", ref: ref, position: 3),
-      NewSection(label: "Status Log", ref: ref, position: 4),
-      NewSection(label: "BSM", ref: ref, position: 5),
+      NewSection(label: "Specials", ref: ref, position: 0, iconData: Icons.star_border_rounded),
+      NewSection(label: "Inbound", ref: ref, position: 1, iconData: Icons.flight_land),
+      NewSection(label: "onward", ref: ref, position: 2, iconData: Icons.flight_takeoff),
+      NewSection(label: "Position Log", ref: ref, position: 3, iconData: AbomisIconPack.report),
+      NewSection(label: "Status Log", ref: ref, position: 4, iconData: AbomisIconPack.info),
+      NewSection(label: "BSM", ref: ref, position: 5, iconData: Icons.chat),
     ];
     ThemeData theme = Theme.of(context);
 
@@ -86,94 +88,69 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
           constraints: BoxConstraints(minWidth: width, maxHeight: height * 0.7),
           decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
+            padding: const EdgeInsets.symmetric(vertical: 25),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(tag.numString, style: tagNumStyle),
-                        const SizedBox(width: 15),
-                        SizedBox(
-                          height: 20,
-                          child: tag.getTypeWidget,
-                        ),
-                        const SizedBox(width: 12),
-                        SizedBox(
-                          height: 25,
-                          child: tag.getStatusWidget,
-                        ),
-                        const SizedBox(width: 20),
-                        SizedBox(
-                          height: 25,
-                          child: tag.getInboundWidget,
-                        ),
-                        const SizedBox(width: 12),
-                        SizedBox(
-                          height: 25,
-                          child: tag.getOutboundWidget,
-                        ),
-                        const SizedBox(width: 30),
-                        if (tag.isGateTag)
-                          Transform.rotate(
-                            angle: -90 * math.pi / 180,
-                            child: tag.getGateWidget,
-                          ),
-                        const SizedBox(width: 5),
-                        const Row(
-                          children: [
-                            Icon(size: 12, Icons.shield, color: Colors.grey),
-                            Text("14", style: TextStyle(fontSize: 10)),
-                          ],
-                        ),
-                        const SizedBox(width: 5),
-                        const Row(
-                          children: [
-                            Icon(size: 12, Icons.shopping_bag, color: Colors.grey),
-                            Text("5", style: TextStyle(fontSize: 10)),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        FlightBanner(
-                          flight: f,
-                          bgColor: Colors.black12,
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          "${tag.getAddress} (${tag.tagPositions.first.indexInPosition})",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(width: 10),
-                        Text(tag.tagPositions.first.getTime()),
-                        const SizedBox(width: 10),
-                        DotButton(
-                          size: 25,
-                          icon: Icons.refresh,
-                          onPressed: () {},
-                        ),
-                        const SizedBox(width: 10),
-                        IconButton(onPressed: nav.pop, icon: const Icon(Icons.close, color: MyColors.brownGrey)),
-                      ],
-                    )
-                  ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(tag.numString, style: tagNumStyle),
+                          const SizedBox(width: 15),
+                          SizedBox(height: 20, child: tag.getTypeWidget),
+                          const SizedBox(width: 12),
+                          SizedBox(height: 25, child: tag.getStatusWidget),
+                          const SizedBox(width: 20),
+                          SizedBox(height: 25, child: tag.getInboundWidget),
+                          const SizedBox(width: 12),
+                          SizedBox(height: 25, child: tag.getOutboundWidget),
+                          const SizedBox(width: 30),
+                          if (tag.isGateTag) Transform.rotate(angle: -90 * math.pi / 180, child: tag.getGateWidget),
+
+                          // const SizedBox(width: 5),
+                          // const Row(
+                          //   children: [
+                          //     Icon(size: 12, Icons.shield, color: Colors.grey),
+                          //     Text("14", style: TextStyle(fontSize: 10)),
+                          //   ],
+                          // ),
+                          // const SizedBox(width: 5),
+                          // const Row(
+                          //   children: [
+                          //     Icon(size: 12, Icons.shopping_bag, color: Colors.grey),
+                          //     Text("5", style: TextStyle(fontSize: 10)),
+                          //   ],
+                          // ),
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          FlightBanner(flight: f, bgColor: Colors.black12),
+                          const SizedBox(width: 10),
+                          Text("${tag.getAddress} (${tag.tagPositions.first.indexInPosition})", style: const TextStyle(fontWeight: FontWeight.bold)),
+                          const SizedBox(width: 10),
+                          Text(tag.tagPositions.first.getTime()),
+                          const SizedBox(width: 10),
+                          IconButton(onPressed: nav.pop, icon: const Icon(Icons.close, color: MyColors.brownGrey)),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
                 const SizedBox(height: 20),
                 const Divider(thickness: 2, height: 1),
                 const SizedBox(height: 20),
-                DcsInfoWidget(info: tag.dcsInfo),
+                Padding(padding: const EdgeInsets.symmetric(horizontal: 15.0), child: DcsInfoWidget(info: tag.dcsInfo, moreDetails: moreDetails)),
                 const SizedBox(height: 20),
                 const Divider(thickness: 2, height: 1),
-                const SizedBox(height: 20),
                 Flexible(
                   child: ListView.builder(
                     itemCount: secList.length,
@@ -187,61 +164,40 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                         headerTileColor: index % 2 == 0 ? MyColors.oddRow : MyColors.evenRow,
                         title: Container(
                           decoration: const BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(width: 1.0, color: Colors.grey),
-                            ),
+                            border: Border(bottom: BorderSide(width: 1.0, color: Colors.grey)),
                           ),
-                          child: SectionTileWidget2(
-                            secTag: secList[index],
-                            iconData: Icons.star_border_rounded,
-                            tag: tag,
-                            f: f,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: SectionTileWidget2(secTag: secList[index], tag: tag, f: f),
+                            ),
                           ),
                         ),
                         children: index == 1
                             ? []
                             : index == 3
                                 ? [
-                                      const ExpansionListItem(
-                                        texts: ["Time", "User", "Position/Order", "Details"],
-                                        isBold: true,
-                                        bgColor: MyColors.evenRow,
-                                      )
+                                      const ExpansionListItem(texts: ["Time", "User", "Position/Order", "Details"], isBold: true, bgColor: MyColors.evenRow)
                                     ] +
                                     tag.tagPositions.asMap().entries.map((t) {
                                       var index = t.key;
                                       TagPosition value = t.value;
 
                                       return ExpansionListItem(
-                                          texts: [
-                                            value.dateUtc.format_yyyyMMdd.toString(),
-                                            value.username,
-                                            value.positionId.toString(),
-                                            value.positionDesc ?? '-'
-                                          ],
+                                          texts: [value.dateUtc.format_yyyyMMdd.toString(), value.username, value.positionId.toString(), value.positionDesc ?? '-'],
                                           isBold: false,
-                                          bgColor: index % 2 == 0
-                                              ? MyColors.oddRow
-                                              : MyColors.evenRow); //todo correct values?
+                                          bgColor: index % 2 == 0 ? MyColors.oddRow : MyColors.evenRow); //todo correct values?
                                     }).toList()
                                 : index == 4
                                     ? [
-                                          const ExpansionListItem(
-                                            texts: ["Time", "User", "Number", "Status"],
-                                            isBold: true,
-                                            bgColor: MyColors.evenRow,
-                                          )
-                                        ] + //todo correct values?
+                                          const ExpansionListItem(texts: ["Time", "User", "Number", "Status"], isBold: true, bgColor: MyColors.evenRow)
+                                        ] +
                                         tag.actionsHistory.asMap().entries.map((t) {
                                           var index = t.key;
                                           ActionHistory value = t.value;
                                           return ExpansionListItem(
-                                              texts: [
-                                                value.actionTime,
-                                                value.username,
-                                                value.positionId.toString(),
-                                                BasicClass.getTagStatusByID(value.tagStatus)?.title ?? ""
-                                              ],
+                                              texts: [value.actionTime, value.username, value.positionId.toString(), BasicClass.getTagStatusByID(value.tagStatus)?.title ?? ""],
                                               isBold: false,
                                               bgColor: index % 2 == 0 ? MyColors.oddRow : MyColors.evenRow);
                                         }).toList()
@@ -256,16 +212,14 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                     },
                   ),
                 ),
-                // TextButton(
-                //     style: TextButton.styleFrom(foregroundColor: MyColors.brownGrey3),
-                //     onPressed: () => myFlightDetailsController.deleteTag(fInfo?.flightScheduleId ?? f.id, tag),
-                //     child: const Text("Delete Tag")),
-                MyButton(
-                  label: "Delete Tag",
-                  color: MyColors.brownGrey3,
-                  width: 100,
-                  fade: true,
-                  onPressed: () async => myFlightDetailsController.deleteTag(fInfo?.flightScheduleId ?? f.id, tag),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: MyButton(
+                    label: "Delete Tag",
+                    width: 120,
+                    style: TextButton.styleFrom(backgroundColor: MyColors.white3, foregroundColor: MyColors.brownGrey3, elevation: 0),
+                    onPressed: () async => myFlightDetailsController.deleteTag(fInfo?.flightScheduleId ?? f.id, tag),
+                  ),
                 ),
               ],
             ),
@@ -295,15 +249,11 @@ class BSMMessage extends StatelessWidget {
               // height: 50,
               padding: const EdgeInsets.all(10.0),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(7), // radius of 10
-                color: MyColors.greyishBrown,
-              ),
+                  borderRadius: BorderRadius.circular(7), // radius of 10
+                  color: MyColors.greyishBrown),
               child: Row(
                 children: [
-                  Text(
-                    bsm.bsmMessage,
-                    style: const TextStyle(color: MyColors.green),
-                  ),
+                  Text(bsm.bsmMessage, style: const TextStyle(color: MyColors.green)),
                 ],
               )),
         ),
@@ -332,34 +282,16 @@ class ExpansionListItem extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Container(
+          SizedBox(
             width: 800,
             height: 50,
-            // color: bgColor,
-            // padding: EdgeInsets.symmetric(horizontal: 10),
             child: Row(
               // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                    flex: 1,
-                    child: Center(
-                        child: Text(texts[0],
-                            style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
-                Expanded(
-                    flex: 1,
-                    child: Center(
-                        child: Text(texts[1],
-                            style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
-                Expanded(
-                    flex: 1,
-                    child: Center(
-                        child: Text(texts[2],
-                            style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
-                Expanded(
-                    flex: 1,
-                    child: Center(
-                        child: Text(texts[3],
-                            style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
+                Expanded(flex: 1, child: Center(child: Text(texts[0], style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
+                Expanded(flex: 1, child: Center(child: Text(texts[1], style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
+                Expanded(flex: 1, child: Center(child: Text(texts[2], style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
+                Expanded(flex: 1, child: Center(child: Text(texts[3], style: TextStyle(color: MyColors.greyishBrown, fontSize: 12, fontWeight: fw)))),
               ],
             ),
           ),
@@ -371,23 +303,60 @@ class ExpansionListItem extends StatelessWidget {
 
 class DcsInfoWidget extends StatelessWidget {
   final DcsInfo? info;
+  late TagMoreDetails moreDetails;
 
-  const DcsInfoWidget({Key? key, required this.info}) : super(key: key);
+  DcsInfoWidget({Key? key, required this.info, required this.moreDetails}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
+    late List<Uint8List> photosBytes = moreDetails.tagPhotos.map((e) => base64Decode(e.photo)).toList();
+
     if (info == null) {
       return Row(children: [
-        HorizontalCardField(title: "Pax", value: info!.paxId.toString()),
+        const HorizontalCardField(title: "Pax", value: ""),
         const SizedBox(width: 70),
-        HorizontalCardField(title: "PNR", value: info!.pnr),
+        const HorizontalCardField(title: "PNR", value: ""),
         const SizedBox(width: 70),
-        HorizontalCardField(title: "P/W", value: "${info!.count}/${info!.weight}"),
+        const HorizontalCardField(title: "P/W", value: ""),
         const SizedBox(width: 70),
-        HorizontalCardField(title: "Dest", value: info!.dest),
+        const HorizontalCardField(title: "Dest", value: ""),
         const SizedBox(width: 70),
-        const HorizontalCardField(title: "Photo", valueWidget: Icon(Icons.camera_alt, color: Colors.blue), value: "-"),
+        // if (photosBytes.isNotEmpty)
+        Expanded(
+          child: Row(
+              children: photosBytes.asMap().entries.map((b) {
+            return InkWell(
+              onTap: () async {
+                final NavigationService nav = getIt<NavigationService>();
+                FlightDetailsController myFlightDetailsController = getIt<FlightDetailsController>();
+
+                Size imageSize = await myFlightDetailsController.getImageSize(b.value);
+                nav.dialog(PhotoPreviewDialog(
+                  imageFileBytes: b.value,
+                  imageSize: imageSize,
+                  pos: null,
+                  photoUrl: null,
+                ));
+              },
+              child: Container(
+                // color: Colors.red,
+                margin: const EdgeInsets.only(right: 20),
+                height: 50,
+                width: 50,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    color: Colors.grey,
+                    width: 44,
+                    height: 44,
+                    child: Image.memory(b.value),
+                  ),
+                ),
+              ),
+            );
+          }).toList()),
+        ),
       ]);
     }
     return Row(children: [
@@ -398,8 +367,7 @@ class DcsInfoWidget extends StatelessWidget {
           onTap: () {},
           child: Text(
             info!.paxName,
-            style: const TextStyle(
-                color: Colors.blueAccent, decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
+            style: const TextStyle(color: Colors.blueAccent, decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
           ),
         ),
       ),
@@ -410,8 +378,42 @@ class DcsInfoWidget extends StatelessWidget {
       const SizedBox(width: 70),
       HorizontalCardField(title: "Dest", value: info!.dest),
       const SizedBox(width: 70),
-      const HorizontalCardField(
-          title: "Photo", valueWidget: Icon(Icons.add_a_photo_outlined, color: Colors.blue), value: "-"),
+      Expanded(
+        child: Row(
+            children: photosBytes.asMap().entries.map((b) {
+          return InkWell(
+            onTap: () async {
+              print("here 372");
+              final NavigationService nav = getIt<NavigationService>();
+              FlightDetailsController myFlightDetailsController = getIt<FlightDetailsController>();
+
+              Size imageSize = await myFlightDetailsController.getImageSize(b.value);
+              nav.dialog(PhotoPreviewDialog(
+                imageFileBytes: b.value,
+                imageSize: imageSize,
+                pos: null,
+                photoUrl: null,
+              ));
+              print("here 379");
+            },
+            child: Container(
+              // color: Colors.red,
+              margin: const EdgeInsets.only(right: 20),
+              height: 50,
+              width: 50,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  color: Colors.grey,
+                  width: 44,
+                  height: 44,
+                  child: Image.memory(b.value),
+                ),
+              ),
+            ),
+          );
+        }).toList()),
+      ),
     ]);
   }
 }
@@ -419,13 +421,11 @@ class DcsInfoWidget extends StatelessWidget {
 class SectionTileWidget2 extends StatelessWidget {
   const SectionTileWidget2({
     super.key,
-    required this.iconData,
     required this.secTag,
     required this.tag,
     required this.f,
   });
 
-  final IconData iconData;
   final NewSection? secTag;
   final FlightTag tag;
   final Flight f;
@@ -433,34 +433,35 @@ class SectionTileWidget2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return secTag!.position == 0
-        ? SizedBox(
+        ? Container(
             height: 60,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                    IconButton(onPressed: () {}, icon: Icon(iconData)),
-                    Text(secTag!.label,
-                        style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+                    Icon(secTag!.iconData),
+                    const SizedBox(width: 8),
+                    Text(secTag!.label, style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
                     const SizedBox(width: 80),
                     SizedBox(height: 20, child: tag.getTypeWidget),
                     const SizedBox(width: 12),
                   ] +
                   tag.tagSsrs.asMap().entries.map((t) {
-                    var index = t.key;
                     TagSSR value = t.value;
                     return tag.getTagSsrsWidget(value.name)!;
                   }).toList(),
             ),
           )
         : secTag!.position == 2
-            ? SizedBox(
+            ? Container(
                 height: 60,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                        IconButton(onPressed: () {}, icon: Icon(iconData)),
-                        Text(secTag!.label,
-                            style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+                        Icon(secTag!.iconData),
+                        const SizedBox(width: 8),
+                        Text(secTag!.label, style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
                         const SizedBox(width: 80),
                       ] +
                       (tag.outboundLegs.isEmpty
@@ -475,8 +476,7 @@ class SectionTileWidget2 extends StatelessWidget {
                               const SizedBox(width: 70),
                               HorizontalCardField(title: "FLNB", value: tag.outboundLegs.first.flnb),
                               const SizedBox(width: 70),
-                              HorizontalCardField(
-                                  title: "Date", value: DateFormat("dd MMM").format(tag.outboundLegs.first.flightDate)),
+                              HorizontalCardField(title: "Date", value: DateFormat("dd MMM").format(tag.outboundLegs.first.flightDate)),
                               const SizedBox(width: 70),
                               HorizontalCardField(title: "City", value: tag.outboundLegs.first.city),
                             ]),
@@ -488,12 +488,17 @@ class SectionTileWidget2 extends StatelessWidget {
                 width: double.infinity,
                 alignment: Alignment.centerLeft,
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(secTag!.isSectionExpanded() ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                        color: Colors.black),
-                    IconButton(onPressed: () {}, icon: Icon(iconData)),
-                    Text(secTag!.label,
-                        style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+                    Row(
+                      children: [
+                        const SizedBox(width: 14),
+                        Icon(secTag!.iconData),
+                        const SizedBox(width: 8),
+                        Text(secTag!.label, style: const TextStyle(color: MyColors.black, fontSize: 16, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                    Icon(secTag!.isSectionExpanded() ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down, color: Colors.black),
                   ],
                 ),
               );
@@ -503,9 +508,10 @@ class SectionTileWidget2 extends StatelessWidget {
 class NewSection {
   final WidgetRef ref;
   String label;
+  IconData iconData;
   final int position;
 
-  NewSection({required this.ref, required this.label, required this.position});
+  NewSection({required this.ref, required this.label, required this.position, required this.iconData});
 
   bool isSectionExpanded() {
     List<int> expandeds = ref.watch(expandedTagDetailsDialog);
