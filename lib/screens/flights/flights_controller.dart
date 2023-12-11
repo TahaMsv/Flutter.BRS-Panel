@@ -298,17 +298,18 @@ class FlightsController extends MainController {
     }
   }
 
-  savePlans({required Flight flight, required ContainersPlan newPlan}) {}
+  // savePlans({required Flight flight, required ContainersPlan newPlan}) {}
 
-  Future<ContainersPlan?> flightSavePlans({required Flight flight, required ContainersPlan newPlan}) async {
+  Future<ContainersPlan?> flightSavePlans(
+      {required Flight flight, required ContainersPlan newPlan, required int? sectionID, required int? spotID}) async {
     ContainersPlan? plans;
     FlightSaveContainersPlanUseCase flightSavePlansUsecase = FlightSaveContainersPlanUseCase();
     FlightSaveContainersPlanRequest flightSaveContainersPlanRequest =
-        FlightSaveContainersPlanRequest(flight: flight, plan: newPlan);
+        FlightSaveContainersPlanRequest(f: flight, plan: newPlan, secID: sectionID, spotID: spotID);
     final fOrR = await flightSavePlansUsecase(request: flightSaveContainersPlanRequest);
-
-    fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightSavePlans(flight: flight, newPlan: newPlan)), (r) {
-      // plans = r.plan;
+    fOrR.fold(
+        (f) => FailureHandler.handle(f,
+            retry: () => flightSavePlans(flight: flight, newPlan: newPlan, sectionID: sectionID, spotID: spotID)), (r) {
       SuccessHandler.handle(ServerSuccess(code: 1, msg: "Plan Saved Successfully!"));
     });
 

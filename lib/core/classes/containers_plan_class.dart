@@ -2,6 +2,8 @@ import 'flight_class.dart';
 
 class ContainersPlan {
   final int flightId;
+  final int? sectionID;
+  final int? spotID;
   final String statustics;
   final int cartCap;
   final int uldCap;
@@ -11,6 +13,8 @@ class ContainersPlan {
 
   ContainersPlan({
     required this.flightId,
+    required this.sectionID,
+    required this.spotID,
     required this.statustics,
     required this.cartCap,
     required this.uldCap,
@@ -21,6 +25,8 @@ class ContainersPlan {
 
   ContainersPlan copyWith({
     int? flightId,
+    int? sectionID,
+    int? spotID,
     String? statustics,
     int? cartCap,
     int? uldCap,
@@ -30,6 +36,8 @@ class ContainersPlan {
   }) =>
       ContainersPlan(
         flightId: flightId ?? this.flightId,
+        sectionID: sectionID ?? this.sectionID,
+        spotID: spotID ?? this.spotID,
         statustics: statustics ?? this.statustics,
         cartCap: cartCap ?? this.cartCap,
         uldCap: uldCap ?? this.uldCap,
@@ -39,24 +47,28 @@ class ContainersPlan {
       );
 
   factory ContainersPlan.fromJson(Map<String, dynamic> json) => ContainersPlan(
-    flightId: json["FlightID"],
-    statustics: json["Statustics"],
-    cartCap: json["CartCap"],
-    uldCap: json["ULDCap"],
-    lastFligt:json["LastFligt"]==null?null: Flight.fromJson(json["LastFligt"]),
-    lastFlightPlanData: List<PlanDatum>.from(json["LastFlightPlanData"].map((x) => PlanDatum.fromJson(x))),
-    planData: List<PlanDatum>.from(json["PlanData"].map((x) => PlanDatum.fromJson(x))),
-  );
+        flightId: json["FlightID"],
+        sectionID: json["SectionID"],
+        spotID: json["SpotID"],
+        statustics: json["Statustics"],
+        cartCap: json["CartCap"],
+        uldCap: json["ULDCap"],
+        lastFligt: json["LastFligt"] == null ? null : Flight.fromJson(json["LastFligt"]),
+        lastFlightPlanData: List<PlanDatum>.from(json["LastFlightPlanData"].map((x) => PlanDatum.fromJson(x))),
+        planData: List<PlanDatum>.from(json["PlanData"].map((x) => PlanDatum.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "FlightID": flightId,
-    "Statustics": statustics,
-    "CartCap": cartCap,
-    "ULDCap": uldCap,
-    "LastFligt": lastFligt?.toJson(),
-    "LastFlightPlanData": List<dynamic>.from(lastFlightPlanData.map((x) => x.toJson())),
-    "PlanData": List<dynamic>.from(planData.map((x) => x.toJson())),
-  };
+        "FlightID": flightId,
+        "SectionID": sectionID,
+        "SpotID": spotID,
+        "Statustics": statustics,
+        "CartCap": cartCap,
+        "ULDCap": uldCap,
+        "LastFligt": lastFligt?.toJson(),
+        "LastFlightPlanData": List<dynamic>.from(lastFlightPlanData.map((x) => x.toJson())),
+        "PlanData": List<dynamic>.from(planData.map((x) => x.toJson())),
+      };
 }
 
 class PlanDatum {
@@ -82,16 +94,16 @@ class PlanDatum {
       );
 
   factory PlanDatum.fromJson(Map<String, dynamic> json) => PlanDatum(
-    tagTypeId: json["TagTypeID"],
-    cartCount: json["CartCount"],
-    uldCount: json["ULDCount"],
-  );
+        tagTypeId: json["TagTypeID"],
+        cartCount: json["CartCount"],
+        uldCount: json["ULDCount"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "TagTypeID": tagTypeId,
-    "CartCount": cartCount,
-    "ULDCount": uldCount,
-  };
+        "TagTypeID": tagTypeId,
+        "CartCount": cartCount,
+        "ULDCount": uldCount,
+      };
 }
 
 class LastFligt {
@@ -117,14 +129,15 @@ class LastFligt {
       );
 
   factory LastFligt.fromJson(Map<String, dynamic> json) => LastFligt(
-    al: json["AL"],
-    flnb: json["FLNB"],
-    flightDate: DateTime.parse(json["FlightDate"]),
-  );
+        al: json["AL"],
+        flnb: json["FLNB"],
+        flightDate: DateTime.parse(json["FlightDate"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "AL": al,
-    "FLNB": flnb,
-    "FlightDate": "${flightDate.year.toString().padLeft(4, '0')}-${flightDate.month.toString().padLeft(2, '0')}-${flightDate.day.toString().padLeft(2, '0')}",
-  };
+        "AL": al,
+        "FLNB": flnb,
+        "FlightDate":
+            "${flightDate.year.toString().padLeft(4, '0')}-${flightDate.month.toString().padLeft(2, '0')}-${flightDate.day.toString().padLeft(2, '0')}",
+      };
 }

@@ -8,6 +8,7 @@ import '../core/constants/ui.dart';
 import '../core/navigation/navigation_service.dart';
 import '../core/navigation/route_names.dart';
 import '../core/navigation/router.dart';
+import '../core/platform/cached_image.dart';
 import '../initialize.dart';
 import '../screens/login/login_controller.dart';
 import 'DotButton.dart';
@@ -183,7 +184,7 @@ class UserIndicatorWidget extends ConsumerWidget {
                     decoration: const BoxDecoration(color: Colors.blueAccent),
                     width: avatarRadius * 2,
                     height: avatarRadius * 2,
-                    child: const Icon(Icons.person),
+                    child: CachedImage.showImage(BasicClass.profileUrl),
                   ),
                 ),
               ),

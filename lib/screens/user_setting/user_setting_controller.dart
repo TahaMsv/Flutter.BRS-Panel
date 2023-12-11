@@ -7,7 +7,6 @@ import '../../core/platform/image_picker.dart';
 import '../../core/util/basic_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
 import '../../core/util/handlers/success_handler.dart';
-import 'dialogs/change_pass_dialog.dart';
 import 'usecases/change_pass_usecase.dart';
 import 'usecases/upload_avatar_usecase.dart';
 import 'user_setting_state.dart';
@@ -39,11 +38,6 @@ class UserSettingController extends MainController {
     //     userSettingState.setState();
     //   }
     // });
-  }
-
-  Future<void> changePasswordDialog() async {
-    final String? result = await nav.dialog(const ChangePassDialog());
-    if (result == null) return;
   }
 
   /// Requests ---------------------------------------------------------------------------------------------------------

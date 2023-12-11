@@ -10,6 +10,7 @@ import 'usecases/delete_tag_usecase.dart';
 import 'usecases/flight_get_details_usecase.dart';
 import 'usecases/flight_get_tag_details_usecase.dart';
 import 'usecases/get_container_pdf_usecase.dart';
+import 'usecases/get_history_log_usecase.dart';
 
 class FlightDetailsRepository implements FlightDetailsRepositoryInterface {
   final FlightDetailsRemoteDataSource flightDetailsRemoteDataSource = FlightDetailsRemoteDataSource();
@@ -74,6 +75,21 @@ class FlightDetailsRepository implements FlightDetailsRepositoryInterface {
         deleteTagResponse = await flightDetailsLocalDataSource.deleteTag(request: request);
       }
       return Right(deleteTagResponse);
+    } on AppException catch (e) {
+      return Left(ServerFailure.fromAppException(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, GetHistoryLogResponse>> getHistoryLog(GetHistoryLogRequest request) async {
+    try {
+      GetHistoryLogResponse getHistoryLogResponse;
+      if (await networkInfo.isConnected) {
+        getHistoryLogResponse = await flightDetailsRemoteDataSource.getHistoryLog(request: request);
+      } else {
+        getHistoryLogResponse = await flightDetailsLocalDataSource.getHistoryLog(request: request);
+      }
+      return Right(getHistoryLogResponse);
     } on AppException catch (e) {
       return Left(ServerFailure.fromAppException(e));
     }
