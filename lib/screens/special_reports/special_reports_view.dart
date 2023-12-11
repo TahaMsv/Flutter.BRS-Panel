@@ -6,7 +6,6 @@ import '../../widgets/DotButton.dart';
 import '../../widgets/MyAppBar.dart';
 import '../../widgets/MyTextField.dart';
 import 'special_reports_controller.dart';
-import 'special_reports_state.dart';
 
 class SpecialReportsView extends StatelessWidget {
   const SpecialReportsView({super.key});
@@ -42,10 +41,7 @@ class SpecialReportsPanel extends ConsumerWidget {
                 placeholder: "Search Here...",
                 controller: searchC,
                 showClearButton: true,
-                onChanged: (v) {
-                  final s = ref.read(userSearchProvider.notifier);
-                  s.state = v;
-                },
+                onChanged: (v) {},
               )),
           const SizedBox(width: 12),
           Expanded(

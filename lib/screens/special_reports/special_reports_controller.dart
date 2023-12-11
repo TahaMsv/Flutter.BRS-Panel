@@ -14,7 +14,10 @@ class SpecialReportsController extends MainController {
     GetSpecialReportListRequest request = GetSpecialReportListRequest(reportType: null);
     GetSpecialReportListUseCase useCase = GetSpecialReportListUseCase();
     final fOrR = await useCase(request: request);
-    fOrR.fold((l) => FailureHandler.handle(l, retry: getSpecialReportList), (r) {});
+    fOrR.fold((l) => FailureHandler.handle(l, retry: getSpecialReportList), (r) {
+      final srp = ref.read(specialReportDataProvider.notifier);
+      srp.update((state) => r.reportData);
+    });
   }
 
   /// Core ---------------------------------------------------------------------------------------------------------
