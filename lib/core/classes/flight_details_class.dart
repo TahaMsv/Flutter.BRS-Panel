@@ -208,8 +208,9 @@ class FlightTag {
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: getStatus.getColor.withOpacity(0.3)),
         child: Center(
           child: Row(
+            // mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Icon(getStatus.getIcon, color: getStatus.getColor, size: 12),
+              if (getStatus.getIcon != null) Icon(getStatus.getIcon, color: getStatus.getColor, size: 12),
               RichText(
                   text: TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
                 TextSpan(
@@ -231,7 +232,7 @@ class FlightTag {
           child: Center(
             child: Row(
               children: [
-                const Icon(Icons.flight_land, color: Colors.green, size: 12),
+                if (getStatus.getIcon != null) const Icon(Icons.flight_land, color: Colors.green, size: 12),
                 RichText(
                     text: const TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
                   TextSpan(
@@ -252,7 +253,7 @@ class FlightTag {
           child: Center(
             child: Row(
               children: [
-                const Icon(Icons.flight_takeoff, color: Colors.blue, size: 12),
+                if (getStatus.getIcon != null) const Icon(Icons.flight_takeoff, color: Colors.blue, size: 12),
                 RichText(
                     text: const TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
                   TextSpan(
@@ -308,7 +309,7 @@ class FlightTag {
         child: Center(
           child: Row(
             children: [
-              const Icon(AbomisIconPack.denyLoad, color: Colors.green, size: 0),
+              if (getStatus.getIcon != null) const Icon(AbomisIconPack.denyLoad, color: Colors.green, size: 0),
               RichText(
                   text: const TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
                 TextSpan(

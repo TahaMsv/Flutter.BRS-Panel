@@ -1,9 +1,11 @@
 // ignore_for_file: unused_result
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/abstracts/success_abs.dart';
 import '../../core/classes/login_user_class.dart';
+import '../../core/util/confirm_operation.dart';
 import '../../core/util/handlers/success_handler.dart';
 import 'example/dummy_class.dart' if (dart.library.js) 'dart:html' as html;
 import 'package:flutter/foundation.dart';
@@ -24,6 +26,9 @@ import 'usecases/get_container_pdf_usecase.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+import 'package:flutter/material.dart';
 
 class FlightDetailsController extends MainController {
   late FlightDetailsState flightDetailsState = ref.read(flightDetailsProvider);
@@ -33,12 +38,9 @@ class FlightDetailsController extends MainController {
   List<TagContainer> getBinContainers(Bin bin, List<TagContainer> allCons, FlightDetails fd, bool countEmpty) {
     List<TagContainer> results = [];
     if (fd.tagList.any((e) => e.getContainerID == null && e.tagPositions.first.binID == bin.id)) {
-      results =
-          allCons.where((e) => e.getTags(fd).where((t) => t.tagPositions.first.binID == bin.id).isNotEmpty).toList() +
-              [TagContainer.bulk(2)];
+      results = allCons.where((e) => e.getTags(fd).where((t) => t.tagPositions.first.binID == bin.id).isNotEmpty).toList() + [TagContainer.bulk(2)];
     } else {
-      results =
-          allCons.where((e) => e.getTags(fd).where((t) => t.tagPositions.first.binID == bin.id).isNotEmpty).toList();
+      results = allCons.where((e) => e.getTags(fd).where((t) => t.tagPositions.first.binID == bin.id).isNotEmpty).toList();
     }
     return results;
   }
@@ -46,15 +48,15 @@ class FlightDetailsController extends MainController {
   List<FlightTag> getContainerTags(TagContainer con, List<FlightTag> allTags) {
     Position? selectedPos = ref.watch(selectedPosInDetails);
     return allTags.where((e) {
-      return (selectedPos == null || selectedPos.id == e.currentPosition) &&
-              e.tagPositions.first.container?.id == con.id ||
-          (e.tagPositions.first.container?.id == null && con.isCart);
+      return (selectedPos == null || selectedPos.id == e.currentPosition) && e.tagPositions.first.container?.id == con.id || (e.tagPositions.first.container?.id == null && con.isCart);
     }).toList();
   }
 
   /// Core -------------------------------------------------------------------------------------------------------------
 
   deleteTag(int flightID, FlightTag tag) async {
+    bool confirm = await ConfirmOperation.getConfirm(Operation(message: "You are Deleting tags", title: "Are You Sure?", actions: ["Cancel", "Confirm"], type: OperationType.warning));
+    if (!confirm) return;
     DeleteTagRequest deleteTagRequest = DeleteTagRequest(flightID: flightID, tag: tag);
     DeleteTagUseCase deleteTagUseCase = DeleteTagUseCase();
     final fOrR = await deleteTagUseCase(request: deleteTagRequest);
@@ -71,8 +73,7 @@ class FlightDetailsController extends MainController {
 
   getContainerPDF(TagContainer container) async {
     GetContainerReportUseCase getContainerReportUseCase = GetContainerReportUseCase();
-    GetContainerReportRequest getContainerReportRequest =
-        GetContainerReportRequest(con: container, userSetting: BasicClass.userSetting);
+    GetContainerReportRequest getContainerReportRequest = GetContainerReportRequest(con: container, userSetting: BasicClass.userSetting);
     final fOrR = await getContainerReportUseCase(request: getContainerReportRequest);
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => getContainerPDF(container)), (r) {
       final bytes = base64Decode(r.dataFile);
@@ -140,8 +141,7 @@ class FlightDetailsController extends MainController {
   Future<TagMoreDetails?> flightGetTagMoreDetails(int flightID, FlightTag tag) async {
     TagMoreDetails? moreDetails;
     FlightGetTagMoreDetailsUseCase flightGetTagMoreDetailsUsecase = FlightGetTagMoreDetailsUseCase();
-    FlightGetTagMoreDetailsRequest flightGetTagMoreDetailsRequest =
-        FlightGetTagMoreDetailsRequest(flightID: flightID, tag: tag);
+    FlightGetTagMoreDetailsRequest flightGetTagMoreDetailsRequest = FlightGetTagMoreDetailsRequest(flightID: flightID, tag: tag);
     final fOrR = await flightGetTagMoreDetailsUsecase(request: flightGetTagMoreDetailsRequest);
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightGetTagMoreDetails(flightID, tag)), (r) {
       moreDetails = r.details;
@@ -152,5 +152,14 @@ class FlightDetailsController extends MainController {
       ));
     });
     return moreDetails;
+  }
+
+  Future<Size> getImageSize(Uint8List imageData) async {
+    final Completer<ui.Image> completer = Completer();
+    final Uint8List bytes = Uint8List.fromList(imageData);
+    final ui.Codec codec = await ui.instantiateImageCodec(bytes);
+    final ui.Image image = (await codec.getNextFrame()).image;
+    completer.complete(image);
+    return Size(image.width.toDouble(), image.height.toDouble());
   }
 }
