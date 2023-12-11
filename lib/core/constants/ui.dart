@@ -38,7 +38,7 @@ class MyColors {
   static const eggshell = Color.fromRGBO(244, 243, 225, 1);
   static const dullOrange = Color.fromRGBO(217, 152, 65, 1);
   static const aquaMarine = Color.fromRGBO(77, 204, 182, 0.1);
-  static const darkMint = Color.fromRGBO(72, 192, 162, 1);
+  static const darkMint = Color.fromRGBO(72, 192, 162, 1);  //#48C0A2
   static const brownGrey = Color.fromRGBO(141, 141, 141, 1);
   static const brownGrey2 = Color.fromRGBO(134, 134, 134, 1);
   static const brownGrey3 = Color.fromRGBO(173, 173, 173, 1);
@@ -228,6 +228,7 @@ class TextStyles {
   static const styleBold24Black = TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xff424242));
   static const styleBold16Grey = TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xff808080));
   static const styleBold16Black = TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: MyColors.black1);
+  static const style16Black = TextStyle(fontSize: 16,  color: MyColors.black1);
   static const style16Grey = TextStyle(fontSize: 16, color: Color(0xff808080), fontWeight: FontWeight.w300);
   static const tagListHeader = TextStyle(fontWeight: FontWeight.bold, fontSize: 12);
 }
