@@ -78,8 +78,7 @@ class UserListWidget extends ConsumerWidget {
         child: Container(
           height: 850,
           width: 900,
-          decoration:
-              BoxDecoration(border: Border.all(color: MyColors.borderColor), borderRadius: BorderRadius.circular(10.0)),
+          decoration: BoxDecoration(border: Border.all(color: MyColors.borderColor), borderRadius: BorderRadius.circular(10.0)),
           margin: const EdgeInsets.symmetric(vertical: 40),
           child: Row(
             children: [
@@ -109,8 +108,7 @@ class UserListWidget extends ConsumerWidget {
                     const ProfileDrawerElement(title: "Edit Profile", icon: Icons.person, index: 0),
                     const ProfileDrawerElement(title: "Change Password", icon: AbomisIconPack.lock, index: 1),
                     const ProfileDrawerElement(title: "Email Verification", icon: AbomisIconPack.email, index: 2),
-                    const ProfileDrawerElement(
-                        title: "Phone Verification", icon: Icons.phone_android_rounded, index: 3),
+                    const ProfileDrawerElement(title: "Phone Verification", icon: Icons.phone_android_rounded, index: 3),
                     const ProfileDrawerElement(title: "FAQ", icon: Icons.info_outline, index: 4),
                     const ProfileDrawerElement(title: "Support", icon: Icons.call, isBottomDivider: true, index: 5),
                   ],
@@ -128,35 +126,21 @@ class UserListWidget extends ConsumerWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                MyTextField(
-                                    label: "Old Password",
-                                    controller: oldPassC,
-                                    labelStyle: const TextStyle(color: MyColors.brownGrey3)),
+                                MyTextField(label: "Old Password", controller: oldPassC, labelStyle: const TextStyle(color: MyColors.brownGrey3)),
                                 const SizedBox(height: 30),
-                                MyTextField(
-                                    label: "New Password",
-                                    controller: newPassC,
-                                    labelStyle: const TextStyle(color: MyColors.brownGrey3)),
+                                MyTextField(label: "New Password", controller: newPassC, labelStyle: const TextStyle(color: MyColors.brownGrey3)),
                                 const SizedBox(height: 30),
-                                MyTextField(
-                                    label: "Repeat Password",
-                                    controller: repPassC,
-                                    labelStyle: const TextStyle(color: MyColors.brownGrey3)),
+                                MyTextField(label: "Repeat Password", controller: repPassC, labelStyle: const TextStyle(color: MyColors.brownGrey3)),
                                 const SizedBox(height: 30),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     MyButton(
-                                      onPressed: () async => await controller.changePassRequest(
-                                          oldPassC.text, newPassC.text, repPassC.text),
+                                      onPressed: () async => await controller.changePassRequest(oldPassC.text, newPassC.text, repPassC.text),
                                       label: 'Submit',
                                       color: MyColors.darkMint,
                                       child: const Row(
-                                        children: [
-                                          Text('Submit', style: TextStyle(color: Colors.white, fontSize: 14)),
-                                          SizedBox(width: 20),
-                                          Icon(Icons.check, color: Colors.white)
-                                        ],
+                                        children: [Text('Submit', style: TextStyle(color: Colors.white, fontSize: 14)), SizedBox(width: 20), Icon(Icons.check, color: Colors.white)],
                                       ),
                                     ),
                                   ],
@@ -208,16 +192,17 @@ class EditProfileWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 20),
-            TextButton(
-                child: const Row(children: [Icon(Icons.edit, size: 18), SizedBox(width: 3), Text("Change Photo")]),
-                onPressed: () => controller.setAvatar()),
+            MyButton(
+              onPressed: () async {
+                await controller.setAvatar();
+              },
+              label: 'Change Photo',
+              fade: true,
+              child: const Row(children: [Icon(Icons.edit, size: 18), SizedBox(width: 3), Text("Change Photo")]),
+            ),
             const SizedBox(width: 20),
             TextButton(
-              child: const Row(children: [
-                Icon(Icons.delete, size: 18, color: MyColors.red),
-                SizedBox(width: 3),
-                Text("Delete", style: TextStyle(color: MyColors.red))
-              ]),
+              child: const Row(children: [Icon(Icons.delete, size: 18, color: MyColors.red), SizedBox(width: 3), Text("Delete", style: TextStyle(color: MyColors.red))]),
               onPressed: () {},
             ),
           ],
@@ -276,11 +261,7 @@ class EditProfileWidget extends StatelessWidget {
               label: 'Submit',
               color: MyColors.darkMint,
               child: const Row(
-                children: [
-                  Text('Submit', style: TextStyle(color: Colors.white, fontSize: 14)),
-                  SizedBox(width: 20),
-                  Icon(Icons.check, color: Colors.white)
-                ],
+                children: [Text('Submit', style: TextStyle(color: Colors.white, fontSize: 14)), SizedBox(width: 20), Icon(Icons.check, color: Colors.white)],
               ),
             ),
           ],
@@ -291,8 +272,7 @@ class EditProfileWidget extends StatelessWidget {
 }
 
 class ProfileDrawerElement extends ConsumerStatefulWidget {
-  const ProfileDrawerElement(
-      {super.key, this.isBottomDivider = false, required this.title, required this.icon, required this.index});
+  const ProfileDrawerElement({super.key, this.isBottomDivider = false, required this.title, required this.icon, required this.index});
 
   final bool isBottomDivider;
   final String title;
@@ -321,12 +301,7 @@ class _ProfileDrawerElementState extends ConsumerState<ProfileDrawerElement> {
             color: bgColor,
             height: 45,
             child: Row(
-              children: [
-                const SizedBox(width: 10),
-                Icon(widget.icon, color: textColor, size: 16),
-                const SizedBox(width: 10),
-                Text(widget.title, style: TextStyle(color: textColor))
-              ],
+              children: [const SizedBox(width: 10), Icon(widget.icon, color: textColor, size: 16), const SizedBox(width: 10), Text(widget.title, style: TextStyle(color: textColor))],
             ),
           ),
           if (widget.isBottomDivider) const Divider(),

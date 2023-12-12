@@ -1,4 +1,6 @@
 import 'dart:typed_data';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/abstracts/success_abs.dart';
@@ -20,7 +22,8 @@ class UserSettingController extends MainController {
     try {
       final XFile? image = await ImageGetter.pickImageFromGallery();
       if (image == null) throw Exception("No image is picked!");
-      uploadAvatarRequest(await image.readAsBytes(), image.name);
+      final Uint8List imageBytes = await image.readAsBytes();
+      return uploadAvatarRequest(imageBytes, image.name);
     } catch (e) {
       print(e.toString());
     }
@@ -42,16 +45,18 @@ class UserSettingController extends MainController {
 
   /// Requests ---------------------------------------------------------------------------------------------------------
 
-  uploadAvatarRequest(Uint8List imageValue, String imageName) async {
+  Future<void> uploadAvatarRequest(Uint8List imageValue, String imageName) async {
     UploadAvatarRequest request = UploadAvatarRequest(imageValue: imageValue, imageName: imageName);
     UploadAvatarUseCase uploadAvatarUseCase = UploadAvatarUseCase();
-    userSettingState.updateProfile = true;
-    userSettingState.setState();
     final fOrR = await uploadAvatarUseCase(request: request);
-    userSettingState.updateProfile = false;
-    userSettingState.setState();
-    fOrR.fold((l) => FailureHandler.handle(l, retry: () => uploadAvatarRequest(imageValue, imageName)), (r) {});
+    fOrR.fold((l) => FailureHandler.handle(l, retry: () => uploadAvatarRequest(imageValue, imageName)), (r) async {
+      CachedNetworkImage.evictFromCache(BasicClass.profileUrl);
+      Future.delayed(const Duration(milliseconds: 100),(){
+        userSettingState.setState();
+      });
+    });
   }
+
 
   changePassRequest(String oldPass, String newPass, String newPass2) async {
     ChangePassRequest changePassRequest = ChangePassRequest(oldPassV: oldPass, newPassV: newPass, newPass2V: newPass2);

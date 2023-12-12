@@ -21,7 +21,7 @@ class FlightSummaryRemoteDataSource implements FlightSummaryDataSourceInterface 
   @override
   Future<FlightGetHistoryLogResponse> flightGetHistoryLog({required FlightGetHistoryLogRequest request}) async {
     Response res = await networkManager.post(request);
-    FlightGetHistoryLogResponse response = await Parser().pars(FlightGetHistoryLogResponse.fromResponse, res);
+    FlightGetHistoryLogResponse response = await Parser.parse(FlightGetHistoryLogResponse.fromResponse, res);
     return response;
   }
 }

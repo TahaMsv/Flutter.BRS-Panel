@@ -16,14 +16,14 @@ class BsmRemoteDataSource implements BsmDataSourceInterface {
   Future<BsmListResponse> bsmList({required BsmListRequest request}) async {
     
     Response res = await networkManager.post(request);
-    BsmListResponse response = await Parser().pars(BsmListResponse.fromResponse, res);
+    BsmListResponse response = await Parser.parse(BsmListResponse.fromResponse, res);
     return response;
   }
 
     @override
       Future<AddBSMResponse> addBsm({required AddBSMRequest request}) async {
         Response res = await networkManager.post(request);
-        AddBSMResponse response = await Parser().pars(AddBSMResponse.fromResponse, res);
+        AddBSMResponse response = await Parser.parse(AddBSMResponse.fromResponse, res);
         return response;
       }
 

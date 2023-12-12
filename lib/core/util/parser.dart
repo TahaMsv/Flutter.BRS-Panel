@@ -5,10 +5,9 @@ import '../abstracts/parser_abs.dart';
 import '../abstracts/response_abs.dart';
 import 'handlers/failure_handler.dart';
 
-class Parser implements ParserAbs {
-  @override
-
-  Future<R> pars<M, R>(ComputeCallback<M, R> callback, M message, {String? debugLabel,Map<String,dynamic>? example}) async {
+class Parser  {
+  Parser._();
+  static Future<R> parse<M, R>(ComputeCallback<M, R> callback, M message, {String? debugLabel,Map<String,dynamic>? example}) async {
     try {
       final res = await compute(callback, message);
       return res;
@@ -25,4 +24,5 @@ class Parser implements ParserAbs {
       rethrow;
     }
   }
+
 }

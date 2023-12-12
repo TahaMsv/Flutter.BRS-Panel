@@ -24,14 +24,14 @@ class SpecialReportsRemoteDataSource implements SpecialReportsDataSourceInterfac
   @override
   Future<GetParamsOptionsResponse> getParamsOptions({required GetParamsOptionsRequest request}) async {
     Response res = await networkManager.post(request);
-    GetParamsOptionsResponse response = await Parser().pars(GetParamsOptionsResponse.fromResponse, res);
+    GetParamsOptionsResponse response = await Parser.parse(GetParamsOptionsResponse.fromResponse, res);
     return response;
   }
 
     @override
       Future<GetSpecialReportResultResponse> getSpecialReportResult({required GetSpecialReportResultRequest request}) async {
         Response res = await networkManager.post(request);
-        GetSpecialReportResultResponse response = await Parser().pars(GetSpecialReportResultResponse.fromResponse, res);
+        GetSpecialReportResultResponse response = await Parser.parse(GetSpecialReportResultResponse.fromResponse, res);
         return response;
       }
 

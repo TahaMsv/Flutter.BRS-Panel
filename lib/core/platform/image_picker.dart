@@ -9,7 +9,8 @@ class ImageGetter {
       // print( picker.supportsImageSource(ImageSource.gallery));
       final XFile? image = await picker.pickImage(source: ImageSource.gallery, requestFullMetadata: false);
       return image;
-    } catch (_) {
+    } catch (e) {
+      print(e);
       return null;
     }
   }

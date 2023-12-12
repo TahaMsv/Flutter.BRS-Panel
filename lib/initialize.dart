@@ -219,3 +219,6 @@ Future<void> initDataBase() async {
   await Hive.initFlutter();
   Hive.registerAdapter(UserDBAdapter());
 }
+
+
+

@@ -1,5 +1,8 @@
+import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../../screens/user_setting/user_setting_state.dart';
 import '../constants/apis.dart';
 import 'spiners.dart';
 
@@ -31,7 +34,7 @@ class CachedImage {
           ),
         ),
       ),
-      placeholder: (context, url) => Icon(Icons.person, size: iconSize),
+      placeholder: (context, url) =>Icon(Icons.person, size: iconSize),
       errorWidget: (context, url, error) {
         return Icon(Icons.person, size: iconSize);
       },
