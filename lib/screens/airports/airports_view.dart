@@ -4,8 +4,8 @@ import 'package:get/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../core/constants/ui.dart';
-import '../../core/util/basic_class.dart';
 import '../../initialize.dart';
+import '../../widgets/DotButton.dart';
 import '../../widgets/LoadingListView.dart';
 import '../../widgets/MyTextField.dart';
 import 'airports_controller.dart';
@@ -41,6 +41,11 @@ class AirportsPanel extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       child: Row(
         children: [
+          DotButton(
+              size: 35,
+              onPressed: myAirportsController.openAddUpdateAirportDialog,
+              icon: Icons.add,
+              color: Colors.blueAccent),
           const SizedBox(width: 12),
           Expanded(
               flex: 2,
@@ -55,11 +60,8 @@ class AirportsPanel extends ConsumerWidget {
                   s.state = v;
                 },
               )),
-          const SizedBox(width: 12),
-          const Expanded(
-            flex: 5,
-            child: SizedBox(),
-          ),
+          const Expanded(flex: 5, child: SizedBox()),
+          DotButton(icon: Icons.refresh, onPressed: () async => myAirportsController.getAirports()),
         ],
       ),
     );
@@ -76,7 +78,7 @@ class AirportListWidget extends ConsumerWidget {
     final airportList = ref.watch(filteredAirportListProvider);
     return Expanded(
       child: LoadingListView(
-        loading: false,
+        loading: state.loading,
         child: SfDataGrid(
             headerGridLinesVisibility: GridLinesVisibility.both,
             selectionMode: SelectionMode.none,

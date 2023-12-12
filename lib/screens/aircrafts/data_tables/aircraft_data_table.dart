@@ -82,19 +82,24 @@ class AircraftDataSource extends DataGridSource {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              // MyButton(
-              //   height: 30,
-              //   // fontSize: 12,
-              //   label: "ULD List",fade: true,onPressed: (){
-              //   aircraftsController.goUlds(f);
-              // },),
+              MyButton(
+                onPressed: () async => aircraftsController.openAddUpdateAirCraftDialog(aircraft: f),
+                label: 'Delete',
+                fade: true,
+                height: 30,
+                width: 35,
+                child: const Icon(Icons.edit, size: 20),
+              ),
               const SizedBox(width: 12),
-              // DotButton(
-              //   icon: Icons.more_vert,
-              //   onPressed: () {
-              //     // aircraftsController.aircraftActionDialog(f);
-              //   },
-              // )
+              MyButton(
+                onPressed: () async => await aircraftsController.deleteAircraft(f),
+                label: 'Delete',
+                color: MyColors.red,
+                fade: true,
+                height: 30,
+                width: 35,
+                child: const Icon(Icons.delete_forever, size: 20),
+              )
             ],
           ),
         );

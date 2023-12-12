@@ -4,7 +4,6 @@ import 'package:get/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../core/constants/ui.dart';
-import '../../core/util/basic_class.dart';
 import '../../initialize.dart';
 import '../../widgets/DotButton.dart';
 import '../../widgets/LoadingListView.dart';
@@ -21,9 +20,7 @@ class AircraftsView extends StatelessWidget {
     return const Scaffold(
         appBar: MyAppBar(),
         body: Column(
-          children: [
-            AircraftsPanel(),
-            AircraftListWidget()],
+          children: [AircraftsPanel(), AircraftListWidget()],
         ));
   }
 }
@@ -44,7 +41,7 @@ class AircraftsPanel extends ConsumerWidget {
           DotButton(
               size: 35,
               // onPressed: () => myAirlinesController.goAddAircraft(),
-              onPressed: () => myAirlinesController.openAddAirCraftDialog(),
+              onPressed: () => myAirlinesController.openAddUpdateAirCraftDialog(),
               icon: Icons.add,
               color: Colors.blueAccent),
           const SizedBox(width: 12),

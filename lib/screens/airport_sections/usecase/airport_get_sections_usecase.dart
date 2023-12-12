@@ -4,7 +4,6 @@ import '../../../core/abstracts/request_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/abstracts/usecase_abs.dart';
 import '../../../core/classes/airport_section_class.dart';
-import '../../../core/classes/login_user_class.dart';
 import '../airport_Sections_repository.dart';
 
 class AirportGetSectionsUseCase extends UseCase<AirportGetSectionsResponse, AirportGetSectionsRequest> {
@@ -19,16 +18,16 @@ class AirportGetSectionsUseCase extends UseCase<AirportGetSectionsResponse, Airp
 }
 
 class AirportGetSectionsRequest extends Request {
-  final Airport airport;
+  final String airportCode;
 
-  AirportGetSectionsRequest({required this.airport});
+  AirportGetSectionsRequest({required this.airportCode});
 
   @override
   Map<String, dynamic> toJson() => {
         "Body": {
           "Execution": "AirportGetSections",
           "Token": token,
-          "Request": {"Airport": airport.code}
+          "Request": {"Airport": airportCode}
         }
       };
 

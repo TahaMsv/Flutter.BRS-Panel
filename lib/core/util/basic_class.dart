@@ -136,7 +136,7 @@ class BasicClass {
   }
 
   static DateTime? getTimeFromUTC(DateTime? dt) {
-    return dt?.add(Duration(minutes: airport.timeZone ?? 0));
+    return dt?.add(Duration(minutes: airport.timeZone));
   }
 
   static HandlingAccess? getHandlingByID(int? handlingID) {

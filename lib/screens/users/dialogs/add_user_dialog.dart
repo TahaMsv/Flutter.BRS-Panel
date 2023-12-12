@@ -1,9 +1,9 @@
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/widgets/MyDropDown.dart';
 import 'package:brs_panel/widgets/MySegment.dart';
-import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../../core/classes/airport_class.dart';
 import '../../../core/classes/login_user_class.dart';
 import '../../../core/classes/user_class.dart';
 import '../../../core/constants/ui.dart';
@@ -106,7 +106,10 @@ class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
                         flex: 2,
                         child: MySegment<UserAccessType>(
                           height: 48,
-                          items: UserAccessType.values.where((element) => element != UserAccessType.admin || BasicClass.userInfo.userSettings.isAdmin).toList(),
+                          items: UserAccessType.values
+                              .where((element) =>
+                                  element != UserAccessType.admin || BasicClass.userInfo.userSettings.isAdmin)
+                              .toList(),
                           value: userType,
                           itemToString: (e) => e.label!,
                           onChange: (v) {
@@ -201,7 +204,7 @@ class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
                             ? SizedBox(
                                 height: 48,
                                 child: MyTextField(
-                                  label: isEditing?'New Password':'Password',
+                                  label: isEditing ? 'New Password' : 'Password',
                                   controller: passwordC,
                                   isPassword: true,
                                 ))

@@ -21,25 +21,24 @@ class MyButton extends StatefulWidget {
   final bool fade;
   final Color? color;
 
-  const MyButton(
-      {super.key,
-      this.height = 35,
-      this.fontSize = 13,
-      this.width,
-      this.onPressed,
-      this.onLongPress,
-      this.onHover,
-      this.onFocusChange,
-      this.style,
-      this.focusNode,
-      this.autofocus = false,
-      this.statesController,
-      this.showLoading = true,
-      this.child,
-      required this.label,
-      // this.loading = false,
-      this.fade = false,
-      this.color});
+  const MyButton({super.key,
+    this.height = 35,
+    this.fontSize = 13,
+    this.width,
+    this.onPressed,
+    this.onLongPress,
+    this.onHover,
+    this.onFocusChange,
+    this.style,
+    this.focusNode,
+    this.autofocus = false,
+    this.statesController,
+    this.showLoading = true,
+    this.child,
+    required this.label,
+    // this.loading = false,
+    this.fade = false,
+    this.color});
 
   @override
   State<MyButton> createState() => _MyButtonState();
@@ -65,7 +64,7 @@ class _MyButtonState extends State<MyButton> {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    Color c = widget.onPressed==null?Colors.grey: widget.color ?? theme.primaryColor;
+    Color c = widget.onPressed == null ? Colors.grey : widget.color ?? theme.primaryColor;
     return SizedBox(
       height: widget.height,
       width: widget.width,
@@ -88,10 +87,11 @@ class _MyButtonState extends State<MyButton> {
             ),
         child: IndexedStack(
           alignment: Alignment.center,
-          index: _loading && widget.showLoading ? 0 : 1,
+          index: _loading && widget.showLoading ? ((widget.width ?? 44) < 43 ? 2 : 1) : 0,
           children: [
+            widget.child ?? Text(widget.label, style: TextStyle(fontSize: widget.fontSize)),
             SpinKitThreeBounce(color: widget.fade ? c : Colors.white, size: 18),
-            widget.child ?? Text(widget.label, style: TextStyle(fontSize: widget.fontSize))
+            SpinKitCircle(color: widget.fade ? c : Colors.white, size: 18),
           ],
         ),
       ),

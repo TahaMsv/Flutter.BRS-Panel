@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import '../../core/abstracts/exception_abs.dart';
 import '../../core/abstracts/failures_abs.dart';

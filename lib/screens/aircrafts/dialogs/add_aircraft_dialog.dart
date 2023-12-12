@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../../../core/classes/login_user_class.dart';
 import '../../../core/constants/abomis_pack_icons.dart';
 import '../../../core/constants/ui.dart';
 import '../../../initialize.dart';
@@ -9,16 +10,20 @@ import '../../../widgets/MyTextField.dart';
 import '../aircrafts_controller.dart';
 import '../aircrafts_state.dart';
 
-class AddAirCraftDialog extends ConsumerStatefulWidget {
-  const AddAirCraftDialog({Key? key}) : super(key: key);
+class AddUpdateAirCraftDialog extends ConsumerStatefulWidget {
+  const AddUpdateAirCraftDialog({Key? key, required this.aircraft}) : super(key: key);
+  final Aircraft? aircraft;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _AddAirCraftDialogState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _AddUpdateAirCraftDialogState();
 }
 
-class _AddAirCraftDialogState extends ConsumerState<AddAirCraftDialog> {
+class _AddUpdateAirCraftDialogState extends ConsumerState<AddUpdateAirCraftDialog> {
+  bool isUpdate = true;
+
   @override
   void initState() {
+    if (widget.aircraft == null) isUpdate = false;
     super.initState();
   }
 
@@ -37,9 +42,9 @@ class _AddAirCraftDialogState extends ConsumerState<AddAirCraftDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 30.0),
-                child: Text("Add AirCraft", style: TextStyles.styleBold24Black),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                child: Text(isUpdate ? "Update AirCraft" : "Add AirCraft", style: TextStyles.styleBold24Black),
               ),
               const SizedBox(height: 10),
               const Divider(thickness: 1),
@@ -160,8 +165,9 @@ class _AddAirCraftDialogState extends ConsumerState<AddAirCraftDialog> {
                     width: 150,
                   ),
                   MyButton(
-                    onPressed: () async => aircraftsController.addAirCraft(),
-                    label: 'Add Aircraft',
+                    onPressed: () async =>
+                        aircraftsController.addUpdateAirCraft(aircraft: widget.aircraft, isUpdate: isUpdate),
+                    label: 'Confirm',
                     style: TextButton.styleFrom(
                         backgroundColor: MyColors.white3, foregroundColor: MyColors.lightIshBlue, elevation: 0),
                     color: MyColors.lightIshBlue,

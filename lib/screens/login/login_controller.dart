@@ -19,6 +19,7 @@ import '../../core/util/handlers/failure_handler.dart';
 import '../../core/util/version_handler.dart';
 import '../../initialize.dart';
 import '../aircrafts/aircrafts_state.dart';
+import '../airports/airports_state.dart';
 import 'login_state.dart';
 import 'usecases/login_usecase.dart';
 
@@ -70,8 +71,8 @@ class LoginController extends MainController {
       BasicClass.initialize(user!, deviceInfo.screenType);
       final userP = ref.read(userProvider.notifier);
       userP.state = user;
-      final alP = ref.read(aircraftListProvider.notifier);
-      alP.setAircrafts(user!.systemSettings.aircraftList);
+      final aclP = ref.read(aircraftListProvider.notifier);
+      aclP.setAircrafts(user!.systemSettings.aircraftList);
     });
     return user;
   }

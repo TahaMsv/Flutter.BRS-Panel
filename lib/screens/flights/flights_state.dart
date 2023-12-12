@@ -1,8 +1,7 @@
-import 'package:brs_panel/core/classes/login_user_class.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 import '../../core/classes/flight_class.dart';
+import '../../core/classes/login_user_class.dart';
 import '../../core/enums/flight_type_filter_enum.dart';
 
 final flightsProvider = ChangeNotifierProvider<FlightsState>((_) => FlightsState());
@@ -31,7 +30,11 @@ final filteredFlightListProvider = Provider<List<Flight>>((ref) {
   final searchFilter = ref.watch(flightSearchProvider);
   return flights
       .where(
-        (f) => f.validateType(typeFilter) && f.validateSearch(searchFilter) && f.validateAirline(alFilter) && f.validateAirport(apFilter),
+        (f) =>
+            f.validateType(typeFilter) &&
+            f.validateSearch(searchFilter) &&
+            f.validateAirline(alFilter) &&
+            f.validateAirport(apFilter),
       )
       .toList();
 });

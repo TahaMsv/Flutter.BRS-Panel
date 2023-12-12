@@ -1,5 +1,3 @@
-import 'dart:developer';
-import 'package:brs_panel/screens/aircrafts/usecases/add_aircraft_usecase.dart';
 import 'package:dartz/dartz.dart';
 import '../../core/abstracts/exception_abs.dart';
 import '../../core/abstracts/failures_abs.dart';
@@ -8,6 +6,8 @@ import '../../initialize.dart';
 import 'interfaces/aircrafts_repository_interface.dart';
 import 'data_sources/aircrafts_local_ds.dart';
 import 'data_sources/aircrafts_remote_ds.dart';
+import 'usecases/add_aircraft_usecase.dart';
+import 'usecases/delete_aircraft.dart';
 
 class AircraftsRepository implements AircraftsRepositoryInterface {
   final AircraftsRemoteDataSource aircraftsRemoteDataSource = AircraftsRemoteDataSource();
@@ -26,6 +26,21 @@ class AircraftsRepository implements AircraftsRepositoryInterface {
         addAirCraftResponse = await aircraftsLocalDataSource.addAirCraft(request: request);
       }
       return Right(addAirCraftResponse);
+    } on AppException catch (e) {
+      return Left(ServerFailure.fromAppException(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, DeleteAircraftResponse>> deleteAircraft(DeleteAircraftRequest request) async {
+    try {
+      DeleteAircraftResponse deleteAircraftResponse;
+      if (await networkInfo.isConnected) {
+        deleteAircraftResponse = await aircraftsRemoteDataSource.deleteAircraft(request: request);
+      } else {
+        deleteAircraftResponse = await aircraftsLocalDataSource.deleteAircraft(request: request);
+      }
+      return Right(deleteAircraftResponse);
     } on AppException catch (e) {
       return Left(ServerFailure.fromAppException(e));
     }

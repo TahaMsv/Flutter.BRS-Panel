@@ -1,3 +1,4 @@
+import 'package:brs_panel/core/abstracts/local_data_base_abs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../core/classes/flight_details_class.dart';
@@ -38,8 +39,16 @@ class AircraftListNotifier extends StateNotifier<List<Aircraft>> {
     state = [...state, aircraft];
   }
 
-  void removeAircraft(String code) {
-    state = state.where((element) => element.al != code).toList();
+  void updateAircraft(Aircraft aircraft) {
+    List<Aircraft> aircrafts = [...state];
+    Aircraft? a = aircrafts.firstWhereOrNull((a) => a.id == aircraft.id);
+    if (a == null) return;
+    aircrafts[aircrafts.indexOf(a)] = aircraft;
+    state = aircrafts;
+  }
+
+  void removeAircraft(int id) {
+    state = state.where((element) => element.id != id).toList();
   }
 
   void setAircrafts(List<Aircraft> fl) {

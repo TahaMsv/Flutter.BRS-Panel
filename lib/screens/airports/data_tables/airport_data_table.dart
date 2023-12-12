@@ -1,13 +1,8 @@
-import 'package:brs_panel/core/util/basic_class.dart';
-import 'package:brs_panel/widgets/TagCountWidget.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:brs_panel/core/constants/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
-
-import '../../../core/classes/login_user_class.dart';
-import '../../../core/constants/ui.dart';
+import '../../../core/classes/airport_class.dart';
 import '../../../initialize.dart';
-import '../../../widgets/DotButton.dart';
 import '../../../widgets/MyButton.dart';
 import '../airports_controller.dart';
 
@@ -31,10 +26,10 @@ extension AirportDataTableColumnDetails on AirportDataTableColumn {
 }
 
 class AirportDataSource extends DataGridSource {
-  late final List<Airport> _dataList;
+  late final List<DetailedAirport> _dataList;
   late final AirportsController airportsController = getIt<AirportsController>();
 
-  AirportDataSource({required List<Airport> airports}) {
+  AirportDataSource({required List<DetailedAirport> airports}) {
     _dataList = airports;
     _airports = airports
         .map<DataGridRow>(
@@ -57,7 +52,7 @@ class AirportDataSource extends DataGridSource {
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
     final int index = rows.indexOf(row);
-    final Airport a = _dataList[index];
+    final DetailedAirport a = _dataList[index];
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((dataGridCell) {
       if (dataGridCell.columnName == AirportDataTableColumn.airport.name) {
@@ -101,12 +96,24 @@ class AirportDataSource extends DataGridSource {
                 },
               ),
               const SizedBox(width: 12),
-              // DotButton(
-              //   icon: Icons.more_vert,
-              //   onPressed: () {
-              //     // airportsController.airportActionDialog(f);
-              //   },
-              // )
+              MyButton(
+                onPressed: () async => await airportsController.openAddUpdateAirportDialog(airport: a),
+                label: 'Delete',
+                fade: true,
+                height: 30,
+                width: 35,
+                child: const Icon(Icons.edit, size: 20),
+              ),
+              const SizedBox(width: 12),
+              MyButton(
+                onPressed: () async => await airportsController.deleteAirport(a),
+                label: 'Delete',
+                color: MyColors.red,
+                fade: true,
+                height: 30,
+                width: 35,
+                child: const Icon(Icons.delete_forever, size: 20),
+              )
             ],
           ),
         );

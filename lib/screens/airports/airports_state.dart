@@ -1,45 +1,53 @@
 import 'package:flutter/cupertino.dart';
+import 'package:get/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../../core/classes/login_user_class.dart';
-import '../../core/util/basic_class.dart';
+import '../../core/classes/airport_class.dart';
 
 final airportsProvider = ChangeNotifierProvider<AirportsState>((_) => AirportsState());
 
 class AirportsState extends ChangeNotifier {
   void setState() => notifyListeners();
 
-  ///bool loading = false;
-
+  final TextEditingController codeC = TextEditingController();
+  final TextEditingController cityC = TextEditingController();
+  int? timeZone;
+  String? strTimeZone;
+  bool loading = false;
 }
 
-
 final airportsSearchProvider = StateProvider<String>((ref) => '');
-final filteredAirportListProvider = Provider<List<Airport>>((ref) {
-  // final airports = ref.watch(airportListProvider);
-  final airports = BasicClass.systemSetting.airportList;
+final filteredAirportListProvider = Provider<List<DetailedAirport>>((ref) {
+  final airports = ref.watch(airportListProvider);
   final searchFilter = ref.watch(airportsSearchProvider);
-  return airports
-      .where(
-        (f) => f.validateSearch(searchFilter),
-  )
-      .toList();
+  return airports.where((f) => f.validateSearch(searchFilter)).toList();
 });
 
-class AirportListNotifier extends StateNotifier<List<Airport>> {
+final airportListProvider = StateNotifierProvider<AirportDetailListNotifier, List<DetailedAirport>>((ref) {
+  return AirportDetailListNotifier(ref);
+});
+
+class AirportDetailListNotifier extends StateNotifier<List<DetailedAirport>> {
   final StateNotifierProviderRef ref;
 
-  AirportListNotifier(this.ref) : super([]);
+  AirportDetailListNotifier(this.ref) : super([]);
 
-  void addAirport(Airport airport) {
+  void addAirportDetail(DetailedAirport airport) {
     state = [...state, airport];
   }
 
-  void removeAirport(String code) {
+  void updateAirportDetail(DetailedAirport airport) {
+    List<DetailedAirport> airports = [...state];
+    DetailedAirport? da = airports.firstWhereOrNull((a) => a.code == airport.code);
+    if (da == null) return;
+    airports[airports.indexOf(da)] = airport;
+    state = airports;
+  }
+
+  void removeAirportDetail(String code) {
     state = state.where((element) => element.code != code).toList();
   }
 
-  void setAirports(List<Airport> fl) {
+  void setAirportDetails(List<DetailedAirport> fl) {
     state = fl;
   }
 }

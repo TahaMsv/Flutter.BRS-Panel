@@ -1,7 +1,7 @@
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/abstracts/success_abs.dart';
+import '../../core/classes/airport_class.dart';
 import '../../core/classes/airport_section_class.dart';
-import '../../core/classes/login_user_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
 import '../../core/util/handlers/success_handler.dart';
 import '../airport_carts/airport_carts_state.dart';
@@ -118,11 +118,11 @@ class AirportSectionsController extends MainController {
   /// Requests ---------------------------------------------------------------------------------------------------------
 
   Future<AirportSections?> airportGetSections() async {
-    Airport? sapP = ref.read(selectedAirportProvider);
+    DetailedAirport? sapP = ref.read(selectedAirportProvider);
     if (sapP == null) return null;
     AirportSections? sections;
     AirportGetSectionsUseCase airportGetSectionsUseCase = AirportGetSectionsUseCase();
-    AirportGetSectionsRequest airportGetSectionsRequest = AirportGetSectionsRequest(airport: sapP);
+    AirportGetSectionsRequest airportGetSectionsRequest = AirportGetSectionsRequest(airportCode: sapP.code);
     final fOrR = await airportGetSectionsUseCase(request: airportGetSectionsRequest);
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => airportGetSections()), (r) {
       sections = r.airportSections;

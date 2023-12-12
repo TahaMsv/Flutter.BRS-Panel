@@ -1,10 +1,7 @@
+import 'package:brs_panel/core/classes/airport_class.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../../core/classes/airport_cart_class.dart';
-import '../../core/classes/flight_details_class.dart';
 import '../../core/classes/tag_container_class.dart';
-import '../../core/classes/login_user_class.dart';
 
 final airportCartsProvider = ChangeNotifierProvider<AirportCartsState>((_) => AirportCartsState());
 
@@ -14,10 +11,11 @@ class AirportCartsState extends ChangeNotifier {
   ///bool loading = false;
 }
 
-final cartListProvider = StateNotifierProvider<AirportCartListNotifier, List<TagContainer>>((ref) => AirportCartListNotifier(ref));
+final cartListProvider =
+    StateNotifierProvider<AirportCartListNotifier, List<TagContainer>>((ref) => AirportCartListNotifier(ref));
 
 final cartSearchProvider = StateProvider<String>((ref) => '');
-final selectedAirportProvider = StateProvider<Airport?>((ref) => null);
+final selectedAirportProvider = StateProvider<DetailedAirport?>((ref) => null);
 
 final filteredCartListProvider = Provider<List<TagContainer>>((ref) {
   final carts = ref.watch(cartListProvider);

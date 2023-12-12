@@ -1,12 +1,9 @@
-import 'package:brs_panel/core/classes/airport_cart_class.dart';
 import 'package:dartz/dartz.dart';
 import '../../../core/abstracts/failures_abs.dart';
 import '../../../core/abstracts/request_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/abstracts/usecase_abs.dart';
-import '../../../core/classes/flight_details_class.dart';
 import '../../../core/classes/tag_container_class.dart';
-import '../../../core/classes/login_user_class.dart';
 import '../airport_carts_repository.dart';
 
 class AirportGetCartsUseCase extends UseCase<AirportGetCartsResponse,AirportGetCartsRequest> {
@@ -22,8 +19,8 @@ class AirportGetCartsUseCase extends UseCase<AirportGetCartsResponse,AirportGetC
 }
 
 class AirportGetCartsRequest extends Request {
-  final Airport airport;
-  AirportGetCartsRequest({required this.airport});
+  final String airportCode;
+  AirportGetCartsRequest({required this.airportCode});
 
   @override
   Map<String, dynamic> toJson() =>{
@@ -31,7 +28,7 @@ class AirportGetCartsRequest extends Request {
       "Execution": "CartList",
       "Token":token,
       "Request": {
-        "Airport": airport.code
+        "Airport": airportCode
       }
     }
   };
