@@ -28,24 +28,32 @@ class AirportsView extends StatelessWidget {
   }
 }
 
-class AirportsPanel extends ConsumerWidget {
-  static TextEditingController searchC = TextEditingController();
-
+class AirportsPanel extends ConsumerStatefulWidget {
   const AirportsPanel({Key? key}) : super(key: key);
-  static AirportsController myAirportsController = getIt<AirportsController>();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _AirportsPanelState();
+}
+
+class _AirportsPanelState extends ConsumerState<AirportsPanel> {
+  static TextEditingController searchC = TextEditingController();
+  static AirportsController myAirportsController = getIt<AirportsController>();
+  bool showClearButton = false;
+
+  @override
+  void initState() {
+    showClearButton = searchC.text.isNotEmpty;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       color: MyColors.white1,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       child: Row(
         children: [
-          DotButton(
-              size: 35,
-              onPressed: myAirportsController.openAddUpdateAirportDialog,
-              icon: Icons.add,
-              color: Colors.blueAccent),
+          DotButton(size: 35, onPressed: myAirportsController.openAddUpdateAirportDialog, icon: Icons.add, color: Colors.blueAccent),
           const SizedBox(width: 12),
           Expanded(
               flex: 2,
@@ -54,10 +62,13 @@ class AirportsPanel extends ConsumerWidget {
                 prefixIcon: const Icon(Icons.search),
                 placeholder: "Search Here...",
                 controller: searchC,
-                showClearButton: true,
+                showClearButton: showClearButton,
                 onChanged: (v) {
                   final s = ref.read(airportsSearchProvider.notifier);
                   s.state = v;
+                  setState(() {
+                    showClearButton = searchC.text.isNotEmpty;
+                  });
                 },
               )),
           const Expanded(flex: 5, child: SizedBox()),
@@ -92,6 +103,7 @@ class AirportListWidget extends ConsumerWidget {
                     columnName: e.name,
                     label: Center(child: Text(e.name.capitalizeFirst!)),
                     width: e.width * width,
+                    allowSorting: e.name.capitalizeFirst! != "Actions",
                   ),
                 )
                 .toList()),

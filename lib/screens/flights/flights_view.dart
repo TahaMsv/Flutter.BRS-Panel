@@ -2,6 +2,7 @@ import 'package:artemis_ui_kit/artemis_ui_kit.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../core/classes/login_user_class.dart';
@@ -50,8 +51,7 @@ class FlightsPanel extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       child: Row(
         children: [
-          DotButton(
-              size: 35, onPressed: () => myFlightsController.goAddFlight(), icon: Icons.add, color: Colors.blueAccent),
+          DotButton(size: 35, onPressed: () => myFlightsController.goAddFlight(), icon: Icons.add, color: Colors.blueAccent),
           const SizedBox(width: 12),
           Expanded(
               flex: 2,
@@ -76,8 +76,7 @@ class FlightsPanel extends ConsumerWidget {
                     size: 35,
                     leftWidget: const Icon(Icons.chevron_left, size: 20, color: MyColors.black3),
                     rightWidget: const Icon(Icons.chevron_right, size: 20, color: MyColors.black3),
-                    centerWidget: Text(dt.toddMMMEEE,
-                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: MyColors.black3)),
+                    centerWidget: Text(dt.toddMMMEEE, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: MyColors.black3)),
                     leftAction: () => myFlightsController.flightList(dt.add(const Duration(days: -1))),
                     rightAction: () => myFlightsController.flightList(dt.add(const Duration(days: 1))),
                     centerAction: myFlightsController.pickDate,
@@ -187,7 +186,12 @@ class FlightListWidget extends ConsumerWidget {
             headerRowHeight: 35,
             source: FlightDataSource(flights: flightList),
             columns: FlightDataTableColumn.values
-                .map((e) => GridColumn(columnName: e.name, label: Center(child: Text(e.label)), width: e.width * width))
+                .map((e) => GridColumn(
+                      columnName: e.name,
+                      label: Center(child: Text(e.label)),
+                      width: e.width * width,
+                      allowSorting: e.name.capitalizeFirst! != "Actions" && e.name.capitalizeFirst! != "Status",
+                    ))
                 .toList()),
       ),
     );

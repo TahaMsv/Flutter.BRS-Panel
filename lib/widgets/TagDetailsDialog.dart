@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:artemis_utils/artemis_utils.dart';
+import 'package:brs_panel/core/abstracts/local_data_base_abs.dart';
 import 'package:brs_panel/core/constants/abomis_pack_icons.dart';
 import 'package:brs_panel/widgets/MyButton.dart';
 import 'package:flutter/material.dart';
@@ -183,9 +184,10 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                                     tag.tagPositions.asMap().entries.map((t) {
                                       var index = t.key;
                                       TagPosition value = t.value;
+                                      AirportPositionSection? sec = BasicClass.getAllAirportSections().firstWhereOrNull((element) => element.id == t.value.sectionID);
 
                                       return ExpansionListItem(
-                                          texts: [value.dateUtc.format_yyyyMMdd.toString(), value.username, value.positionId.toString(), value.positionDesc ?? '-'],
+                                          texts: [value.dateUtc.format_yyyyMMdd.toString(), value.username, "${sec?.label} / ${t.value.indexInPosition}", value.positionDesc ?? '-'],
                                           isBold: false,
                                           bgColor: index % 2 == 0 ? MyColors.oddRow : MyColors.evenRow); //todo correct values?
                                     }).toList()
@@ -359,62 +361,60 @@ class DcsInfoWidget extends StatelessWidget {
         ),
       ]);
     }
-    return Row(children: [
-      HorizontalCardField(
-        title: "Pax",
-        widgetPadding: EdgeInsets.zero,
-        valueWidget: GestureDetector(
-          onTap: () {},
-          child: Text(
-            info!.paxName,
-            style: const TextStyle(color: Colors.blueAccent, decoration: TextDecoration.underline, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-      const SizedBox(width: 70),
-      HorizontalCardField(title: "PNR", value: info!.pnr),
-      const SizedBox(width: 70),
-      HorizontalCardField(title: "P/W", value: "${info!.count}/${info!.weight}"),
-      const SizedBox(width: 70),
-      HorizontalCardField(title: "Dest", value: info!.dest),
-      const SizedBox(width: 70),
-      Expanded(
-        child: Row(
-            children: photosBytes.asMap().entries.map((b) {
-          return InkWell(
-            onTap: () async {
-              print("here 372");
-              final NavigationService nav = getIt<NavigationService>();
-              FlightDetailsController myFlightDetailsController = getIt<FlightDetailsController>();
-
-              Size imageSize = await myFlightDetailsController.getImageSize(b.value);
-              nav.dialog(PhotoPreviewDialog(
-                imageFileBytes: b.value,
-                imageSize: imageSize,
-                pos: null,
-                photoUrl: null,
-              ));
-              print("here 379");
-            },
-            child: Container(
-              // color: Colors.red,
-              margin: const EdgeInsets.only(right: 20),
-              height: 50,
-              width: 50,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
+    return Column(
+      children: [
+        Row(children: [
+          HorizontalCardField(title: "Pax", value: info!.paxName),
+          const SizedBox(width: 70),
+          HorizontalCardField(title: "SEC", value: info!.securityCode.toString()),
+          const SizedBox(width: 70),
+          HorizontalCardField(title: "PNR", value: info!.pnr),
+          const SizedBox(width: 70),
+          HorizontalCardField(title: "P/W", value: "${info!.count}/${info!.weight}"),
+          const SizedBox(width: 70),
+          HorizontalCardField(title: "Dest", value: info!.dest),
+          const SizedBox(width: 70),
+          Expanded(
+            child: Row(
+                children: photosBytes.asMap().entries.map((b) {
+              return InkWell(
+                onTap: () async {
+                  final NavigationService nav = getIt<NavigationService>();
+                  FlightDetailsController myFlightDetailsController = getIt<FlightDetailsController>();
+                  Size imageSize = await myFlightDetailsController.getImageSize(b.value);
+                  nav.dialog(PhotoPreviewDialog(
+                    imageFileBytes: b.value,
+                    imageSize: imageSize,
+                    pos: null,
+                    photoUrl: null,
+                  ));
+                },
                 child: Container(
-                  color: Colors.grey,
-                  width: 44,
-                  height: 44,
-                  child: Image.memory(b.value),
+                  margin: const EdgeInsets.only(right: 20),
+                  height: 50,
+                  width: 50,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      color: Colors.grey,
+                      width: 44,
+                      height: 44,
+                      child: Image.memory(b.value),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          );
-        }).toList()),
-      ),
-    ]);
+              );
+            }).toList()),
+          ),
+        ]),
+        // Row(
+        //   children: [
+        //     HorizontalCardField(title: "Pax", value: info!.),
+        //     const SizedBox(width: 70),
+        //   ],
+        // )
+      ],
+    );
   }
 }
 
