@@ -25,14 +25,26 @@ class UsersView extends StatelessWidget {
   }
 }
 
-class UsersPanel extends ConsumerWidget {
-  static TextEditingController searchC = TextEditingController();
-  static UsersController controller = getIt<UsersController>();
-
+class UsersPanel extends ConsumerStatefulWidget {
   const UsersPanel({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _UsersPanelState();
+}
+
+class _UsersPanelState extends ConsumerState<UsersPanel> {
+  static TextEditingController searchC = TextEditingController();
+  static UsersController controller = getIt<UsersController>();
+  bool showClearButton = false;
+
+  @override
+  void initState() {
+    showClearButton = searchC.text.isNotEmpty;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       color: MyColors.white1,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -44,12 +56,15 @@ class UsersPanel extends ConsumerWidget {
               child: MyTextField(
                 height: 35,
                 prefixIcon: const Icon(Icons.search),
-                placeholder: "Search Here...",
+                placeholder: "Search Here ...",
                 controller: searchC,
-                showClearButton: true,
+                showClearButton: showClearButton,
                 onChanged: (v) {
                   final s = ref.read(userSearchProvider.notifier);
                   s.state = v;
+                  setState(() {
+                    showClearButton = searchC.text.isNotEmpty;
+                  });
                 },
               )),
           const SizedBox(width: 12),
@@ -58,11 +73,7 @@ class UsersPanel extends ConsumerWidget {
             child: Row(
               children: [
                 const Spacer(),
-                DotButton(
-                    size: 35,
-                    onPressed: () => controller.addUpdateUser(null),
-                    icon: Icons.add,
-                    color: Colors.blueAccent),
+                DotButton(size: 35, onPressed: () => controller.addUpdateUser(null), icon: Icons.add, color: Colors.blueAccent),
               ],
             ),
           ),

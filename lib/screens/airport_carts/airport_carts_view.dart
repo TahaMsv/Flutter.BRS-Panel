@@ -27,14 +27,26 @@ class AirportCartsView extends StatelessWidget {
   }
 }
 
-class AirportCartsPanel extends ConsumerWidget {
-  static TextEditingController searchC = TextEditingController();
-
+class AirportCartsPanel extends ConsumerStatefulWidget {
   const AirportCartsPanel({Key? key}) : super(key: key);
-  static AirportCartsController myAirportCartsController = getIt<AirportCartsController>();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _AirportCartsPanelState();
+}
+
+class _AirportCartsPanelState extends ConsumerState<AirportCartsPanel> {
+  static TextEditingController searchC = TextEditingController();
+  static AirportCartsController myAirportCartsController = getIt<AirportCartsController>();
+  bool showClearButton = false;
+
+  @override
+  void initState() {
+    showClearButton = searchC.text.isNotEmpty;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     return Container(
       color: MyColors.white1,
@@ -55,12 +67,15 @@ class AirportCartsPanel extends ConsumerWidget {
             child: MyTextField(
               height: 35,
               prefixIcon: const Icon(Icons.search),
-              placeholder: "Search Here...",
+              placeholder: "Search Here ...",
               controller: searchC,
-              showClearButton: true,
+              showClearButton: showClearButton,
               onChanged: (v) {
                 final s = ref.read(cartSearchProvider.notifier);
                 s.state = v;
+                setState(() {
+                  showClearButton = searchC.text.isNotEmpty;
+                });
               },
             ),
           ),

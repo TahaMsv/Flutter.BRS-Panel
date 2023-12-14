@@ -36,14 +36,26 @@ class FlightsView extends StatelessWidget {
   }
 }
 
-class FlightsPanel extends ConsumerWidget {
-  static TextEditingController searchC = TextEditingController();
-  static FlightsController myFlightsController = getIt<FlightsController>();
-
-  const FlightsPanel({super.key});
+class FlightsPanel extends ConsumerStatefulWidget {
+  const FlightsPanel({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _FlightsPanelState();
+}
+
+class _FlightsPanelState extends ConsumerState<FlightsPanel> {
+  static TextEditingController searchC = TextEditingController();
+  static FlightsController myFlightsController = getIt<FlightsController>();
+  bool showClearButton = false;
+
+  @override
+  void initState() {
+    showClearButton = searchC.text.isNotEmpty;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     bool showFilter = ref.watch(flightsShowFiltersProvider);
     FlightTypeFilter flightTypeFilter = ref.watch(flightTypeFilterProvider);
     return Container(
@@ -58,12 +70,15 @@ class FlightsPanel extends ConsumerWidget {
               child: MyTextField(
                 height: 35,
                 prefixIcon: const Icon(Icons.search),
-                placeholder: "Search Here...",
+                placeholder: "Search Here ...",
                 controller: searchC,
-                showClearButton: true,
+                showClearButton: showClearButton,
                 onChanged: (v) {
                   final s = ref.read(flightSearchProvider.notifier);
                   s.state = v;
+                  setState(() {
+                    showClearButton = searchC.text.isNotEmpty;
+                  });
                 },
               )),
           const SizedBox(width: 12),

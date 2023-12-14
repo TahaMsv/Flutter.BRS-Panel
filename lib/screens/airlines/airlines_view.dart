@@ -31,15 +31,26 @@ class AirlinesView extends StatelessWidget {
 }
 
 
-
-class AirlinesPanel extends ConsumerWidget {
-  static TextEditingController searchC = TextEditingController();
-
+class AirlinesPanel extends ConsumerStatefulWidget {
   const AirlinesPanel({Key? key}) : super(key: key);
-  static AirlinesController myAirlinesController = getIt<AirlinesController>();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _AirlinesPanelState();
+}
+
+class _AirlinesPanelState extends ConsumerState<AirlinesPanel> {
+  static TextEditingController searchC = TextEditingController();
+  static AirlinesController myAirlinesController = getIt<AirlinesController>();
+  bool showClearButton = false;
+
+  @override
+  void initState() {
+    showClearButton = searchC.text.isNotEmpty;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       color: MyColors.white1,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -51,12 +62,15 @@ class AirlinesPanel extends ConsumerWidget {
               child: MyTextField(
                 height: 35,
                 prefixIcon: const Icon(Icons.search),
-                placeholder: "Search Here...",
+                placeholder: "Search Here ...",
                 controller: searchC,
-                showClearButton: true,
+                showClearButton: showClearButton,
                 onChanged: (v) {
                   final s = ref.read(airlineSearchProvider.notifier);
                   s.state = v;
+                  setState(() {
+                    showClearButton = searchC.text.isNotEmpty;
+                  });
                 },
               )),
           const SizedBox(width: 12),

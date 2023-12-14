@@ -106,28 +106,39 @@ class SpecialReportsParamsWidget extends ConsumerWidget {
                           );
                         }).toList()),
               const SizedBox(height: 12),
-
             ],
           ),
         ),
         Expanded(
             child: Container(
-              color: Colors.grey.withOpacity(0.1),
-              child: report == null ? const SizedBox() : SpecialReportResultWidget(report: report),
-            ))
+          color: Colors.grey.withOpacity(0.1),
+          child: report == null ? const SizedBox() : SpecialReportResultWidget(report: report),
+        ))
       ],
     );
   }
 }
 
-class SpecialReportsPanel extends ConsumerWidget {
-  static TextEditingController searchC = TextEditingController();
-  static SpecialReportsController controller = getIt<SpecialReportsController>();
-
+class SpecialReportsPanel extends ConsumerStatefulWidget {
   const SpecialReportsPanel({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _SpecialReportsPanelState();
+}
+
+class _SpecialReportsPanelState extends ConsumerState<SpecialReportsPanel> {
+  static TextEditingController searchC = TextEditingController();
+  static SpecialReportsController controller = getIt<SpecialReportsController>();
+  bool showClearButton = false;
+
+  @override
+  void initState() {
+    showClearButton = searchC.text.isNotEmpty;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       color: MyColors.white1,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -139,10 +150,14 @@ class SpecialReportsPanel extends ConsumerWidget {
               child: MyTextField(
                 height: 35,
                 prefixIcon: const Icon(Icons.search),
-                placeholder: "Search Here...",
+                placeholder: "Search Here ...",
                 controller: searchC,
-                showClearButton: true,
-                onChanged: (v) {},
+                showClearButton: showClearButton,
+                onChanged: (v) {
+                  setState(() {
+                    showClearButton = searchC.text.isNotEmpty;
+                  });
+                },
               )),
           const SizedBox(width: 12),
           Expanded(

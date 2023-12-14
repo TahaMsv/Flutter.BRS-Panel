@@ -27,14 +27,26 @@ class AirlineUldsView extends StatelessWidget {
   }
 }
 
-class AirlineUldsPanel extends ConsumerWidget {
-  static TextEditingController searchC = TextEditingController();
-
+class AirlineUldsPanel extends ConsumerStatefulWidget {
   const AirlineUldsPanel({Key? key}) : super(key: key);
-  static AirlineUldsController myAirlineUldsController = getIt<AirlineUldsController>();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _AirportsPanelState();
+}
+
+class _AirportsPanelState extends ConsumerState<AirlineUldsPanel> {
+  static TextEditingController searchC = TextEditingController();
+  static AirlineUldsController myAirlineUldsController = getIt<AirlineUldsController>();
+  bool showClearButton = false;
+
+  @override
+  void initState() {
+    showClearButton = searchC.text.isNotEmpty;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     return Container(
       color: MyColors.white1,
@@ -55,12 +67,15 @@ class AirlineUldsPanel extends ConsumerWidget {
               child: MyTextField(
                 height: 35,
                 prefixIcon: const Icon(Icons.search),
-                placeholder: "Search Here...",
+                placeholder: "Search Here ...",
                 controller: searchC,
-                showClearButton: true,
+                showClearButton: showClearButton,
                 onChanged: (v) {
                   final s = ref.read(uldSearchProvider.notifier);
                   s.state = v;
+                  setState(() {
+                    showClearButton = searchC.text.isNotEmpty;
+                  });
                 },
               )),
           const SizedBox(width: 12),

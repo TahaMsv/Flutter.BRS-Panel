@@ -60,7 +60,7 @@ class _AirportsPanelState extends ConsumerState<AirportsPanel> {
               child: MyTextField(
                 height: 35,
                 prefixIcon: const Icon(Icons.search),
-                placeholder: "Search Here...",
+                placeholder: "Search Here ...",
                 controller: searchC,
                 showClearButton: showClearButton,
                 onChanged: (v) {
