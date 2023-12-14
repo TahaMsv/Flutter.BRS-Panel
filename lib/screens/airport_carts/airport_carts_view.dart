@@ -44,7 +44,7 @@ class AirportCartsView extends ConsumerWidget {
                         .map(
                           (e) => GridColumn(
                             columnName: e.name,
-                            label: Center(child: Text(e.name.capitalizeFirst!)),
+                            label: Center(child: Text(e.appropriateName)),
                             width: e.width * width,
                             allowSorting: false,
                           ),

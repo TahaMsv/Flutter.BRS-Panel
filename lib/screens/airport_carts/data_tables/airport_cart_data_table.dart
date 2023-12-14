@@ -9,7 +9,7 @@ import '../../../widgets/MyButton.dart';
 import '../airport_carts_controller.dart';
 
 enum AirportCartDataTableColumn {
-  id,
+  // id,
   code,
   title,
   assignedFlight,
@@ -28,9 +28,26 @@ extension AirportCartDataTableColumnDetails on AirportCartDataTableColumn {
       case AirportCartDataTableColumn.tagTypes:
         return 0.35;
       case AirportCartDataTableColumn.assignedFlight:
-        return 0.14;
+        return 0.15;
       default:
-        return 0.07;
+        return 0.1;
+    }
+  }
+
+  String get appropriateName {
+    switch (this) {
+      case AirportCartDataTableColumn.code:
+        return "Code";
+      case AirportCartDataTableColumn.title:
+        return "Title";
+      case AirportCartDataTableColumn.tagTypes:
+        return "Tag Types";
+      case AirportCartDataTableColumn.assignedFlight:
+        return "Assigned Flight";
+      case AirportCartDataTableColumn.closedTime:
+        return "Closed Time";
+      case AirportCartDataTableColumn.actions:
+        return "Actions";
     }
   }
 }
@@ -45,7 +62,7 @@ class AirportCartDataSource extends DataGridSource {
         .map<DataGridRow>(
           (e) => DataGridRow(
             cells: [
-              DataGridCell<String>(columnName: AirportCartDataTableColumn.id.name, value: e.id.toString()),
+              // DataGridCell<String>(columnName: AirportCartDataTableColumn.id.name, value: e.id.toString()),
               DataGridCell<String>(columnName: AirportCartDataTableColumn.code.name, value: e.code),
               DataGridCell<String>(columnName: AirportCartDataTableColumn.title.name, value: e.title),
               DataGridCell<String>(columnName: AirportCartDataTableColumn.assignedFlight.name, value: e.al),
@@ -69,9 +86,9 @@ class AirportCartDataSource extends DataGridSource {
     TagContainer cart = _dataList[index];
     return DataGridRowAdapter(
         cells: row.getCells().map<Widget>((dataGridCell) {
-      if (dataGridCell.columnName == AirportCartDataTableColumn.id.name) {
-        return Container(alignment: Alignment.center, child: Text(cart.id.toString()));
-      }
+      // if (dataGridCell.columnName == AirportCartDataTableColumn.id.name) {
+      //   return Container(alignment: Alignment.center, child: Text(cart.id.toString()));
+      // }
       if (dataGridCell.columnName == AirportCartDataTableColumn.code.name) {
         return Container(alignment: Alignment.center, child: Text(cart.code));
       }
