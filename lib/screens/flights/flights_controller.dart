@@ -214,10 +214,10 @@ class FlightsController extends MainController {
   }
 
   Future<void> flightSendReport({required String email, required String typeB, required Flight flight, required bool attachment}) async {
-    if (email.trim().isEmpty && typeB.trim().isEmpty) {
-      FailureHandler.handle(ValidationFailure(code: 1, msg: "Both the email address and type-b can not be empty", traceMsg: ""));
-      return;
-    }
+    // if (email.trim().isEmpty && typeB.trim().isEmpty) {
+    //   FailureHandler.handle(ValidationFailure(code: 1, msg: "Both the email address and type-b can not be empty", traceMsg: ""));
+    //   return;
+    // }
 
     if (email.trim().isNotEmpty) {
       List<String> invalidEmails =

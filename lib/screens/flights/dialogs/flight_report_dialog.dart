@@ -125,7 +125,15 @@ class _FlightReportDialogState extends State<FlightReportDialog> {
                     children: [
                       const Expanded(child: Text("Email")),
                       const SizedBox(width: 12),
-                      Expanded(flex: 7, child: MyTextField(placeholder: "a.b@c.com, a2.b@c.com, ", controller: emailC)),
+                      Expanded(
+                          flex: 7,
+                          child: MyTextField(
+                            placeholder: "a.b@c.com, a2.b@c.com, ",
+                            controller: emailC,
+                            onChanged: (String value) {
+                              setState(() {});
+                            },
+                          )),
                       // const SizedBox(width: 12),
                       // DotButton(
                       //     icon: Icons.send,
@@ -141,7 +149,15 @@ class _FlightReportDialogState extends State<FlightReportDialog> {
                     children: [
                       const Expanded(child: Text("Type B")),
                       const SizedBox(width: 12),
-                      Expanded(flex: 7, child: MyTextField(placeholder: "abcdefg, igklmno,", controller: typebC)),
+                      Expanded(
+                          flex: 7,
+                          child: MyTextField(
+                            placeholder: "abcdefg, igklmno,",
+                            controller: typebC,
+                            onChanged: (String value) {
+                              setState(() {});
+                            },
+                          )),
                       // const SizedBox(width: 12),
                       // DotButton(
                       //     icon: Icons.send,
@@ -160,7 +176,6 @@ class _FlightReportDialogState extends State<FlightReportDialog> {
               padding: const EdgeInsets.only(left: 18, right: 18, bottom: 12, top: 12),
               child: Row(
                 children: [
-                  
                   MySwitchButton(
                       value: attachment,
                       onChange: (v) {
@@ -178,9 +193,11 @@ class _FlightReportDialogState extends State<FlightReportDialog> {
                   ),
                   const SizedBox(width: 12),
                   MyButton(
-                    onPressed: () async {
-                      await getIt<FlightsController>().flightSendReport(email: emailC.text, typeB: typebC.text, flight: widget.flight, attachment: attachment);
-                    },
+                    onPressed: emailC.text.trim().isEmpty && typebC.text.trim().isEmpty
+                        ? null
+                        : () async {
+                            await getIt<FlightsController>().flightSendReport(email: emailC.text, typeB: typebC.text, flight: widget.flight, attachment: attachment);
+                          },
                     label: "Send",
                     color: theme.primaryColor,
                   ),
