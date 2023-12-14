@@ -33,7 +33,7 @@ class FlightAddRemoveContainerRequest extends Request {
       "Execution": "AssignContainerToFlight",
       "Token":token,
       "Request": {
-        "FlightScheduleID": flight.id,
+        "FlightScheduleID": isAdd?flight.id:con.flightID,
         "ContainerID": con.id!,
         "Destination": con.dest,
         "DestList":con.destList,

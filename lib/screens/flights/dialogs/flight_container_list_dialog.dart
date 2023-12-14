@@ -7,9 +7,12 @@ import 'package:brs_panel/widgets/MyTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
+import '../../../core/abstracts/success_abs.dart';
 import '../../../core/classes/flight_class.dart';
 import '../../../core/classes/tag_container_class.dart';
 import '../../../core/classes/login_user_class.dart';
+import '../../../core/util/confirm_operation.dart';
+import '../../../core/util/handlers/success_handler.dart';
 import '../../../initialize.dart';
 import '../../../widgets/MyButton.dart';
 import '../../../core/constants/ui.dart';
@@ -24,8 +27,7 @@ class FlightContainerListDialog extends StatefulWidget {
   final List<TagContainer> cons;
   final List<String> destList;
 
-  const FlightContainerListDialog({Key? key, required this.cons, required this.flight, required this.destList})
-      : super(key: key);
+  const FlightContainerListDialog({Key? key, required this.cons, required this.flight, required this.destList}) : super(key: key);
 
   @override
   State<FlightContainerListDialog> createState() => _FlightContainerListDialogState();
@@ -70,10 +72,9 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
     ThemeData theme = Theme.of(context);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    List<TagContainer> assignedList =
-        assigned.where((element) => element.validateSearch(assignedSearchC.text)).toList();
-    List<TagContainer> availableList =
-        available.where((element) => element.validateSearch(availableSearchC.text)).toList();
+    List<TagContainer> assignedList = assigned.where((element) => element.validateSearch(assignedSearchC.text)).toList();
+    List<TagContainer> availableList = available.where((element) => element.validateSearch(availableSearchC.text)).toList();
+    availableList.sort((a, b) => (a.flightID ?? 0).compareTo(b.flightID ?? 0));
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: width * 0.1, vertical: height * 0.2),
       backgroundColor: Colors.white,
@@ -173,8 +174,7 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                           children: [
                             GridView(
                                 shrinkWrap: true,
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 3, childAspectRatio: 2, crossAxisSpacing: 8, mainAxisSpacing: 8),
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 2, crossAxisSpacing: 8, mainAxisSpacing: 8),
                                 children: BasicClass.systemSetting.tagTypeList
                                     .where((element) => element.label.isNotEmpty)
                                     .map(
@@ -198,11 +198,8 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                             const Divider(height: 24),
                             const SizedBox(height: 12),
                             MyFieldPicker<AirportPositionSection>(
-                              items: BasicClass.getAllAirportSections4()
-                                  .where((element) =>
-                                      widget.flight.validAssignContainerPositions.contains(element.position) &&
-                                      element.canHaveContainer)
-                                  .toList(),
+                              items:
+                                  BasicClass.getAllAirportSections4().where((element) => widget.flight.validAssignContainerPositions.contains(element.position) && element.canHaveContainer).toList(),
                               label: "Airport Section",
                               itemToString: (item) => item.label,
                               value: airportPositionSection,
@@ -212,12 +209,8 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                   spot = null;
                                 }
                                 if (as != null && as.spotRequired) {
-                                  spot = (BasicClass.userSetting.shootList
-                                              .firstWhereOrNull((element) => element.id == airportPositionSection?.id)
-                                              ?.spotList ??
-                                          [])
-                                      .firstWhereOrNull(
-                                          (element) => !assigned.map((e) => e.spotID).contains(element.id));
+                                  spot = (BasicClass.userSetting.shootList.firstWhereOrNull((element) => element.id == airportPositionSection?.id)?.spotList ?? [])
+                                      .firstWhereOrNull((element) => !assigned.map((e) => e.spotID).contains(element.id));
                                 }
                                 setState(() {});
                               },
@@ -226,16 +219,11 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                 ? Padding(
                                     padding: const EdgeInsets.only(top: 24),
                                     child: MyFieldPicker<Spot>(
-                                      items: BasicClass.userSetting.shootList
-                                              .firstWhereOrNull((element) => element.id == airportPositionSection?.id)
-                                              ?.spotList ??
-                                          [],
+                                      items: BasicClass.userSetting.shootList.firstWhereOrNull((element) => element.id == airportPositionSection?.id)?.spotList ?? [],
                                       // items: [],
                                       label: "Spot",
 
-                                      itemToString: (item) =>
-                                          item.spot +
-                                          (assignedList.any((element) => element.spotID == item.id) ? "  (Used)" : ""),
+                                      itemToString: (item) => item.spot + (assignedList.any((element) => element.spotID == item.id) ? "  (Used)" : ""),
                                       value: spot,
                                       onChange: (s) {
                                         spot = s;
@@ -264,22 +252,35 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                 headerRowHeight: 35,
                                 source: AvailableContainerDataSource(
                                   cons: availableList,
-                                  onAdd: (typeList.isEmpty ||
-                                          airportPositionSection == null ||
-                                          airportPositionSection!.spotRequired && spot == null)
+                                  onAdd: (typeList.isEmpty || airportPositionSection == null || (airportPositionSection!.spotRequired && spot == null))
                                       ? null
                                       : (e) async {
                                           e.tagTypeIds = typeList.map((e) => e.id.toString()).join(",");
                                           e.sectionID = airportPositionSection!.id;
                                           e.spotID = spot?.id;
-                                          final a = await myFlightsController.flightAddRemoveContainer(
-                                              widget.flight, e, true);
+                                          final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, true);
                                           if (a != null) {
                                             available.removeWhere((element) => element.id == a.id);
                                             assigned.insert(0, a);
                                             setState(() {});
                                           }
                                         },
+                                  unassigned: (e) async {
+                                    final conf = await ConfirmOperation.getConfirm(
+                                      Operation(message: "Unassign Container from flight", title: "Are You Sure?", actions: ["Confirm", 'Cancel']),
+                                    );
+                                    if (!conf) return;
+                                    // e.tagTypeIds = typeList.map((e) => e.id.toString()).join(",");
+                                    // e.sectionID = airportPositionSection!.id;
+                                    // e.spotID = spot?.id;
+                                    final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, false);
+                                    if (a != null) {
+                                      available.removeWhere((element) => element.id == a.id);
+                                      available.insert(0, a);
+                                      setState(() {});
+                                      SuccessHandler.handle(ServerSuccess(code: 1, msg: "Container unassigned from Flight"));
+                                    }
+                                  },
                                 ),
                                 columns: AvailableContainerDataTableColumn.values
                                     .map(
@@ -471,8 +472,7 @@ class AvailableContainerWidget extends StatelessWidget {
   final int index;
   final void Function() onAdd;
 
-  const AvailableContainerWidget({Key? key, required this.con, required this.index, required this.onAdd})
-      : super(key: key);
+  const AvailableContainerWidget({Key? key, required this.con, required this.index, required this.onAdd}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -506,8 +506,7 @@ class AssignedContainerWidget extends StatelessWidget {
   final int index;
   final void Function() onDelete;
 
-  const AssignedContainerWidget({Key? key, required this.con, required this.index, required this.onDelete})
-      : super(key: key);
+  const AssignedContainerWidget({Key? key, required this.con, required this.index, required this.onDelete}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

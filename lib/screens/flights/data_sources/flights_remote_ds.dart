@@ -32,6 +32,7 @@ class FlightsRemoteDataSource implements FlightsDataSourceInterface {
   @override
   Future<FlightAddRemoveContainerResponse> flightAddRemoveContainer({required FlightAddRemoveContainerRequest request}) async {
     Response res = await networkManager.post(request);
+    print(res.body);
     return FlightAddRemoveContainerResponse.fromResponse(res);
   }
 

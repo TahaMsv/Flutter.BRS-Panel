@@ -31,15 +31,15 @@ extension FlightDataTableColumnDetails on AvailableContainerDataTableColumn {
 class AvailableContainerDataSource extends DataGridSource {
   late final List<TagContainer> _dataList;
   final Future<void> Function(TagContainer)? onAdd;
+  final Future<void> Function(TagContainer)? unassigned;
 
-  AvailableContainerDataSource({required List<TagContainer> cons, required this.onAdd}) {
+  AvailableContainerDataSource({required List<TagContainer> cons, required this.onAdd, required this.unassigned}) {
     _dataList = cons;
     _cons = cons
         .map<DataGridRow>(
           (e) => DataGridRow(
             cells: [
-              DataGridCell<int>(
-                  columnName: AvailableContainerDataTableColumn.id.name, value: cons.length - cons.indexOf(e)),
+              DataGridCell<int>(columnName: AvailableContainerDataTableColumn.id.name, value: cons.length - cons.indexOf(e)),
               DataGridCell<String>(columnName: AvailableContainerDataTableColumn.name.name, value: e.code.trim()),
               DataGridCell<String>(columnName: AvailableContainerDataTableColumn.actions.name, value: ''),
             ],
@@ -70,7 +70,7 @@ class AvailableContainerDataSource extends DataGridSource {
             return Row(
               children: [
                 const SizedBox(width: 8),
-                con.getImg,
+                con.getImgMini,
                 const SizedBox(width: 8),
                 Text(con.code, style: TextStyles.styleBold16Black),
               ],
@@ -82,11 +82,17 @@ class AvailableContainerDataSource extends DataGridSource {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  DotButton(
-                    icon: Icons.add,
-                    color: Colors.blueAccent,
-                    onPressed: ((con.tagCount) > 0 || onAdd == null) ? null : () async => await onAdd!(con),
-                  )
+                  con.flightID == null
+                      ? DotButton(
+                          icon: Icons.add,
+                          color: Colors.blueAccent,
+                          onPressed: (onAdd == null) ? null : () async => await onAdd!(con),
+                        )
+                      : DotButton(
+                          icon: Icons.link_off,
+                          color: Colors.deepOrange,
+                          onPressed: (unassigned == null) ? null : () async => await unassigned!(con),
+                        )
                 ],
               ),
             );
