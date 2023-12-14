@@ -8,7 +8,7 @@ final airportCartsProvider = ChangeNotifierProvider<AirportCartsState>((_) => Ai
 class AirportCartsState extends ChangeNotifier {
   void setState() => notifyListeners();
 
-  ///bool loading = false;
+  bool loading = false;
 }
 
 final cartListProvider =

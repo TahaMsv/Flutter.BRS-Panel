@@ -1,27 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:get/utils.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../core/classes/tag_container_class.dart';
 import '../../core/constants/ui.dart';
 import '../../initialize.dart';
 import '../../widgets/DotButton.dart';
+import '../../widgets/LoadingListView.dart';
 import '../../widgets/MyAppBar.dart';
 import '../../widgets/MyTextField.dart';
 import 'airport_carts_controller.dart';
 import 'airport_carts_state.dart';
+import 'data_tables/airport_cart_data_table.dart';
 
-class AirportCartsView extends StatelessWidget {
+class AirportCartsView extends ConsumerWidget {
   const AirportCartsView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-        appBar: MyAppBar(),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final double width = MediaQuery.of(context).size.width;
+    final AirportCartsState state = ref.watch(airportCartsProvider);
+    final cartList = ref.watch(filteredCartListProvider);
+
+    return Scaffold(
+        appBar: const MyAppBar(),
         body: Column(
           children: [
             AirportCartsPanel(),
-            AirportCartListWidget(),
+            // AirportCartListWidget(),
+            Expanded(
+              child: LoadingListView(
+                loading: state.loading,
+                child: SfDataGrid(
+                    headerGridLinesVisibility: GridLinesVisibility.both,
+                    selectionMode: SelectionMode.none,
+                    sortingGestureType: SortingGestureType.doubleTap,
+                    // allowSorting: true,
+                    headerRowHeight: 35,
+                    source: AirportCartDataSource(carts: cartList),
+                    columns: AirportCartDataTableColumn.values
+                        .map(
+                          (e) => GridColumn(
+                            columnName: e.name,
+                            label: Center(child: Text(e.name.capitalizeFirst!)),
+                            width: e.width * width,
+                            allowSorting: false,
+                          ),
+                        )
+                        .toList()),
+              ),
+            ),
           ],
         ));
   }
@@ -133,7 +163,11 @@ class AirportCartWidget extends StatelessWidget {
         children: [
           Align(
             alignment: Alignment.topLeft,
-            child: Container(margin: const EdgeInsets.all(4), padding: const EdgeInsets.all(2), decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.tealAccent), child: Text("${cart.id}")),
+            child: Container(
+                margin: const EdgeInsets.all(4),
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.tealAccent),
+                child: Text("${cart.id}")),
           ),
           Align(
             alignment: Alignment.topRight,
