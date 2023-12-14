@@ -3,14 +3,12 @@ import 'package:brs_panel/widgets/MyDropDown.dart';
 import 'package:brs_panel/widgets/MySegment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../core/classes/airport_class.dart';
 import '../../../core/classes/login_user_class.dart';
 import '../../../core/classes/user_class.dart';
 import '../../../core/constants/ui.dart';
 import '../../../core/navigation/navigation_service.dart';
 import '../../../core/util/basic_class.dart';
 import '../../../widgets/MyButton.dart';
-import '../../../widgets/MySwitchButton.dart';
 import '../../../widgets/MyTextField.dart';
 import '../users_controller.dart';
 
@@ -25,7 +23,6 @@ class AddUpdateUserDialog extends StatefulWidget {
 
 class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
   late final bool isEditing;
-  bool isAdmin = false;
   UserAccessType userType = UserAccessType.agent;
   final TextEditingController handlingC = TextEditingController();
   final TextEditingController nameC = TextEditingController();
@@ -212,18 +209,6 @@ class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  !BasicClass.userInfo.userSettings.isAdmin
-                      ? const SizedBox()
-                      : Row(
-                          children: [
-                            MySwitchButton(
-                              value: isAdmin,
-                              onChange: (b) => setState(() => isAdmin = b),
-                              label: "Admin",
-                            ),
-                          ],
-                        ),
                 ],
               ),
             ),
@@ -263,9 +248,9 @@ class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
                       waitSecondMin: 3,
                       waitSecondMax: 6,
                       tagOnlyDigit: true,
-                      isAdmin: isAdmin,
+                      isAdmin: false,
                       handlingID: selectedHandling?.id,
-                      isHandlingAdmin: isAdmin,
+                      isHandlingAdmin: false,
                       accessType: userType.id,
                       password: passwordC.text.isEmpty ? null : passwordC.text,
                     );

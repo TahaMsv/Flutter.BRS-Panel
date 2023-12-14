@@ -33,13 +33,13 @@ class BasicClass {
     instance._appConfig = config;
   }
 
-  static Airport get airport => instance._airport!;
+  static Airport get airport => instance._airport ?? Airport.empty();
 
-  static String get username => instance._userInfo!.username;
+  static String get username => instance._userInfo?.username ?? "";
 
-  static String get profileUrl => Apis.getProfileImage(instance._userInfo!.username);
+  static String get profileUrl => Apis.getProfileImage(instance._userInfo?.username ?? "");
 
-  static List<String> get airlineList => instance._userSettings!.accessAirlines;
+  static List<String> get airlineList => instance._userSettings?.accessAirlines ?? [];
 
   static SystemSettings get systemSetting => instance._systemSettings ?? SystemSettings.empty();
 

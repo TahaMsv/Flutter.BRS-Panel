@@ -77,7 +77,6 @@ class BarcodeGeneratorView extends ConsumerWidget {
                 const SizedBox(width: 40),
                 MyButton(
                   height: 45,
-                  width: 50,
                   label: 'Generate Barcodes',
                   fontSize: 12,
                   onPressed: myBgController.generateBarcodes,

@@ -42,10 +42,12 @@ class Section {
   final int position;
   final int offset;
   final bool isMainSection;
+  final int? groundSectionID;
   final bool canHaveTag;
   final bool canHaveContainer;
   final bool canHaveBin;
   final bool spotRequired;
+  final List<SectionSpot> spots;
   final List<Section> sections;
 
   const Section({
@@ -55,10 +57,12 @@ class Section {
     required this.position,
     required this.offset,
     required this.isMainSection,
+    required this.groundSectionID,
     required this.canHaveTag,
     required this.canHaveContainer,
     required this.canHaveBin,
     required this.spotRequired,
+    required this.spots,
     required this.sections,
   });
 
@@ -69,10 +73,12 @@ class Section {
     int? position,
     int? offset,
     bool? isMainSection,
+    int? groundSectionID,
     bool? canHaveTag,
     bool? canHaveContainer,
     bool? canHaveBin,
     bool? spotRequired,
+    List<SectionSpot>? spots,
     List<Section>? sections,
   }) =>
       Section(
@@ -82,10 +88,12 @@ class Section {
         position: position ?? this.position,
         offset: offset ?? this.offset,
         isMainSection: isMainSection ?? this.isMainSection,
+        groundSectionID: groundSectionID ?? this.groundSectionID,
         canHaveTag: canHaveTag ?? this.canHaveTag,
         canHaveContainer: canHaveContainer ?? this.canHaveContainer,
         canHaveBin: canHaveBin ?? this.canHaveBin,
         spotRequired: spotRequired ?? this.spotRequired,
+        spots: spots ?? this.spots,
         sections: sections ?? this.sections,
       );
 
@@ -95,11 +103,13 @@ class Section {
       code: "",
       position: 0,
       offset: 0,
-      isMainSection: true,
+      isMainSection: false,
+      groundSectionID: null,
       canHaveTag: true,
-      canHaveContainer: true,
-      canHaveBin: true,
-      spotRequired: true,
+      canHaveContainer: false,
+      canHaveBin: false,
+      spotRequired: false,
+      spots: [],
       sections: []);
 
   factory Section.fromJson(Map<String, dynamic> json) => Section(
@@ -109,10 +119,12 @@ class Section {
         position: json["Position"],
         offset: json["Offset"],
         isMainSection: json["IsMainSection"],
+        groundSectionID: json["GroundSectionID"],
         canHaveTag: json["CanHaveTag"],
         canHaveContainer: json["CanHaveContainer"],
         canHaveBin: json["CanHaveBin"],
         spotRequired: json["SpotRequired"],
+        spots: List<SectionSpot>.from((json["SpotList"] ?? []).map((x) => SectionSpot.fromJson(x))),
         sections: List<Section>.from((json["SUBS"] ?? []).map((x) => Section.fromJson(x))),
       );
 
@@ -123,14 +135,37 @@ class Section {
         "Position": position,
         "Offset": offset,
         "IsMainSection": isMainSection,
+        "GroundSectionID": groundSectionID,
         "CanHaveTag": canHaveTag,
         "CanHaveContainer": canHaveContainer,
         "CanHaveBin": canHaveBin,
         "SpotRequired": spotRequired,
+        "SpotList": List<dynamic>.from(spots.map((x) => x.toJson())),
         "SUBS": List<dynamic>.from(sections.map((x) => x.toJson())),
       };
+
+  List<Section> get subSections {
+    List<Section> hier = [];
+    if (sections.isEmpty) return hier;
+    for (var s in sections) {
+      hier = hier + s.subSections.map((e) => e.copyWith()).toList();
+    }
+    return hier;
+  }
 
   validateSearch(String s) {
     return null;
   }
+}
+
+class SectionSpot {
+  final String label;
+
+  SectionSpot({required this.label});
+
+  SectionSpot copyWith({String? label}) => SectionSpot(label: label ?? this.label);
+
+  factory SectionSpot.fromJson(Map<String, dynamic> json) => SectionSpot(label: json["Label"]);
+
+  Map<String, dynamic> toJson() => {"Label": label};
 }

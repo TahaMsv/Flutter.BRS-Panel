@@ -2,14 +2,9 @@ import 'package:brs_panel/core/classes/tag_container_class.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../../core/constants/ui.dart';
-import '../../../initialize.dart';
 import '../../../widgets/DotButton.dart';
 
-enum AvailableContainerDataTableColumn {
-  id,
-  name,
-  actions
-}
+enum AvailableContainerDataTableColumn { id, name, actions }
 
 extension FlightDataTableColumnDetails on AvailableContainerDataTableColumn {
   double get width {
@@ -22,11 +17,12 @@ extension FlightDataTableColumnDetails on AvailableContainerDataTableColumn {
         return 0.17;
     }
   }
+
   String get label {
     switch (this) {
       case AvailableContainerDataTableColumn.actions:
         return "";
-      default :
+      default:
         return name;
     }
   }
@@ -34,20 +30,21 @@ extension FlightDataTableColumnDetails on AvailableContainerDataTableColumn {
 
 class AvailableContainerDataSource extends DataGridSource {
   late final List<TagContainer> _dataList;
-  final Future<void> Function(TagContainer) onAdd;
+  final Future<void> Function(TagContainer)? onAdd;
 
-  AvailableContainerDataSource({required List<TagContainer> cons,required this.onAdd}) {
+  AvailableContainerDataSource({required List<TagContainer> cons, required this.onAdd}) {
     _dataList = cons;
     _cons = cons
         .map<DataGridRow>(
           (e) => DataGridRow(
-        cells: [
-          DataGridCell<int>(columnName: AvailableContainerDataTableColumn.id.name, value:cons.length - cons.indexOf(e)),
-          DataGridCell<String>(columnName: AvailableContainerDataTableColumn.name.name, value: e.code.trim()),
-          DataGridCell<String>(columnName: AvailableContainerDataTableColumn.actions.name, value: ''),
-        ],
-      ),
-    )
+            cells: [
+              DataGridCell<int>(
+                  columnName: AvailableContainerDataTableColumn.id.name, value: cons.length - cons.indexOf(e)),
+              DataGridCell<String>(columnName: AvailableContainerDataTableColumn.name.name, value: e.code.trim()),
+              DataGridCell<String>(columnName: AvailableContainerDataTableColumn.actions.name, value: ''),
+            ],
+          ),
+        )
         .toList();
   }
 
@@ -61,7 +58,7 @@ class AvailableContainerDataSource extends DataGridSource {
     final int index = rows.indexOf(row);
     final TagContainer con = _dataList[index];
     return DataGridRowAdapter(
-        color: index.isEven?MyColors.evenRow:MyColors.oddRow,
+        color: index.isEven ? MyColors.evenRow : MyColors.oddRow,
         cells: row.getCells().map<Widget>((dataGridCell) {
           if (dataGridCell.columnName == AvailableContainerDataTableColumn.id.name) {
             return Container(
@@ -88,9 +85,7 @@ class AvailableContainerDataSource extends DataGridSource {
                   DotButton(
                     icon: Icons.add,
                     color: Colors.blueAccent,
-                    onPressed: (con.tagCount ?? 0) > 0 ? null : ()async{
-                      await onAdd(con);
-                    },
+                    onPressed: ((con.tagCount) > 0 || onAdd == null) ? null : () async => await onAdd!(con),
                   )
                 ],
               ),
@@ -100,4 +95,3 @@ class AvailableContainerDataSource extends DataGridSource {
         }).toList());
   }
 }
-

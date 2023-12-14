@@ -61,7 +61,7 @@ class _DotButtonState extends State<DotButton> {
       width: widget.size,
       height: widget.size,
       child: ElevatedButton(
-        onPressed: _onTap,
+        onPressed: widget.onPressed==null?null:_onTap,
         onLongPress: widget.onLongPress,
         onFocusChange: widget.onFocusChange,
         autofocus: widget.autofocus,
