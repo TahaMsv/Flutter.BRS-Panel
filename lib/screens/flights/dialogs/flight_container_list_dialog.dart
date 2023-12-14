@@ -1,7 +1,5 @@
 import 'package:artemis_ui_kit/artemis_ui_kit.dart';
-import 'package:brs_panel/core/abstracts/failures_abs.dart';
 import 'package:brs_panel/core/util/basic_class.dart';
-import 'package:brs_panel/core/util/handlers/failure_handler.dart';
 import 'package:brs_panel/widgets/DotButton.dart';
 import 'package:brs_panel/widgets/FlightBanner.dart';
 import 'package:brs_panel/widgets/MyCheckBoxButton.dart';
@@ -61,14 +59,9 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
     classes.add(BasicClass.systemSetting.classTypeList.first);
     availableDests = List.from(widget.destList);
     assigned = widget.cons.where((element) => element.flightID != null).toList();
-    available =
-        widget.cons.where((element) => element.flightID == null && !assigned.any((as) => element.id == as.id)).toList();
-    availableSearchC.addListener(() {
-      setState(() {});
-    });
-    assignedSearchC.addListener(() {
-      setState(() {});
-    });
+    available = widget.cons.where((element) => element.flightID != widget.flight.id).toList();
+    availableSearchC.addListener(() => setState(() {}));
+    assignedSearchC.addListener(() => setState(() {}));
     super.initState();
   }
 
@@ -111,6 +104,15 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                 children: [
                   Expanded(
                     flex: 2,
+                    child: Container(
+                      height: 50,
+                      alignment: Alignment.center,
+                      color: MyColors.evenRow,
+                      child: const Text("Section & TagType", style: TextStyles.styleBold16Grey),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
@@ -127,16 +129,6 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                           ),
                         ],
                       ),
-                    ),
-                  ),
-
-                  Expanded(
-                    flex: 2,
-                    child: Container(
-                      height: 50,
-                      alignment: Alignment.center,
-                      color: MyColors.evenRow,
-                      child: const Text("Section & TagType", style: TextStyles.styleBold16Grey),
                     ),
                   ),
                   // const SizedBox(width: 12),
@@ -167,92 +159,6 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    flex: 2,
-                    child: Column(
-                      children: [
-                        Expanded(
-                            child: SfDataGrid(
-                                headerGridLinesVisibility: GridLinesVisibility.both,
-                                selectionMode: SelectionMode.none,
-                                horizontalScrollPhysics: const NeverScrollableScrollPhysics(),
-                                sortingGestureType: SortingGestureType.doubleTap,
-                                gridLinesVisibility: GridLinesVisibility.vertical,
-                                allowSorting: true,
-                                // shrinkWrapColumns: true,
-                                headerRowHeight: 35,
-                                source: AvailableContainerDataSource(
-                                  cons: availableList,
-                                  onAdd: (e) async {
-                                    if (typeList.isEmpty) {
-                                      FailureHandler.handle(ValidationFailure(
-                                          code: 1, msg: "Select Valid Types for Container!", traceMsg: ''));
-                                      return;
-                                    }
-                                    if (airportPositionSection == null) {
-                                      FailureHandler.handle(
-                                          ValidationFailure(code: 1, msg: "Section is Required!", traceMsg: ''));
-                                      return;
-                                    }
-                                    if (airportPositionSection!.spotRequired && spot == null) {
-                                      FailureHandler.handle(ValidationFailure(
-                                          code: 1, msg: "Selected Section Requires Spot!", traceMsg: ''));
-                                      return;
-                                    }
-
-                                    e.tagTypeIds = typeList.map((e) => e.id.toString()).join(",");
-                                    e.sectionID = airportPositionSection!.id;
-                                    e.spotID = spot?.id;
-                                    final a =
-                                        await myFlightsController.flightAddRemoveContainer(widget.flight, e, true);
-                                    if (a != null) {
-                                      available.removeWhere((element) => element.id == a.id);
-                                      assigned.insert(0, a);
-                                      setState(() {});
-                                    }
-                                  },
-                                ),
-                                columns: AvailableContainerDataTableColumn.values
-                                    .map(
-                                      (e) => GridColumn(
-                                        columnName: e.name,
-
-                                        label: Center(
-                                            child: Text(
-                                          e.label.capitalizeFirst!,
-                                          style: const TextStyle(fontSize: 12),
-                                        )),
-                                        // columnWidthMode: ColumnWidthMode.fill
-                                        width: width * 0.8 * 0.2 * e.width,
-                                      ),
-                                    )
-                                    .toList())
-                            // child: Container(
-                            //   child: ListView.builder(
-                            //     itemBuilder: (c, i) {
-                            //       TagContainer e = availableList[i];
-                            //       e = e.copyWith(destination: dest, destList: destList.join(","), classList: classes.map((e) => e.abbreviation).join(","));
-                            //       return AvailableContainerWidget(
-                            //         con: e,
-                            //         index: i,
-                            //         onAdd: () async {
-                            //           final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, true);
-                            //           if (a != null) {
-                            //             available.removeWhere((element) => element.id == a.id);
-                            //             assigned.add(a);
-                            //             setState(() {});
-                            //           }
-                            //         },
-                            //       );
-                            //     },
-                            //     itemCount: availableList.length,
-                            //   ),
-                            // ),
-                            ),
-                      ],
-                    ),
-                  ),
-                  // const SizedBox(width: 12),
                   Expanded(
                       flex: 2,
                       child: Container(
@@ -342,6 +248,80 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                           ],
                         ),
                       )),
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      children: [
+                        Expanded(
+                            child: SfDataGrid(
+                                headerGridLinesVisibility: GridLinesVisibility.both,
+                                selectionMode: SelectionMode.none,
+                                horizontalScrollPhysics: const NeverScrollableScrollPhysics(),
+                                sortingGestureType: SortingGestureType.doubleTap,
+                                gridLinesVisibility: GridLinesVisibility.vertical,
+                                allowSorting: true,
+                                // shrinkWrapColumns: true,
+                                headerRowHeight: 35,
+                                source: AvailableContainerDataSource(
+                                  cons: availableList,
+                                  onAdd: (typeList.isEmpty ||
+                                          airportPositionSection == null ||
+                                          airportPositionSection!.spotRequired && spot == null)
+                                      ? null
+                                      : (e) async {
+                                          e.tagTypeIds = typeList.map((e) => e.id.toString()).join(",");
+                                          e.sectionID = airportPositionSection!.id;
+                                          e.spotID = spot?.id;
+                                          final a = await myFlightsController.flightAddRemoveContainer(
+                                              widget.flight, e, true);
+                                          if (a != null) {
+                                            available.removeWhere((element) => element.id == a.id);
+                                            assigned.insert(0, a);
+                                            setState(() {});
+                                          }
+                                        },
+                                ),
+                                columns: AvailableContainerDataTableColumn.values
+                                    .map(
+                                      (e) => GridColumn(
+                                        columnName: e.name,
+
+                                        label: Center(
+                                            child: Text(
+                                          e.label.capitalizeFirst!,
+                                          style: const TextStyle(fontSize: 12),
+                                        )),
+                                        // columnWidthMode: ColumnWidthMode.fill
+                                        width: width * 0.8 * 0.2 * e.width,
+                                      ),
+                                    )
+                                    .toList())
+                            // child: Container(
+                            //   child: ListView.builder(
+                            //     itemBuilder: (c, i) {
+                            //       TagContainer e = availableList[i];
+                            //       e = e.copyWith(destination: dest, destList: destList.join(","), classList: classes.map((e) => e.abbreviation).join(","));
+                            //       return AvailableContainerWidget(
+                            //         con: e,
+                            //         index: i,
+                            //         onAdd: () async {
+                            //           final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, true);
+                            //           if (a != null) {
+                            //             available.removeWhere((element) => element.id == a.id);
+                            //             assigned.add(a);
+                            //             setState(() {});
+                            //           }
+                            //         },
+                            //       );
+                            //     },
+                            //     itemCount: availableList.length,
+                            //   ),
+                            // ),
+                            ),
+                      ],
+                    ),
+                  ),
+                  const VerticalDivider(),
                   Expanded(
                     flex: 5,
                     child: SfDataGrid(

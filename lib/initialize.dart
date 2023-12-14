@@ -21,7 +21,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:network_manager/network_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_strategy/url_strategy.dart';
 import 'package:window_manager/window_manager.dart';
 import 'core/data_base/classes/db_user_class.dart';
 import 'core/data_base/local_data_base.dart';
@@ -44,7 +43,7 @@ Future<void> init() async {
   if (!kIsWeb) {
     WidgetsFlutterBinding.ensureInitialized();
   }
-  setPathUrlStrategy();
+  // setPathUrlStrategy();
   initFullScreen();
   await initDataBase();
   await loadConfigFile();

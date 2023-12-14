@@ -273,7 +273,7 @@ class TagContainer {
     shootID: json["ShootID"],
     classTypeID: json["ClassTypeID"] ?? 1,
     positionID: json["PositionID"] ?? -1,
-    title: json["Title"],
+    title: json["Title"] ?? "",
     closedTime: json["ClosedTime"],
     tagCount: json["TagCount"] ?? 0,
     flnb: json["FLNB"],

@@ -615,17 +615,18 @@ class BinTileWidget extends StatelessWidget {
               ),
             ),
           const SizedBox(width: 8),
-          Container(
-            height: 25,
-            width: 100,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15), border: Border.all(color: MyColors.white3.withOpacity(0.5))),
-            child: Text(
-              "Containers: ${items.length}",
-              style: const TextStyle(fontSize: 12, color: MyColors.white3),
-            ),
-          )
+          if (bin.containerType != 1)
+            Container(
+              height: 25,
+              width: 100,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15), border: Border.all(color: MyColors.white3.withOpacity(0.5))),
+              child: Text(
+                "Containers: ${items.length}",
+                style: const TextStyle(fontSize: 12, color: MyColors.white3),
+              ),
+            )
         ],
       ),
     );

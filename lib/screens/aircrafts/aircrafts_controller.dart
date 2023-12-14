@@ -1,3 +1,4 @@
+import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:flutter/material.dart';
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/abstracts/success_abs.dart';
@@ -11,6 +12,7 @@ import 'aircrafts_state.dart';
 import 'dialogs/add_aircraft_dialog.dart';
 import 'usecases/add_aircraft_usecase.dart';
 import 'usecases/delete_aircraft.dart';
+import 'usecases/get_aircraft_list.dart';
 
 class AircraftsController extends MainController {
   late AircraftsState aircraftsState = ref.read(aircraftsProvider);
@@ -45,6 +47,19 @@ class AircraftsController extends MainController {
     aircraftsState.bins.removeAt(i);
     aircraftsState.binsC.removeAt(i);
     aircraftsState.setState();
+  }
+
+  getAircrafts() async {
+    GetAircraftListRequest getAircraftListRequest = GetAircraftListRequest(al: BasicClass.userSetting.al);
+    GetAircraftListUseCase getAircraftListUseCase = GetAircraftListUseCase();
+    aircraftsState.loading = true;
+    aircraftsState.setState();
+    final fOrR = await getAircraftListUseCase(request: getAircraftListRequest);
+    aircraftsState.loading = false;
+    fOrR.fold((l) => FailureHandler.handle(l, retry: getAircrafts), (r) {
+      final alP = ref.read(aircraftListProvider.notifier);
+      alP.setAircrafts(r.aircrafts);
+    });
   }
 
   addUpdateAirCraft({Aircraft? aircraft, required bool isUpdate}) async {
@@ -85,5 +100,11 @@ class AircraftsController extends MainController {
       alP.removeAircraft(f.id);
       SuccessHandler.handle(ServerSuccess(code: 1, msg: "Aircraft is Removed Successfully!"));
     });
+  }
+
+  @override
+  void onInit() {
+    getAircrafts();
+    super.onInit();
   }
 }

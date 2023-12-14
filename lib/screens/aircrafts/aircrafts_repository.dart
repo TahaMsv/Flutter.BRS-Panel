@@ -8,6 +8,7 @@ import 'data_sources/aircrafts_local_ds.dart';
 import 'data_sources/aircrafts_remote_ds.dart';
 import 'usecases/add_aircraft_usecase.dart';
 import 'usecases/delete_aircraft.dart';
+import 'usecases/get_aircraft_list.dart';
 
 class AircraftsRepository implements AircraftsRepositoryInterface {
   final AircraftsRemoteDataSource aircraftsRemoteDataSource = AircraftsRemoteDataSource();
@@ -15,6 +16,21 @@ class AircraftsRepository implements AircraftsRepositoryInterface {
   final NetworkInfo networkInfo = getIt<NetworkInfo>();
 
   AircraftsRepository();
+
+  @override
+  Future<Either<Failure, GetAircraftListResponse>> getAircraftList(GetAircraftListRequest request) async {
+    try {
+      GetAircraftListResponse getAircraftListResponse;
+      if (await networkInfo.isConnected) {
+        getAircraftListResponse = await aircraftsRemoteDataSource.getAircraftList(request: request);
+      } else {
+        getAircraftListResponse = await aircraftsLocalDataSource.getAircraftList(request: request);
+      }
+      return Right(getAircraftListResponse);
+    } on AppException catch (e) {
+      return Left(ServerFailure.fromAppException(e));
+    }
+  }
 
   @override
   Future<Either<Failure, AddAirCraftResponse>> addAirCraft(AddAirCraftRequest request) async {

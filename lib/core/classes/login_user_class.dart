@@ -1486,6 +1486,8 @@ class Airport {
         timeZone: timeZone ?? this.timeZone,
       );
 
+  factory Airport.empty() => const Airport(code: "", cityName: "", strTimeZone: "", timeZone: 0);
+
   factory Airport.fromJson(Map<String, dynamic> json) => Airport(
         code: json["Code"],
         cityName: json["CityName"],

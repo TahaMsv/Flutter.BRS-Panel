@@ -58,11 +58,8 @@ class AircraftsPanel extends ConsumerWidget {
                   s.state = v;
                 },
               )),
-          const SizedBox(width: 12),
-          const Expanded(
-            flex: 5,
-            child: SizedBox(),
-          ),
+          const Expanded(flex: 5, child: SizedBox()),
+          DotButton(icon: Icons.refresh, onPressed: () async => myAirlinesController.getAircrafts()),
         ],
       ),
     );
@@ -79,7 +76,7 @@ class AircraftListWidget extends ConsumerWidget {
     final aircraftList = ref.watch(filteredAircraftListProvider);
     return Expanded(
       child: LoadingListView(
-        loading: false,
+        loading: state.loading,
         child: SfDataGrid(
             headerGridLinesVisibility: GridLinesVisibility.both,
             selectionMode: SelectionMode.none,

@@ -148,6 +148,13 @@ class AirportSectionsController extends MainController {
 
   /// Core -------------------------------------------------------------------------------------------------------------
 
+  bool checkForceGround(Section? section) {
+    final List<Section> selectedSections = ref.read(selectedSectionsProvider.notifier).state;
+    if (selectedSections.length < 2) return false;
+    if (selectedSections[1].subSections.any((s) => s.groundSectionID != null && s.id != section?.id)) return false;
+    return true;
+  }
+
   setIsSectionUpdated(bool b) {
     airportSectionsState.areSectionsUpdated = b;
     airportSectionsState.setState();

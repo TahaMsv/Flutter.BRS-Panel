@@ -10,7 +10,7 @@ final aircraftsProvider = ChangeNotifierProvider<AircraftsState>((_) => Aircraft
 class AircraftsState extends ChangeNotifier {
   void setState() => notifyListeners();
 
-  ///bool loading = false;
+  bool loading = false;
   List<Bin> bins = [];
   TextEditingController alC = TextEditingController(text: BasicClass.userInfo.userSettings.al);
   TextEditingController typeC = TextEditingController();
@@ -33,7 +33,7 @@ final aircraftListProvider = StateNotifierProvider<AircraftListNotifier, List<Ai
 class AircraftListNotifier extends StateNotifier<List<Aircraft>> {
   final StateNotifierProviderRef ref;
 
-  AircraftListNotifier(this.ref) : super(BasicClass.systemSetting.aircraftList);
+  AircraftListNotifier(this.ref) : super([]);
 
   void addAircraft(Aircraft aircraft) {
     state = [...state, aircraft];
