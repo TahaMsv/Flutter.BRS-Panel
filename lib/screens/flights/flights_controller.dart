@@ -106,20 +106,15 @@ class FlightsController extends MainController {
 
   void flightAddContainer(TagContainer e) {}
 
-  Future<TagContainer?> flightAddRemoveContainer(Flight flight, TagContainer c, bool isAdd) async {
-    TagContainer? container;
+  Future<List<TagContainer>> flightAddRemoveContainer(Flight flight, TagContainer c, bool isAdd) async {
+    List<TagContainer> containers = [];
     FlightAddRemoveContainerUseCase flightAddContainerUsecase = FlightAddRemoveContainerUseCase();
-    FlightAddRemoveContainerRequest flightAddRemoveContainerRequest = FlightAddRemoveContainerRequest(
-      flight: flight,
-      con: c,
-      isAdd: isAdd,
-    );
+    FlightAddRemoveContainerRequest flightAddRemoveContainerRequest = FlightAddRemoveContainerRequest(flight: flight, con: c, isAdd: isAdd);
     final fOrR = await flightAddContainerUsecase(request: flightAddRemoveContainerRequest);
-
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightAddRemoveContainer(flight, c, isAdd)), (r) {
-      container = r.container;
+      containers = r.containers;
     });
-    return container;
+    return containers;
   }
 
   Future<void> pickDate() async {

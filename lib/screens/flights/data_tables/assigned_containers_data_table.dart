@@ -1,19 +1,10 @@
-
 import 'package:brs_panel/core/classes/tag_container_class.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../../core/constants/ui.dart';
-import '../../../initialize.dart';
 import '../../../widgets/DotButton.dart';
 
-enum AssignedContainerDataTableColumn {
-  id,
-  name,
-  position,
-  tagCount,
-  tagTypes,
-  actions
-}
+enum AssignedContainerDataTableColumn { id, name, position, tagCount, tagTypes, actions }
 
 extension FlightDataTableColumnDetails on AssignedContainerDataTableColumn {
   double get width {
@@ -21,22 +12,23 @@ extension FlightDataTableColumnDetails on AssignedContainerDataTableColumn {
       case AssignedContainerDataTableColumn.name:
         return 0.23;
       case AssignedContainerDataTableColumn.position:
-        return 0.1;
+        return 0.12;
       case AssignedContainerDataTableColumn.tagCount:
-        return 0.1;
+        return 0.12;
       case AssignedContainerDataTableColumn.tagTypes:
-        return 0.25;
+        return 0.36;
       case AssignedContainerDataTableColumn.actions:
         return 0.12;
       case AssignedContainerDataTableColumn.id:
         return 0.08;
     }
   }
+
   String get label {
     switch (this) {
       case AssignedContainerDataTableColumn.actions:
         return "";
-      default :
+      default:
         return name;
     }
   }
@@ -46,21 +38,21 @@ class AssignedContainerDataSource extends DataGridSource {
   late final List<TagContainer> _dataList;
   final Function(TagContainer) onDelete;
 
-  AssignedContainerDataSource({required List<TagContainer> cons,required this.onDelete}) {
+  AssignedContainerDataSource({required List<TagContainer> cons, required this.onDelete}) {
     _dataList = cons;
     _cons = cons
         .map<DataGridRow>(
           (e) => DataGridRow(
-        cells: [
-          DataGridCell<int>(columnName: AssignedContainerDataTableColumn.id.name, value:cons.length - cons.indexOf(e)),
-          DataGridCell<String>(columnName: AssignedContainerDataTableColumn.name.name, value: e.title),
-          DataGridCell<int>(columnName: AssignedContainerDataTableColumn.position.name, value: 1),
-          DataGridCell<String>(columnName: AssignedContainerDataTableColumn.tagCount.name, value: e.from),
-          DataGridCell<String>(columnName: AssignedContainerDataTableColumn.tagTypes.name, value: e.tagTypeIds),
-          DataGridCell<String>(columnName: AssignedContainerDataTableColumn.actions.name, value: ''),
-        ],
-      ),
-    )
+            cells: [
+              DataGridCell<int>(columnName: AssignedContainerDataTableColumn.id.name, value: cons.length - cons.indexOf(e)),
+              DataGridCell<String>(columnName: AssignedContainerDataTableColumn.name.name, value: e.title),
+              DataGridCell<int>(columnName: AssignedContainerDataTableColumn.position.name, value: 1),
+              DataGridCell<String>(columnName: AssignedContainerDataTableColumn.tagCount.name, value: e.from),
+              DataGridCell<String>(columnName: AssignedContainerDataTableColumn.tagTypes.name, value: e.tagTypeIds),
+              DataGridCell<String>(columnName: AssignedContainerDataTableColumn.actions.name, value: ''),
+            ],
+          ),
+        )
         .toList();
   }
 
@@ -75,7 +67,7 @@ class AssignedContainerDataSource extends DataGridSource {
     final TagContainer con = _dataList[index];
 
     return DataGridRowAdapter(
-        color: index.isEven?MyColors.evenRow:MyColors.oddRow,
+        color: index.isEven ? MyColors.evenRow : MyColors.oddRow,
         cells: row.getCells().map<Widget>((dataGridCell) {
           if (dataGridCell.columnName == AssignedContainerDataTableColumn.id.name) {
             return Container(
@@ -97,7 +89,10 @@ class AssignedContainerDataSource extends DataGridSource {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.centerLeft,
-              child: Text(con.getPosition!.title,style: TextStyle(color: con.getPosition!.getColor,fontWeight: FontWeight.bold),),
+              child: Text(
+                con.getPosition!.title,
+                style: TextStyle(color: con.getPosition!.getColor, fontWeight: FontWeight.bold),
+              ),
             );
           }
           if (dataGridCell.columnName == AssignedContainerDataTableColumn.tagCount.name) {
@@ -108,11 +103,7 @@ class AssignedContainerDataSource extends DataGridSource {
             );
           }
           if (dataGridCell.columnName == AssignedContainerDataTableColumn.tagTypes.name) {
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              alignment: Alignment.centerLeft,
-              child: con.allowedTagTypesWidget
-            );
+            return Container(padding: const EdgeInsets.symmetric(horizontal: 12), alignment: Alignment.centerLeft, child: con.allowedTagTypesWidget);
           }
           if (dataGridCell.columnName == AssignedContainerDataTableColumn.actions.name) {
             return Container(
@@ -123,10 +114,7 @@ class AssignedContainerDataSource extends DataGridSource {
                   DotButton(
                     icon: Icons.delete,
                     color: Colors.red,
-                    onPressed: (con.tagCount ?? 0) > 0 ? null : ()async{
-
-                     await onDelete(con);
-                    },
+                    onPressed: (con.tagCount) > 0 ? null : () async => await onDelete(con),
                   )
                 ],
               ),
@@ -137,7 +125,4 @@ class AssignedContainerDataSource extends DataGridSource {
   }
 }
 
-
-class AssignedContainerDataTableColumnSizer extends ColumnSizer {
-
-}
+class AssignedContainerDataTableColumnSizer extends ColumnSizer {}

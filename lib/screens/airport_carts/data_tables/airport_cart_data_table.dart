@@ -98,7 +98,7 @@ class AirportCartDataSource extends DataGridSource {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(width: 8),
-            cart.getImg,
+            cart.getImgMini,
             const SizedBox(width: 8),
             Text(cart.code, style: TextStyles.styleBold16Black),
           ],

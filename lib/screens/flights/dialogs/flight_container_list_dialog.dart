@@ -60,8 +60,8 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
     destList = List.from(widget.destList);
     classes.add(BasicClass.systemSetting.classTypeList.first);
     availableDests = List.from(widget.destList);
-    assigned = widget.cons.where((element) => element.flightID != null).toList();
-    available = widget.cons.where((element) => element.flightID != widget.flight.id).toList();
+    assigned = widget.cons.where((c) => c.flightID != null && c.flightID == widget.flight.id).toList();
+    available = widget.cons.where((c) => c.flightID != widget.flight.id).toList();
     availableSearchC.addListener(() => setState(() {}));
     assignedSearchC.addListener(() => setState(() {}));
     super.initState();
@@ -76,7 +76,7 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
     List<TagContainer> availableList = available.where((element) => element.validateSearch(availableSearchC.text)).toList();
     availableList.sort((a, b) => (a.flightID ?? 0).compareTo(b.flightID ?? 0));
     return Dialog(
-      insetPadding: EdgeInsets.symmetric(horizontal: width * 0.1, vertical: height * 0.2),
+      insetPadding: EdgeInsets.symmetric(horizontal: width * 0.05, vertical: height * 0.125),
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Container(
@@ -222,8 +222,7 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                       items: BasicClass.userSetting.shootList.firstWhereOrNull((element) => element.id == airportPositionSection?.id)?.spotList ?? [],
                                       // items: [],
                                       label: "Spot",
-
-                                      itemToString: (item) => item.spot + (assignedList.any((element) => element.spotID == item.id) ? "  (Used)" : ""),
+                                      itemToString: (item) => item.spot + (assigned.any((element) => element.spotID == item.id) ? "  (Used)" : ""),
                                       value: spot,
                                       onChange: (s) {
                                         spot = s;
@@ -259,9 +258,10 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                           e.sectionID = airportPositionSection!.id;
                                           e.spotID = spot?.id;
                                           final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, true);
-                                          if (a != null) {
-                                            available.removeWhere((element) => element.id == a.id);
-                                            assigned.insert(0, a);
+                                          if (a.isNotEmpty) {
+                                            available.removeWhere((element) => a.any((e) => e.id == element.id));
+                                            assigned.removeWhere((element) => a.any((e) => e.id == element.id));
+                                            assigned = [...a, ...assigned];
                                             setState(() {});
                                           }
                                         },
@@ -274,9 +274,9 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                     // e.sectionID = airportPositionSection!.id;
                                     // e.spotID = spot?.id;
                                     final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, false);
-                                    if (a != null) {
-                                      available.removeWhere((element) => element.id == a.id);
-                                      available.insert(0, a);
+                                    if (a.isNotEmpty) {
+                                      available.removeWhere((element) => a.any((e) => e.id == element.id));
+                                      available = [...a, ...available];
                                       setState(() {});
                                       SuccessHandler.handle(ServerSuccess(code: 1, msg: "Container unassigned from Flight"));
                                     }
@@ -339,9 +339,10 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                           cons: assignedList.where((element) => element.flightID == widget.flight.id).toList(),
                           onDelete: (e) async {
                             final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, false);
-                            if (a != null) {
-                              assigned.removeWhere((element) => element.id == a.id);
-                              available.add(a);
+                            if (a.isNotEmpty) {
+                              assigned.removeWhere((element) => a.any((e) => e.id == element.id));
+                              available.removeWhere((element) => a.any((e) => e.id == element.id));
+                              available = [...a, ...available];
                               setState(() {});
                             }
                           },
@@ -350,11 +351,7 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                             .map(
                               (e) => GridColumn(
                                   columnName: e.name,
-                                  label: Center(
-                                      child: Text(
-                                    e.label.capitalizeFirst!,
-                                    style: const TextStyle(fontSize: 12),
-                                  )),
+                                  label: Center(child: Text(e.label.capitalizeFirst!, style: const TextStyle(fontSize: 12))),
                                   // columnWidthMode: ColumnWidthMode.fill
                                   width: width * 0.8 * 0.6 * e.width),
                             )

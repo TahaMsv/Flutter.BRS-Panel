@@ -42,8 +42,6 @@ class FlightDetailsRemoteDataSource implements FlightDetailsDataSourceInterface 
   @override
   Future<GetHistoryLogResponse> getHistoryLog({required GetHistoryLogRequest request}) async {
     Response res = await networkManager.post(request);
-    //todo delete THis!!!
-    print(res.body);
     return GetHistoryLogResponse.fromResponse(res);
   }
 }

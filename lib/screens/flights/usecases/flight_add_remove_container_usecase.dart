@@ -9,78 +9,75 @@ import '../../../core/classes/tag_container_class.dart';
 import '../../../core/classes/login_user_class.dart';
 import '../flights_repository.dart';
 
-class FlightAddRemoveContainerUseCase extends UseCase<FlightAddRemoveContainerResponse,FlightAddRemoveContainerRequest> {
+class FlightAddRemoveContainerUseCase extends UseCase<FlightAddRemoveContainerResponse, FlightAddRemoveContainerRequest> {
   FlightAddRemoveContainerUseCase();
 
   @override
   Future<Either<Failure, FlightAddRemoveContainerResponse>> call({required FlightAddRemoveContainerRequest request}) {
-  if(request.validate()!=null) return Future(() =>Left(request.validate()!));
+    if (request.validate() != null) return Future(() => Left(request.validate()!));
     FlightsRepository repository = FlightsRepository();
     return repository.flightAddRemoveContainer(request);
   }
-
 }
 
 class FlightAddRemoveContainerRequest extends Request {
   final Flight flight;
   final TagContainer con;
   final bool isAdd;
-  FlightAddRemoveContainerRequest({required this.flight,required this.con,required this.isAdd});
+
+  FlightAddRemoveContainerRequest({required this.flight, required this.con, required this.isAdd});
 
   @override
-  Map<String, dynamic> toJson() =>{
-    "Body": {
-      "Execution": "AssignContainerToFlight",
-      "Token":token,
-      "Request": {
-        "FlightScheduleID": isAdd?flight.id:con.flightID,
-        "ContainerID": con.id!,
-        "Destination": con.dest,
-        "DestList":con.destList,
-        "ClassList":con.classTypeList,
-        // "ClassTypeID": con.classTypeID,
-        "IsDeleted": isAdd?0:1,
-        "SpotID": con.spotID,
-        "ShootID": con.shootID,
-        "TagTypeIDs": con.tagTypeIds,
-        "ClassTypeID": 1,
-        // "PositionID": positionID,
-        // "IsDeleted": assign ? 0 : 1,
-        // "IsForced": isForce,
-        "SectionID": con.sectionID
-      },
-    }
-  };
+  Map<String, dynamic> toJson() => {
+        "Body": {
+          "Execution": "AssignContainerToFlight",
+          "Token": token,
+          "Request": {
+            "FlightScheduleID": isAdd ? flight.id : con.flightID,
+            "ContainerID": con.id!,
+            "Destination": con.dest,
+            "DestList": con.destList,
+            "ClassList": con.classTypeList,
+            // "ClassTypeID": con.classTypeID,
+            "IsDeleted": isAdd ? 0 : 1,
+            "SpotID": con.spotID,
+            "ShootID": con.shootID,
+            "TagTypeIDs": con.tagTypeIds,
+            "ClassTypeID": 1,
+            // "PositionID": positionID,
+            // "IsDeleted": assign ? 0 : 1,
+            // "IsForced": isForce,
+            "SectionID": con.sectionID
+          },
+        }
+      };
 
-  Failure? validate(){
+  Failure? validate() {
     return null;
   }
 }
 
-
 class FlightAddRemoveContainerResponse extends Response {
-  final TagContainer container;
-  FlightAddRemoveContainerResponse({required int status, required String message, required this.container})
+  final List<TagContainer> containers;
+
+  FlightAddRemoveContainerResponse({required int status, required String message, required this.containers})
       : super(
           status: status,
           message: message,
-          body: container.toJson(),
+          body: containers.map((x) => x.toJson()).toList(),
         );
 
-    factory FlightAddRemoveContainerResponse.fromResponse(Response res) => FlightAddRemoveContainerResponse(
+  factory FlightAddRemoveContainerResponse.fromResponse(Response res) => FlightAddRemoveContainerResponse(
         status: res.status,
         message: res.message,
-
-        container:TagContainer.fromJson(res.body),
+        containers: List<TagContainer>.from(res.body["SetContainers"].map((x) => TagContainer.fromJson(x))),
       );
-
 }
 
 class FlightAddRemoveContainer extends Response {
   final List<TagContainer> containers;
 
-  FlightAddRemoveContainer({required int status, required String message, required this.containers})
-      : super(status: status, message: message, body: containers.map((e)=>e.toJson()).toList());
+  FlightAddRemoveContainer({required int status, required String message, required this.containers}) : super(status: status, message: message, body: containers.map((e) => e.toJson()).toList());
 
   factory FlightAddRemoveContainer.fromResponse(Response res) => FlightAddRemoveContainer(
         status: res.status,

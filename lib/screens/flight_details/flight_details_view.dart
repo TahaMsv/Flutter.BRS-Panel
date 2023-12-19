@@ -440,17 +440,16 @@ class BinTileWidget extends StatelessWidget {
               ),
             ),
           const SizedBox(width: 8),
-          if (!items.any((e) => e.type == "ULD"))
-            Container(
-              height: 25,
-              width: 100,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), border: Border.all(color: MyColors.white3.withOpacity(0.5))),
-              child: Text(
-                "Tags: $tagCount",
-                style: const TextStyle(fontSize: 12, color: MyColors.white3),
-              ),
+          Container(
+            height: 25,
+            width: 100,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), border: Border.all(color: MyColors.white3.withOpacity(0.5))),
+            child: Text(
+              "Tags: $tagCount",
+              style: const TextStyle(fontSize: 12, color: MyColors.white3),
             ),
+          ),
         ],
       ),
     );

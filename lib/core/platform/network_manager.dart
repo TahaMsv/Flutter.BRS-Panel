@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:network_manager/network_manager.dart';
 import 'package:dio/dio.dart' as dio;
@@ -17,6 +19,7 @@ class NetworkManager implements NetworkManagerInterface {
     print(api);
     debugPrint(networkRequest.options.baseUrl);
     NetworkResponse networkResponse = await networkRequest.post();
+    // print(jsonEncode(networkResponse.responseBody));
     if (networkResponse.responseStatus) {
       try {
         // Response res = Response.fromJson(networkResponse.responseBody);

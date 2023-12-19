@@ -32,7 +32,6 @@ class FlightsRemoteDataSource implements FlightsDataSourceInterface {
   @override
   Future<FlightAddRemoveContainerResponse> flightAddRemoveContainer({required FlightAddRemoveContainerRequest request}) async {
     Response res = await networkManager.post(request);
-    print(res.body);
     return FlightAddRemoveContainerResponse.fromResponse(res);
   }
 
@@ -61,6 +60,7 @@ class FlightsRemoteDataSource implements FlightsDataSourceInterface {
     FlightGetReportResponse response = FlightGetReportResponse.fromResponse(res);
     return response;
   }
+
   @override
   Future<FlightSendReportResponse> flightSendReport({required FlightSendReportRequest request}) async {
     Response res = await networkManager.post(request);
