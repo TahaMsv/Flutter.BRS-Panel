@@ -87,14 +87,14 @@ class AirportCartsController extends MainController {
     nav.dialog(AddUpdateAirportCartDialog(editingCart: cart));
   }
 
-  Future<void> deleteCart(TagContainer cart) async {
+  deleteCart(TagContainer cart) async {
     bool confirm = await ConfirmOperation.getConfirm(Operation(
         message: "You are Deleting Cart ${cart.code}",
         title: "Are You Sure",
         actions: ["Cancel", "Confirm"],
         type: OperationType.warning));
     if (confirm) {
-      airportDeleteCart(cart);
+      await airportDeleteCart(cart);
     }
   }
 }

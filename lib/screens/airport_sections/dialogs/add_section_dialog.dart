@@ -49,6 +49,7 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateSectionDialog> {
       codeC.text = widget.section!.code;
       selectedPosition = BasicClass.systemSetting.positions.firstWhereOrNull((e) => e.id == widget.section!.position);
       selectedOffset = widget.section!.offset;
+      isGround = widget.section!.isGround ?? false;
       isMain = widget.section!.isMainSection;
       tag = widget.section!.canHaveTag;
       con = widget.section!.canHaveContainer;
@@ -164,8 +165,7 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateSectionDialog> {
           Row(
             children: [
               const SizedBox(width: 18),
-              Text(widget.section == null ? "Add Section" : "Edit Section",
-                  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
+              Text(widget.section == null ? "Add Section" : "Edit Section", style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
               const Spacer(),
               IconButton(onPressed: ns.pop, icon: const Icon(Icons.close))
             ],
@@ -221,12 +221,7 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateSectionDialog> {
               const SizedBox(width: 20),
               SizedBox(
                   width: 250,
-                  child: MyDropDown<Position>(
-                      label: "Select",
-                      items: positionList,
-                      itemToString: (s) => s.title,
-                      onSelect: (s) => setState(() => selectedPosition = s),
-                      value: selectedPosition)),
+                  child: MyDropDown<Position>(label: "Select", items: positionList, itemToString: (s) => s.title, onSelect: (s) => setState(() => selectedPosition = s), value: selectedPosition)),
             ],
           ),
           const Divider(height: 1, color: MyColors.lineColor2),
@@ -239,12 +234,7 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateSectionDialog> {
               const SizedBox(width: 20),
               SizedBox(
                   width: 250,
-                  child: MyDropDown<int>(
-                      label: "Select",
-                      items: offsetList,
-                      itemToString: (i) => i.toString(),
-                      onSelect: (i) => setState(() => selectedOffset = i),
-                      value: selectedOffset)),
+                  child: MyDropDown<int>(label: "Select", items: offsetList, itemToString: (i) => i.toString(), onSelect: (i) => setState(() => selectedOffset = i), value: selectedOffset)),
               const SizedBox(width: 30),
               const Text("Preview", style: TextStyle(color: MyColors.brownGrey)),
               const SizedBox(width: 20),
@@ -256,9 +246,7 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateSectionDialog> {
                       width: 80,
                       alignment: Alignment.center,
                       margin: const EdgeInsets.all(9),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: selectedPosition!.getColor)),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), border: Border.all(color: selectedPosition!.getColor)),
                       child: Text(selectedPosition!.title, style: TextStyle(color: selectedPosition!.getColor)),
                     ),
                     if (selectedOffset != null)
@@ -269,8 +257,7 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateSectionDialog> {
                             height: 18,
                             width: 18,
                             alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                                color: selectedPosition!.getColor, borderRadius: BorderRadius.circular(4)),
+                            decoration: BoxDecoration(color: selectedPosition!.getColor, borderRadius: BorderRadius.circular(4)),
                             child: Text(selectedOffset.toString(), style: const TextStyle(color: MyColors.white3)),
                           )),
                   ],
@@ -283,8 +270,7 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateSectionDialog> {
             children: [
               Container(
                 margin: const EdgeInsets.only(left: 30, top: 15, bottom: 15),
-                child:
-                    MySwitchButton(value: spotRequired, onChange: (b) => checkBoxAction(3, b), label: "Spot Required"),
+                child: MySwitchButton(value: spotRequired, onChange: (b) => checkBoxAction(3, b), label: "Spot Required"),
               ),
               const SizedBox(width: 40),
               if (spotRequired)
@@ -299,18 +285,8 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateSectionDialog> {
                               padding: const EdgeInsets.only(bottom: 8, right: 10),
                               child: Row(
                                 children: [
-                                  if (textCs.length > 1)
-                                    DotButton(
-                                        color: MyColors.red,
-                                        onPressed: () => setState(() => textCs.remove(e)),
-                                        icon: Icons.remove)
-                                  else
-                                    const SizedBox(width: 30),
-                                  Container(
-                                      height: 30,
-                                      width: 250,
-                                      margin: const EdgeInsets.only(left: 10),
-                                      child: MyTextField(label: "Required Spot", controller: e, required: true)),
+                                  if (textCs.length > 1) DotButton(color: MyColors.red, onPressed: () => setState(() => textCs.remove(e)), icon: Icons.remove) else const SizedBox(width: 30),
+                                  Container(height: 30, width: 250, margin: const EdgeInsets.only(left: 10), child: MyTextField(label: "Required Spot", controller: e, required: true)),
                                 ],
                               ),
                             )),
@@ -320,10 +296,11 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateSectionDialog> {
                 ),
               if (spotRequired)
                 Padding(
-                  padding: const EdgeInsets.only(top: 15),
-                  child:
-                      DotButton(onPressed: () => setState(() => textCs.add(TextEditingController())), icon: Icons.add),
-                ),
+                    padding: const EdgeInsets.only(top: 15),
+                    child: DotButton(
+                      onPressed: () => setState(() => textCs.add(TextEditingController())),
+                      icon: Icons.add,
+                    )),
             ],
           ),
           const Divider(height: 1, color: MyColors.lineColor2),
@@ -348,12 +325,13 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateSectionDialog> {
                       position: selectedPosition?.id ?? 0,
                       offset: selectedOffset ?? 0,
                       isMainSection: isMain,
-                      groundSectionID: isGround ? 0 : null,
+                      isGround: isGround,
+                      groundSectionID: null,
                       canHaveTag: tag,
                       canHaveContainer: con,
                       canHaveBin: bin,
                       spotRequired: spotRequired,
-                      spots: textCs.map((e) => SectionSpot(label: e.text)).toList(),
+                      spots: textCs.map((e) => SectionSpot(id: null, label: e.text)).toList(),
                       sections: sections,
                     ));
                   },

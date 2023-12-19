@@ -1,10 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get_rx/src/rx_typedefs/rx_typedefs.dart';
 
 class DotButton extends StatefulWidget {
   final double size;
-  final VoidCallback? onPressed;
+  final Callback? onPressed;
   final VoidCallback? onLongPress;
   final ValueChanged<bool>? onHover;
   final ValueChanged<bool>? onFocusChange;

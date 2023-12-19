@@ -42,6 +42,7 @@ class Section {
   final int position;
   final int offset;
   final bool isMainSection;
+  final bool? isGround;
   final int? groundSectionID;
   final bool canHaveTag;
   final bool canHaveContainer;
@@ -57,6 +58,7 @@ class Section {
     required this.position,
     required this.offset,
     required this.isMainSection,
+    required this.isGround,
     required this.groundSectionID,
     required this.canHaveTag,
     required this.canHaveContainer,
@@ -73,6 +75,7 @@ class Section {
     int? position,
     int? offset,
     bool? isMainSection,
+    bool? isGround,
     int? groundSectionID,
     bool? canHaveTag,
     bool? canHaveContainer,
@@ -88,6 +91,7 @@ class Section {
         position: position ?? this.position,
         offset: offset ?? this.offset,
         isMainSection: isMainSection ?? this.isMainSection,
+        isGround: isGround ?? this.isGround,
         groundSectionID: groundSectionID ?? this.groundSectionID,
         canHaveTag: canHaveTag ?? this.canHaveTag,
         canHaveContainer: canHaveContainer ?? this.canHaveContainer,
@@ -104,6 +108,7 @@ class Section {
       position: 0,
       offset: 0,
       isMainSection: false,
+      isGround: null,
       groundSectionID: null,
       canHaveTag: true,
       canHaveContainer: false,
@@ -119,6 +124,7 @@ class Section {
         position: json["Position"],
         offset: json["Offset"],
         isMainSection: json["IsMainSection"],
+        isGround: json["IsGround"],
         groundSectionID: json["GroundSectionID"],
         canHaveTag: json["CanHaveTag"],
         canHaveContainer: json["CanHaveContainer"],
@@ -135,6 +141,7 @@ class Section {
         "Position": position,
         "Offset": offset,
         "IsMainSection": isMainSection,
+        "IsGround": isGround,
         "GroundSectionID": groundSectionID,
         "CanHaveTag": canHaveTag,
         "CanHaveContainer": canHaveContainer,
@@ -159,13 +166,14 @@ class Section {
 }
 
 class SectionSpot {
+  final int? id;
   final String label;
 
-  SectionSpot({required this.label});
+  SectionSpot({required this.id, required this.label});
 
-  SectionSpot copyWith({String? label}) => SectionSpot(label: label ?? this.label);
+  SectionSpot copyWith({int? id, String? label}) => SectionSpot(id: id ?? this.id, label: label ?? this.label);
 
-  factory SectionSpot.fromJson(Map<String, dynamic> json) => SectionSpot(label: json["Label"]);
+  factory SectionSpot.fromJson(Map<String, dynamic> json) => SectionSpot(id: json["ID"], label: json["Label"]);
 
-  Map<String, dynamic> toJson() => {"Label": label};
+  Map<String, dynamic> toJson() => {"ID": id, "Label": label};
 }

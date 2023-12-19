@@ -139,9 +139,7 @@ class AirportCartDataSource extends DataGridSource {
               DotButton(
                 icon: Icons.delete,
                 size: 25,
-                onPressed: () {
-                  airportCartsController.deleteCart(cart);
-                },
+                onPressed: () async => await airportCartsController.deleteCart(cart),
                 color: Colors.red,
               ),
             ],

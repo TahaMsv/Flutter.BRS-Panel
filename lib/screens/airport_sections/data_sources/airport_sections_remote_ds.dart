@@ -14,6 +14,7 @@ class AirportSectionsRemoteDataSource implements AirportSectionsDataSourceInterf
   @override
   Future<AirportGetSectionsResponse> airportGetSections({required AirportGetSectionsRequest request}) async {
     Response res = await networkManager.post(request);
+    print(res.body);
     return AirportGetSectionsResponse.fromResponse(res);
   }
 

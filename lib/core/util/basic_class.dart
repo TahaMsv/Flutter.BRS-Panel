@@ -25,8 +25,7 @@ class BasicClass {
     instance._userSettings = user.userSettings;
     instance._systemSettings = user.systemSettings;
     instance._deviceType = deviceType;
-    instance._airport =
-        user.systemSettings.airportList.firstWhere((element) => element.code == user.userSettings.airport);
+    instance._airport = user.systemSettings.airportList.firstWhere((element) => element.code == user.userSettings.airport);
   }
 
   static void setConfig(Config config) {
@@ -61,7 +60,6 @@ class BasicClass {
   }
 
   static Airport? getAirportByCode(String code) {
-    print(code);
     return systemSetting.airportList.firstWhereOrNull((e) => e.code == code);
   }
 

@@ -39,7 +39,7 @@ class MyExpansionTile2 extends StatefulWidget {
       this.onExpansionChanged,
       this.children = const <Widget>[],
       this.trailing,
-      this.initiallyExpanded = false,
+      this.initiallyExpanded = true,
       this.maintainState = false,
       this.tilePadding,
       this.expandedCrossAxisAlignment,

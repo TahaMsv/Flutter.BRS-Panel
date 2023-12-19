@@ -180,17 +180,13 @@ class AirportCartWidget extends StatelessWidget {
                     DotButton(
                       icon: Icons.edit,
                       size: 25,
-                      onPressed: () {
-                        myAirportCartsController.updateCart(cart);
-                      },
+                      onPressed: () => myAirportCartsController.updateCart(cart),
                     ),
                     const SizedBox(width: 8),
                     DotButton(
                       icon: Icons.delete,
                       size: 25,
-                      onPressed: () {
-                        myAirportCartsController.deleteCart(cart);
-                      },
+                      onPressed: () async => await myAirportCartsController.deleteCart(cart),
                       color: Colors.red,
                     ),
                   ],

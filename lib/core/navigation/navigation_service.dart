@@ -56,7 +56,7 @@ class NavigationService extends BasicNavigationService {
 
   @override
   void pop<T extends Object?>([T? result]) {
-    return context.pop(result);
+    return context.canPop() ? context.pop(result) : null;
   }
 
   @override

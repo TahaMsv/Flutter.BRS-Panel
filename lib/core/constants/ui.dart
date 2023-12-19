@@ -38,7 +38,7 @@ class MyColors {
   static const eggshell = Color.fromRGBO(244, 243, 225, 1);
   static const dullOrange = Color.fromRGBO(217, 152, 65, 1);
   static const aquaMarine = Color.fromRGBO(77, 204, 182, 0.1);
-  static const darkMint = Color.fromRGBO(72, 192, 162, 1);  //#48C0A2
+  static const darkMint = Color.fromRGBO(72, 192, 162, 1); //#48C0A2
   static const brownGrey = Color.fromRGBO(141, 141, 141, 1);
   static const brownGrey2 = Color.fromRGBO(134, 134, 134, 1);
   static const brownGrey3 = Color.fromRGBO(173, 173, 173, 1);
@@ -86,17 +86,20 @@ class MyColors {
   static const checkinGreen = Color.fromRGBO(72, 192, 162, 1);
   static const boardingBlue = Color.fromRGBO(77, 111, 255, 1);
   static const reserveGreen = Color.fromRGBO(176, 255, 223, 1);
-  static const containerGreen = Color(0xffe1eae6);
-  static const containerGreen2 = Color(0xffCDDDD6);
-  static const binGrey = Color(0xff687A89);
-  static const binGrey2 = Color(0xff646E7D);
-  static const sectionGrey = Color(0xff3E3E3E);
+  static const containerGreen = Color(0xffe1eae6); //rgb(225,234,230)
+  static const containerGreen2 = Color(0xffCDDDD6); //rgb(205,221,214)
+  static const binGrey = Color(0xff687A89); //rgb(104,122,137)
+  static const binGrey2 = Color(0xff646E7D); //rgb(100,110,125)
+  static const sectionGrey = Color(0xff3E3E3E); //rgb(62,62,62)
+  static const sectionGrey2 = Color(0xff3C3A3A); //rgb(60,58,58)
   static const sectionSelected = Color(0xffF7F8FF);
   static const borderColor = Color(0xffD6D6D6);
   static const borderColor2 = Color(0xffEAEAEA);
-  static const evenRow = Color(0xfff8f8f8);
-  static const evenRow2 = Color(0xfff7f7f7);
-  static const oddRow = Color(0xffffffff);
+  static const evenRow = Color(0xfff8f8f8); //rgb(248,248,248)
+  static const evenRow2 = Color(0xfff7f7f7); //rgb(247,247,247)
+  static const evenRow3 = Color(0xffECF1EF); //rgb(240,250,245)
+  static const oddRow = Color(0xffffffff); //rgb(255,255,255)
+  static const oddRow3 = Color(0xffE6EEEA); //rgb(230,238,234)
   static const indexColor = Color(0xff3b3b3b);
 
   static const materialColor = {
@@ -124,8 +127,7 @@ class MyTheme {
     brightness: Brightness.light,
     disabledColor: MyColors.brownGrey,
     scaffoldBackgroundColor: Colors.white,
-    tabBarTheme: TabBarTheme(
-        labelPadding: EdgeInsets.zero, labelColor: Colors.blue, unselectedLabelColor: Colors.blue.withOpacity(0.5)),
+    tabBarTheme: TabBarTheme(labelPadding: EdgeInsets.zero, labelColor: Colors.blue, unselectedLabelColor: Colors.blue.withOpacity(0.5)),
     timePickerTheme: const TimePickerThemeData(),
     dividerTheme: const DividerThemeData(color: MyColors.lineColor, indent: 1, space: 1),
     appBarTheme: const AppBarTheme(
@@ -228,7 +230,7 @@ class TextStyles {
   static const styleBold24Black = TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xff424242));
   static const styleBold16Grey = TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xff808080));
   static const styleBold16Black = TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: MyColors.black1);
-  static const style16Black = TextStyle(fontSize: 16,  color: MyColors.black1);
+  static const style16Black = TextStyle(fontSize: 16, color: MyColors.black1);
   static const style16Grey = TextStyle(fontSize: 16, color: Color(0xff808080), fontWeight: FontWeight.w300);
   static const tagListHeader = TextStyle(fontWeight: FontWeight.bold, fontSize: 12);
 }
