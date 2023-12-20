@@ -232,5 +232,6 @@ class TextStyles {
   static const styleBold16Black = TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: MyColors.black1);
   static const style16Black = TextStyle(fontSize: 16, color: MyColors.black1);
   static const style16Grey = TextStyle(fontSize: 16, color: Color(0xff808080), fontWeight: FontWeight.w300);
+  static const style11Grey = TextStyle(fontSize: 11, color: Color(0xff808080), fontWeight: FontWeight.w300);
   static const tagListHeader = TextStyle(fontWeight: FontWeight.bold, fontSize: 12);
 }

@@ -90,6 +90,57 @@ class FailureHandler {
     }
   }
 
+  static void customHandle(Failure failure, {Function? retry}) {
+    const Color color = Color(0xffc72c41);
+    BotToast.showAttachedWidget(
+        attachedBuilder: (_) => Transform.scale(
+              scale: 0.7,
+              child: Material(
+                child: GestureDetector(
+                  onTap: () => BotToast.cleanAll(),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 500,
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                        decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(10)),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
+                          const Text("Error!", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22)),
+                          const SizedBox(height: 8),
+                          Text("$failure", style: const TextStyle(color: Colors.white, fontSize: 16)),
+                          const SizedBox(height: 24),
+                          Row(
+                            children: [
+                              const Spacer(),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(foregroundColor: color),
+                                onPressed: () => BotToast.cleanAll(),
+                                child: const Text("Cancel", style: TextStyle(color: Colors.black)),
+                              ),
+                              const SizedBox(width: 8),
+                              if (retry != null)
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(backgroundColor: color.withOpacity(0.1)),
+                                  onPressed: () {
+                                    BotToast.cleanAll();
+                                    retry();
+                                  },
+                                  child: const Text("Force Action", style: TextStyle(color: Colors.white)),
+                                ),
+                            ],
+                          ),
+                        ]),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+        duration: const Duration(seconds: 10),
+        target: const Offset(500, 30));
+  }
+
   static void handleNoElement(String name) {
     navigationService.snackbar(
       Text("Could not Find $name"),

@@ -10,6 +10,7 @@ class FlightsState extends ChangeNotifier {
   void setState() => notifyListeners();
 
   bool loadingFlights = false;
+  List<int> containerAssignButtonLoading = [];
 }
 
 final flightListProvider = StateNotifierProvider<FlightListNotifier, List<Flight>>((ref) => FlightListNotifier(ref));
@@ -30,11 +31,7 @@ final filteredFlightListProvider = Provider<List<Flight>>((ref) {
   final searchFilter = ref.watch(flightSearchProvider);
   return flights
       .where(
-        (f) =>
-            f.validateType(typeFilter) &&
-            f.validateSearch(searchFilter) &&
-            f.validateAirline(alFilter) &&
-            f.validateAirport(apFilter),
+        (f) => f.validateType(typeFilter) && f.validateSearch(searchFilter) && f.validateAirline(alFilter) && f.validateAirport(apFilter),
       )
       .toList();
 });

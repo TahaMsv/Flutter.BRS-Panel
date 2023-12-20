@@ -16,6 +16,7 @@ class DotButton extends StatefulWidget {
   final Widget? child;
   final IconData icon;
   final bool showLoading;
+  final bool controlLoading;
   final bool fade;
   final Color? color;
 
@@ -33,6 +34,7 @@ class DotButton extends StatefulWidget {
       this.child,
       required this.icon,
       this.showLoading = true,
+      this.controlLoading = false,
       this.fade = true,
       this.color});
 
@@ -42,27 +44,29 @@ class DotButton extends StatefulWidget {
 
 class _DotButtonState extends State<DotButton> {
   bool _loading = false;
-  _onTap(){
-    if(widget.onPressed is AsyncCallback){
-      if(_loading) return;
+
+  _onTap() {
+    if (widget.onPressed is AsyncCallback) {
+      if (_loading) return;
       _loading = true;
-      setState((){});
+      setState(() {});
       (widget.onPressed as AsyncCallback).call().whenComplete(() {
         _loading = false;
-        setState((){});
+        setState(() {});
       });
-    }else{
+    } else {
       widget.onPressed?.call();
     }
   }
+
   @override
   Widget build(BuildContext context) {
-    Color c = widget.onPressed==null?Colors.grey: widget.color ?? Colors.blueAccent;
+    Color c = widget.onPressed == null ? Colors.grey : widget.color ?? Colors.blueAccent;
     return SizedBox(
       width: widget.size,
       height: widget.size,
       child: ElevatedButton(
-        onPressed: widget.onPressed==null?null:_onTap,
+        onPressed: widget.onPressed == null ? null : _onTap,
         onLongPress: widget.onLongPress,
         onFocusChange: widget.onFocusChange,
         autofocus: widget.autofocus,
@@ -71,18 +75,15 @@ class _DotButtonState extends State<DotButton> {
         onHover: widget.onHover,
         style: ButtonStyle(
           shape: MaterialStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(5))),
-          fixedSize: MaterialStatePropertyAll(Size(widget.size,widget.size)),
+          fixedSize: MaterialStatePropertyAll(Size(widget.size, widget.size)),
           padding: const MaterialStatePropertyAll(EdgeInsets.zero),
           shadowColor: const MaterialStatePropertyAll(Colors.transparent),
           backgroundColor: MaterialStatePropertyAll(c.withOpacity(widget.fade ? 0.3 : 1)),
           foregroundColor: MaterialStatePropertyAll(widget.fade ? c : Colors.white),
         ),
-        child: _loading && widget.showLoading
-            ? SpinKitCircle(
-                color: widget.fade ? c : Colors.white,
-                size: widget.size-8,
-              )
-            : widget.child ?? Icon(widget.icon,size: widget.size-8,),
+        child: (_loading && widget.showLoading) || widget.controlLoading
+            ? SpinKitCircle(color: widget.fade ? c : Colors.white, size: widget.size - 8)
+            : widget.child ?? Icon(widget.icon, size: widget.size - 8),
       ),
     );
   }

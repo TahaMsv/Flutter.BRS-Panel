@@ -67,6 +67,11 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
     super.initState();
   }
 
+  getFirstEmptySpot() {
+    spot = (BasicClass.shootList.firstWhereOrNull((element) => element.id == airportPositionSection?.id)?.spotList ?? [])
+        .firstWhereOrNull((element) => (!assigned.map((e) => e.spotID).contains(element.id) && !available.map((e) => e.spotID).contains(element.id)));
+  }
+
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
@@ -205,13 +210,8 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                               value: airportPositionSection,
                               onChange: (as) {
                                 airportPositionSection = as;
-                                if (as == null || !as.spotRequired) {
-                                  spot = null;
-                                }
-                                if (as != null && as.spotRequired) {
-                                  spot = (BasicClass.userSetting.shootList.firstWhereOrNull((element) => element.id == airportPositionSection?.id)?.spotList ?? [])
-                                      .firstWhereOrNull((element) => !assigned.map((e) => e.spotID).contains(element.id));
-                                }
+                                if (as == null || !as.spotRequired) spot = null;
+                                if (as != null && as.spotRequired) getFirstEmptySpot();
                                 setState(() {});
                               },
                             ),
@@ -219,10 +219,11 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                 ? Padding(
                                     padding: const EdgeInsets.only(top: 24),
                                     child: MyFieldPicker<Spot>(
-                                      items: BasicClass.userSetting.shootList.firstWhereOrNull((element) => element.id == airportPositionSection?.id)?.spotList ?? [],
+                                      items: BasicClass.shootList.firstWhereOrNull((element) => element.id == airportPositionSection?.id)?.spotList ?? [],
                                       // items: [],
                                       label: "Spot",
-                                      itemToString: (item) => item.spot + (assigned.any((element) => element.spotID == item.id) ? "  (Used)" : ""),
+                                      itemToString: (item) =>
+                                          item.spot + ((assigned.any((element) => element.spotID == item.id) || available.any((element) => element.spotID == item.id)) ? "  (Used)" : ""),
                                       value: spot,
                                       onChange: (s) {
                                         spot = s;
@@ -257,29 +258,29 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                           e.tagTypeIds = typeList.map((e) => e.id.toString()).join(",");
                                           e.sectionID = airportPositionSection!.id;
                                           e.spotID = spot?.id;
-                                          final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, true);
-                                          if (a.isNotEmpty) {
-                                            available.removeWhere((element) => a.any((e) => e.id == element.id));
-                                            assigned.removeWhere((element) => a.any((e) => e.id == element.id));
-                                            assigned = [...a, ...assigned];
-                                            setState(() {});
-                                          }
+                                          myFlightsController.flightAddRemoveContainer(widget.flight, e, true, (a) {
+                                            if (a.isNotEmpty) {
+                                              available.removeWhere((element) => a.any((e) => e.id == element.id));
+                                              assigned.removeWhere((element) => a.any((e) => e.id == element.id));
+                                              assigned = [...a, ...assigned];
+                                              if (spot != null) getFirstEmptySpot();
+                                              setState(() {});
+                                            }
+                                          });
                                         },
                                   unassigned: (e) async {
                                     final conf = await ConfirmOperation.getConfirm(
                                       Operation(message: "Unassign Container from flight", title: "Are You Sure?", actions: ["Confirm", 'Cancel']),
                                     );
                                     if (!conf) return;
-                                    // e.tagTypeIds = typeList.map((e) => e.id.toString()).join(",");
-                                    // e.sectionID = airportPositionSection!.id;
-                                    // e.spotID = spot?.id;
-                                    final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, false);
-                                    if (a.isNotEmpty) {
-                                      available.removeWhere((element) => a.any((e) => e.id == element.id));
-                                      available = [...a, ...available];
-                                      setState(() {});
-                                      SuccessHandler.handle(ServerSuccess(code: 1, msg: "Container unassigned from Flight"));
-                                    }
+                                    myFlightsController.flightAddRemoveContainer(widget.flight, e, false, (a) {
+                                      if (a.isNotEmpty) {
+                                        available.removeWhere((element) => a.any((e) => e.id == element.id));
+                                        available = [...a, ...available];
+                                        setState(() {});
+                                        SuccessHandler.handle(ServerSuccess(code: 1, msg: "Container unassigned from Flight"));
+                                      }
+                                    });
                                   },
                                 ),
                                 columns: AvailableContainerDataTableColumn.values
@@ -338,13 +339,14 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                         source: AssignedContainerDataSource(
                           cons: assignedList.where((element) => element.flightID == widget.flight.id).toList(),
                           onDelete: (e) async {
-                            final a = await myFlightsController.flightAddRemoveContainer(widget.flight, e, false);
-                            if (a.isNotEmpty) {
-                              assigned.removeWhere((element) => a.any((e) => e.id == element.id));
-                              available.removeWhere((element) => a.any((e) => e.id == element.id));
-                              available = [...a, ...available];
-                              setState(() {});
-                            }
+                            await myFlightsController.flightAddRemoveContainer(widget.flight, e, false, (a) {
+                              if (a.isNotEmpty) {
+                                assigned.removeWhere((element) => a.any((e) => e.id == element.id));
+                                available.removeWhere((element) => a.any((e) => e.id == element.id));
+                                available = [...a, ...available];
+                                setState(() {});
+                              }
+                            });
                           },
                         ),
                         columns: AssignedContainerDataTableColumn.values

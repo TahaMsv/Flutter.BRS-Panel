@@ -1,3 +1,5 @@
+import 'package:brs_panel/core/util/basic_class.dart';
+
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/abstracts/success_abs.dart';
 import '../../core/classes/airport_class.dart';
@@ -57,12 +59,8 @@ class AirportsController extends MainController {
   /// Requests ---------------------------------------------------------------------------------------------------------
 
   addUpdateAirport(Airport? airport, bool isUpdate) async {
-    AddUpdateAirportRequest addUpdateAirportRequest = AddUpdateAirportRequest(
-        code: airportsState.codeC.text,
-        cityName: airportsState.cityC.text,
-        strTimeZone: airport?.strTimeZone,
-        timeZone: airport?.timeZone,
-        isUpdate: isUpdate);
+    AddUpdateAirportRequest addUpdateAirportRequest =
+        AddUpdateAirportRequest(code: airportsState.codeC.text, cityName: airportsState.cityC.text, strTimeZone: airport?.strTimeZone, timeZone: airport?.timeZone, isUpdate: isUpdate);
     AddUpdateAirportUseCase addUpdateAirportUseCase = AddUpdateAirportUseCase();
     final fOrR = await addUpdateAirportUseCase(request: addUpdateAirportRequest);
     fOrR.fold((l) => FailureHandler.handle(l), (r) {
@@ -78,11 +76,7 @@ class AirportsController extends MainController {
   }
 
   deleteAirport(DetailedAirport airport) async {
-    bool confirm = await ConfirmOperation.getConfirm(Operation(
-        message: "You are Deleting Airport",
-        title: "Are You Sure?",
-        actions: ["Cancel", "Confirm"],
-        type: OperationType.warning));
+    bool confirm = await ConfirmOperation.getConfirm(Operation(message: "You are Deleting Airport", title: "Are You Sure?", actions: ["Cancel", "Confirm"], type: OperationType.warning));
     if (!confirm) return;
     DeleteAirportRequest deleteAirportRequest = DeleteAirportRequest(code: airport.code);
     DeleteAirportUseCase deleteAirportUseCase = DeleteAirportUseCase();

@@ -11,7 +11,14 @@ class NavigationService extends BasicNavigationService {
 
   BuildContext get context => rootRouterKey.currentState!.context;
 
-  bool get isDialogOpened => _openedDialogs.isEmpty;
+  BuildContext get pageContext => rootRouterKey.currentState!.context;
+
+  BuildContext get dialogContext => _dialogContext!;
+
+  BuildContext? _dialogContext;
+
+  bool get isDialogOpened => _openedDialogs.isNotEmpty;
+
   final Map<RouteNames, MainController> _registeredControllers = {};
 
   void registerController(RouteNames route, MainController controller) {
@@ -36,7 +43,6 @@ class NavigationService extends BasicNavigationService {
   }) async {
     initRegisteredController(route);
     context.goNamed(route.name, pathParameters: pathParameters, queryParameters: queryParameters, extra: extra);
-
   }
 
   @override
@@ -65,10 +71,10 @@ class NavigationService extends BasicNavigationService {
   }
 
   @override
-  Future<T?> pushNamed<T extends Object?>(RouteNames route, {Map<String, String> pathParameters = const <String, String>{}, Map<String, dynamic> queryParameters = const <String, dynamic>{}, Object? extra}) {
+  Future<T?> pushNamed<T extends Object?>(RouteNames route,
+      {Map<String, String> pathParameters = const <String, String>{}, Map<String, dynamic> queryParameters = const <String, dynamic>{}, Object? extra}) {
     initRegisteredController(route);
     return context.pushNamed(route.name, pathParameters: pathParameters, queryParameters: queryParameters, extra: extra);
-
   }
 
   @override
@@ -103,10 +109,14 @@ class NavigationService extends BasicNavigationService {
       context: context,
       barrierDismissible: true,
       useRootNavigator: false,
-      builder: (context) => content,
+      builder: (context) {
+        _dialogContext = context;
+        return content;
+      },
     ).then((value) {
       log("Dialog Then $value");
       _openedDialogs.removeLast();
+      if (_openedDialogs.isEmpty) _dialogContext = null;
       res = value;
       return value;
     });

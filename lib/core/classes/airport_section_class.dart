@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'login_user_class.dart';
 
 @immutable
 class AirportSections {
@@ -160,6 +161,19 @@ class Section {
     return hier;
   }
 
+  AirportPositionSection get convertToAPS {
+    return AirportPositionSection(
+        id: id ?? 0,
+        label: label,
+        position: position,
+        offset: offset,
+        canHaveTag: canHaveTag,
+        subs: sections.map((sub) => sub.convertToAPS).toList(),
+        canHaveContainer: canHaveContainer,
+        canHaveBin: canHaveBin,
+        spotRequired: spotRequired);
+  }
+
   validateSearch(String s) {
     return null;
   }
@@ -167,7 +181,7 @@ class Section {
 
 class SectionSpot {
   final int? id;
-  final String label;
+  final String? label;
 
   SectionSpot({required this.id, required this.label});
 

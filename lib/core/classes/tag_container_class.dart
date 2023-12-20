@@ -217,7 +217,6 @@ class TagContainer {
     required this.title,
     required this.code,
     required this.sectionID,
-
     this.spotID,
     this.binID,
     this.shootID,
@@ -264,30 +263,30 @@ class TagContainer {
   // bool isClosed;
 
   factory TagContainer.fromJson(Map<String, dynamic> json) => TagContainer(
-    id: json["ID"],
-    flightID: json["FlightID"],
-    binID: json["BinID"],
-    sectionID: json["SectionID"]??1,
-    typeId: json["TypeID"] ?? 1,
-    spotID: json["SpotID"],
-    shootID: json["ShootID"],
-    classTypeID: json["ClassTypeID"] ?? 1,
-    positionID: json["PositionID"] ?? -1,
-    title: json["Title"] ?? "",
-    closedTime: json["ClosedTime"],
-    tagCount: json["TagCount"] ?? 0,
-    flnb: json["FLNB"],
-    al: json["AL"],
-    tagTypeIds: json["TagTypeIDs"],
-    code: json["Code"] ?? "",
-    barcode: json["Barcode"] ?? "",
-    dest: json["Dest"] ?? json["To"] ?? "",
-    // isClosed: json["IsClosed"] ?? false,
-    barcodePrefix: json["BarcodePrefix"],
-    destList: ((json["DestList"] ?? "") as String).split(","),
-    classTypeList: ((json["ClassList"] ?? "") as String).split(",").where((element) => element.trim().isNotEmpty).toList(),
-    ocrPrefix: List<String>.from((json["OCRPrefix"] ?? ["AKE######", "CART######"]).map((x) => x.toString())),
-  );
+        id: json["ID"],
+        flightID: json["FlightID"],
+        binID: json["BinID"],
+        sectionID: json["SectionID"] ?? 1,
+        typeId: json["TypeID"] ?? 1,
+        spotID: json["SpotID"],
+        shootID: json["ShootID"],
+        classTypeID: json["ClassTypeID"] ?? 1,
+        positionID: json["PositionID"] ?? -1,
+        title: json["Title"] ?? "",
+        closedTime: json["ClosedTime"],
+        tagCount: json["TagCount"] ?? 0,
+        flnb: json["FLNB"],
+        al: json["AL"],
+        tagTypeIds: json["TagTypeIDs"],
+        code: json["Code"] ?? "",
+        barcode: json["Barcode"] ?? "",
+        dest: json["Dest"] ?? json["To"] ?? "",
+        // isClosed: json["IsClosed"] ?? false,
+        barcodePrefix: json["BarcodePrefix"],
+        destList: ((json["DestList"] ?? "") as String).split(","),
+        classTypeList: ((json["ClassList"] ?? "") as String).split(",").where((element) => element.trim().isNotEmpty).toList(),
+        ocrPrefix: List<String>.from((json["OCRPrefix"] ?? ["AKE######", "CART######"]).map((x) => x.toString())),
+      );
 
   factory TagContainer.fromQr(String qr) {
     int foundTypeID = 1;
@@ -336,7 +335,7 @@ class TagContainer {
   }
 
   factory TagContainer.bulk(int? posId) {
-    return  TagContainer(
+    return TagContainer(
       id: -100,
       typeId: 1,
       // flightID: null,
@@ -347,120 +346,123 @@ class TagContainer {
       from: "",
       // barcodePrefix: "",
       // ocrPrefix: ["AKE######", "CART######"],
-      tagCount: 0, sectionID: 1, flightID: null, positionID: 1, classTypeID: 1, ocrPrefix: const [],
+      tagCount: 0,
+      sectionID: 1,
+      flightID: null,
+      positionID: 1,
+      classTypeID: 1,
+      ocrPrefix: const [],
     );
   }
 
   // String get getQr => "ConQR:$code,$typeId";
-  String get getQr => "${isCart ? 'C' : 'U'}${id}";
+  String get getQr => "${isCart ? 'C' : 'U'}$id";
 
-  String get rote => (from.isEmpty || dest.isEmpty) ? "" : "${from}-${dest}";
-  String get type => typeId ==1?'Cart':"ULD";
+  String get rote => (from.isEmpty || dest.isEmpty) ? "" : "$from-$dest";
+
+  String get type => typeId == 1 ? 'Cart' : "ULD";
+
   String get allowedDests => destList.join("").trim().isEmpty ? "All" : destList.join(", ");
 
   Widget get getImg => Image.asset(typeId == 1 ? AssetImages.cart : AssetImages.uld, width: 44);
+
   Widget get getImgMini => Stack(
-    children: [
-      Image.asset(typeId == 1 ? AssetImages.cart : AssetImages.uld, width: 22),
-      isClosed
-          ? Container(
-        decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3), borderRadius: BorderRadius.circular(3)),
-        width: 23,
-        height: 23,
-        alignment: Alignment.topCenter,
-        child: Text(
-          "Closed!",
-          style: TextStyle(fontSize: 5, fontWeight: FontWeight.bold),
-        ),
-      )
-          : SizedBox()
-    ],
-  );
+        children: [
+          Image.asset(typeId == 1 ? AssetImages.cart : AssetImages.uld, width: 22),
+          isClosed
+              ? Container(
+                  decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3), borderRadius: BorderRadius.circular(3)),
+                  width: 23,
+                  height: 23,
+                  alignment: Alignment.topCenter,
+                  child: const Text(
+                    "Closed!",
+                    style: TextStyle(fontSize: 5, fontWeight: FontWeight.bold),
+                  ),
+                )
+              : const SizedBox()
+        ],
+      );
 
   Widget get allowedClassesWidget => RichText(
-    text: TextSpan(
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
-      children: classTypeList.where((element) => element.isNotEmpty).isEmpty
-          ? [TextSpan(text: 'All', style: TextStyle(color: Colors.black))]
-          : classTypeList
-          .map((e) => BasicClass.getClassTypeByCode(e))
-          .map(
-            (cl) => TextSpan(
-          text: "${cl?.abbreviation}",
-          style: TextStyle(color: cl!.getColor),
+        text: TextSpan(
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
+          children: classTypeList.where((element) => element.isNotEmpty).isEmpty
+              ? [const TextSpan(text: 'All', style: TextStyle(color: Colors.black))]
+              : classTypeList
+                  .map((e) => BasicClass.getClassTypeByCode(e))
+                  .map(
+                    (cl) => TextSpan(
+                      text: "${cl?.abbreviation}",
+                      style: TextStyle(color: cl!.getColor),
+                    ),
+                  )
+                  .toList(),
         ),
-      )
-          .toList(),
-    ),
-  );
+      );
 
   Widget get allowedDestsWidget => Container(
-    padding: EdgeInsets.all(2),
-    decoration: BoxDecoration(color: MyColors.ice, borderRadius: BorderRadius.circular(4)),
-    child: Text(
-      allowedDests ?? '',
-      style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-    ),
-  );
+        padding: const EdgeInsets.all(2),
+        decoration: BoxDecoration(color: MyColors.ice, borderRadius: BorderRadius.circular(4)),
+        child: Text(
+          allowedDests,
+          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+        ),
+      );
 
-  Widget get allowedTagTypesWidget => Container(
-    // height: 35,
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: allowedTagTypes.isEmpty
-          ? []
-          : allowedTagTypes
-          .where((element) => element.label.isNotEmpty)
-          .map((e) => Container(
-        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 5),
-        decoration: BoxDecoration(color: e.getColor.withOpacity(1), borderRadius: BorderRadius.circular(4)),
-        child: Text(
-          e.label,
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: e.getTextColor),
-        ),
-      ))
-          .toList(),
-    ),
-  );
-  Widget get allowedTagTypesWidgetMini => Container(
-    // height: 35,
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: allowedTagTypes.isEmpty
-          ? []
-          : allowedTagTypes
-          .where((element) => element.label.isNotEmpty)
-          .map((e) => Container(
-        padding: EdgeInsets.symmetric(horizontal: 3, vertical: 2),
-        decoration: BoxDecoration(color: e.getColor.withOpacity(1), borderRadius: BorderRadius.circular(2)),
-        child: Text(
-          e.label,
-          style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: e.getTextColor),
-        ),
-      ))
-          .toList(),
-    ),
-  );
+  Widget get allowedTagTypesWidget => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: allowedTagTypes.isEmpty
+            ? []
+            : allowedTagTypes
+                .where((element) => element.label.isNotEmpty)
+                .map((e) => Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 5),
+                      decoration: BoxDecoration(color: e.getColor.withOpacity(1), borderRadius: BorderRadius.circular(4)),
+                      child: Text(
+                        e.label,
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: e.getTextColor),
+                      ),
+                    ))
+                .toList(),
+      );
+
+  Widget get allowedTagTypesWidgetMini => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: allowedTagTypes.isEmpty
+            ? []
+            : allowedTagTypes
+                .where((element) => element.label.isNotEmpty)
+                .map((e) => Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+                      decoration: BoxDecoration(color: e.getColor.withOpacity(1), borderRadius: BorderRadius.circular(2)),
+                      child: Text(
+                        e.label,
+                        style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: e.getTextColor),
+                      ),
+                    ))
+                .toList(),
+      );
 
   Color get getTypeColor => allowedTagTypes.isEmpty ? Colors.transparent : allowedTagTypes.first.getColor;
 
   Spot? get getSpot {
     if (spotID == null) return null;
-    List<Spot> combinedList = BasicClass.userSetting.shootList.map((e) => e.spotList).toList().expand((e) => e).toList();
+    List<Spot> combinedList = BasicClass.shootList.map((e) => e.spotList).toList().expand((e) => e).toList();
     return combinedList.firstWhere((element) => element.id == spotID);
   }
 
   Widget get getSpotWidget {
-    if (spotID == null) return SizedBox();
+    if (spotID == null) return const SizedBox();
 
-    List<Spot> combinedList = BasicClass.userSetting.shootList.map((e) => e.spotList).toList().expand((e) => e).toList();
+    List<Spot> combinedList = BasicClass.shootList.map((e) => e.spotList).toList().expand((e) => e).toList();
     return Container(
         width: 45,
-        padding: EdgeInsets.all(2),
+        padding: const EdgeInsets.all(2),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: MyColors.myGreen.withOpacity(0.4)),
         child: Text(
-          combinedList.firstWhereOrNull((element) => element.id == spotID)?.spot??'${spotID}',
-          style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
+          combinedList.firstWhereOrNull((element) => element.id == spotID)?.spot ?? '$spotID',
+          style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold, overflow: TextOverflow.ellipsis),
         ));
   }
 
@@ -469,31 +471,31 @@ class TagContainer {
   Position? get getPosition => BasicClass.getPositionById(positionID);
 
   Map<String, dynamic> toJson() => {
-    "ID": id,
-    "FlightID": flightID,
-    "SpotID": spotID,
-    "BinID": binID,
-    "TypeID": typeId,
-    "TagCount": tagCount,
-    "ClassTypeID": classTypeID,
-    "ShootID": shootID,
-    "Title": title,
-    "Code": code,
-    "Dest": dest,
-    "From": from,
-    "Barcode": barcode,
-    "ClosedTime": closedTime,
-    "AL": al,
-    "FLNB": flnb,
-    "TagTypeIDs": tagTypeIds,
-    "DestList": destList.join(","),
-    "ClassList": classTypeList.join(","),
-    "To": dest,
-    "PositionID": positionID,
-    "BarcodePrefix": barcodePrefix,
-    "OCRPrefix": ocrPrefix,
-    // "IsClosed": isClosed
-  };
+        "ID": id,
+        "FlightID": flightID,
+        "SpotID": spotID,
+        "BinID": binID,
+        "TypeID": typeId,
+        "TagCount": tagCount,
+        "ClassTypeID": classTypeID,
+        "ShootID": shootID,
+        "Title": title,
+        "Code": code,
+        "Dest": dest,
+        "From": from,
+        "Barcode": barcode,
+        "ClosedTime": closedTime,
+        "AL": al,
+        "FLNB": flnb,
+        "TagTypeIDs": tagTypeIds,
+        "DestList": destList.join(","),
+        "ClassList": classTypeList.join(","),
+        "To": dest,
+        "PositionID": positionID,
+        "BarcodePrefix": barcodePrefix,
+        "OCRPrefix": ocrPrefix,
+        // "IsClosed": isClosed
+      };
 
   @override
   bool operator ==(Object other) {
@@ -518,7 +520,7 @@ class TagContainer {
   }
 
   validateSearch(String searched) {
-    return ("$code".toLowerCase().contains(searched.toLowerCase()) || searched == "") || (searched.toLowerCase().trim() == barcode.toLowerCase().trim());
+    return (code.toLowerCase().contains(searched.toLowerCase()) || searched == "") || (searched.toLowerCase().trim() == barcode.toLowerCase().trim());
   }
 
   List<TagType> get allowedTagTypes => BasicClass.systemSetting.tagTypeList.where((tt) => (tagTypeIds ?? '').split(",").contains(tt.id.toString())).toList();

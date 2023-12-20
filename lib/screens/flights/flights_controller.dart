@@ -106,13 +106,18 @@ class FlightsController extends MainController {
 
   void flightAddContainer(TagContainer e) {}
 
-  Future<List<TagContainer>> flightAddRemoveContainer(Flight flight, TagContainer c, bool isAdd) async {
+  Future<List<TagContainer>> flightAddRemoveContainer(Flight flight, TagContainer c, bool isAdd, Function function, {bool isForce = false}) async {
     List<TagContainer> containers = [];
     FlightAddRemoveContainerUseCase flightAddContainerUsecase = FlightAddRemoveContainerUseCase();
-    FlightAddRemoveContainerRequest flightAddRemoveContainerRequest = FlightAddRemoveContainerRequest(flight: flight, con: c, isAdd: isAdd);
+    FlightAddRemoveContainerRequest flightAddRemoveContainerRequest = FlightAddRemoveContainerRequest(flight: flight, con: c, isAdd: isAdd, isForce: isForce);
+    flightsState.containerAssignButtonLoading.add(c.id ?? -1);
+    flightsState.setState();
     final fOrR = await flightAddContainerUsecase(request: flightAddRemoveContainerRequest);
-    fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightAddRemoveContainer(flight, c, isAdd)), (r) {
+    flightsState.containerAssignButtonLoading.remove(c.id ?? -1);
+    flightsState.setState();
+    fOrR.fold((f) => isAdd ? FailureHandler.customHandle(f, retry: () => flightAddRemoveContainer(flight, c, isAdd, function, isForce: true)) : FailureHandler.handle(f), (r) {
       containers = r.containers;
+      function(containers);
     });
     return containers;
   }

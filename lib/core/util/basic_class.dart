@@ -19,10 +19,14 @@ class BasicClass {
   Airport? _airport;
   ScreenType? _deviceType;
   Config? _appConfig;
+  List<Shoot>? _shootList;
+  List<AirportPositionSection>? _sections;
 
   static void initialize(LoginUser user, ScreenType deviceType) {
     instance._userInfo = user;
     instance._userSettings = user.userSettings;
+    setSections(user.userSettings.hierarchy);
+    setShootList(user.userSettings.shootList);
     instance._systemSettings = user.systemSettings;
     instance._deviceType = deviceType;
     instance._airport = user.systemSettings.airportList.firstWhere((element) => element.code == user.userSettings.airport);
@@ -43,6 +47,10 @@ class BasicClass {
   static SystemSettings get systemSetting => instance._systemSettings ?? SystemSettings.empty();
 
   static UserSettings get userSetting => instance._userSettings ?? UserSettings.empty();
+
+  static List<Shoot> get shootList => instance._shootList ?? [];
+
+  static List<AirportPositionSection> get sections => instance._sections ?? [];
 
   static LoginUser get userInfo => instance._userInfo ?? LoginUser.empty();
 
@@ -97,7 +105,7 @@ class BasicClass {
 
   static List<AirportPositionSection> getAllAirportSections() {
     List<AirportPositionSection> secs = [];
-    for (var s in userSetting.hierarchy) {
+    for (var s in sections) {
       secs = secs + s.subSections.map((e) => e.copyWith(address: "${e.address}${e.label}")).toList();
     }
     return secs;
@@ -105,7 +113,7 @@ class BasicClass {
 
   static List<AirportPositionSection> getAllAirportSections1() {
     List<AirportPositionSection> secs = [];
-    for (var s in userSetting.hierarchy) {
+    for (var s in sections) {
       List<AirportPositionSection> sections = getAllAirportSections2(s);
       secs = secs + sections;
     }
@@ -123,7 +131,7 @@ class BasicClass {
 
   static List<AirportPositionSection> getAllAirportSections4() {
     List<AirportPositionSection> secs = [];
-    for (var s in userSetting.hierarchy) {
+    for (var s in sections) {
       secs = secs + s.subSections.map((e) => e.copyWith(address: "${e.address}${e.label}")).toList();
     }
     return secs;
@@ -143,5 +151,13 @@ class BasicClass {
 
   static setAirport(Airport ap) {
     instance._airport = ap;
+  }
+
+  static setSections(List<AirportPositionSection> airportPositionSections) {
+    instance._sections = airportPositionSections;
+  }
+
+  static setShootList(List<Shoot> shootList) {
+    instance._shootList = shootList;
   }
 }

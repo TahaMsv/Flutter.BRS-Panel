@@ -1,8 +1,10 @@
 import 'package:brs_panel/core/classes/tag_container_class.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../../core/constants/ui.dart';
 import '../../../widgets/DotButton.dart';
+import '../flights_state.dart';
 
 enum AvailableContainerDataTableColumn { id, name, actions }
 
@@ -73,6 +75,8 @@ class AvailableContainerDataSource extends DataGridSource {
                 con.getImgMini,
                 const SizedBox(width: 8),
                 Text(con.code, style: TextStyles.styleBold16Black),
+                const SizedBox(width: 4),
+                if (con.spotID != null && con.flightID != null) Text("(${con.getSpot?.label})", style: TextStyles.style11Grey),
               ],
             );
           }
@@ -82,17 +86,23 @@ class AvailableContainerDataSource extends DataGridSource {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  con.flightID == null
-                      ? DotButton(
-                          icon: Icons.add,
-                          color: Colors.blueAccent,
-                          onPressed: (onAdd == null) ? null : () async => await onAdd!(con),
-                        )
-                      : DotButton(
-                          icon: Icons.link_off,
-                          color: Colors.deepOrange,
-                          onPressed: (unassigned == null) ? null : () async => await unassigned!(con),
-                        )
+                  Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                    FlightsState state = ref.watch(flightsProvider);
+                    bool loading = state.containerAssignButtonLoading.contains(con.id);
+                    return con.flightID == null
+                        ? DotButton(
+                            icon: Icons.add,
+                            color: Colors.blueAccent,
+                            controlLoading: loading,
+                            onPressed: (onAdd == null) ? null : () async => await onAdd!(con),
+                          )
+                        : DotButton(
+                            icon: Icons.link_off,
+                            color: Colors.deepOrange,
+                            controlLoading: loading,
+                            onPressed: (unassigned == null) ? null : () async => await unassigned!(con),
+                          );
+                  }),
                 ],
               ),
             );

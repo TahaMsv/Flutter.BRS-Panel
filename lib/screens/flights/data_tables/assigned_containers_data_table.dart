@@ -10,7 +10,7 @@ extension FlightDataTableColumnDetails on AssignedContainerDataTableColumn {
   double get width {
     switch (this) {
       case AssignedContainerDataTableColumn.name:
-        return 0.23;
+        return 0.27;
       case AssignedContainerDataTableColumn.position:
         return 0.12;
       case AssignedContainerDataTableColumn.tagCount:
@@ -18,7 +18,7 @@ extension FlightDataTableColumnDetails on AssignedContainerDataTableColumn {
       case AssignedContainerDataTableColumn.tagTypes:
         return 0.36;
       case AssignedContainerDataTableColumn.actions:
-        return 0.12;
+        return 0.08;
       case AssignedContainerDataTableColumn.id:
         return 0.08;
     }
@@ -82,6 +82,8 @@ class AssignedContainerDataSource extends DataGridSource {
                 con.getImg,
                 const SizedBox(width: 8),
                 Text(con.code, style: TextStyles.styleBold16Black),
+                const SizedBox(width: 4),
+                if (con.spotID != null) Text("(${con.getSpot?.label})", style: TextStyles.style11Grey),
               ],
             );
           }
@@ -90,8 +92,8 @@ class AssignedContainerDataSource extends DataGridSource {
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.centerLeft,
               child: Text(
-                con.getPosition!.title,
-                style: TextStyle(color: con.getPosition!.getColor, fontWeight: FontWeight.bold),
+                con.getPosition?.title ?? '',
+                style: TextStyle(color: con.getPosition?.getColor, fontWeight: FontWeight.bold),
               ),
             );
           }

@@ -77,15 +77,16 @@ class AirportDataSource extends DataGridSource {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              MyButton(
-                height: 30,
-                label: "Sections",
-                fade: true,
-                onPressed: () async {
-                  await airportsController.goSections(a);
-                },
-              ),
-              const SizedBox(width: 12),
+              //todo bring back sections again!!!
+              // MyButton(
+              //   height: 30,
+              //   label: "Sections",
+              //   fade: true,
+              //   onPressed: () async {
+              //     await airportsController.goSections(a);
+              //   },
+              // ),
+              // const SizedBox(width: 12),
               MyButton(
                 height: 30,
                 // fontSize: 12,

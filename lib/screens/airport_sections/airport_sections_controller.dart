@@ -2,6 +2,8 @@ import '../../core/abstracts/controller_abs.dart';
 import '../../core/abstracts/success_abs.dart';
 import '../../core/classes/airport_class.dart';
 import '../../core/classes/airport_section_class.dart';
+import '../../core/classes/login_user_class.dart';
+import '../../core/util/basic_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
 import '../../core/util/handlers/success_handler.dart';
 import '../airport_carts/airport_carts_state.dart';
@@ -139,7 +141,8 @@ class AirportSectionsController extends MainController {
     AirportUpdateSectionsRequest airportUpdateSectionsRequest = AirportUpdateSectionsRequest(sections: sections!);
     final fOrR = await airportUpdateSectionsUseCase(request: airportUpdateSectionsRequest);
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => airportGetSections()), (r) {
-      sectionsP.state = r.airportSections;
+      if (r.airportSections != null && r.airportSections!.sections.isNotEmpty) sectionsP.state = r.airportSections;
+      updateBasicClassSections();
       SuccessHandler.handle(ServerSuccess(code: 1, msg: "Changes Saved Successfully!"));
       setIsSectionUpdated(true);
     });
@@ -151,7 +154,7 @@ class AirportSectionsController extends MainController {
   bool checkForceGround(Section? section) {
     final List<Section> selectedSections = ref.read(selectedSectionsProvider.notifier).state;
     if (selectedSections.length < 2) return false;
-    if (selectedSections[1].subSections.any((s) => s.groundSectionID != null && s.id != section?.id)) return false;
+    if (selectedSections[1].subSections.any((s) => s.isGround == true && s.id != section?.id)) return false;
     return true;
   }
 
@@ -178,5 +181,36 @@ class AirportSectionsController extends MainController {
     prev.add(subs.first);
     selectedSectionsP.state = prev;
     setFirstSections(subs.first.sections);
+  }
+
+  updateBasicClassSections() {
+    final sectionsP = ref.read(sectionsProvider.notifier);
+    List<Section> sc0 = sectionsP.state?.sections ?? [];
+    if (sectionsP.state?.airport != BasicClass.airport.code) return;
+    //updating spots
+    List<Shoot> shootList = [];
+    for (Section s in sc0) {
+      for (Section sub in s.subSections) {
+        print(sub.label);
+        if (sub.spots.isNotEmpty) {
+          print("found!!!");
+          Shoot shoot = Shoot(
+              id: sub.id ?? -1,
+              airport: sectionsP.state?.airport ?? "",
+              title: sub.label,
+              spotList: sub.spots.map((spot) => Spot(id: spot.id ?? -1, spot: spot.label ?? "", barcode: spot.label ?? "", containerId: null)).toList());
+          shootList.add(shoot);
+        }
+      }
+    }
+    print(shootList.map((e) => e.toJson()));
+    BasicClass.setShootList(shootList);
+
+    //updating sections
+    List<AirportPositionSection> airportPositionSections = [];
+    for (Section s in sc0) {
+      airportPositionSections.add(s.convertToAPS);
+    }
+    BasicClass.setSections(airportPositionSections);
   }
 }

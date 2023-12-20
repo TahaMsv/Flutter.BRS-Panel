@@ -42,11 +42,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
     plan = ContainersPlan.fromJson(widget.plan.toJson());
     print("Plan sectionID ${plan.sectionID}  Plan spot ${plan.spotID}");
     airportPositionSection = BasicClass.getAirportSectionByID(plan.sectionID);
-    spot = (BasicClass.userSetting.shootList
-                .firstWhereOrNull((element) => element.id == plan.sectionID)
-                ?.spotList ??
-            [])
-        .firstWhereOrNull((e) => e.id == plan.spotID);
+    spot = (BasicClass.shootList.firstWhereOrNull((element) => element.id == plan.sectionID)?.spotList ?? []).firstWhereOrNull((e) => e.id == plan.spotID);
 
     print(airportPositionSection?.id);
     print(spot?.id);
@@ -87,10 +83,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                 ? const SizedBox()
                 : Container(
                     margin: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: MyColors.black3),
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.blueAccent.withOpacity(0.1)),
+                    decoration: BoxDecoration(border: Border.all(color: MyColors.black3), borderRadius: BorderRadius.circular(8), color: Colors.blueAccent.withOpacity(0.1)),
                     padding: const EdgeInsets.all(8),
                     child: Row(children: [Expanded(child: Text(plan.statustics))]),
                   ),
@@ -121,10 +114,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                                 padding: const EdgeInsets.all(8.0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(AssetImages.cart, width: 100, height: 50),
-                                    Text("(${plan.cartCap})", style: headerStyles)
-                                  ],
+                                  children: [Image.asset(AssetImages.cart, width: 100, height: 50), Text("(${plan.cartCap})", style: headerStyles)],
                                 ),
                               ),
                             ),
@@ -165,18 +155,14 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                                       DotButton(
                                         icon: Icons.picture_as_pdf,
                                         color: Colors.red,
-                                        onPressed: (e.uldCount == 0 && e.cartCount == 0)
-                                            ? null
-                                            : () async => await getIt<FlightsController>()
-                                                .flightGetPlanFile(flight: widget.flight, type: type),
+                                        onPressed: (e.uldCount == 0 && e.cartCount == 0) ? null : () async => await getIt<FlightsController>().flightGetPlanFile(flight: widget.flight, type: type),
                                       ),
                                       const SizedBox(width: 24),
                                       Expanded(
                                         child: Container(
                                           alignment: Alignment.center,
                                           padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                                          decoration: BoxDecoration(
-                                              color: type.getColor, borderRadius: BorderRadius.circular(5)),
+                                          decoration: BoxDecoration(color: type.getColor, borderRadius: BorderRadius.circular(5)),
                                           child: Text(
                                             type.label,
                                             style: TextStyle(
@@ -219,8 +205,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                               Expanded(
                                 flex: 2,
                                 child: Center(
-                                  child: Text("${(e.uldCount * plan.uldCap) + (e.cartCount * plan.cartCap)}",
-                                      style: headerStyles),
+                                  child: Text("${(e.uldCount * plan.uldCap) + (e.cartCount * plan.cartCap)}", style: headerStyles),
                                 ),
                               ),
                               const SizedBox(width: 24),
@@ -313,8 +298,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                                         children: [
                                           Expanded(
                                             flex: 1,
-                                            child:
-                                                PlanInputWidget(canEdit: false, value: e.cartCount, onChange: (v) {}),
+                                            child: PlanInputWidget(canEdit: false, value: e.cartCount, onChange: (v) {}),
                                           ),
                                           const SizedBox(width: 24),
                                           Expanded(
@@ -324,9 +308,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                                           const SizedBox(width: 24),
                                           Expanded(
                                             child: Center(
-                                              child: Text(
-                                                  "${(e.uldCount * plan.uldCap) + (e.cartCount * plan.cartCap)}",
-                                                  style: headerStyles),
+                                              child: Text("${(e.uldCount * plan.uldCap) + (e.cartCount * plan.cartCap)}", style: headerStyles),
                                             ),
                                           ),
                                           const SizedBox(width: 24),
@@ -367,9 +349,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("${plan.planData.map((e) => e.cartCount).sum} Cart(s)", style: headerStyles)
-                                ],
+                                children: [Text("${plan.planData.map((e) => e.cartCount).sum} Cart(s)", style: headerStyles)],
                               ),
                             ),
                           ),
@@ -382,9 +362,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text("${plan.planData.map((e) => e.uldCount).sum} ULD(s)", style: headerStyles)
-                                ],
+                                children: [Text("${plan.planData.map((e) => e.uldCount).sum} ULD(s)", style: headerStyles)],
                               ),
                             ),
                           ),
@@ -393,9 +371,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                         Expanded(
                           flex: 2,
                           child: Center(
-                            child: Text(
-                                "${plan.planData.map((e) => (e.uldCount * plan.uldCap) + (e.cartCount * plan.cartCap)).sum} Tag(s)",
-                                style: headerStyles),
+                            child: Text("${plan.planData.map((e) => (e.uldCount * plan.uldCap) + (e.cartCount * plan.cartCap)).sum} Tag(s)", style: headerStyles),
                           ),
                         ),
                         const SizedBox(width: 24),
@@ -414,11 +390,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                   Expanded(
                     flex: 1,
                     child: MyFieldPicker<AirportPositionSection>(
-                      items: BasicClass.getAllAirportSections4()
-                          .where((element) =>
-                              widget.flight.validAssignContainerPositions.contains(element.position) &&
-                              element.canHaveContainer)
-                          .toList(),
+                      items: BasicClass.getAllAirportSections4().where((element) => widget.flight.validAssignContainerPositions.contains(element.position) && element.canHaveContainer).toList(),
                       label: "Airport Section",
                       itemToString: (item) => item.label,
                       value: airportPositionSection,
@@ -434,10 +406,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                     flex: 1,
                     child: (airportPositionSection?.spotRequired ?? false)
                         ? MyFieldPicker<Spot>(
-                            items: BasicClass.userSetting.shootList
-                                    .firstWhereOrNull((element) => element.id == airportPositionSection?.id)
-                                    ?.spotList ??
-                                [],
+                            items: BasicClass.shootList.firstWhereOrNull((element) => element.id == airportPositionSection?.id)?.spotList ?? [],
                             label: "Spot",
                             itemToString: (item) => item.spot,
                             value: spot,
@@ -450,11 +419,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                   const SizedBox(width: 24),
                   MyButton(
                     onPressed: () async {
-                      await myFlightsController.flightSavePlans(
-                          flight: widget.flight,
-                          newPlan: plan,
-                          sectionID: airportPositionSection?.id,
-                          spotID: spot?.id);
+                      await myFlightsController.flightSavePlans(flight: widget.flight, newPlan: plan, sectionID: airportPositionSection?.id, spotID: spot?.id);
                     },
                     label: "Save",
                     color: theme.primaryColor,
