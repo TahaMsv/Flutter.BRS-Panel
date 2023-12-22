@@ -40,7 +40,7 @@ class FlightAddRemoveContainerRequest extends Request {
             "ClassList": con.classTypeList,
             "TagTypeIDs": con.tagTypeIds,
             "ClassTypeID": 1,
-            "PositionID": con.positionID,
+            "PositionID": null, //con.positionID,
             "IsDeleted": isAdd ? 0 : 1,
             "IsForced": isForce,
             "SectionID": con.sectionID,
