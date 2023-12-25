@@ -99,6 +99,7 @@ class AircraftsController extends MainController {
 
   @override
   void onInit() {
+    print("aircrafts  onInit");
     getAircrafts();
     super.onInit();
   }

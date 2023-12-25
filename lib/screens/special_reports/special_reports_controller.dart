@@ -82,6 +82,16 @@ class SpecialReportsController extends MainController {
     return result;
   }
 
+  Future<void> retrieveSpecialReportScreenFromLocalStorage() async {
+    ref.read(specialReportDataProvider.notifier).update((state) => null);
+    ref.read(selectedSpecialReportProvider.notifier).update((state) => null);
+    ref.read(specialReportResultProvider.notifier).update((state) => null);
+    ref.read(specialReportOptionsProvider.notifier).update((state) => []);
+    ref.read(paramsDataProvider.notifier).update((state) => {});
+    getSpecialReportList();
+  }
+
+
   /// Core ---------------------------------------------------------------------------------------------------------
 
   @override

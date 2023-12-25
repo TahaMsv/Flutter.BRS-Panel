@@ -4,7 +4,12 @@ import 'package:brs_panel/core/platform/encryptor.dart';
 import 'package:brs_panel/core/platform/network_manager.dart';
 import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:brs_panel/core/util/confirm_operation.dart';
+import 'package:brs_panel/screens/airports/airports_controller.dart';
+import 'package:brs_panel/screens/barcode_generator/barcode_generator_controller.dart';
+import 'package:brs_panel/screens/bsm/bsm_controller.dart';
 import 'package:brs_panel/screens/login/usecases/server_select_usecase.dart';
+import 'package:brs_panel/screens/special_reports/special_reports_controller.dart';
+import 'package:brs_panel/screens/users/users_controller.dart';
 import 'package:brs_panel/widgets/ServerSelectDialog.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import '../../core/abstracts/controller_abs.dart';
@@ -83,13 +88,45 @@ class LoginController extends MainController {
   void downloadNewVersion(NewVersion newVersion) {}
 
   Future<void> retrieveFromLocalStorage() async {
+    // await loadPreferences();
+    // await retrieveUserFormLocalStorage();
+    //
+    // //Is it refreshing?
+    // bool isRefreshed = prefs.getBool(SpKeys.isRefreshed) ?? false;
+    // if (!isRefreshed) return;
+    // prefs.setBool(SpKeys.isRefreshed, false);
+    //
+    // // bool firstInit = prefs.getBool(SpKeys.flightVFirstInit) ?? false;
+    // // // print("firstInit: ${firstInit}");
+    // // if (!firstInit) {
+    // //   prefs.setBool(SpKeys.flightVFirstInit, true);
+    // //   return;
+    // // }
+    //
+    // FlightsController flightsController = getIt<FlightsController>();
+    // flightsController.retrieveFlightsScreenFromLocalStorage();
+    //
+    // AircraftsController aircraftsController = getIt<AircraftsController>();
+    // aircraftsController.retrieveAirCraftsScreenFromLocalStorage();
+    //
+    // AirportsController airportsController = getIt<AirportsController>();
+    // airportsController.retrieveAirportsScreenFromLocalStorage();
+    //
+    // SpecialReportsController specialReportsController = getIt<SpecialReportsController>();
+    // specialReportsController.retrieveSpecialReportScreenFromLocalStorage();
+    //
+    // UsersController usersController = getIt<UsersController>();
+    // usersController.getUsers();
+  }
+
+  Future<void> retrieveFromLocalStorage2() async {
     await loadPreferences();
     await retrieveUserFormLocalStorage();
 
     //Is it refreshing?
-    bool isRefreshed = prefs.getBool(SpKeys.isRefreshed) ?? false;
-    if (!isRefreshed) return;
-    prefs.setBool(SpKeys.isRefreshed, false);
+    // bool isRefreshed = prefs.getBool(SpKeys.isRefreshed) ?? false;
+    // if (!isRefreshed) return;
+    // prefs.setBool(SpKeys.isRefreshed, false);
 
     // bool firstInit = prefs.getBool(SpKeys.flightVFirstInit) ?? false;
     // // print("firstInit: ${firstInit}");
@@ -101,8 +138,23 @@ class LoginController extends MainController {
     FlightsController flightsController = getIt<FlightsController>();
     flightsController.retrieveFlightsScreenFromLocalStorage();
 
-    // AircraftsController aircraftsController = getIt<AircraftsController>();
-    // aircraftsController.retrieveAirCraftsScreenFromLocalStorage();
+    AircraftsController aircraftsController = getIt<AircraftsController>();
+    aircraftsController.retrieveAirCraftsScreenFromLocalStorage();
+
+    AirportsController airportsController = getIt<AirportsController>();
+    airportsController.retrieveAirportsScreenFromLocalStorage();
+
+    SpecialReportsController specialReportsController = getIt<SpecialReportsController>();
+    specialReportsController.retrieveSpecialReportScreenFromLocalStorage();
+
+    UsersController usersController = getIt<UsersController>();
+    usersController.getUsers();
+
+    BsmController bsmController = getIt<BsmController>();
+    bsmController.retrieveBSMScreenFromLocalStorage();
+
+    BarcodeGeneratorController barcodeGeneratorController = getIt<BarcodeGeneratorController>();
+    barcodeGeneratorController.retrieveBarcodeGenScreenFromLocalStorage();
   }
 
   Future<void> retrieveUserFormLocalStorage() async {

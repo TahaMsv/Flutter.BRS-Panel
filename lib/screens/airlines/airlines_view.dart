@@ -23,12 +23,12 @@ class AirlinesView extends StatefulWidget {
 }
 
 class _AirlinesViewState extends State<AirlinesView> {
-  @override
-  void initState() {
-    LoginController controller = getIt<LoginController>();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) => controller.retrieveFromLocalStorage());
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   LoginController controller = getIt<LoginController>();
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) => controller.retrieveFromLocalStorage());
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {

@@ -33,21 +33,12 @@ class _MyAppState extends ConsumerState<MyApp> {
     WebAppReloadDetector.onReload(() {
       print('Web Page Reloaded');
       LoginController loginController = getIt<LoginController>();
-      loginController.prefs.setBool(SpKeys.isRefreshed, true);
+      // loginController.prefs.setBool(SpKeys.isRefreshed, true);
+      loginController.retrieveFromLocalStorage2();
       // bool? firstInit = loginController.prefs.getBool(SpKeys.flightVFirstInit);
       // print('firstInit: ${firstInit}');
     });
-    // html.window.onBeforeUnload.listen((event)  {
-    //    initControllers();
-    //   LoginController loginController = getIt<LoginController>();
-    //   FlightsController flightsController = getIt<FlightsController>();
-    //   print("Refreshing the web page");
-    //   final GoRouter router = ref.watch(routerProvider);
-    //   String currentPath = router.location;
-    //   print(currentPath);
-    //   if (currentPath == "/login") return;
-    //   flightsController.retrieveUserFormLocalStorage();
-    // });
+
   }
 
   @override

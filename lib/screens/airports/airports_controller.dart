@@ -101,6 +101,10 @@ class AirportsController extends MainController {
     });
   }
 
+  Future<void> retrieveAirportsScreenFromLocalStorage() async {
+    getAirports();
+  }
+
   /// Core -------------------------------------------------------------------------------------------------------------
 
   @override

@@ -13,6 +13,7 @@ import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../core/classes/bsm_result_class.dart';
+import '../../core/constants/share_prefrences_keys.dart';
 import '../../core/util/basic_class.dart';
 import '../../widgets/LoadingListView.dart';
 import 'bsm_controller.dart';
@@ -29,7 +30,6 @@ class BsmView extends StatelessWidget {
         appBar: MyAppBar(),
         body: Column(
           children: [
-
             // TextButton(
             //     onPressed: () {
             //       myBsmController.bsmList(DateTime.now());
@@ -80,9 +80,16 @@ class BsmPanelWidget extends ConsumerWidget {
                   maxLines: null,
                   placeholder: "BSM Message",
                   controller: state.newBsmC,
-                  suffixIcon: DotButton(icon: Icons.delete,onPressed: (){
-                    state.newBsmC.clear();
-                  },),
+                  suffixIcon: DotButton(
+                    icon: Icons.delete,
+                    onPressed: () {
+                      state.newBsmC.clear();
+                      myBsmController.prefs.setString(SpKeys.bsmMessage, "");
+                    },
+                  ),
+                  onChanged: (v) {
+                    myBsmController.prefs.setString(SpKeys.bsmMessage, v);
+                  },
                 ),
               ),
               const SizedBox(width: 12),
@@ -96,15 +103,15 @@ class BsmPanelWidget extends ConsumerWidget {
               Expanded(
                 flex: 1,
                 child: MyButtonPanel(
-                  leftAction: (){
+                  leftAction: () {
                     ref.read(bsmDateProvider.notifier).update((state) => state.add(const Duration(days: -1)));
                     myBsmController.bsmList(bsmDate);
                   },
-                  rightAction: (){
+                  rightAction: () {
                     ref.read(bsmDateProvider.notifier).update((state) => state.add(const Duration(days: 1)));
                     myBsmController.bsmList(bsmDate);
                   },
-                  centerAction: (){},
+                  centerAction: () {},
                   centerWidget: Text(bsmDate.format_ddMMMEEE),
                   leftWidget: const Icon(Icons.chevron_left),
                   rightWidget: const Icon(Icons.chevron_right),
@@ -135,33 +142,35 @@ class BsmListWidget extends ConsumerWidget {
     final BsmState state = ref.watch(bsmProvider);
     final bsmList = ref.watch(filteredBsmListProvider);
     return Expanded(
-      child:
-      state.loadingBSM?
-          const SpinKitCircle(size: 50,color: MyColors.mainColor,):
-      SfDataGrid(
-          onQueryRowHeight: (details) {
-            return details.getIntrinsicRowHeight(details.rowIndex);
-          },
-          headerGridLinesVisibility: GridLinesVisibility.both,
-          selectionMode: SelectionMode.none,
-          shrinkWrapColumns: true,
-          // shrinkWrapRows: true,
-          // shrinkWrapColumns: false,
-          sortingGestureType: SortingGestureType.doubleTap,
-          gridLinesVisibility: GridLinesVisibility.vertical,
-          allowSorting: true,
-          rowHeight: 70,
-          headerRowHeight: 35,
-          source: BsmDataSource(bsm: bsmList),
-          columns: BsmDataTableColumn.values
-              .map(
-                (e) => GridColumn(
-                  columnName: e.name,
-                  label: Center(child: Text(e.label!)),
-                  width: e.width * width,
-                ),
-              )
-              .toList()),
+      child: state.loadingBSM
+          ? const SpinKitCircle(
+              size: 50,
+              color: MyColors.mainColor,
+            )
+          : SfDataGrid(
+              onQueryRowHeight: (details) {
+                return details.getIntrinsicRowHeight(details.rowIndex);
+              },
+              headerGridLinesVisibility: GridLinesVisibility.both,
+              selectionMode: SelectionMode.none,
+              shrinkWrapColumns: true,
+              // shrinkWrapRows: true,
+              // shrinkWrapColumns: false,
+              sortingGestureType: SortingGestureType.doubleTap,
+              gridLinesVisibility: GridLinesVisibility.vertical,
+              allowSorting: true,
+              rowHeight: 70,
+              headerRowHeight: 35,
+              source: BsmDataSource(bsm: bsmList),
+              columns: BsmDataTableColumn.values
+                  .map(
+                    (e) => GridColumn(
+                      columnName: e.name,
+                      label: Center(child: Text(e.label!)),
+                      width: e.width * width,
+                    ),
+                  )
+                  .toList()),
     );
   }
 }
