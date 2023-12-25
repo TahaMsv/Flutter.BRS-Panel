@@ -94,13 +94,13 @@ class FlightsController extends MainController {
     savedDateTime = savedDateTimeString.isNotEmpty ? DateTime.parse(savedDateTimeString) : DateTime.now();
     flightList(savedDateTime);
 
-    // String flightAirportFilterPString = prefs.getString(SpKeys.flightAirportFilterP) ?? "";
-    // String flightAirlineFilterPString = prefs.getString(SpKeys.flightAirlineFilterP) ?? "";
-    // final fapfP = ref.watch(flightAirportFilterProvider.notifier);
-    // fapfP.state = Airport.fromJson(jsonDecode(flightAirportFilterPString));
-    // final falP = ref.watch(flightAirlineFilterProvider.notifier);
-    // falP.state = flightAirlineFilterPString;
-
+    String? flightAirportFilterPString = prefs.getString(SpKeys.flightAirportFilterP);
+    String? flightAirlineFilterPString = prefs.getString(SpKeys.flightAirlineFilterP);
+    final fapfP = ref.watch(flightAirportFilterProvider.notifier);
+    print(flightAirportFilterPString.runtimeType);
+    fapfP.state = flightAirportFilterPString == "null" ? null : Airport.fromJson(jsonDecode(flightAirportFilterPString!));
+    final falP = ref.watch(flightAirlineFilterProvider.notifier);
+    falP.state = (flightAirlineFilterPString == "null" || flightAirlineFilterPString == "") ? null : flightAirlineFilterPString;
     String flightTypeFilterPString = prefs.getString(SpKeys.flightTypeFilterP) ?? "";
     ref.read(flightTypeFilterProvider.notifier).state = getFlightTypeFilterFromString(flightTypeFilterPString);
   }

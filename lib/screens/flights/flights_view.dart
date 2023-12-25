@@ -138,7 +138,8 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                             items: BasicClass.systemSetting.airportList,
                             onChange: (v) {
                               a.state = v;
-                              // myFlightsController.prefs.setString(SpKeys.flightAirportFilterP, jsonEncode(v!.toJson()));
+                              print(v);
+                              myFlightsController.prefs.setString(SpKeys.flightAirportFilterP, jsonEncode(v?.toJson()));
                             },
                             value: a.state,
                           ),
@@ -160,7 +161,7 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                             items: BasicClass.airlineList,
                             onChange: (v) {
                               a.state = v;
-                              // myFlightsController.prefs.setString(SpKeys.flightAirlineFilterP, v!);
+                              myFlightsController.prefs.setString(SpKeys.flightAirlineFilterP, v ?? "");
                             },
                             value: a.state,
                           ),
