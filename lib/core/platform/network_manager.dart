@@ -15,11 +15,13 @@ class NetworkManager implements NetworkManagerInterface {
   @override
   Future<Response> post(Request request, {String? api}) async {
     NetworkRequest networkRequest = NetworkRequest(api: api ?? Apis.baseUrl, data: request.toJson());
-    // debugPrint(jsonEncode(request.toJson()));
-    print(api);
-    debugPrint(networkRequest.options.baseUrl);
+    // debugPrint("request: ${jsonEncode(request.toJson())}");
+    // print("networkRequest: ${networkRequest.data}");
+    // print("api: ${api}");
+    // debugPrint(networkRequest.options.baseUrl);
     NetworkResponse networkResponse = await networkRequest.post();
-    print(jsonEncode(networkResponse.responseBody));
+    // print("responseBody: ${jsonEncode(networkResponse.responseBody)}");
+    // print("responseStatus: ${networkResponse.responseStatus}");
     if (networkResponse.responseStatus) {
       try {
         // Response res = Response.fromJson(networkResponse.responseBody);
@@ -58,8 +60,7 @@ class NetworkManager implements NetworkManagerInterface {
     return res;
   }
 
-  Future<dio.Response> dioPost(
-      {required String api, Map<String, dynamic> request = const {}, Map<String, dynamic> header = const {}}) async {
+  Future<dio.Response> dioPost({required String api, Map<String, dynamic> request = const {}, Map<String, dynamic> header = const {}}) async {
     try {
       dio.Dio dd = dio.Dio(dio.BaseOptions(headers: header));
       var formData = dio.FormData.fromMap(request);

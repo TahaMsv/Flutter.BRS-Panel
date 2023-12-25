@@ -254,13 +254,38 @@ class TagContainer {
   String from;
   String barcode;
   String? closedTime;
-
   int tagCount;
   List<String> ocrPrefix;
   List<String> destList;
   List<String> classTypeList;
 
   // bool isClosed;
+  Map<String, dynamic> toJson() => {
+    "ID": id,
+    "FlightID": flightID,
+    "SpotID": spotID,
+    "BinID": binID,
+    "TypeID": typeId,
+    "TagCount": tagCount,
+    "ClassTypeID": classTypeID,
+    "ShootID": shootID,
+    "Title": title,
+    "Code": code,
+    "Dest": dest,
+    "From": from,
+    "Barcode": barcode,
+    "ClosedTime": closedTime,
+    "AL": al,
+    "FLNB": flnb,
+    "TagTypeIDs": tagTypeIds,
+    "DestList": destList.join(","),
+    "ClassList": classTypeList.join(","),
+    "To": dest,
+    "PositionID": positionID,
+    "BarcodePrefix": barcodePrefix,
+    "OCRPrefix": ocrPrefix,
+    // "IsClosed": isClosed
+  };
 
   factory TagContainer.fromJson(Map<String, dynamic> json) => TagContainer(
         id: json["ID"],
@@ -273,19 +298,23 @@ class TagContainer {
         classTypeID: json["ClassTypeID"] ?? 1,
         positionID: json["PositionID"] ?? -1,
         title: json["Title"] ?? "",
-        closedTime: json["ClosedTime"],
+        closedTime: json["ClosedTime"] ?? "",
         tagCount: json["TagCount"] ?? 0,
-        flnb: json["FLNB"],
-        al: json["AL"],
-        tagTypeIds: json["TagTypeIDs"],
+        flnb: json["FLNB"] ?? "",
+        al: json["AL"] ?? "",
+        tagTypeIds: json["TagTypeIDs"] ?? "",
         code: json["Code"] ?? "",
         barcode: json["Barcode"] ?? "",
         dest: json["Dest"] ?? json["To"] ?? "",
+        from: json["From"] ?? "",
         // isClosed: json["IsClosed"] ?? false,
-        barcodePrefix: json["BarcodePrefix"],
-        destList: ((json["DestList"] ?? "") as String).split(","),
-        classTypeList: ((json["ClassList"] ?? "") as String).split(",").where((element) => element.trim().isNotEmpty).toList(),
-        ocrPrefix: List<String>.from((json["OCRPrefix"] ?? ["AKE######", "CART######"]).map((x) => x.toString())),
+        barcodePrefix: json["BarcodePrefix"] ?? "",
+        // destList: ((json["DestList"] ?? "") as String).split(","),
+        destList: [],
+        // classTypeList: ((json["ClassList"] ?? "") as String).split(",").where((element) => element.trim().isNotEmpty).toList(),
+        classTypeList: [],
+        // ocrPrefix: List<String>.from((json["OCRPrefix"] ?? ["AKE######", "CART######"]).map((x) => x.toString())),
+        ocrPrefix: [],
       );
 
   factory TagContainer.fromQr(String qr) {
@@ -470,32 +499,7 @@ class TagContainer {
 
   Position? get getPosition => BasicClass.getPositionById(positionID);
 
-  Map<String, dynamic> toJson() => {
-        "ID": id,
-        "FlightID": flightID,
-        "SpotID": spotID,
-        "BinID": binID,
-        "TypeID": typeId,
-        "TagCount": tagCount,
-        "ClassTypeID": classTypeID,
-        "ShootID": shootID,
-        "Title": title,
-        "Code": code,
-        "Dest": dest,
-        "From": from,
-        "Barcode": barcode,
-        "ClosedTime": closedTime,
-        "AL": al,
-        "FLNB": flnb,
-        "TagTypeIDs": tagTypeIds,
-        "DestList": destList.join(","),
-        "ClassList": classTypeList.join(","),
-        "To": dest,
-        "PositionID": positionID,
-        "BarcodePrefix": barcodePrefix,
-        "OCRPrefix": ocrPrefix,
-        // "IsClosed": isClosed
-      };
+
 
   @override
   bool operator ==(Object other) {

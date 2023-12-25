@@ -10,6 +10,7 @@ class FlightsState extends ChangeNotifier {
   void setState() => notifyListeners();
 
   bool loadingFlights = false;
+  bool firstInit = false;
   List<int> containerAssignButtonLoading = [];
 }
 

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:artemis_utils/artemis_utils.dart';
 import 'package:brs_panel/core/abstracts/failures_abs.dart';
 import 'package:brs_panel/core/abstracts/success_abs.dart';
 import 'package:brs_panel/core/navigation/route_names.dart';
@@ -29,11 +30,16 @@ import '../../core/classes/flight_report_class.dart';
 import '../../core/classes/login_user_class.dart';
 import '../../core/classes/tag_container_class.dart';
 import '../../core/constants/apis.dart';
+import '../../core/constants/share_prefrences_keys.dart';
+import '../../core/enums/flight_type_filter_enum.dart';
 import '../../core/platform/device_info.dart';
 import '../../core/util/basic_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
 import 'package:path/path.dart' as p;
+import '../aircrafts/aircrafts_state.dart';
 import '../flight_details/dialogs/pdf_preview_dialog.dart';
+import '../login/login_controller.dart';
+import '../login/login_state.dart';
 import 'dialogs/containers_plan_dialog.dart';
 import 'flights_state.dart';
 
@@ -44,12 +50,16 @@ class FlightsController extends MainController {
 
   @override
   onInit() {
-    flightList(DateTime.now());
+    print("FlightsController onInit");
+    // prefs.setBool(SpKeys.flightVFirstInit, false);
+    // flightsState.firstInit = false;
+    flightList(ref.read(flightDateProvider.notifier).state);
   }
 
   Future<List<Flight>?> flightList(DateTime dt) async {
     final flightDateP = ref.read(flightDateProvider.notifier);
     flightDateP.state = dt;
+    prefs.setString(SpKeys.flightDateP, dt.toIso8601String());
     List<Flight>? flights;
     flightsState.loadingFlights = true;
     flightsState.setState();
@@ -64,6 +74,35 @@ class FlightsController extends MainController {
       fl.setFlights(flights!);
     });
     return flights;
+  }
+
+  Future<void> retrieveFlightsScreenFromLocalStorage() async {
+    // LoginController loginController = getIt<LoginController>();
+    // await loginController.loadPreferences();
+    // bool isRefreshed = prefs.getBool(SpKeys.isRefreshed) ?? false;
+    // if (!isRefreshed) return;
+    // prefs.setBool(SpKeys.isRefreshed, false);
+    // bool firstInit = prefs.getBool(SpKeys.flightVFirstInit) ?? false;
+    // // print("firstInit: ${firstInit}");
+    // if (!firstInit) {
+    //   prefs.setBool(SpKeys.flightVFirstInit, true);
+    //   return;
+    // }
+    // await loginController.retrieveUserFormLocalStorage();
+    late DateTime savedDateTime;
+    final savedDateTimeString = prefs.getString(SpKeys.flightDateP) ?? '';
+    savedDateTime = savedDateTimeString.isNotEmpty ? DateTime.parse(savedDateTimeString) : DateTime.now();
+    flightList(savedDateTime);
+
+    // String flightAirportFilterPString = prefs.getString(SpKeys.flightAirportFilterP) ?? "";
+    // String flightAirlineFilterPString = prefs.getString(SpKeys.flightAirlineFilterP) ?? "";
+    // final fapfP = ref.watch(flightAirportFilterProvider.notifier);
+    // fapfP.state = Airport.fromJson(jsonDecode(flightAirportFilterPString));
+    // final falP = ref.watch(flightAirlineFilterProvider.notifier);
+    // falP.state = flightAirlineFilterPString;
+
+    String flightTypeFilterPString = prefs.getString(SpKeys.flightTypeFilterP) ?? "";
+    ref.read(flightTypeFilterProvider.notifier).state = getFlightTypeFilterFromString(flightTypeFilterPString);
   }
 
   void goAddFlight() {

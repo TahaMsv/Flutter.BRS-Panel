@@ -18,8 +18,10 @@ import '../../core/platform/device_info.dart';
 import '../../core/util/handlers/failure_handler.dart';
 import '../../core/util/version_handler.dart';
 import '../../initialize.dart';
+import '../aircrafts/aircrafts_controller.dart';
 import '../aircrafts/aircrafts_state.dart';
 import '../airports/airports_state.dart';
+import '../flights/flights_controller.dart';
 import 'login_state.dart';
 import 'usecases/login_usecase.dart';
 
@@ -67,6 +69,7 @@ class LoginController extends MainController {
       prefs.setString(SpKeys.username, username);
       prefs.setString(SpKeys.password, loginState.passwordC.text);
       prefs.setString(SpKeys.airline, al);
+      prefs.setString(SpKeys.user, jsonEncode(user!.toJson()));
       nav.goNamed(RouteNames.flights);
       BasicClass.initialize(user!, deviceInfo.screenType);
       final userP = ref.read(userProvider.notifier);
@@ -78,6 +81,43 @@ class LoginController extends MainController {
   }
 
   void downloadNewVersion(NewVersion newVersion) {}
+
+  Future<void> retrieveFromLocalStorage() async {
+    await loadPreferences();
+    await retrieveUserFormLocalStorage();
+
+    //Is it refreshing?
+    bool isRefreshed = prefs.getBool(SpKeys.isRefreshed) ?? false;
+    if (!isRefreshed) return;
+    prefs.setBool(SpKeys.isRefreshed, false);
+
+    // bool firstInit = prefs.getBool(SpKeys.flightVFirstInit) ?? false;
+    // // print("firstInit: ${firstInit}");
+    // if (!firstInit) {
+    //   prefs.setBool(SpKeys.flightVFirstInit, true);
+    //   return;
+    // }
+
+    FlightsController flightsController = getIt<FlightsController>();
+    flightsController.retrieveFlightsScreenFromLocalStorage();
+
+    // AircraftsController aircraftsController = getIt<AircraftsController>();
+    // aircraftsController.retrieveAirCraftsScreenFromLocalStorage();
+  }
+
+  Future<void> retrieveUserFormLocalStorage() async {
+    print("retrieveUserFormLocalStorage");
+    LoginUser? user;
+    DeviceInfoService deviceInfoService = getIt<DeviceInfoService>();
+    DeviceInfo deviceInfo = deviceInfoService.getInfo();
+    String? userString = prefs.getString(SpKeys.user);
+    user = userString == null ? LoginUser.empty() : LoginUser.fromJson(jsonDecode(userString));
+    BasicClass.initialize(user, deviceInfo.screenType);
+    final userP = ref.read(userProvider.notifier);
+    userP.state = user;
+    final aclP = ref.read(aircraftListProvider.notifier);
+    aclP.setAircrafts(user.systemSettings.aircraftList);
+  }
 
   loadPreferences() {
     print("loadPreferences");
@@ -103,8 +143,7 @@ class LoginController extends MainController {
       final userP = ref.read(userProvider.notifier);
       userP.state = null;
     } else {
-      bool conf = await ConfirmOperation.getConfirm(
-          Operation(message: "Are you sure?", title: "Logout?", actions: ["Confirm", 'Cancel']));
+      bool conf = await ConfirmOperation.getConfirm(Operation(message: "Are you sure?", title: "Logout?", actions: ["Confirm", 'Cancel']));
       if (conf) {
         String? serverJson = prefs.getString(SpKeys.serverJson);
         if (serverJson != null) {
@@ -135,8 +174,7 @@ class LoginController extends MainController {
       nav
           .dialog(ServerSelectDialog(
         servers: servers,
-        currentServer: servers.firstWhereOrNull(
-            (e) => e.address.toLowerCase() == (s?.address.toLowerCase() ?? NetworkManager().currentBaseUrl)),
+        currentServer: servers.firstWhereOrNull((e) => e.address.toLowerCase() == (s?.address.toLowerCase() ?? NetworkManager().currentBaseUrl)),
       ))
           .then((value) {
         if (value is Server) {
