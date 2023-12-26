@@ -10,26 +10,35 @@ import '../../widgets/DotButton.dart';
 import '../../widgets/LoadingListView.dart';
 import '../../widgets/MyTextField.dart';
 import '../airlines/airlines_state.dart';
+import '../login/login_controller.dart';
 import 'airlines_controller.dart';
 import 'airlines_state.dart';
 import 'data_tables/airline_data_table.dart';
 
-class AirlinesView extends StatelessWidget {
+class AirlinesView extends StatefulWidget {
   const AirlinesView({super.key});
+
+  @override
+  State<AirlinesView> createState() => _AirlinesViewState();
+}
+
+class _AirlinesViewState extends State<AirlinesView> {
+  // @override
+  // void initState() {
+  //   LoginController controller = getIt<LoginController>();
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) => controller.retrieveFromLocalStorage());
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
         appBar: MyAppBar(),
         body: Column(
-          children: [
-            AirlinesPanel(),
-            AirlineListWidget()
-          ],
+          children: [AirlinesPanel(), AirlineListWidget()],
         ));
   }
 }
-
 
 class AirlinesPanel extends ConsumerStatefulWidget {
   const AirlinesPanel({Key? key}) : super(key: key);

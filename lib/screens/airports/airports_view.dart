@@ -8,12 +8,26 @@ import '../../initialize.dart';
 import '../../widgets/DotButton.dart';
 import '../../widgets/LoadingListView.dart';
 import '../../widgets/MyTextField.dart';
+import '../login/login_controller.dart';
 import 'airports_controller.dart';
 import 'airports_state.dart';
 import 'data_tables/airport_data_table.dart';
 
-class AirportsView extends StatelessWidget {
+class AirportsView extends StatefulWidget {
   const AirportsView({super.key});
+
+  @override
+  State<AirportsView> createState() => _AirportsViewState();
+}
+
+class _AirportsViewState extends State<AirportsView> {
+
+  // @override
+  // void initState() {
+  //   LoginController controller = getIt<LoginController>();
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) => controller.retrieveFromLocalStorage());
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {

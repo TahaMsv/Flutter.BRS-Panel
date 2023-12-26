@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:artemis_ui_kit/artemis_ui_kit.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
@@ -6,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../core/classes/login_user_class.dart';
+import '../../core/constants/share_prefrences_keys.dart';
 import '../../core/constants/ui.dart';
 import '../../core/enums/flight_type_filter_enum.dart';
 import '../../core/util/basic_class.dart';
@@ -15,14 +18,29 @@ import '../../widgets/MyAnimatedSwitcher.dart';
 import '../../widgets/MyFieldPicker.dart';
 import '../../widgets/MySegment.dart';
 import '../../widgets/MyTextField.dart';
+import '../login/login_controller.dart';
 import 'data_tables/flight_data_table.dart';
 import 'flights_controller.dart';
 import 'flights_state.dart';
 
-class FlightsView extends StatelessWidget {
+class FlightsView extends StatefulWidget {
   static FlightsController myFlightsController = getIt<FlightsController>();
 
   const FlightsView({super.key});
+
+  @override
+  State<FlightsView> createState() => _FlightsViewState();
+}
+
+class _FlightsViewState extends State<FlightsView> {
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   print("Here fv init");
+  //   LoginController controller = getIt<LoginController>();
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) => controller.retrieveFromLocalStorage());
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +136,11 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                             itemToString: (a) => "${a.code} (${a.code})",
                             label: 'Airport',
                             items: BasicClass.systemSetting.airportList,
-                            onChange: (v) => a.state = v,
+                            onChange: (v) {
+                              a.state = v;
+                              print(v);
+                              myFlightsController.prefs.setString(SpKeys.flightAirportFilterP, jsonEncode(v?.toJson()));
+                            },
                             value: a.state,
                           ),
                         );
@@ -137,7 +159,10 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                             itemToString: (a) => a,
                             label: 'Airline',
                             items: BasicClass.airlineList,
-                            onChange: (v) => a.state = v,
+                            onChange: (v) {
+                              a.state = v;
+                              myFlightsController.prefs.setString(SpKeys.flightAirlineFilterP, v ?? "");
+                            },
                             value: a.state,
                           ),
                         );
@@ -151,7 +176,10 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                       height: 35,
                       itemToString: (e) => e.toStr,
                       items: FlightTypeFilter.values,
-                      onChange: (FlightTypeFilter v) => ref.read(flightTypeFilterProvider.notifier).state = v,
+                      onChange: (FlightTypeFilter v) {
+                        ref.read(flightTypeFilterProvider.notifier).state = v;
+                        myFlightsController.prefs.setString(SpKeys.flightTypeFilterP, v.toStr);
+                      },
                       value: flightTypeFilter,
                     ),
                   ),

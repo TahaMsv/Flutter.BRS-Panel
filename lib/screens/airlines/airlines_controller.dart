@@ -8,6 +8,7 @@ import '../../core/abstracts/controller_abs.dart';
 import '../../core/util/basic_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
 
+import '../login/login_controller.dart';
 import 'airlines_state.dart';
 
 class AirlinesController extends MainController {
@@ -23,5 +24,7 @@ class AirlinesController extends MainController {
     }
   }
   // UseCase UseCase = UseCase(repository: Repository());
+
+
 
 }

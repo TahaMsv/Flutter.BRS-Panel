@@ -3,6 +3,7 @@ import 'package:brs_panel/screens/bsm/usecases/bsm_list_usecase.dart';
 
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/classes/bsm_result_class.dart';
+import '../../core/constants/share_prefrences_keys.dart';
 import '../../core/util/basic_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
 
@@ -15,14 +16,27 @@ class BsmController extends MainController {
 
   @override
   onInit() {
-    bsmList(DateTime.now());
+    bsmList(ref.read(bsmDateProvider.notifier).state);
+  }
+
+  Future<void> retrieveBSMScreenFromLocalStorage() async {
+    late DateTime savedDateTime;
+    final savedDateTimeString = prefs.getString(SpKeys.bsmDateP) ?? '';
+    savedDateTime = savedDateTimeString.isNotEmpty ? DateTime.parse(savedDateTimeString) : DateTime.now();
+    bsmList(savedDateTime);
+
+    final bsmMessageString = prefs.getString(SpKeys.bsmMessage) ?? '';
+    bsmState.newBsmC.text = bsmMessageString;
   }
 
   Future<List<BsmResult>> bsmList(DateTime dt) async {
-    final bsmDate = ref.read(bsmDateProvider);
+    final bsmDate = ref.read(bsmDateProvider.notifier);
+    bsmDate.state = dt;
+    prefs.setString(SpKeys.bsmDateP, dt.toIso8601String());
+
     List<BsmResult> bsms = [];
     BsmListUseCase bsmListUsecase = BsmListUseCase();
-    BsmListRequest bsmListRequest = BsmListRequest(date: bsmDate);
+    BsmListRequest bsmListRequest = BsmListRequest(date: dt);
     bsmState.loadingBSM = true;
     bsmState.setState();
     final fOrR = await bsmListUsecase(request: bsmListRequest);
@@ -47,7 +61,7 @@ class BsmController extends MainController {
       bsmResult = r.bsmResult;
       final bsmList = ref.read(bsmListProvider.notifier);
       bsmState.newBsmC.clear();
-      bsmList.insertBsm(0,r.bsmResult);
+      bsmList.insertBsm(0, r.bsmResult);
     });
     return bsmResult;
   }

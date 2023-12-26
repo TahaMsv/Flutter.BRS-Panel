@@ -18,6 +18,8 @@ final routerProvider = Provider.autoDispose<GoRouter>((ref) {
     debugLogDiagnostics: false,
     initialLocation: RouteNames.login.path,
     routes: notifier.routes,
-    redirect: notifier.redirect,
+    // redirect: notifier.redirect,
+
+
   );
 });

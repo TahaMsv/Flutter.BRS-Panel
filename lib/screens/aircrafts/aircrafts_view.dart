@@ -8,12 +8,25 @@ import '../../initialize.dart';
 import '../../widgets/DotButton.dart';
 import '../../widgets/LoadingListView.dart';
 import '../../widgets/MyTextField.dart';
+import '../login/login_controller.dart';
 import 'aircrafts_controller.dart';
 import 'aircrafts_state.dart';
 import 'data_tables/aircraft_data_table.dart';
 
-class AircraftsView extends StatelessWidget {
+class AircraftsView extends StatefulWidget {
   const AircraftsView({super.key});
+
+  @override
+  State<AircraftsView> createState() => _AircraftsViewState();
+}
+
+class _AircraftsViewState extends State<AircraftsView> {
+  // @override
+  // void initState() {
+  //   LoginController controller = getIt<LoginController>();
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) => controller.retrieveFromLocalStorage());
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +77,8 @@ class _AircraftsPanelState extends ConsumerState<AircraftsPanel> {
                 prefixIcon: const Icon(Icons.search),
                 placeholder: "Search Here ...",
                 controller: searchC,
-                showClearButton: showClearButton,                onChanged: (v) {
+                showClearButton: showClearButton,
+                onChanged: (v) {
                   final s = ref.read(aircraftSearchProvider.notifier);
                   s.state = v;
                   setState(() {

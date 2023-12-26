@@ -1,4 +1,5 @@
 import 'package:barcode_widget/barcode_widget.dart';
+import 'package:brs_panel/core/constants/share_prefrences_keys.dart';
 import 'package:flutter/material.dart';
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/abstracts/failures_abs.dart';
@@ -11,8 +12,23 @@ import 'package:printing/printing.dart';
 class BarcodeGeneratorController extends MainController {
   late BarcodeGeneratorState bgmState = ref.read(bgProvider);
 
+  Future<void> retrieveBarcodeGenScreenFromLocalStorage() async {
+    final String barcodeTypeString = prefs.getString(SpKeys.barcodeType) ?? BarcodeType.Code128.name;
+    final bool isRangeMode = prefs.getBool(SpKeys.rangeMode) ?? false;
+    final String startCString = prefs.getString(SpKeys.barcodeStartC) ?? '';
+    final String savedDateTimeString = prefs.getString(SpKeys.barcodeEndC) ?? '';
+
+    changeBarcodeType(barcodeTypeString);
+    bgmState.isRangeMode = isRangeMode;
+    bgmState.startController.text = startCString;
+    bgmState.endController.text = savedDateTimeString;
+    generateBarcodes(showError: false);
+    bgmState.setState();
+  }
+
   void toggleRangeMode() {
     bgmState.isRangeMode = !bgmState.isRangeMode;
+    prefs.setBool(SpKeys.rangeMode, bgmState.isRangeMode);
     bgmState.setState();
   }
 
@@ -106,33 +122,33 @@ class BarcodeGeneratorController extends MainController {
     await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => doc.save());
   }
 
-  void generateBarcodes() {
+  void generateBarcodes({bool showError = true}) {
     String start = bgmState.startController.text;
     String end = bgmState.endController.text;
     if (bgmState.isRangeMode) {
       if (start.length < bgmState.conf.minLength) {
-        FailureHandler.handle(ValidationFailure(code: 1, msg: 'Start length must be from ${bgmState.conf.minLength} to ${bgmState.conf.maxLength} characters', traceMsg: ""));
+        if (showError) FailureHandler.handle(ValidationFailure(code: 1, msg: 'Start length must be from ${bgmState.conf.minLength} to ${bgmState.conf.maxLength} characters', traceMsg: ""));
         return;
       }
       if (!isValidBarcode(start)) {
-        FailureHandler.handle(ValidationFailure(code: 1, msg: "Start: Invalid barcode", traceMsg: ""));
+        if (showError) FailureHandler.handle(ValidationFailure(code: 1, msg: "Start: Invalid barcode", traceMsg: ""));
         return;
       }
       if (end.length < bgmState.conf.minLength) {
-        FailureHandler.handle(ValidationFailure(code: 1, msg: 'End length must be from ${bgmState.conf.minLength} to ${bgmState.conf.maxLength} characters', traceMsg: ""));
+        if (showError) FailureHandler.handle(ValidationFailure(code: 1, msg: 'End length must be from ${bgmState.conf.minLength} to ${bgmState.conf.maxLength} characters', traceMsg: ""));
         return;
       }
       if (!isValidBarcode(end)) {
-        FailureHandler.handle(ValidationFailure(code: 1, msg: "End: Invalid barcode", traceMsg: ""));
+        if (showError) FailureHandler.handle(ValidationFailure(code: 1, msg: "End: Invalid barcode", traceMsg: ""));
         return;
       }
     } else {
       if (start.length < bgmState.conf.minLength) {
-        FailureHandler.handle(ValidationFailure(code: 1, msg: 'Barcode length must be from ${bgmState.conf.minLength} to ${bgmState.conf.maxLength} characters', traceMsg: ""));
+        if (showError) FailureHandler.handle(ValidationFailure(code: 1, msg: 'Barcode length must be from ${bgmState.conf.minLength} to ${bgmState.conf.maxLength} characters', traceMsg: ""));
         return;
       }
       if (!isValidBarcode(start)) {
-        FailureHandler.handle(ValidationFailure(code: 1, msg: "Barcode: Invalid barcode", traceMsg: ""));
+        if (showError) FailureHandler.handle(ValidationFailure(code: 1, msg: "Barcode: Invalid barcode", traceMsg: ""));
         return;
       }
     }

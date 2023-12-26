@@ -1,3 +1,4 @@
+import 'package:brs_panel/core/constants/share_prefrences_keys.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
 import 'package:brs_panel/widgets/MyButton.dart';
@@ -36,7 +37,10 @@ class BarcodeGeneratorView extends ConsumerWidget {
                       label: "Barcode type",
                       items: BarcodeType.values.map((e) => e.name).toList(),
                       itemToString: (i) => i.toString(),
-                      onSelect: (i) => myBgController.changeBarcodeType(i!),
+                      onSelect: (i) {
+                        myBgController.changeBarcodeType(i!);
+                        myBgController.prefs.setString(SpKeys.barcodeType, i);
+                      },
                       value: state.conf.type.name),
                 ),
                 const SizedBox(width: 40),
@@ -52,10 +56,8 @@ class BarcodeGeneratorView extends ConsumerWidget {
                       inputFormatters: [state.conf.getBarcodeInputFormatterForTextInput(state.isRangeMode)],
                       controller: state.startController,
                       maxLength: state.conf.maxLength,
-                      // formValidator: (value) {
-                      //   return value!.length < state.conf.minLength ? 'Barcode must be greater than ${state.conf.minLength - 1} characters' : null;
-                      // },
-                      // showClearButton: true,
+                      onChanged: (v) => myBgController.prefs.setString(SpKeys.barcodeStartC, v) ,
+
                     ),
                     const SizedBox(width: 40),
                     if (state.showRangeMode && state.isRangeMode)
@@ -66,10 +68,8 @@ class BarcodeGeneratorView extends ConsumerWidget {
                         inputFormatters: [state.conf.getBarcodeInputFormatterForTextInput(state.isRangeMode)],
                         controller: state.endController,
                         maxLength: state.conf.maxLength,
-                        // formValidator: (value) {
-                        //   return value!.length < state.conf.minLength ? 'Barcode must be greater than ${state.conf.minLength - 1} characters' : null;
-                        // },
-                        // showClearButton: true,
+                        onChanged: (v) => myBgController.prefs.setString(SpKeys.barcodeEndC, v) ,
+
                       ),
                     if (!state.showRangeMode || !state.isRangeMode) const SizedBox(width: 250),
                   ],

@@ -25,10 +25,7 @@ class AircraftsController extends MainController {
     aircraftsState.typeC.text = aircraft?.aircraftType ?? "";
     aircraftsState.registrationC.text = aircraft?.registration ?? "";
     aircraftsState.bins = aircraft?.bins ?? [];
-    aircraftsState.binsC = aircraft?.bins
-            .map((e) => [TextEditingController(text: e.compartment), TextEditingController(text: e.binNumber)])
-            .toList() ??
-        [];
+    aircraftsState.binsC = aircraft?.bins.map((e) => [TextEditingController(text: e.compartment), TextEditingController(text: e.binNumber)]).toList() ?? [];
     nav.dialog(AddUpdateAirCraftDialog(aircraft: aircraft)).then((value) {
       aircraftsState.typeC.text = "";
       aircraftsState.registrationC.text = "";
@@ -67,13 +64,11 @@ class AircraftsController extends MainController {
     String type = aircraftsState.typeC.text;
     String registration = aircraftsState.registrationC.text;
     List<Bin> bins = aircraftsState.bins;
-    Aircraft temp =
-        (aircraft ?? Aircraft.empty()).copyWith(al: al, registration: registration, aircraftType: type, bins: bins);
+    Aircraft temp = (aircraft ?? Aircraft.empty()).copyWith(al: al, registration: registration, aircraftType: type, bins: bins);
     AddAirCraftUseCase addAirCraftUseCase = AddAirCraftUseCase();
     AddAirCraftRequest addAirCraftRequest = AddAirCraftRequest(aircraft: temp);
     final fOrR = await addAirCraftUseCase(request: addAirCraftRequest);
-    fOrR.fold((f) => FailureHandler.handle(f, retry: () => addUpdateAirCraft(aircraft: aircraft, isUpdate: isUpdate)),
-        (r) {
+    fOrR.fold((f) => FailureHandler.handle(f, retry: () => addUpdateAirCraft(aircraft: aircraft, isUpdate: isUpdate)), (r) {
       final alP = ref.read(aircraftListProvider.notifier);
       if (isUpdate) {
         alP.updateAircraft(r.aircraft);
@@ -86,11 +81,7 @@ class AircraftsController extends MainController {
   }
 
   deleteAircraft(Aircraft f) async {
-    bool confirm = await ConfirmOperation.getConfirm(Operation(
-        message: "You are Deleting Aircraft",
-        title: "Are You Sure?",
-        actions: ["Cancel", "Confirm"],
-        type: OperationType.warning));
+    bool confirm = await ConfirmOperation.getConfirm(Operation(message: "You are Deleting Aircraft", title: "Are You Sure?", actions: ["Cancel", "Confirm"], type: OperationType.warning));
     if (!confirm) return;
     DeleteAircraftRequest deleteAircraftRequest = DeleteAircraftRequest(id: f.id);
     DeleteAircraftUseCase deleteAircraftUseCase = DeleteAircraftUseCase();
@@ -102,8 +93,13 @@ class AircraftsController extends MainController {
     });
   }
 
+  Future<void> retrieveAirCraftsScreenFromLocalStorage() async {
+    getAircrafts();
+  }
+
   @override
   void onInit() {
+    print("aircrafts  onInit");
     getAircrafts();
     super.onInit();
   }

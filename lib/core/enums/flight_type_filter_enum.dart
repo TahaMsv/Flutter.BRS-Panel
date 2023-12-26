@@ -13,3 +13,14 @@ extension Str on FlightTypeFilter {
     }
   }
 }
+
+FlightTypeFilter getFlightTypeFilterFromString(String value) {
+  switch (value.toLowerCase()) {
+    case 'departure':
+      return FlightTypeFilter.departure;
+    case 'arrival':
+      return FlightTypeFilter.arrival;
+    default:
+      throw ArgumentError('Invalid value: $value');
+  }
+}

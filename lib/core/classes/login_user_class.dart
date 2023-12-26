@@ -51,6 +51,7 @@ class LoginUser {
         rememberMe: json["RememberMe"],
         userSettings: UserSettings.fromJson(json["UserSettings"]),
         systemSettings: SystemSettings.fromJson(json["SystemSettings"]),
+        // systemSettings: SystemSettings.empty(),
         username: json["Username"] ?? '',
         password: json["Password"] ?? '',
       );
@@ -1500,7 +1501,7 @@ class TagType {
   final String label;
   final String color;
   final String textColor;
-  final String al;
+  final String? al;
 
   TagType({
     required this.id,
