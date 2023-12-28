@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:artemis_utils/artemis_utils.dart';
 import 'package:brs_panel/core/abstracts/failures_abs.dart';
 import 'package:brs_panel/core/abstracts/success_abs.dart';
 import 'package:brs_panel/core/navigation/route_names.dart';
@@ -30,17 +29,14 @@ import '../../core/classes/flight_report_class.dart';
 import '../../core/classes/login_user_class.dart';
 import '../../core/classes/tag_container_class.dart';
 import '../../core/constants/apis.dart';
-import '../../core/constants/share_prefrences_keys.dart';
+import '../../core/constants/data_bases_keys.dart';
 import '../../core/data_base/web_data_base.dart';
 import '../../core/enums/flight_type_filter_enum.dart';
 import '../../core/platform/device_info.dart';
 import '../../core/util/basic_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
 import 'package:path/path.dart' as p;
-import '../aircrafts/aircrafts_state.dart';
 import '../flight_details/dialogs/pdf_preview_dialog.dart';
-import '../login/login_controller.dart';
-import '../login/login_state.dart';
 import 'dialogs/containers_plan_dialog.dart';
 import 'flights_state.dart';
 
@@ -60,7 +56,7 @@ class FlightsController extends MainController {
   Future<List<Flight>?> flightList(DateTime dt) async {
     final flightDateP = ref.read(flightDateProvider.notifier);
     flightDateP.state = dt;
-    await SessionStorage().setString(SpKeys.flightDateP, dt.toIso8601String());
+    await SessionStorage().setString(SsKeys.flightDateP, dt.toIso8601String());
     List<Flight>? flights;
     flightsState.loadingFlights = true;
     flightsState.setState();
@@ -91,18 +87,18 @@ class FlightsController extends MainController {
     // }
     // await loginController.retrieveUserFormLocalStorage();
     late DateTime savedDateTime;
-    final savedDateTimeString = await SessionStorage().getString(SpKeys.flightDateP) ?? '';
+    final savedDateTimeString = await SessionStorage().getString(SsKeys.flightDateP) ?? '';
     savedDateTime = savedDateTimeString.isNotEmpty ? DateTime.parse(savedDateTimeString) : DateTime.now();
     flightList(savedDateTime);
 
-    String? flightAirportFilterPString = await SessionStorage().getString(SpKeys.flightAirportFilterP);
-    String? flightAirlineFilterPString = await SessionStorage().getString(SpKeys.flightAirlineFilterP);
+    String? flightAirportFilterPString = await SessionStorage().getString(SsKeys.flightAirportFilterP);
+    String? flightAirlineFilterPString = await SessionStorage().getString(SsKeys.flightAirlineFilterP);
     final fapfP = ref.watch(flightAirportFilterProvider.notifier);
     print(flightAirportFilterPString.runtimeType);
     fapfP.state = flightAirportFilterPString == "null" ? null : Airport.fromJson(jsonDecode(flightAirportFilterPString!));
     final falP = ref.watch(flightAirlineFilterProvider.notifier);
     falP.state = (flightAirlineFilterPString == "null" || flightAirlineFilterPString == "") ? null : flightAirlineFilterPString;
-    String flightTypeFilterPString = await SessionStorage().getString(SpKeys.flightTypeFilterP) ?? "";
+    String flightTypeFilterPString = await SessionStorage().getString(SsKeys.flightTypeFilterP) ?? "";
     ref.read(flightTypeFilterProvider.notifier).state = getFlightTypeFilterFromString(flightTypeFilterPString);
   }
 

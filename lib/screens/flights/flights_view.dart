@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../core/classes/login_user_class.dart';
-import '../../core/constants/share_prefrences_keys.dart';
+import '../../core/constants/data_bases_keys.dart';
 import '../../core/constants/ui.dart';
 import '../../core/data_base/web_data_base.dart';
 import '../../core/enums/flight_type_filter_enum.dart';
@@ -124,8 +124,7 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                             onChange: (v) async {
                               a.state = v;
                               print(v);
-
-                              await SessionStorage().setString(SpKeys.flightAirportFilterP, jsonEncode(v?.toJson()));
+                              await SessionStorage().setString(SsKeys.flightAirportFilterP, jsonEncode(v?.toJson()));
                             },
                             value: a.state,
                           ),
@@ -147,7 +146,7 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                             items: BasicClass.airlineList,
                             onChange: (v) async {
                               a.state = v;
-                              await SessionStorage().setString(SpKeys.flightAirlineFilterP, v ?? "");
+                              await SessionStorage().setString(SsKeys.flightAirlineFilterP, v ?? "");
                             },
                             value: a.state,
                           ),
@@ -164,7 +163,7 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                       items: FlightTypeFilter.values,
                       onChange: (FlightTypeFilter v) async{
                         ref.read(flightTypeFilterProvider.notifier).state = v;
-                        await SessionStorage().setString(SpKeys.flightTypeFilterP, v.toStr);
+                        await SessionStorage().setString(SsKeys.flightTypeFilterP, v.toStr);
                       },
                       value: flightTypeFilter,
                     ),

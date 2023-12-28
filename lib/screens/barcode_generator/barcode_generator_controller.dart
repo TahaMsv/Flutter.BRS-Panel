@@ -1,5 +1,5 @@
 import 'package:barcode_widget/barcode_widget.dart';
-import 'package:brs_panel/core/constants/share_prefrences_keys.dart';
+import 'package:brs_panel/core/constants/data_bases_keys.dart';
 import 'package:flutter/material.dart';
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/abstracts/failures_abs.dart';
@@ -14,10 +14,10 @@ class BarcodeGeneratorController extends MainController {
   late BarcodeGeneratorState bgmState = ref.read(bgProvider);
 
   Future<void> retrieveBarcodeGenScreenFromLocalStorage() async {
-    final String barcodeTypeString = await SessionStorage().getString(SpKeys.barcodeType) ?? BarcodeType.Code128.name;
-    final bool isRangeMode = await SessionStorage().getBool(SpKeys.rangeMode) ?? false;
-    final String startCString = await SessionStorage().getString(SpKeys.barcodeStartC) ?? '';
-    final String savedDateTimeString = await SessionStorage().getString(SpKeys.barcodeEndC) ?? '';
+    final String barcodeTypeString = await SessionStorage().getString(SsKeys.barcodeType) ?? BarcodeType.Code128.name;
+    final bool isRangeMode = await SessionStorage().getBool(SsKeys.rangeMode) ?? false;
+    final String startCString = await SessionStorage().getString(SsKeys.barcodeStartC) ?? '';
+    final String savedDateTimeString = await SessionStorage().getString(SsKeys.barcodeEndC) ?? '';
 
     changeBarcodeType(barcodeTypeString);
     bgmState.isRangeMode = isRangeMode;
@@ -29,7 +29,7 @@ class BarcodeGeneratorController extends MainController {
 
   void toggleRangeMode()async {
     bgmState.isRangeMode = !bgmState.isRangeMode;
-    await SessionStorage().setBool(SpKeys.rangeMode, bgmState.isRangeMode);
+    await SessionStorage().setBool(SsKeys.rangeMode, bgmState.isRangeMode);
     bgmState.setState();
   }
 

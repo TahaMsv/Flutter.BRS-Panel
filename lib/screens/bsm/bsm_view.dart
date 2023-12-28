@@ -9,14 +9,11 @@ import 'package:brs_panel/widgets/MyButtonPanel.dart';
 import 'package:brs_panel/widgets/MyTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../core/classes/bsm_result_class.dart';
-import '../../core/constants/share_prefrences_keys.dart';
+import '../../core/constants/data_bases_keys.dart';
 import '../../core/data_base/web_data_base.dart';
-import '../../core/util/basic_class.dart';
-import '../../widgets/LoadingListView.dart';
 import 'bsm_controller.dart';
 import 'bsm_state.dart';
 
@@ -85,11 +82,11 @@ class BsmPanelWidget extends ConsumerWidget {
                     icon: Icons.delete,
                     onPressed: () {
                       state.newBsmC.clear();
-                       SessionStorage().setString(SpKeys.bsmMessage, "");
+                       SessionStorage().setString(SsKeys.bsmMessage, "");
                     },
                   ),
                   onChanged: (v) {
-                    SessionStorage().setString(SpKeys.bsmMessage, v);
+                    SessionStorage().setString(SsKeys.bsmMessage, v);
                   },
                 ),
               ),

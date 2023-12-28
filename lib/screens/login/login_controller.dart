@@ -17,7 +17,7 @@ import '../../core/abstracts/device_info_service_abs.dart';
 import '../../core/classes/new_version_class.dart';
 import '../../core/classes/server_class.dart';
 import '../../core/classes/login_user_class.dart';
-import '../../core/constants/share_prefrences_keys.dart';
+import '../../core/constants/data_bases_keys.dart';
 import '../../core/data_base/web_data_base.dart';
 import '../../core/navigation/route_names.dart';
 import '../../core/platform/device_info.dart';

@@ -23,9 +23,8 @@ import 'usecases/flight_get_details_usecase.dart';
 import 'usecases/flight_get_tag_details_usecase.dart';
 import 'usecases/get_container_pdf_usecase.dart';
 import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
+// import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 
@@ -81,12 +80,10 @@ class FlightDetailsController extends MainController {
   }
 
   printPDF(Uint8List bytes) async {
-    final doc = pw.Document();
-    print(bytes);
+    // final doc = pw.Document();
+    // print(bytes);
     // await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => doc.save(),);
-    await Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async => bytes,
-    );
+    await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => bytes);
   }
 
   openPDFFile(Uint8List bytes, String name) async {
