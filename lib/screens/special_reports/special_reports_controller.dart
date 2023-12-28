@@ -82,7 +82,7 @@ class SpecialReportsController extends MainController {
     return result;
   }
 
-  Future<void> retrieveSpecialReportScreenFromLocalStorage() async {
+  void initSpecialReports() {
     ref.read(specialReportDataProvider.notifier).update((state) => null);
     ref.read(selectedSpecialReportProvider.notifier).update((state) => null);
     ref.read(specialReportResultProvider.notifier).update((state) => null);
@@ -91,22 +91,15 @@ class SpecialReportsController extends MainController {
     getSpecialReportList();
   }
 
+  Future<void> retrieveSpecialReportScreenFromLocalStorage() async {
+    initSpecialReports();
+  }
 
   /// Core ---------------------------------------------------------------------------------------------------------
 
   @override
   void onInit() {
-    ref.read(specialReportDataProvider.notifier).update((state) => null);
-    ref.read(selectedSpecialReportProvider.notifier).update((state) => null);
-    ref.read(specialReportResultProvider.notifier).update((state) => null);
-    ref.read(specialReportOptionsProvider.notifier).update((state) => []);
-    ref.read(paramsDataProvider.notifier).update((state) => {});
-    // final specialReportDataProvider = StateProvider<SpecialReportData?>((ref) => null);
-    // final selectedSpecialReportProvider = StateProvider<SpecialReport?>((ref) => null);
-    // final specialReportOptionsProvider = StateProvider<List<SpecialReportParameterOptions>>((ref) => []);
-    // final paramsDataProvider = StateProvider<Map<SpecialReportParam, ParamOption>>((ref) => {});
-    // final specialReportResultProvider = StateProvider<SpecialReportResult?>((ref) => null);
-    getSpecialReportList();
+    initSpecialReports();
     super.onInit();
   }
 }

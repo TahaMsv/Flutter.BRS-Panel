@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:brs_panel/core/classes/flight_summary_class.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_state.dart';
 import 'package:brs_panel/screens/flight_summary/dialogs/flight_history_log_dialog.dart';
@@ -7,6 +9,8 @@ import 'package:brs_panel/screens/flight_summary/usecases/flight_get_summary_use
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/classes/flight_class.dart';
 import '../../core/classes/history_log_class.dart';
+import '../../core/constants/data_bases_keys.dart';
+import '../../core/data_base/web_data_base.dart';
 import '../../core/util/basic_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
 
@@ -43,7 +47,7 @@ class FlightSummaryController extends MainController {
     HistoryLog? log;
     FlightGetHistoryLogUseCase flightGetHistoryLogUsecase = FlightGetHistoryLogUseCase();
     FlightGetHistoryLogRequest flightGetHistoryLogRequest = FlightGetHistoryLogRequest(airport: null, flightID: flight.id, tagID: null, userID: null);
-    final fOrR = await flightGetHistoryLogUsecase(request:flightGetHistoryLogRequest);
+    final fOrR = await flightGetHistoryLogUsecase(request: flightGetHistoryLogRequest);
 
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightGetHistoryLog(flight)), (r) {
       log = r.logs;
@@ -51,4 +55,10 @@ class FlightSummaryController extends MainController {
     return log;
   }
 
+  Future<void> retrieveFlightSummaryScreenFromLocalStorage() async {
+    String? selectedFlightPString = await SessionStorage().getString(SsKeys.selectedFlightP);
+
+    final sfP = ref.read(selectedFlightProvider.notifier);
+    sfP.state = Flight.fromJson(jsonDecode(selectedFlightPString!));
+  }
 }

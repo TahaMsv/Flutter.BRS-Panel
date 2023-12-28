@@ -13,23 +13,23 @@ import 'package:printing/printing.dart';
 class BarcodeGeneratorController extends MainController {
   late BarcodeGeneratorState bgmState = ref.read(bgProvider);
 
-  Future<void> retrieveBarcodeGenScreenFromLocalStorage() async {
-    final String barcodeTypeString = await SessionStorage().getString(SsKeys.barcodeType) ?? BarcodeType.Code128.name;
-    final bool isRangeMode = await SessionStorage().getBool(SsKeys.rangeMode) ?? false;
-    final String startCString = await SessionStorage().getString(SsKeys.barcodeStartC) ?? '';
-    final String savedDateTimeString = await SessionStorage().getString(SsKeys.barcodeEndC) ?? '';
-
-    changeBarcodeType(barcodeTypeString);
-    bgmState.isRangeMode = isRangeMode;
-    bgmState.startController.text = startCString;
-    bgmState.endController.text = savedDateTimeString;
-    generateBarcodes(showError: false);
-    bgmState.setState();
-  }
+  // Future<void> retrieveBarcodeGenScreenFromLocalStorage() async {
+  //   final String barcodeTypeString = await SessionStorage().getString(SsKeys.barcodeType) ?? BarcodeType.Code128.name;
+  //   final bool isRangeMode = await SessionStorage().getBool(SsKeys.rangeMode) ?? false;
+  //   final String startCString = await SessionStorage().getString(SsKeys.barcodeStartC) ?? '';
+  //   final String savedDateTimeString = await SessionStorage().getString(SsKeys.barcodeEndC) ?? '';
+  //
+  //   changeBarcodeType(barcodeTypeString);
+  //   bgmState.isRangeMode = isRangeMode;
+  //   bgmState.startController.text = startCString;
+  //   bgmState.endController.text = savedDateTimeString;
+  //   generateBarcodes(showError: false);
+  //   bgmState.setState();
+  // }
 
   void toggleRangeMode()async {
     bgmState.isRangeMode = !bgmState.isRangeMode;
-    await SessionStorage().setBool(SsKeys.rangeMode, bgmState.isRangeMode);
+    // await SessionStorage().setBool(SsKeys.rangeMode, bgmState.isRangeMode);
     bgmState.setState();
   }
 

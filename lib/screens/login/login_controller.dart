@@ -7,6 +7,8 @@ import 'package:brs_panel/core/util/confirm_operation.dart';
 import 'package:brs_panel/screens/airports/airports_controller.dart';
 import 'package:brs_panel/screens/barcode_generator/barcode_generator_controller.dart';
 import 'package:brs_panel/screens/bsm/bsm_controller.dart';
+import 'package:brs_panel/screens/flight_details/flight_details_controller.dart';
+import 'package:brs_panel/screens/flight_summary/flight_summary_controller.dart';
 import 'package:brs_panel/screens/login/usecases/server_select_usecase.dart';
 import 'package:brs_panel/screens/special_reports/special_reports_controller.dart';
 import 'package:brs_panel/screens/users/users_controller.dart';
@@ -109,8 +111,11 @@ class LoginController extends MainController {
     BsmController bsmController = getIt<BsmController>();
     bsmController.retrieveBSMScreenFromLocalStorage();
 
-    BarcodeGeneratorController barcodeGeneratorController = getIt<BarcodeGeneratorController>();
-    barcodeGeneratorController.retrieveBarcodeGenScreenFromLocalStorage();
+    FlightDetailsController flightDetailsController = getIt<FlightDetailsController>();
+    flightDetailsController.retrieveFlightDetailsScreenFromLocalStorage();
+
+    FlightSummaryController flightSummaryController = getIt<FlightSummaryController>();
+    flightSummaryController.retrieveFlightSummaryScreenFromLocalStorage();
   }
 
   Future<void> retrieveUserFormLocalStorage() async {

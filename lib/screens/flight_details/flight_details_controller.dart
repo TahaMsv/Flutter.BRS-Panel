@@ -3,7 +3,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/abstracts/success_abs.dart';
+import '../../core/classes/flight_class.dart';
 import '../../core/classes/login_user_class.dart';
+import '../../core/constants/data_bases_keys.dart';
+import '../../core/data_base/web_data_base.dart';
 import '../../core/util/confirm_operation.dart';
 import '../../core/util/handlers/success_handler.dart';
 import '../../core/util/web_util/web_dummy_class.dart' if (dart.library.js) 'dart:html' as html;
@@ -23,6 +26,7 @@ import 'usecases/flight_get_details_usecase.dart';
 import 'usecases/flight_get_tag_details_usecase.dart';
 import 'usecases/get_container_pdf_usecase.dart';
 import 'package:pdf/pdf.dart';
+
 // import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'dart:ui' as ui;
@@ -157,5 +161,17 @@ class FlightDetailsController extends MainController {
     final ui.Image image = (await codec.getNextFrame()).image;
     completer.complete(image);
     return Size(image.width.toDouble(), image.height.toDouble());
+  }
+
+  Future<void> retrieveFlightDetailsScreenFromLocalStorage() async {
+    String? selectedFlightPString = await SessionStorage().getString(SsKeys.selectedFlightP);
+    String? selectedPosInDetailsString = await SessionStorage().getString(SsKeys.selectedPosInDetails);
+
+    final sfP = ref.read(selectedFlightProvider.notifier);
+    sfP.state = Flight.fromJson(jsonDecode(selectedFlightPString!));
+
+    ref.read(selectedPosInDetails.notifier).state = Position.fromJson(jsonDecode(selectedPosInDetailsString!));
+    flightDetailsState.setState();
+    print("Postiotion : ${ref.read(selectedPosInDetails.notifier).state!.title}");
   }
 }

@@ -56,7 +56,7 @@ class FlightsController extends MainController {
   Future<List<Flight>?> flightList(DateTime dt) async {
     final flightDateP = ref.read(flightDateProvider.notifier);
     flightDateP.state = dt;
-    await SessionStorage().setString(SsKeys.flightDateP, dt.toIso8601String());
+    // await SessionStorage().setString(SsKeys.flightDateP, dt.toIso8601String());
     List<Flight>? flights;
     flightsState.loadingFlights = true;
     flightsState.setState();
@@ -74,32 +74,19 @@ class FlightsController extends MainController {
   }
 
   Future<void> retrieveFlightsScreenFromLocalStorage() async {
-    // LoginController loginController = getIt<LoginController>();
-    // await loginController.loadPreferences();
-    // bool isRefreshed = prefs.getBool(SpKeys.isRefreshed) ?? false;
-    // if (!isRefreshed) return;
-    // prefs.setBool(SpKeys.isRefreshed, false);
-    // bool firstInit = prefs.getBool(SpKeys.flightVFirstInit) ?? false;
-    // // print("firstInit: ${firstInit}");
-    // if (!firstInit) {
-    //   prefs.setBool(SpKeys.flightVFirstInit, true);
-    //   return;
-    // }
-    // await loginController.retrieveUserFormLocalStorage();
-    late DateTime savedDateTime;
-    final savedDateTimeString = await SessionStorage().getString(SsKeys.flightDateP) ?? '';
-    savedDateTime = savedDateTimeString.isNotEmpty ? DateTime.parse(savedDateTimeString) : DateTime.now();
-    flightList(savedDateTime);
-
-    String? flightAirportFilterPString = await SessionStorage().getString(SsKeys.flightAirportFilterP);
-    String? flightAirlineFilterPString = await SessionStorage().getString(SsKeys.flightAirlineFilterP);
-    final fapfP = ref.watch(flightAirportFilterProvider.notifier);
-    print(flightAirportFilterPString.runtimeType);
-    fapfP.state = flightAirportFilterPString == "null" ? null : Airport.fromJson(jsonDecode(flightAirportFilterPString!));
-    final falP = ref.watch(flightAirlineFilterProvider.notifier);
-    falP.state = (flightAirlineFilterPString == "null" || flightAirlineFilterPString == "") ? null : flightAirlineFilterPString;
-    String flightTypeFilterPString = await SessionStorage().getString(SsKeys.flightTypeFilterP) ?? "";
-    ref.read(flightTypeFilterProvider.notifier).state = getFlightTypeFilterFromString(flightTypeFilterPString);
+    // late DateTime savedDateTime;
+    // final savedDateTimeString = await SessionStorage().getString(SsKeys.flightDateP) ?? '';
+    // savedDateTime = savedDateTimeString.isNotEmpty ? DateTime.parse(savedDateTimeString) : DateTime.now();
+    flightList(DateTime.now());
+    // String? flightAirportFilterPString = await SessionStorage().getString(SsKeys.flightAirportFilterP);
+    // String? flightAirlineFilterPString = await SessionStorage().getString(SsKeys.flightAirlineFilterP);
+    // final fapfP = ref.watch(flightAirportFilterProvider.notifier);
+    // print(flightAirportFilterPString.runtimeType);
+    // fapfP.state = flightAirportFilterPString == "null" ? null : Airport.fromJson(jsonDecode(flightAirportFilterPString!));
+    // final falP = ref.watch(flightAirlineFilterProvider.notifier);
+    // falP.state = (flightAirlineFilterPString == "null" || flightAirlineFilterPString == "") ? null : flightAirlineFilterPString;
+    // String flightTypeFilterPString = await SessionStorage().getString(SsKeys.flightTypeFilterP) ?? "";
+    // ref.read(flightTypeFilterProvider.notifier).state = getFlightTypeFilterFromString(flightTypeFilterPString);
   }
 
   void goAddFlight() {
@@ -109,8 +96,10 @@ class FlightsController extends MainController {
   void goDetails(Flight f, {Position? selectedPos}) {
     final sfP = ref.read(selectedFlightProvider.notifier);
     sfP.state = f;
+    SessionStorage().setString(SsKeys.selectedFlightP, jsonEncode(f.toJson()));
     final spP = ref.read(selectedPosInDetails.notifier);
     spP.state = BasicClass.getPositionByID(selectedPos?.id ?? f.positions.first.id)!;
+    SessionStorage().setString(SsKeys.selectedPosInDetails, jsonEncode(spP.state!.toJson()));
     nav.pushNamed(RouteNames.flightDetails, pathParameters: {"flightID": f.id.toString()}).then((value) {
       DateTime current = ref.read(flightDateProvider);
       flightList(current);
@@ -169,6 +158,7 @@ class FlightsController extends MainController {
   void goSummary(Flight f) {
     final sfP = ref.read(selectedFlightProvider.notifier);
     sfP.state = f;
+    SessionStorage().setString(SsKeys.selectedFlightP, jsonEncode(f.toJson()));
     nav.pushNamed(RouteNames.flightSummary, pathParameters: {"flightID": f.id.toString()});
   }
 

@@ -40,7 +40,7 @@ class BarcodeGeneratorView extends ConsumerWidget {
                       itemToString: (i) => i.toString(),
                       onSelect: (i) {
                         myBgController.changeBarcodeType(i!);
-                        SessionStorage().setString(SsKeys.barcodeType, i);
+                        // SessionStorage().setString(SsKeys.barcodeType, i);
                       },
                       value: state.conf.type.name),
                 ),
@@ -57,7 +57,7 @@ class BarcodeGeneratorView extends ConsumerWidget {
                       inputFormatters: [state.conf.getBarcodeInputFormatterForTextInput(state.isRangeMode)],
                       controller: state.startController,
                       maxLength: state.conf.maxLength,
-                      onChanged: (v) => SessionStorage().setString(SsKeys.barcodeStartC, v),
+                      // onChanged: (v) => SessionStorage().setString(SsKeys.barcodeStartC, v),
 
                     ),
                     const SizedBox(width: 40),
@@ -69,7 +69,7 @@ class BarcodeGeneratorView extends ConsumerWidget {
                         inputFormatters: [state.conf.getBarcodeInputFormatterForTextInput(state.isRangeMode)],
                         controller: state.endController,
                         maxLength: state.conf.maxLength,
-                        onChanged: (v) => SessionStorage().setString(SsKeys.barcodeEndC, v),
+                        // onChanged: (v) => SessionStorage().setString(SsKeys.barcodeEndC, v),
 
                       ),
                     if (!state.showRangeMode || !state.isRangeMode) const SizedBox(width: 250),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:brs_panel/core/constants/ui.dart';
 import 'package:brs_panel/core/platform/spiners.dart';
 import 'package:brs_panel/initialize.dart';
@@ -11,6 +13,8 @@ import '../../core/classes/flight_class.dart';
 import '../../core/classes/flight_details_class.dart';
 import '../../core/classes/tag_container_class.dart';
 import '../../core/classes/login_user_class.dart';
+import '../../core/constants/data_bases_keys.dart';
+import '../../core/data_base/web_data_base.dart';
 import '../../core/util/basic_class.dart';
 import '../../widgets/DotButton.dart';
 import '../../widgets/MySegment.dart';
@@ -112,6 +116,7 @@ class _FlightDetailsPanelState extends ConsumerState<FlightDetailsPanel> {
                 items: pos,
                 onChange: (Position v) {
                   ref.read(selectedPosInDetails.notifier).state = v;
+                  SessionStorage().setString(SsKeys.selectedPosInDetails, jsonEncode(v.toJson()));
                 },
                 value: ref.watch(selectedPosInDetails),
               )),

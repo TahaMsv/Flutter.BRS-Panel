@@ -82,12 +82,11 @@ class BsmPanelWidget extends ConsumerWidget {
                     icon: Icons.delete,
                     onPressed: () {
                       state.newBsmC.clear();
-                       SessionStorage().setString(SsKeys.bsmMessage, "");
                     },
                   ),
-                  onChanged: (v) {
-                    SessionStorage().setString(SsKeys.bsmMessage, v);
-                  },
+                  // onChanged: (v) {
+                  //   SessionStorage().setString(SsKeys.bsmMessage, v);
+                  // },
                 ),
               ),
               const SizedBox(width: 12),

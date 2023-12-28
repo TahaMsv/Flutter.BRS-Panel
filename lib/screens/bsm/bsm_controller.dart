@@ -18,19 +18,15 @@ class BsmController extends MainController {
   }
 
   Future<void> retrieveBSMScreenFromLocalStorage() async {
-    late DateTime savedDateTime;
-    final savedDateTimeString = await SessionStorage().getString(SsKeys.bsmDateP) ?? '';
-    savedDateTime = savedDateTimeString.isNotEmpty ? DateTime.parse(savedDateTimeString) : DateTime.now();
-    bsmList(savedDateTime);
-
-    final bsmMessageString = await SessionStorage().getString(SsKeys.bsmMessage) ?? '';
-    bsmState.newBsmC.text = bsmMessageString;
+    bsmList(ref.read(bsmDateProvider.notifier).state);
+    // final bsmMessageString = await SessionStorage().getString(SsKeys.bsmMessage) ?? '';
+    // bsmState.newBsmC.text = bsmMessageString;
   }
 
   Future<List<BsmResult>> bsmList(DateTime dt) async {
     final bsmDate = ref.read(bsmDateProvider.notifier);
     bsmDate.state = dt;
-    await SessionStorage().setString(SsKeys.bsmDateP, dt.toIso8601String());
+    // await SessionStorage().setString(SsKeys.bsmDateP, dt.toIso8601String());
 
     List<BsmResult> bsms = [];
     BsmListUseCase bsmListUsecase = BsmListUseCase();

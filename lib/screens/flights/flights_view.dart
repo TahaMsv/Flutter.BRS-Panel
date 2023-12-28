@@ -123,8 +123,7 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                             items: BasicClass.systemSetting.airportList,
                             onChange: (v) async {
                               a.state = v;
-                              print(v);
-                              await SessionStorage().setString(SsKeys.flightAirportFilterP, jsonEncode(v?.toJson()));
+                              // await SessionStorage().setString(SsKeys.flightAirportFilterP, jsonEncode(v?.toJson()));
                             },
                             value: a.state,
                           ),
@@ -146,7 +145,7 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                             items: BasicClass.airlineList,
                             onChange: (v) async {
                               a.state = v;
-                              await SessionStorage().setString(SsKeys.flightAirlineFilterP, v ?? "");
+                              // await SessionStorage().setString(SsKeys.flightAirlineFilterP, v ?? "");
                             },
                             value: a.state,
                           ),
@@ -163,7 +162,7 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                       items: FlightTypeFilter.values,
                       onChange: (FlightTypeFilter v) async{
                         ref.read(flightTypeFilterProvider.notifier).state = v;
-                        await SessionStorage().setString(SsKeys.flightTypeFilterP, v.toStr);
+                        // await SessionStorage().setString(SsKeys.flightTypeFilterP, v.toStr);
                       },
                       value: flightTypeFilter,
                     ),
