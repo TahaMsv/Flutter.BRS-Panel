@@ -9,6 +9,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../core/classes/login_user_class.dart';
 import '../../core/constants/share_prefrences_keys.dart';
 import '../../core/constants/ui.dart';
+import '../../core/data_base/web_data_base.dart';
 import '../../core/enums/flight_type_filter_enum.dart';
 import '../../core/util/basic_class.dart';
 import '../../widgets/DotButton.dart';
@@ -120,10 +121,11 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                             itemToString: (a) => "${a.code} (${a.code})",
                             label: 'Airport',
                             items: BasicClass.systemSetting.airportList,
-                            onChange: (v) {
+                            onChange: (v) async {
                               a.state = v;
                               print(v);
-                              myFlightsController.prefs.setString(SpKeys.flightAirportFilterP, jsonEncode(v?.toJson()));
+
+                              await SessionStorage().setString(SpKeys.flightAirportFilterP, jsonEncode(v?.toJson()));
                             },
                             value: a.state,
                           ),
@@ -143,9 +145,9 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                             itemToString: (a) => a,
                             label: 'Airline',
                             items: BasicClass.airlineList,
-                            onChange: (v) {
+                            onChange: (v) async {
                               a.state = v;
-                              myFlightsController.prefs.setString(SpKeys.flightAirlineFilterP, v ?? "");
+                              await SessionStorage().setString(SpKeys.flightAirlineFilterP, v ?? "");
                             },
                             value: a.state,
                           ),
@@ -160,9 +162,9 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                       height: 35,
                       itemToString: (e) => e.toStr,
                       items: FlightTypeFilter.values,
-                      onChange: (FlightTypeFilter v) {
+                      onChange: (FlightTypeFilter v) async{
                         ref.read(flightTypeFilterProvider.notifier).state = v;
-                        myFlightsController.prefs.setString(SpKeys.flightTypeFilterP, v.toStr);
+                        await SessionStorage().setString(SpKeys.flightTypeFilterP, v.toStr);
                       },
                       value: flightTypeFilter,
                     ),

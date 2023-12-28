@@ -14,6 +14,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../core/classes/bsm_result_class.dart';
 import '../../core/constants/share_prefrences_keys.dart';
+import '../../core/data_base/web_data_base.dart';
 import '../../core/util/basic_class.dart';
 import '../../widgets/LoadingListView.dart';
 import 'bsm_controller.dart';
@@ -84,11 +85,11 @@ class BsmPanelWidget extends ConsumerWidget {
                     icon: Icons.delete,
                     onPressed: () {
                       state.newBsmC.clear();
-                      myBsmController.prefs.setString(SpKeys.bsmMessage, "");
+                       SessionStorage().setString(SpKeys.bsmMessage, "");
                     },
                   ),
                   onChanged: (v) {
-                    myBsmController.prefs.setString(SpKeys.bsmMessage, v);
+                    SessionStorage().setString(SpKeys.bsmMessage, v);
                   },
                 ),
               ),

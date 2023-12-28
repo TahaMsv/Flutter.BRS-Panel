@@ -4,6 +4,7 @@ import 'package:brs_panel/screens/bsm/usecases/bsm_list_usecase.dart';
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/classes/bsm_result_class.dart';
 import '../../core/constants/share_prefrences_keys.dart';
+import '../../core/data_base/web_data_base.dart';
 import '../../core/util/basic_class.dart';
 import '../../core/util/handlers/failure_handler.dart';
 
@@ -21,18 +22,18 @@ class BsmController extends MainController {
 
   Future<void> retrieveBSMScreenFromLocalStorage() async {
     late DateTime savedDateTime;
-    final savedDateTimeString = prefs.getString(SpKeys.bsmDateP) ?? '';
+    final savedDateTimeString = await SessionStorage().getString(SpKeys.bsmDateP) ?? '';
     savedDateTime = savedDateTimeString.isNotEmpty ? DateTime.parse(savedDateTimeString) : DateTime.now();
     bsmList(savedDateTime);
 
-    final bsmMessageString = prefs.getString(SpKeys.bsmMessage) ?? '';
+    final bsmMessageString = await SessionStorage().getString(SpKeys.bsmMessage) ?? '';
     bsmState.newBsmC.text = bsmMessageString;
   }
 
   Future<List<BsmResult>> bsmList(DateTime dt) async {
     final bsmDate = ref.read(bsmDateProvider.notifier);
     bsmDate.state = dt;
-    prefs.setString(SpKeys.bsmDateP, dt.toIso8601String());
+    await SessionStorage().setString(SpKeys.bsmDateP, dt.toIso8601String());
 
     List<BsmResult> bsms = [];
     BsmListUseCase bsmListUsecase = BsmListUseCase();

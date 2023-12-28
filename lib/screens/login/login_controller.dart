@@ -19,6 +19,7 @@ import '../../core/classes/new_version_class.dart';
 import '../../core/classes/server_class.dart';
 import '../../core/classes/login_user_class.dart';
 import '../../core/constants/share_prefrences_keys.dart';
+import '../../core/data_base/web_data_base.dart';
 import '../../core/navigation/route_names.dart';
 import '../../core/platform/device_info.dart';
 import '../../core/util/handlers/failure_handler.dart';
@@ -68,13 +69,13 @@ class LoginController extends MainController {
     );
     print("Aa");
     final fOrR = await loginUsecase(request: loginRequest);
-    fOrR.fold((f) => FailureHandler.handle(f, retry: () => login()), (r) {
+    fOrR.fold((f) => FailureHandler.handle(f, retry: () => login()), (r) async {
       user = r.user ?? LoginUser.empty();
       user = user!.copyWith(username: username, password: password);
       prefs.setString(SpKeys.username, username);
       prefs.setString(SpKeys.password, loginState.passwordC.text);
       prefs.setString(SpKeys.airline, al);
-      prefs.setString(SpKeys.user, jsonEncode(user!.toJson()));
+      await SessionStorage().setString(SpKeys.user, jsonEncode(user!.toJson()));
       nav.goNamed(RouteNames.flights);
       BasicClass.initialize(user!, deviceInfo.screenType);
       final userP = ref.read(userProvider.notifier);
@@ -118,7 +119,7 @@ class LoginController extends MainController {
     LoginUser? user;
     DeviceInfoService deviceInfoService = getIt<DeviceInfoService>();
     DeviceInfo deviceInfo = deviceInfoService.getInfo();
-    String? userString = prefs.getString(SpKeys.user);
+    String? userString = await SessionStorage().getString(SpKeys.user);
     user = userString == null ? LoginUser.empty() : LoginUser.fromJson(jsonDecode(userString));
     BasicClass.initialize(user, deviceInfo.screenType);
     final userP = ref.read(userProvider.notifier);

@@ -5,6 +5,7 @@ import 'package:brs_panel/widgets/MyButton.dart';
 import 'package:brs_panel/widgets/MyTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../../core/data_base/web_data_base.dart';
 import '../../widgets/MyDropDown.dart';
 import '../../widgets/MySwitchButton.dart';
 import '../flight_details/flight_details_controller.dart';
@@ -39,7 +40,7 @@ class BarcodeGeneratorView extends ConsumerWidget {
                       itemToString: (i) => i.toString(),
                       onSelect: (i) {
                         myBgController.changeBarcodeType(i!);
-                        myBgController.prefs.setString(SpKeys.barcodeType, i);
+                        SessionStorage().setString(SpKeys.barcodeType, i);
                       },
                       value: state.conf.type.name),
                 ),
@@ -56,7 +57,7 @@ class BarcodeGeneratorView extends ConsumerWidget {
                       inputFormatters: [state.conf.getBarcodeInputFormatterForTextInput(state.isRangeMode)],
                       controller: state.startController,
                       maxLength: state.conf.maxLength,
-                      onChanged: (v) => myBgController.prefs.setString(SpKeys.barcodeStartC, v) ,
+                      onChanged: (v) => SessionStorage().setString(SpKeys.barcodeStartC, v),
 
                     ),
                     const SizedBox(width: 40),
@@ -68,7 +69,7 @@ class BarcodeGeneratorView extends ConsumerWidget {
                         inputFormatters: [state.conf.getBarcodeInputFormatterForTextInput(state.isRangeMode)],
                         controller: state.endController,
                         maxLength: state.conf.maxLength,
-                        onChanged: (v) => myBgController.prefs.setString(SpKeys.barcodeEndC, v) ,
+                        onChanged: (v) => SessionStorage().setString(SpKeys.barcodeEndC, v),
 
                       ),
                     if (!state.showRangeMode || !state.isRangeMode) const SizedBox(width: 250),
@@ -97,30 +98,31 @@ class BarcodeGeneratorView extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 80),
                 child: GridView.builder(
                   padding: const EdgeInsets.all(12),
-                  itemBuilder: (c, i) => SizedBox(
-                    child: Column(
-                      children: [
-                        SizedBox(height: 100, width: 200, child: state.barcodes[i]),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                  itemBuilder: (c, i) =>
+                      SizedBox(
+                        child: Column(
                           children: [
+                            SizedBox(height: 100, width: 200, child: state.barcodes[i]),
                             Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(state.barcodesValue[i]),
-                                TextButton.icon(
-                                  onPressed: () {
-                                    myBgController.printBarcode(i);
-                                  },
-                                  label: const Text(""),
-                                  icon: const Icon(Icons.print_rounded),
+                                Row(
+                                  children: [
+                                    Text(state.barcodesValue[i]),
+                                    TextButton.icon(
+                                      onPressed: () {
+                                        myBgController.printBarcode(i);
+                                      },
+                                      label: const Text(""),
+                                      icon: const Icon(Icons.print_rounded),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
+                      ),
                   itemCount: state.barcodes.length,
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 200,

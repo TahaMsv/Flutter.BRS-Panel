@@ -31,6 +31,7 @@ import '../../core/classes/login_user_class.dart';
 import '../../core/classes/tag_container_class.dart';
 import '../../core/constants/apis.dart';
 import '../../core/constants/share_prefrences_keys.dart';
+import '../../core/data_base/web_data_base.dart';
 import '../../core/enums/flight_type_filter_enum.dart';
 import '../../core/platform/device_info.dart';
 import '../../core/util/basic_class.dart';
@@ -59,7 +60,7 @@ class FlightsController extends MainController {
   Future<List<Flight>?> flightList(DateTime dt) async {
     final flightDateP = ref.read(flightDateProvider.notifier);
     flightDateP.state = dt;
-    prefs.setString(SpKeys.flightDateP, dt.toIso8601String());
+    await SessionStorage().setString(SpKeys.flightDateP, dt.toIso8601String());
     List<Flight>? flights;
     flightsState.loadingFlights = true;
     flightsState.setState();
@@ -90,18 +91,18 @@ class FlightsController extends MainController {
     // }
     // await loginController.retrieveUserFormLocalStorage();
     late DateTime savedDateTime;
-    final savedDateTimeString = prefs.getString(SpKeys.flightDateP) ?? '';
+    final savedDateTimeString = await SessionStorage().getString(SpKeys.flightDateP) ?? '';
     savedDateTime = savedDateTimeString.isNotEmpty ? DateTime.parse(savedDateTimeString) : DateTime.now();
     flightList(savedDateTime);
 
-    String? flightAirportFilterPString = prefs.getString(SpKeys.flightAirportFilterP);
-    String? flightAirlineFilterPString = prefs.getString(SpKeys.flightAirlineFilterP);
+    String? flightAirportFilterPString = await SessionStorage().getString(SpKeys.flightAirportFilterP);
+    String? flightAirlineFilterPString = await SessionStorage().getString(SpKeys.flightAirlineFilterP);
     final fapfP = ref.watch(flightAirportFilterProvider.notifier);
     print(flightAirportFilterPString.runtimeType);
     fapfP.state = flightAirportFilterPString == "null" ? null : Airport.fromJson(jsonDecode(flightAirportFilterPString!));
     final falP = ref.watch(flightAirlineFilterProvider.notifier);
     falP.state = (flightAirlineFilterPString == "null" || flightAirlineFilterPString == "") ? null : flightAirlineFilterPString;
-    String flightTypeFilterPString = prefs.getString(SpKeys.flightTypeFilterP) ?? "";
+    String flightTypeFilterPString = await SessionStorage().getString(SpKeys.flightTypeFilterP) ?? "";
     ref.read(flightTypeFilterProvider.notifier).state = getFlightTypeFilterFromString(flightTypeFilterPString);
   }
 
