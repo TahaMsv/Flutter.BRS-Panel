@@ -1,4 +1,3 @@
-// ignore_for_file: unused_result
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -7,7 +6,7 @@ import '../../core/abstracts/success_abs.dart';
 import '../../core/classes/login_user_class.dart';
 import '../../core/util/confirm_operation.dart';
 import '../../core/util/handlers/success_handler.dart';
-import 'example/dummy_class.dart' if (dart.library.js) 'dart:html' as html;
+import '../../core/util/web_util/web_dummy_class.dart' if (dart.library.js) 'dart:html' as html;
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../core/abstracts/controller_abs.dart';

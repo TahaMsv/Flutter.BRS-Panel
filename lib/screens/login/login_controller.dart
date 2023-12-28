@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:html';
 import 'package:brs_panel/core/abstracts/local_data_base_abs.dart';
 import 'package:brs_panel/core/platform/encryptor.dart';
 import 'package:brs_panel/core/platform/network_manager.dart';
