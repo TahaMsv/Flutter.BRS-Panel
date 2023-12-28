@@ -16,10 +16,10 @@ class AirlinesState extends ChangeNotifier {
 // final airlineListProvider = StateNotifier<List<String>>((ref) => []);
 
 final airlineSearchProvider = StateProvider<String>((ref) => '');
-final airlineListProvider = StateProvider<List<String>>((ref) => []);
+// final airlineListProvider = StateProvider<List<String>>((ref) => []);
 final filteredAirlineListProvider = Provider<List<String>>((ref) {
   // final airlines = ref.watch(airlineListProvider);
-  final airlines = BasicClass.airlineList;
+  final airlines = ref.watch(airlineListProvider);
   final searchFilter = ref.watch(airlineSearchProvider);
   return airlines
       .where(
@@ -27,6 +27,22 @@ final filteredAirlineListProvider = Provider<List<String>>((ref) {
       )
       .toList();
 });
+
+final airlineListProvider = StateNotifierProvider<AirlinesListNotifier, List<String>>((ref) {
+  return AirlinesListNotifier(ref);
+});
+
+class AirlinesListNotifier extends StateNotifier<List<String>> {
+  final StateNotifierProviderRef ref;
+
+  AirlinesListNotifier(this.ref) : super(BasicClass.airlineList);
+
+  void setAirlines(List<String> al) {
+    state = al;
+  }
+}
+
+
 
 class AirlineListNotifier extends StateNotifier<List<Airline>> {
   final StateNotifierProviderRef ref;

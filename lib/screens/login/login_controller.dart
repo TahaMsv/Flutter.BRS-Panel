@@ -4,6 +4,7 @@ import 'package:brs_panel/core/platform/encryptor.dart';
 import 'package:brs_panel/core/platform/network_manager.dart';
 import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:brs_panel/core/util/confirm_operation.dart';
+import 'package:brs_panel/screens/airlines/airlines_controller.dart';
 import 'package:brs_panel/screens/airports/airports_controller.dart';
 import 'package:brs_panel/screens/barcode_generator/barcode_generator_controller.dart';
 import 'package:brs_panel/screens/bsm/bsm_controller.dart';
@@ -116,6 +117,9 @@ class LoginController extends MainController {
 
     FlightSummaryController flightSummaryController = getIt<FlightSummaryController>();
     flightSummaryController.retrieveFlightSummaryScreenFromLocalStorage();
+
+    AirlinesController airlinesController = getIt<AirlinesController>();
+    airlinesController.retrieveAirlinesScreenFromLocalStorage();
   }
 
   Future<void> retrieveUserFormLocalStorage() async {

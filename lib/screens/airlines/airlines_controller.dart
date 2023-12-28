@@ -13,15 +13,18 @@ import 'airlines_state.dart';
 class AirlinesController extends MainController {
   late AirlinesState airlinesState = ref.read(airlinesProvider);
 
-  Future<void> goUlds(String al) async{
+  Future<void> goUlds(String al) async {
     AirlineUldsController airlineUldsController = getIt<AirlineUldsController>();
     final saP = ref.read(selectedAirlineProvider.notifier);
     saP.state = al;
     final ulds = await airlineUldsController.airlineGetUldList();
-    if(ulds!=null) {
+    if (ulds != null) {
       nav.pushNamed(RouteNames.airlineUlds);
     }
   }
-  // UseCase UseCase = UseCase(repository: Repository());
+
+  Future<void> retrieveAirlinesScreenFromLocalStorage() async {
+    ref.read(airlineListProvider.notifier).setAirlines(BasicClass.airlineList);
+  }
 
 }
