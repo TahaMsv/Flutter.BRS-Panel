@@ -25,24 +25,10 @@ import '../../widgets/MyAppBar.dart';
 import '../../widgets/MyCheckBoxButton.dart';
 import '../../widgets/MyTImeField.dart';
 import '../../widgets/MyTextField.dart';
-import '../login/login_controller.dart';
 import 'special_reports_controller.dart';
 
-class SpecialReportsView extends StatefulWidget {
+class SpecialReportsView extends StatelessWidget {
   const SpecialReportsView({super.key});
-
-  @override
-  State<SpecialReportsView> createState() => _SpecialReportsViewState();
-}
-
-class _SpecialReportsViewState extends State<SpecialReportsView> {
-
-  // @override
-  // void initState() {
-  //   LoginController controller = getIt<LoginController>();
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) => controller.retrieveFromLocalStorage());
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {

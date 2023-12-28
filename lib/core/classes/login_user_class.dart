@@ -51,7 +51,6 @@ class LoginUser {
         rememberMe: json["RememberMe"],
         userSettings: UserSettings.fromJson(json["UserSettings"]),
         systemSettings: SystemSettings.fromJson(json["SystemSettings"]),
-        // systemSettings: SystemSettings.empty(),
         username: json["Username"] ?? '',
         password: json["Password"] ?? '',
       );

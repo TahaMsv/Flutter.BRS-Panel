@@ -79,7 +79,6 @@ class RouterNotifier extends AutoDisposeAsyncNotifier<void> implements Listenabl
           path: RouteNames.login.path,
           pageBuilder: (context, state) {
             // LoginController loginController = getIt<LoginController>();
-
             return NoTransitionPage<void>(key: state.pageKey, child: const LoginView());
           },
         ),

@@ -549,18 +549,6 @@ class TagWidget extends StatelessWidget {
                   //     )
                   //   ],
                   // ),
-                  IndexedStack(
-                    index: tag.outboundLegs.isEmpty ? 0 : 1,
-                    children: [
-                      const SizedBox(),
-                      Container(
-                        height: 40,
-                        padding: const EdgeInsets.only(left: 2),
-                        child: const Icon(Icons.flight_takeoff, color: MyColors.blueGreen, size: 20),
-                      )
-                    ],
-                  ),
-                  const Spacer(),
                   SizedBox(
                     height: 40,
                     child: Column(
@@ -586,7 +574,30 @@ class TagWidget extends StatelessWidget {
                       children: [tag.getTypeWidget],
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 4),
+                  IndexedStack(
+                    index: tag.inboundLeg == null ? 0 : 1,
+                    children: [
+                      const SizedBox(),
+                      Container(
+                        height: 40,
+                        padding: const EdgeInsets.only(left: 2),
+                        child: const Icon(Icons.flight_land, color: MyColors.green, size: 20),
+                      )
+                    ],
+                  ),
+                  IndexedStack(
+                    index: tag.outboundLegs.isEmpty ? 0 : 1,
+                    children: [
+                      const SizedBox(),
+                      Container(
+                        height: 40,
+                        padding: const EdgeInsets.only(left: 2),
+                        child: const Icon(Icons.flight_takeoff, color: MyColors.blueGreen, size: 20),
+                      )
+                    ],
+                  ),
+                  const Spacer(),
                   inDetails
                       ? const SizedBox()
                       : SizedBox(

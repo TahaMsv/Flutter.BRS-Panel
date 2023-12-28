@@ -113,9 +113,7 @@ class _AirportCartsPanelState extends ConsumerState<AirportCartsPanel> {
           const Expanded(flex: 5, child: SizedBox()),
           DotButton(
             icon: Icons.refresh,
-            onPressed: () {
-              myAirportCartsController.airportGetCarts();
-            },
+            onPressed: () async => await myAirportCartsController.airportGetCarts(),
           ),
         ],
       ),

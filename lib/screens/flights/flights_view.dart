@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:artemis_ui_kit/artemis_ui_kit.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
@@ -18,29 +17,14 @@ import '../../widgets/MyAnimatedSwitcher.dart';
 import '../../widgets/MyFieldPicker.dart';
 import '../../widgets/MySegment.dart';
 import '../../widgets/MyTextField.dart';
-import '../login/login_controller.dart';
 import 'data_tables/flight_data_table.dart';
 import 'flights_controller.dart';
 import 'flights_state.dart';
 
-class FlightsView extends StatefulWidget {
+class FlightsView extends StatelessWidget {
   static FlightsController myFlightsController = getIt<FlightsController>();
 
   const FlightsView({super.key});
-
-  @override
-  State<FlightsView> createState() => _FlightsViewState();
-}
-
-class _FlightsViewState extends State<FlightsView> {
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   print("Here fv init");
-  //   LoginController controller = getIt<LoginController>();
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) => controller.retrieveFromLocalStorage());
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {

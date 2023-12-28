@@ -8,25 +8,12 @@ import '../../initialize.dart';
 import '../../widgets/DotButton.dart';
 import '../../widgets/LoadingListView.dart';
 import '../../widgets/MyTextField.dart';
-import '../login/login_controller.dart';
 import 'aircrafts_controller.dart';
 import 'aircrafts_state.dart';
 import 'data_tables/aircraft_data_table.dart';
 
-class AircraftsView extends StatefulWidget {
+class AircraftsView extends StatelessWidget {
   const AircraftsView({super.key});
-
-  @override
-  State<AircraftsView> createState() => _AircraftsViewState();
-}
-
-class _AircraftsViewState extends State<AircraftsView> {
-  // @override
-  // void initState() {
-  //   LoginController controller = getIt<LoginController>();
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) => controller.retrieveFromLocalStorage());
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {

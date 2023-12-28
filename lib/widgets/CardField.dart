@@ -70,6 +70,7 @@ class HorizontalCardField extends StatelessWidget {
   final String value;
   final String? titleSuffix;
   final Color valueColor;
+  final double? valueWidth;
   final double scale;
   final NumberFormat? valueFormatter;
   final bool rightAlight;
@@ -86,6 +87,7 @@ class HorizontalCardField extends StatelessWidget {
       this.valueWidget,
       this.rightAlight = false,
       this.valueColor = MyColors.black,
+      this.valueWidth,
       this.widgetPadding,
       this.valueStyle,
       this.scale = 1.0})
@@ -108,8 +110,11 @@ class HorizontalCardField extends StatelessWidget {
         SizedBox(width: 5),
         valueWidget != null
             ? valueWidget!
-            : Text(valueFormatter == null ? value : formatValue(valueFormatter!, value),
-                overflow: TextOverflow.ellipsis, style: valueStyle ?? TextStyle(color: valueColor, fontSize: 16 * scale, fontWeight: FontWeight.w600)),
+            : SizedBox(
+                width: valueWidth,
+                child: Text(valueFormatter == null ? value : formatValue(valueFormatter!, value),
+                    overflow: TextOverflow.ellipsis, style: valueStyle ?? TextStyle(color: valueColor, fontSize: 16 * scale, fontWeight: FontWeight.w600)),
+              ),
       ],
     );
   }

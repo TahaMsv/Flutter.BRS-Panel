@@ -1,7 +1,6 @@
 class SpKeys {
   SpKeys._();
 
-  static const String isRefreshed = "isRefreshed";
   static const String username = "Username";
   static const String user = "User";
   static const String password = "Password";

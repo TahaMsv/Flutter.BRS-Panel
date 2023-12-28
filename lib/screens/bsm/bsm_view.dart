@@ -143,10 +143,7 @@ class BsmListWidget extends ConsumerWidget {
     final bsmList = ref.watch(filteredBsmListProvider);
     return Expanded(
       child: state.loadingBSM
-          ? const SpinKitCircle(
-              size: 50,
-              color: MyColors.mainColor,
-            )
+          ? const SpinKitCircle(size: 50, color: MyColors.mainColor)
           : SfDataGrid(
               onQueryRowHeight: (details) {
                 return details.getIntrinsicRowHeight(details.rowIndex);

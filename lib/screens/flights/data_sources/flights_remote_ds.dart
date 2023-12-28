@@ -20,7 +20,6 @@ class FlightsRemoteDataSource implements FlightsDataSourceInterface {
   @override
   Future<FlightListResponse> flightList({required FlightListRequest request}) async {
     Response res = await networkManager.post(request);
-    print(res);
     return FlightListResponse.fromResponse(res);
   }
 
