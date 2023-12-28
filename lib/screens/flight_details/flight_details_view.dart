@@ -74,6 +74,7 @@ class _FlightDetailsPanelState extends ConsumerState<FlightDetailsPanel> {
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(flightDetailsProvider);
     ThemeData theme = Theme.of(context);
     List<Position> pos = BasicClass.systemSetting.positions.where((element) => ref.watch(selectedFlightProvider)!.positions.map((e) => e.id).contains(element.id)).toList();
     Flight f = ref.watch(selectedFlightProvider)!;

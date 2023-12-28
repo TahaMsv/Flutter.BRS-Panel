@@ -172,6 +172,6 @@ class FlightDetailsController extends MainController {
 
     ref.read(selectedPosInDetails.notifier).state = Position.fromJson(jsonDecode(selectedPosInDetailsString!));
     flightDetailsState.setState();
-    print("Postiotion : ${ref.read(selectedPosInDetails.notifier).state!.title}");
+    print("Position : ${ref.read(selectedPosInDetails.notifier).state!.title}");
   }
 }
