@@ -167,11 +167,16 @@ class FlightDetailsController extends MainController {
     String? selectedFlightPString = await SessionStorage().getString(SsKeys.selectedFlightP);
     String? selectedPosInDetailsString = await SessionStorage().getString(SsKeys.selectedPosInDetails);
 
+    Position v = Position.fromJson(jsonDecode(selectedPosInDetailsString!));
+    ref.read(selectedPosInDetails.notifier).state = BasicClass.systemSetting.positions.firstWhere((e) => e.id == v.id);
+
     final sfP = ref.read(selectedFlightProvider.notifier);
     sfP.state = Flight.fromJson(jsonDecode(selectedFlightPString!));
+  }
 
-    ref.read(selectedPosInDetails.notifier).state = Position.fromJson(jsonDecode(selectedPosInDetailsString!));
-    flightDetailsState.setState();
-    print("Position : ${ref.read(selectedPosInDetails.notifier).state!.title}");
+  @override
+  void onInit() {
+    flightDetailsState.showClearButton = ref.read(tagSearchProvider.notifier).state.isNotEmpty;
+    super.onInit();
   }
 }

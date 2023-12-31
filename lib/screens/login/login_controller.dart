@@ -95,7 +95,7 @@ class LoginController extends MainController {
     await retrieveUserFormLocalStorage();
 
     FlightsController flightsController = getIt<FlightsController>();
-    flightsController.retrieveFlightsScreenFromLocalStorage();
+    await flightsController.retrieveFlightsScreenFromLocalStorage();
 
     AircraftsController aircraftsController = getIt<AircraftsController>();
     aircraftsController.retrieveAirCraftsScreenFromLocalStorage();
@@ -113,10 +113,10 @@ class LoginController extends MainController {
     bsmController.retrieveBSMScreenFromLocalStorage();
 
     FlightDetailsController flightDetailsController = getIt<FlightDetailsController>();
-    flightDetailsController.retrieveFlightDetailsScreenFromLocalStorage();
+    await flightDetailsController.retrieveFlightDetailsScreenFromLocalStorage();
 
     FlightSummaryController flightSummaryController = getIt<FlightSummaryController>();
-    flightSummaryController.retrieveFlightSummaryScreenFromLocalStorage();
+    await flightSummaryController.retrieveFlightSummaryScreenFromLocalStorage();
 
     AirlinesController airlinesController = getIt<AirlinesController>();
     airlinesController.retrieveAirlinesScreenFromLocalStorage();

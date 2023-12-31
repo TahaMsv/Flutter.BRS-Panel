@@ -418,7 +418,6 @@
 //
 //     final flight = flightFromJson(jsonString);
 
-
 import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -473,10 +472,11 @@ class Flight {
 
   Aircraft? get getAircraft => BasicClass.getAircraftByID(aircraftId);
 
-  bool get isArrival => flightType==1;
+  bool get isArrival => flightType == 1;
 
-  List<int> get validPositions => isArrival?[4,5,6]:[1,2,3];
-  List<int> get validAssignContainerPositions => isArrival?[4,5]:[2];
+  List<int> get validPositions => isArrival ? [4, 5, 6] : [1, 2, 3];
+
+  List<int> get validAssignContainerPositions => isArrival ? [4, 5] : [2];
 
   Flight copyWith({
     int? id,
@@ -522,70 +522,91 @@ class Flight {
       );
 
   factory Flight.fromJson(Map<String, dynamic> json) => Flight(
-    id: json["FlightScheduleID"],
-    aircraftId: json["AircraftID"],
-    returnedTagCount: json["ReturnedTagCount"],
-    color: json["Color"],
-    al: json["AL"],
-    flightNumber: json["FlightNumber"],
-    flightDate: DateTime.parse(json["FlightDate"]),
-    std: json["STD"],
-    sta: json["STA"],
-    from: json["FromCity"],
-    to: json["ToCity"],
-    destList: json["DestList"],
-    route: json["Route"],
-    isTest: json["IsTest"],
-    flightType: json["FlightType"]??1,
-    totalBagPCs: json["TotalBagPCs"],
-    totalBagWeight: json["TotalBagWeight"],
-    isFinalized: json["IsFinalized"],
-    positions: List<PositionData>.from((json["Positions"]??[]).map((x) => PositionData.fromJson(x))),
-  );
+        id: json["FlightScheduleID"],
+        aircraftId: json["AircraftID"],
+        returnedTagCount: json["ReturnedTagCount"],
+        color: json["Color"],
+        al: json["AL"],
+        flightNumber: json["FlightNumber"],
+        flightDate: DateTime.parse(json["FlightDate"]),
+        std: json["STD"],
+        sta: json["STA"],
+        from: json["FromCity"],
+        to: json["ToCity"],
+        destList: json["DestList"],
+        route: json["Route"],
+        isTest: json["IsTest"],
+        flightType: json["FlightType"] ?? 1,
+        totalBagPCs: json["TotalBagPCs"],
+        totalBagWeight: json["TotalBagWeight"],
+        isFinalized: json["IsFinalized"],
+        positions: List<PositionData>.from((json["Positions"] ?? []).map((x) => PositionData.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "FlightScheduleID": id,
-
-    "AircraftID": aircraftId,
-    "ReturnedTagCount": returnedTagCount,
-    "Color": color,
-    "AL": al,
-    "FlightNumber": flightNumber,
-    "FlightDate": "${flightDate.year.toString().padLeft(4, '0')}-${flightDate.month.toString().padLeft(2, '0')}-${flightDate.day.toString().padLeft(2, '0')}",
-    "STD": std,
-    "STA": sta,
-    "FromCity": from,
-    "ToCity": to,
-    "DestList": destList,
-    "Route": route,
-    "IsTest": isTest,
-    "FlightType": flightType,
-    "TotalBagPCs": totalBagPCs,
-    "TotalBagWeight": totalBagWeight,
-    "IsFinalized": isFinalized,
-    "Positions": List<dynamic>.from(positions.map((x) => x.toJson())),
-  };
+        "FlightScheduleID": id,
+        "AircraftID": aircraftId,
+        "ReturnedTagCount": returnedTagCount,
+        "Color": color,
+        "AL": al,
+        "FlightNumber": flightNumber,
+        "FlightDate": "${flightDate.year.toString().padLeft(4, '0')}-${flightDate.month.toString().padLeft(2, '0')}-${flightDate.day.toString().padLeft(2, '0')}",
+        "STD": std,
+        "STA": sta,
+        "FromCity": from,
+        "ToCity": to,
+        "DestList": destList,
+        "Route": route,
+        "IsTest": isTest,
+        "FlightType": flightType,
+        "TotalBagPCs": totalBagPCs,
+        "TotalBagWeight": totalBagWeight,
+        "IsFinalized": isFinalized,
+        "Positions": List<dynamic>.from(positions.map((x) => x.toJson())),
+      };
 
   bool validateType(FlightTypeFilter typeFilter) {
     return flightType == typeFilter.index;
   }
 
   bool validateAirline(String? a) {
-    return a==null || al == a;
+    return a == null || al == a;
   }
 
   bool validateAirport(Airport? a) {
-    return a==null || from == a.code;
+    return a == null || from == a.code;
   }
 
   bool validateSearch(String s) {
     return s.isEmpty || "$al$flightNumber".toLowerCase().contains(s.toLowerCase());
   }
 
-  List<String> get destinations => (destList??to).split(",");
+  List<String> get destinations => (destList ?? to).split(",");
 
   @override
   String toString() => flightNumber;
+
+  factory Flight.empty() => Flight(
+        id: 0,
+        aircraftId: null,
+        returnedTagCount: null,
+        color: "",
+        al: "",
+        flightNumber: "",
+        flightDate: DateTime.now(),
+        std: "",
+        sta: "",
+        from: "",
+        to: "",
+        destList: null,
+        route: "",
+        isTest: true,
+        flightType: 0,
+        totalBagPCs: 0,
+        totalBagWeight: 0,
+        isFinalized: false,
+        positions: const [],
+      );
 }
 
 class PositionData {
@@ -619,21 +640,22 @@ class PositionData {
       );
 
   factory PositionData.fromJson(Map<String, dynamic> json) => PositionData(
-    id: json["ID"],
-    tagCount: json["TagCount"],
-    order: json["Order"],
-    excTagCount: json["ExcTagCount"]??1,
-    sections: List<PositionSection>.from((json["Sections"]??[]).map((x) => PositionSection.fromJson(x))),
-  );
+        id: json["ID"],
+        tagCount: json["TagCount"],
+        order: json["Order"],
+        excTagCount: json["ExcTagCount"] ?? 1,
+        sections: List<PositionSection>.from((json["Sections"] ?? []).map((x) => PositionSection.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "ID": id,
-    "TagCount": tagCount,
-    "Order": order,
-    "ExcTagCount": excTagCount,
-    "Sections": List<dynamic>.from(sections.map((x) => x.toJson())),
-  };
+        "ID": id,
+        "TagCount": tagCount,
+        "Order": order,
+        "ExcTagCount": excTagCount,
+        "Sections": List<dynamic>.from(sections.map((x) => x.toJson())),
+      };
 
   Color get color => Colors.green;
+
   String get value => "$tagCount";
 }

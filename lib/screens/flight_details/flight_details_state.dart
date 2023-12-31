@@ -12,6 +12,7 @@ final flightDetailsProvider = ChangeNotifierProvider<FlightDetailsState>((_) => 
 class FlightDetailsState extends ChangeNotifier {
   void setState() => notifyListeners();
 
+  bool showClearButton = false;
   ///bool loading = false;
 }
 

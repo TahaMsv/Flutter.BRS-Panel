@@ -77,7 +77,7 @@ class FlightsController extends MainController {
     // late DateTime savedDateTime;
     // final savedDateTimeString = await SessionStorage().getString(SsKeys.flightDateP) ?? '';
     // savedDateTime = savedDateTimeString.isNotEmpty ? DateTime.parse(savedDateTimeString) : DateTime.now();
-    flightList(DateTime.now());
+    await flightList(DateTime.now());
     // String? flightAirportFilterPString = await SessionStorage().getString(SsKeys.flightAirportFilterP);
     // String? flightAirlineFilterPString = await SessionStorage().getString(SsKeys.flightAirlineFilterP);
     // final fapfP = ref.watch(flightAirportFilterProvider.notifier);

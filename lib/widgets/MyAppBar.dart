@@ -36,8 +36,7 @@ class _MyAppBarState extends State<MyAppBar> {
         // print(router.location);
         currentRoute ??= RouteNames.values.lastWhere((element) => router.location.contains("/${element.path}"));
         return Container(
-          decoration: const BoxDecoration(
-              color: MyColors.white1, border: Border(bottom: BorderSide(color: MyColors.lineColor))),
+          decoration: const BoxDecoration(color: MyColors.white1, border: Border(bottom: BorderSide(color: MyColors.lineColor))),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
           child: isSubroute
               ? DecoratedBox(
@@ -55,18 +54,12 @@ class _MyAppBarState extends State<MyAppBar> {
                           onPressed: () {
                             NavigationService ns = getIt<NavigationService>();
                             ns.pop();
+                            setState(() {});
                           },
                         ),
                         const SizedBox(width: 8),
-                        ...RouteNames.values
-                            .where((element) => router.location.split("/").contains(element.name))
-                            .map((e) {
-                          bool isLast = [...RouteNames.values]
-                                  .where((element) => router.location.split("/").contains(element.name))
-                                  .toList()
-                                  .last
-                                  .path ==
-                              e.path;
+                        ...RouteNames.values.where((element) => router.location.split("/").contains(element.name)).map((e) {
+                          bool isLast = [...RouteNames.values].where((element) => router.location.split("/").contains(element.name)).toList().last.path == e.path;
                           return Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -121,9 +114,7 @@ class _MyAppBarState extends State<MyAppBar> {
 
                           return DecoratedBox(
                             decoration: BoxDecoration(
-                              border: selected
-                                  ? const Border(bottom: BorderSide(color: MyColors.lightIshBlue, width: 4))
-                                  : const Border(),
+                              border: selected ? const Border(bottom: BorderSide(color: MyColors.lightIshBlue, width: 4)) : const Border(),
                             ),
                             child: Padding(
                               padding: const EdgeInsets.only(bottom: 8.0, top: 4),
@@ -194,10 +185,7 @@ class UserIndicatorWidget extends ConsumerWidget {
                 onTap: myLoginController.goToUserProfile,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Hello, ${u.username}"),
-                    Text(ref.watch(selectedServer)?.name ?? "", style: const TextStyle(fontSize: 8))
-                  ],
+                  children: [Text("Hello, ${u.username}"), Text(ref.watch(selectedServer)?.name ?? "", style: const TextStyle(fontSize: 8))],
                 ),
               ),
             ],

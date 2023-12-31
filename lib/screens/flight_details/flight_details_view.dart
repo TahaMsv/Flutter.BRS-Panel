@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:brs_panel/core/constants/ui.dart';
 import 'package:brs_panel/core/platform/spiners.dart';
 import 'package:brs_panel/initialize.dart';
@@ -25,24 +24,14 @@ import 'widgets/data_tables/checkin_table_builder.dart';
 import 'widgets/data_tables/load_table_builder.dart';
 import 'widgets/data_tables/sort_table_builder.dart';
 
-class FlightDetailsView extends StatefulWidget {
+class FlightDetailsView extends ConsumerWidget {
   final int flightID;
 
   const FlightDetailsView({super.key, required this.flightID});
 
   @override
-  State<FlightDetailsView> createState() => _FlightDetailsViewState();
-}
-
-class _FlightDetailsViewState extends State<FlightDetailsView> {
-  @override
-  void initState() {
-    // WidgetsBinding.instance.addPostFrameCallback((_) => getIt<FlightDetailsController>().flightGetDetails(widget.flightID));
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(flightDetailsProvider);
     return const Scaffold(
         appBar: MyAppBar(),
         body: Column(
@@ -54,30 +43,18 @@ class _FlightDetailsViewState extends State<FlightDetailsView> {
   }
 }
 
-class FlightDetailsPanel extends ConsumerStatefulWidget {
+class FlightDetailsPanel extends ConsumerWidget {
   const FlightDetailsPanel({Key? key}) : super(key: key);
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _FlightDetailsPanelState();
-}
-
-class _FlightDetailsPanelState extends ConsumerState<FlightDetailsPanel> {
   static FlightDetailsController myFlightDetailsController = getIt<FlightDetailsController>();
   static TextEditingController searchC = TextEditingController();
-  bool showClearButton = false;
 
   @override
-  void initState() {
-    showClearButton = searchC.text.isNotEmpty;
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(flightDetailsProvider);
     ThemeData theme = Theme.of(context);
-    List<Position> pos = BasicClass.systemSetting.positions.where((element) => ref.watch(selectedFlightProvider)!.positions.map((e) => e.id).contains(element.id)).toList();
-    Flight f = ref.watch(selectedFlightProvider)!;
+    final selectedFlightP = ref.watch(selectedFlightProvider);
+    List<Position> pos = BasicClass.systemSetting.positions.where((element) => (selectedFlightP?.positions ?? []).map((e) => e.id).contains(element.id)).toList();
+    Flight f = selectedFlightP ?? Flight.empty();
     return Container(
       color: MyColors.white1,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -99,13 +76,11 @@ class _FlightDetailsPanelState extends ConsumerState<FlightDetailsPanel> {
                 prefixIcon: const Icon(Icons.search),
                 placeholder: "Search Here ...",
                 controller: searchC,
-                showClearButton: showClearButton,
+                showClearButton: state.showClearButton,
                 onChanged: (v) {
+                  state.showClearButton = searchC.text.isNotEmpty;
                   final s = ref.read(tagSearchProvider.notifier);
                   s.state = v;
-                  setState(() {
-                    showClearButton = searchC.text.isNotEmpty;
-                  });
                 },
               )),
           const SizedBox(width: 12),
@@ -148,11 +123,10 @@ class FlightDetailsWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ThemeData theme = Theme.of(context);
-    final state = ref.watch(flightDetailsProvider);
     final fdP = ref.watch(detailsProvider.notifier);
     final rfdP = ref.watch(refreshDetailsProvider);
     final posListP = ref.watch(selectedFlightProvider);
-    List<Position> posList = BasicClass.systemSetting.positions.where((pos) => posListP!.positions.map((e) => e.id).contains(pos.id)).toList();
+    List<Position> posList = BasicClass.systemSetting.positions.where((pos) => (posListP?.positions ?? []).map((e) => e.id).contains(pos.id)).toList();
     return Expanded(
       child: Container(
         alignment: Alignment.topCenter,
