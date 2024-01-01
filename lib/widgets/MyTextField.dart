@@ -56,7 +56,7 @@ class MyTextField extends StatefulWidget {
     this.textCapitalization = TextCapitalization.none,
     this.textInputAction,
     this.style,
-    this.labelStyle,
+    this.labelStyle = const TextStyle(fontSize: 13),
     this.maxLines = 1,
     this.strutStyle,
     this.textDirection,

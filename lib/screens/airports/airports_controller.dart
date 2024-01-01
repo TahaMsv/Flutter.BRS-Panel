@@ -1,5 +1,3 @@
-import 'package:brs_panel/core/util/basic_class.dart';
-
 import '../../core/abstracts/controller_abs.dart';
 import '../../core/abstracts/success_abs.dart';
 import '../../core/classes/airport_class.dart';
@@ -13,6 +11,8 @@ import '../airport_carts/airport_carts_controller.dart';
 import '../airport_carts/airport_carts_state.dart';
 import '../airport_sections/airport_sections_controller.dart';
 import '../airport_sections/airport_sections_state.dart';
+import '../airport_setting/airport_setting_controller.dart';
+import '../airport_setting/airport_setting_state.dart';
 import 'airports_state.dart';
 import 'dialogs/add_update_airport_dialog.dart';
 import 'usecases/add_update_airport.dart';
@@ -43,6 +43,16 @@ class AirportsController extends MainController {
     airportSectionsP.state = sections;
     airportSectionsController.initSelection();
     if (sections != null) nav.pushNamed(RouteNames.airportSections);
+  }
+
+  Future<void> goSetting(DetailedAirport a) async {
+    final selectedAirportP = ref.read(selectedAirportProvider.notifier);
+    selectedAirportP.state = a;
+    AirportSettingController airportSettingController = getIt<AirportSettingController>();
+    final setting = await airportSettingController.airportGetSetting();
+    final airportSettingP = ref.read(settingProvider.notifier);
+    airportSettingP.state = setting;
+    if (setting != null) nav.pushNamed(RouteNames.airportSetting);
   }
 
   openAddUpdateAirportDialog({DetailedAirport? airport}) {

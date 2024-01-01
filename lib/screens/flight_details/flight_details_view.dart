@@ -51,7 +51,7 @@ class FlightDetailsPanel extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(flightDetailsProvider);
-    ThemeData theme = Theme.of(context);
+    ref.watch(tagSearchProvider);
     final selectedFlightP = ref.watch(selectedFlightProvider);
     List<Position> pos = BasicClass.systemSetting.positions.where((element) => (selectedFlightP?.positions ?? []).map((e) => e.id).contains(element.id)).toList();
     Flight f = selectedFlightP ?? Flight.empty();

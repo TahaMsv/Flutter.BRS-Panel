@@ -31,6 +31,7 @@ import 'core/platform/network_info.dart';
 import 'core/util/basic_class.dart';
 import 'screens/airline_ulds/airline_ulds_controller.dart';
 import 'screens/airport_sections/airport_sections_controller.dart';
+import 'screens/airport_setting/airport_setting_controller.dart';
 import 'screens/home/home_controller.dart';
 import 'screens/login/login_controller.dart';
 import 'screens/special_reports/special_reports_controller.dart';
@@ -85,6 +86,7 @@ initControllers() {
   AirlineUldsController airlineUldsController = AirlineUldsController();
   AirportCartsController airportCartsController = AirportCartsController();
   AirportSectionsController airportSectionsController = AirportSectionsController();
+  AirportSettingController airportSettingController = AirportSettingController();
   BsmController bsmController = BsmController();
   BarcodeGeneratorController barcodeGeneratorController = BarcodeGeneratorController();
   FlightSummaryController flightSummaryController = FlightSummaryController();
@@ -103,6 +105,7 @@ initControllers() {
   getIt.registerSingleton(airlineUldsController);
   getIt.registerSingleton(airportCartsController);
   getIt.registerSingleton(airportSectionsController);
+  getIt.registerSingleton(airportSettingController);
   getIt.registerSingleton(bsmController);
   getIt.registerSingleton(flightSummaryController);
   getIt.registerSingleton(barcodeGeneratorController);
@@ -121,6 +124,7 @@ initControllers() {
     RouteNames.airlineUlds: airlineUldsController,
     RouteNames.airportCarts: airportCartsController,
     RouteNames.airportSections: airportSectionsController,
+    RouteNames.airportSetting: airportSettingController,
     RouteNames.bsm: bsmController,
     RouteNames.barcodeGenerator: barcodeGeneratorController,
     RouteNames.flightDetails: flightSummaryController,

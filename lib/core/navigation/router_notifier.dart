@@ -14,6 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../screens/add_flight/add_flight_view.dart';
 import '../../screens/airport_sections/airport_sections_view.dart';
+import '../../screens/airport_setting/airport_setting_view.dart';
 import '../../screens/home/home_view.dart';
 import '../../screens/login/login_controller.dart';
 import '../../screens/login/login_state.dart';
@@ -161,6 +162,13 @@ class RouterNotifier extends AutoDisposeAsyncNotifier<void> implements Listenabl
           path: RouteNames.airportSections.path,
           pageBuilder: (context, state) {
             return NoTransitionPage<void>(key: state.pageKey, child: const AirportSectionsView());
+          },
+        ),
+        MyRoute(
+          name: RouteNames.airportSetting.name,
+          path: RouteNames.airportSetting.path,
+          pageBuilder: (context, state) {
+            return NoTransitionPage<void>(key: state.pageKey, child: const AirportSettingView());
           },
         ),
       ]

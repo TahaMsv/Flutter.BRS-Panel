@@ -92,14 +92,21 @@ class AirportDataSource extends DataGridSource {
                 // fontSize: 12,
                 label: "Cart List",
                 fade: true,
-                onPressed: () async {
-                  await airportsController.goCarts(a);
-                },
+                onPressed: () async => await airportsController.goCarts(a),
               ),
+              // const SizedBox(width: 12),
+              // MyButton(
+              //   onPressed: () async => await airportsController.goSetting(a),
+              //   label: 'Setting',
+              //   fade: true,
+              //   height: 30,
+              //   width: 35,
+              //   child: const Icon(Icons.settings, size: 20),
+              // ),
               const SizedBox(width: 12),
               MyButton(
                 onPressed: () async => await airportsController.openAddUpdateAirportDialog(airport: a),
-                label: 'Delete',
+                label: 'Edit',
                 fade: true,
                 height: 30,
                 width: 35,

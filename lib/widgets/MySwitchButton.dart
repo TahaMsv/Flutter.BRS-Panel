@@ -17,7 +17,7 @@ class MySwitchButton extends StatelessWidget {
     return TextButton.icon(
       style: TextButton.styleFrom(
           padding: EdgeInsets.zero,
-          backgroundColor: Colors.white,
+          backgroundColor: Colors.transparent,
           foregroundColor:color?? MyColors.black,
       ),
       onPressed: () {
