@@ -25,10 +25,8 @@ class HistoryLog {
       );
 
   factory HistoryLog.fromJson(Map<String, dynamic> json) => HistoryLog(
-        // flightLogs: [],
         flightLogs: List<Log>.from(json["FlightLogs"].map((x) => Log.fromJson(x))),
-        // tagLogs: List<Log>.from(json["TagLogs"].map((x) => Log.fromJson(x))),
-        tagLogs: [],
+        tagLogs: List<Log>.from(json["TagLogs"].map((x) => Log.fromJson(x))),
         userLogs: List<dynamic>.from(json["UserLogs"].map((x) => x)),
         aiportLogs: List<dynamic>.from(json["AiportLogs"].map((x) => x)),
       );
@@ -119,7 +117,7 @@ class Log {
         section: json["Section"],
         exceptionId: json["ExceptionID"],
         description: json["Description"] ?? "",
-        dateUtc: DateTime.tryParse(json["DateUTC"]) ?? DateTime.now(),
+        dateUtc: json["DateUTC"] == null ? DateTime.now() : DateTime.parse(json["DateUTC"]),
         timeUtc: json["TimeUTC"] ?? "",
         flightScheduleId: json["FlightScheduleID"],
       );

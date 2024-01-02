@@ -53,11 +53,8 @@ class FlightSummaryController extends MainController {
     FlightGetHistoryLogUseCase flightGetHistoryLogUsecase = FlightGetHistoryLogUseCase();
 
     FlightGetHistoryLogRequest flightGetHistoryLogRequest = FlightGetHistoryLogRequest(airport: null, flightID: flight.id, tagID: null, userID: null);
-    print("here56");
     final fOrR = await flightGetHistoryLogUsecase(request: flightGetHistoryLogRequest);
-    print("here55");
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightGetHistoryLog(flight)), (r) {
-      print("here57");
       log = r.logs;
     });
     return log;
