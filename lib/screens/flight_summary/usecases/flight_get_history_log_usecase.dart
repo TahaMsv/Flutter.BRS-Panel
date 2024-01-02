@@ -12,8 +12,10 @@ class FlightGetHistoryLogUseCase extends UseCase<FlightGetHistoryLogResponse,Fli
 
   @override
   Future<Either<Failure, FlightGetHistoryLogResponse>> call({required FlightGetHistoryLogRequest request}) {
+
   if(request.validate()!=null) return Future(() =>Left(request.validate()!));
     FlightSummaryRepository repository = FlightSummaryRepository();
+
     return repository.flightGetHistoryLog(request);
   }
 

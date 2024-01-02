@@ -1,4 +1,3 @@
-
 class HistoryLog {
   final List<Log> flightLogs;
   final List<Log> tagLogs;
@@ -26,18 +25,20 @@ class HistoryLog {
       );
 
   factory HistoryLog.fromJson(Map<String, dynamic> json) => HistoryLog(
-    flightLogs: List<Log>.from(json["FlightLogs"].map((x) => Log.fromJson(x))),
-    tagLogs: List<Log>.from(json["TagLogs"].map((x) => Log.fromJson(x))),
-    userLogs: List<dynamic>.from(json["UserLogs"].map((x) => x)),
-    aiportLogs: List<dynamic>.from(json["AiportLogs"].map((x) => x)),
-  );
+        // flightLogs: [],
+        flightLogs: List<Log>.from(json["FlightLogs"].map((x) => Log.fromJson(x))),
+        // tagLogs: List<Log>.from(json["TagLogs"].map((x) => Log.fromJson(x))),
+        tagLogs: [],
+        userLogs: List<dynamic>.from(json["UserLogs"].map((x) => x)),
+        aiportLogs: List<dynamic>.from(json["AiportLogs"].map((x) => x)),
+      );
 
   Map<String, dynamic> toJson() => {
-    "FlightLogs": List<dynamic>.from(flightLogs.map((x) => x.toJson())),
-    "TagLogs": List<dynamic>.from(tagLogs.map((x) => x.toJson())),
-    "UserLogs": List<dynamic>.from(userLogs.map((x) => x)),
-    "AiportLogs": List<dynamic>.from(aiportLogs.map((x) => x)),
-  };
+        "FlightLogs": List<dynamic>.from(flightLogs.map((x) => x.toJson())),
+        "TagLogs": List<dynamic>.from(tagLogs.map((x) => x.toJson())),
+        "UserLogs": List<dynamic>.from(userLogs.map((x) => x)),
+        "AiportLogs": List<dynamic>.from(aiportLogs.map((x) => x)),
+      };
 }
 
 class Log {
@@ -48,7 +49,7 @@ class Log {
   final String flightNumber;
   final String? paxName;
   final String? tagNumber;
-  final String position;
+  final String? position;
   final String? section;
   final int? exceptionId;
   final String description;
@@ -107,36 +108,36 @@ class Log {
       );
 
   factory Log.fromJson(Map<String, dynamic> json) => Log(
-    id: json["ID"],
-    actionType: json["ActionType"],
-    userName: json["UserName"],
-    airport: json["Airport"],
-    flightNumber: json["FlightNumber"],
-    paxName: json["PaxName"],
-    tagNumber: json["TagNumber"],
-    position: json["Position"],
-    section: json["Section"],
-    exceptionId: json["ExceptionID"],
-    description: json["Description"],
-    dateUtc: DateTime.parse(json["DateUTC"]),
-    timeUtc: json["TimeUTC"],
-    flightScheduleId: json["FlightScheduleID"],
-  );
+        id: json["ID"],
+        actionType: json["ActionType"],
+        userName: json["UserName"],
+        airport: json["Airport"],
+        flightNumber: json["FlightNumber"],
+        paxName: json["PaxName"],
+        tagNumber: json["TagNumber"],
+        position: json["Position"],
+        section: json["Section"],
+        exceptionId: json["ExceptionID"],
+        description: json["Description"] ?? "",
+        dateUtc: DateTime.tryParse(json["DateUTC"]) ?? DateTime.now(),
+        timeUtc: json["TimeUTC"] ?? "",
+        flightScheduleId: json["FlightScheduleID"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "ID": id,
-    "ActionType": actionType,
-    "UserName": userName,
-    "Airport": airport,
-    "FlightNumber": flightNumber,
-    "PaxName": paxName,
-    "TagNumber": tagNumber,
-    "Position": position,
-    "Section": section,
-    "ExceptionID": exceptionId,
-    "Description": description,
-    "DateUTC": "${dateUtc.year.toString().padLeft(4, '0')}-${dateUtc.month.toString().padLeft(2, '0')}-${dateUtc.day.toString().padLeft(2, '0')}",
-    "TimeUTC": timeUtc,
-    "FlightScheduleID": flightScheduleId,
-  };
+        "ID": id,
+        "ActionType": actionType,
+        "UserName": userName,
+        "Airport": airport,
+        "FlightNumber": flightNumber,
+        "PaxName": paxName,
+        "TagNumber": tagNumber,
+        "Position": position,
+        "Section": section,
+        "ExceptionID": exceptionId,
+        "Description": description,
+        "DateUTC": "${dateUtc.year.toString().padLeft(4, '0')}-${dateUtc.month.toString().padLeft(2, '0')}-${dateUtc.day.toString().padLeft(2, '0')}",
+        "TimeUTC": timeUtc,
+        "FlightScheduleID": flightScheduleId,
+      };
 }

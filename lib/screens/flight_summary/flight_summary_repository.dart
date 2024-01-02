@@ -37,6 +37,7 @@ class FlightSummaryRepository implements FlightSummaryRepositoryInterface {
     try {
       FlightGetHistoryLogResponse flightGetHistoryLogResponse;
       if (await networkInfo.isConnected) {
+
         flightGetHistoryLogResponse = await flightSummaryRemoteDataSource.flightGetHistoryLog(request: request);
       } else {
         flightGetHistoryLogResponse = await flightSummaryLocalDataSource.flightGetHistoryLog(request: request);

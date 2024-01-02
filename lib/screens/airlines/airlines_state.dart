@@ -23,7 +23,7 @@ final filteredAirlineListProvider = Provider<List<String>>((ref) {
   final searchFilter = ref.watch(airlineSearchProvider);
   return airlines
       .where(
-        (f) => f.contains(searchFilter),
+        (f) =>  searchFilter.trim().isEmpty || f.toLowerCase().contains(searchFilter.toLowerCase()),
       )
       .toList();
 });

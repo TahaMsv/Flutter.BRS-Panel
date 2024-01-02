@@ -37,19 +37,27 @@ class FlightSummaryController extends MainController {
 
   Future<void> flightShowHistoryLogs() async {
     Flight? flight = ref.read(selectedFlightProvider);
+    print("Here40");
     if (flight == null) return;
+    print("Here41");
     HistoryLog? log = await flightGetHistoryLog(flight);
+    print("Here43");
     if (log == null) return;
+    print("Here44");
     nav.dialog(FlightHistoryLogDialog(logs: log));
   }
 
   Future<HistoryLog?> flightGetHistoryLog(Flight flight) async {
     HistoryLog? log;
-    FlightGetHistoryLogUseCase flightGetHistoryLogUsecase = FlightGetHistoryLogUseCase();
-    FlightGetHistoryLogRequest flightGetHistoryLogRequest = FlightGetHistoryLogRequest(airport: null, flightID: flight.id, tagID: null, userID: null);
-    final fOrR = await flightGetHistoryLogUsecase(request: flightGetHistoryLogRequest);
 
+    FlightGetHistoryLogUseCase flightGetHistoryLogUsecase = FlightGetHistoryLogUseCase();
+
+    FlightGetHistoryLogRequest flightGetHistoryLogRequest = FlightGetHistoryLogRequest(airport: null, flightID: flight.id, tagID: null, userID: null);
+    print("here56");
+    final fOrR = await flightGetHistoryLogUsecase(request: flightGetHistoryLogRequest);
+    print("here55");
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightGetHistoryLog(flight)), (r) {
+      print("here57");
       log = r.logs;
     });
     return log;
