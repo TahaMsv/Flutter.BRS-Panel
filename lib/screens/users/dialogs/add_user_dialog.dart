@@ -87,26 +87,25 @@ class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
                     children: [
                       Expanded(
                         flex: 2,
-                        child: MyDropDown<HandlingAccess>(
-                          width: 250,
-                          label: "Handling",
-                          items: handlingList,
-                          value: selectedHandling,
-                          itemToString: (ha) => ha.name,
-                          canClear: true,
-                          showType2: true,
-                          onSelect: (HandlingAccess? ha) => setState(() => selectedHandling = ha),
-                        ),
+                        child: handlingList.isEmpty
+                            ? SizedBox()
+                            : MyDropDown<HandlingAccess>(
+                                width: 250,
+                                label: "Handling",
+                                items: handlingList,
+                                value: selectedHandling,
+                                itemToString: (ha) => ha.name,
+                                canClear: true,
+                                showType2: true,
+                                onSelect: (HandlingAccess? ha) => setState(() => selectedHandling = ha),
+                              ),
                       ),
                       const SizedBox(width: 24),
                       Expanded(
                         flex: 2,
                         child: MySegment<UserAccessType>(
                           height: 48,
-                          items: UserAccessType.values
-                              .where((element) =>
-                                  element != UserAccessType.admin || BasicClass.userInfo.userSettings.isAdmin)
-                              .toList(),
+                          items: UserAccessType.values.where((element) => element != UserAccessType.admin || BasicClass.userInfo.userSettings.isAdmin).toList(),
                           value: userType,
                           itemToString: (e) => e.label!,
                           onChange: (v) {
