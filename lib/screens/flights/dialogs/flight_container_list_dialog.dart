@@ -295,6 +295,7 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                         )),
                                         // columnWidthMode: ColumnWidthMode.fill
                                         width: width * 0.8 * 0.2 * e.width,
+
                                       ),
                                     )
                                     .toList())
@@ -355,6 +356,7 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                   columnName: e.name,
                                   label: Center(child: Text(e.label.capitalizeFirst!, style: const TextStyle(fontSize: 12))),
                                   // columnWidthMode: ColumnWidthMode.fill
+                                  allowSorting: e.name.capitalizeFirst! != "Tagcount",
                                   width: width * 0.8 * 0.6 * e.width),
                             )
                             .toList()),
