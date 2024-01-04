@@ -332,10 +332,11 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                         headerGridLinesVisibility: GridLinesVisibility.both,
                         selectionMode: SelectionMode.none,
                         columnSizer: ColumnSizer(),
-                        sortingGestureType: SortingGestureType.doubleTap,
+                        sortingGestureType: SortingGestureType.tap,
                         gridLinesVisibility: GridLinesVisibility.vertical,
                         shrinkWrapColumns: true,
                         allowSorting: true,
+
                         headerRowHeight: 35,
                         source: AssignedContainerDataSource(
                           cons: assignedList.where((element) => element.flightID == widget.flight.id).toList(),
@@ -356,7 +357,7 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                   columnName: e.name,
                                   label: Center(child: Text(e.label.capitalizeFirst!, style: const TextStyle(fontSize: 12))),
                                   // columnWidthMode: ColumnWidthMode.fill
-                                  allowSorting: e.name.capitalizeFirst! != "Tagcount",
+                                  allowSorting: e.name.capitalizeFirst! != "Tagcount" && e.name.capitalizeFirst! != "Name" ,
                                   width: width * 0.8 * 0.6 * e.width),
                             )
                             .toList()),

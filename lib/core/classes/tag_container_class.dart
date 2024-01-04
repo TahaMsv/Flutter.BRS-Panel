@@ -478,7 +478,7 @@ class TagContainer {
   Spot? get getSpot {
     if (spotID == null) return null;
     List<Spot> combinedList = BasicClass.shootList.map((e) => e.spotList).toList().expand((e) => e).toList();
-    return combinedList.firstWhere((element) => element.id == spotID);
+    return combinedList.firstWhereOrNull((element) => element.id == spotID);
   }
 
   Widget get getSpotWidget {
