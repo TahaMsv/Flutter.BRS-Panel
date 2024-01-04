@@ -138,17 +138,19 @@ class BsmDataSource extends DataGridSource {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: bsm.getTags.where((element) => element.isNotEmpty)
-                    .map((e) => BarcodeWidget(
-                      height: 50,
-                      width: 150,
-                      margin: EdgeInsets.only(bottom: 36,top: 12),
-                      barcode: Barcode.itf(),
-                      data: e,
-                    ))
-                    .toList(),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: bsm.getTags.where((element) => element.isNotEmpty)
+                      .map((e) => BarcodeWidget(
+                        height: 50,
+                        width: 150,
+                        margin: EdgeInsets.only(bottom: 36,top: 12),
+                        barcode: Barcode.itf(),
+                        data: e,
+                      ))
+                      .toList(),
+                ),
               ),
             );
           }
