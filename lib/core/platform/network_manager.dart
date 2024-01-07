@@ -19,7 +19,7 @@ class NetworkManager implements NetworkManagerInterface {
     // print("api: ${api}");
     // debugPrint(networkRequest.options.baseUrl);
     NetworkResponse networkResponse = await networkRequest.post();
-    // print("responseBody: ${jsonEncode(networkResponse.responseBody)}");
+    print("responseBody: ${jsonEncode(networkResponse.responseBody)}");
     // print("responseStatus: ${networkResponse.responseStatus}");
     if (networkResponse.responseStatus) {
       try {

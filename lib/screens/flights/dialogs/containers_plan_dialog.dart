@@ -36,14 +36,18 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
   Spot? spot;
   AirportPositionSection? airportPositionSection;
 
+  List<PlanDatum> planItem2Lists = [];
+
   @override
   void initState() {
+    print("here43");
     print(widget.plan.toJson());
+    print("here43");
     plan = ContainersPlan.fromJson(widget.plan.toJson());
     print("Plan sectionID ${plan.sectionID}  Plan spot ${plan.spotID}");
     airportPositionSection = BasicClass.getAirportSectionByID(plan.sectionID);
     spot = (BasicClass.shootList.firstWhereOrNull((element) => element.id == plan.sectionID)?.spotList ?? []).firstWhereOrNull((e) => e.id == plan.spotID);
-
+    planItem2Lists = [];
     print(airportPositionSection?.id);
     print(spot?.id);
     super.initState();
@@ -89,131 +93,105 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                   ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
               children: [
                 Expanded(
                   flex: 3,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(padding: const EdgeInsets.all(8), child: FlightBanner(flight: widget.flight)),
-                      const Divider(),
-                      Row(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxHeight: 500),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Expanded(
-                            flex: 3,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [Text("Tag Type", style: headerStyles)],
-                            ),
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [Image.asset(AssetImages.cart, width: 100, height: 50), Text("(${plan.cartCap})", style: headerStyles)],
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 24),
-                          Expanded(
-                            flex: 3,
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(AssetImages.uld, width: 100, height: 50),
-                                    Text("(${plan.uldCap})", style: headerStyles),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 24),
-                          const Expanded(flex: 2, child: Center(child: Text("# Bags", style: headerStyles))),
-                          const SizedBox(width: 24),
-                        ],
-                      ),
-                      ...plan.planData.map((e) {
-                        int index = plan.planData.indexOf(e);
-                        TagType type = BasicClass.getTagTypeByID(e.tagTypeId)!;
-                        if (type.label.isEmpty) return const SizedBox();
-                        return Container(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
+                          Padding(padding: const EdgeInsets.all(8), child: FlightBanner(flight: widget.flight)),
+                          const Divider(),
+                          Row(
                             children: [
-                              Expanded(
-                                  flex: 3,
-                                  child: Row(
-                                    children: [
-                                      DotButton(
-                                        icon: Icons.picture_as_pdf,
-                                        color: Colors.red,
-                                        onPressed: (e.uldCount == 0 && e.cartCount == 0) ? null : () async => await getIt<FlightsController>().flightGetPlanFile(flight: widget.flight, type: type),
-                                      ),
-                                      const SizedBox(width: 24),
-                                      Expanded(
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                                          decoration: BoxDecoration(color: type.getColor, borderRadius: BorderRadius.circular(5)),
-                                          child: Text(
-                                            type.label,
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                              color: type.getTextColor,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 24),
-                                    ],
-                                  )),
+                              const Expanded(
+                                flex: 3,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [Text("Tag Type", style: headerStyles)],
+                                ),
+                              ),
                               Expanded(
                                 flex: 3,
-                                child: PlanInputWidget(
-                                    value: e.cartCount,
-                                    onChange: (v) {
-                                      e = e.copyWith(cartCount: v);
-                                      var newPD = plan.planData;
-                                      newPD.replaceRange(index, index + 1, [e]);
-                                      plan = plan.copyWith(planData: newPD);
-                                      setState(() {});
-                                    }),
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [Image.asset(AssetImages.cart, width: 100, height: 50), Text("(${plan.cartCap})", style: headerStyles)],
+                                    ),
+                                  ),
+                                ),
                               ),
                               const SizedBox(width: 24),
                               Expanded(
                                 flex: 3,
-                                child: PlanInputWidget(
-                                    value: e.uldCount,
-                                    onChange: (v) {
-                                      e = e.copyWith(uldCount: v);
-                                      var newPD = plan.planData;
-                                      newPD.replaceRange(index, index + 1, [e]);
-                                      plan = plan.copyWith(planData: newPD);
-                                      setState(() {});
-                                    }),
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Image.asset(AssetImages.uld, width: 100, height: 50),
+                                        Text("(${plan.uldCap})", style: headerStyles),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ),
                               const SizedBox(width: 24),
+                              const Expanded(flex: 2, child: Center(child: Text("# Bags", style: headerStyles))),
+                              const SizedBox(width: 24),
+                            ],
+                          ),
+                          ...plan.planData.map((e) {
+                            int index = plan.planData.indexOf(e);
+                            TagType type = BasicClass.getTagTypeByID(e.tagTypeId.first)!; //todo
+                            if (type.label.isEmpty) return const SizedBox();
+                            return PlanItem(
+                              e: e,
+                              type: type,
+                              flight: widget.flight,
+                              plan: plan,
+                              index: index,
+                              headerStyles: headerStyles,
+                            );
+                          }).toList(),
+                          ...planItem2Lists.map((e) {
+                            return PlanItem2(
+                              headerStyles: headerStyles,
+                              plan: plan,
+                            );
+                          }).toList(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Expanded(flex: 9, child: SizedBox()),
                               Expanded(
                                 flex: 2,
                                 child: Center(
-                                  child: Text("${(e.uldCount * plan.uldCap) + (e.cartCount * plan.cartCap)}", style: headerStyles),
+                                  child: MyButton(
+                                    label: "Add",
+                                    // disabled: state.validateAddFlight,
+                                    width: 70,
+                                    height: 30,
+                                    onPressed: () {
+                                      setState(() {
+                                        planItem2Lists.add(PlanDatum.empty());
+                                      });
+                                    },
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 24),
                             ],
                           ),
-                        );
-                      }).toList()
-                    ],
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
                 Expanded(
@@ -290,7 +268,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                                   ),
                                   ...plan.lastFlightPlanData.map((e) {
                                     // int index = plan.lastFlightPlanData.indexOf(e);
-                                    TagType type = BasicClass.getTagTypeByID(e.tagTypeId)!;
+                                    TagType type = BasicClass.getTagTypeByID(e.tagTypeId.first)!; //todo
                                     if (type.label.isEmpty) return const SizedBox();
                                     return Container(
                                       padding: const EdgeInsets.all(8.0),
@@ -429,6 +407,227 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
             )
           ],
         ),
+      ),
+    );
+  }
+}
+
+class PlanItem extends StatefulWidget {
+  const PlanItem({Key? key, required this.e, required this.type, required this.flight, required this.plan, required this.index, required this.headerStyles}) : super(key: key);
+
+  final PlanDatum e;
+  final TagType type;
+  final Flight flight;
+  final ContainersPlan plan;
+  final int index;
+  final TextStyle headerStyles;
+
+  @override
+  State<PlanItem> createState() => _PlanItemState();
+}
+
+class _PlanItemState extends State<PlanItem> {
+  late PlanDatum e;
+  late TagType type;
+  late ContainersPlan plan;
+  late int index;
+
+  @override
+  void initState() {
+    e = widget.e;
+    type = widget.type;
+    plan = widget.plan;
+    index = widget.index;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+              flex: 3,
+              child: Row(
+                children: [
+                  DotButton(
+                    icon: Icons.picture_as_pdf,
+                    color: Colors.red,
+                    onPressed: (e.uldCount == 0 && e.cartCount == 0) ? null : () async => await getIt<FlightsController>().flightGetPlanFile(flight: widget.flight, type: type),
+                  ),
+                  const SizedBox(width: 24),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                      decoration: BoxDecoration(color: type.getColor, borderRadius: BorderRadius.circular(5)),
+                      child: Text(
+                        type.label,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: type.getTextColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 24),
+                ],
+              )),
+          Expanded(
+            flex: 3,
+            child: PlanInputWidget(
+                value: e.cartCount,
+                onChange: (v) {
+                  e = e.copyWith(cartCount: v);
+                  var newPD = plan.planData;
+                  newPD.replaceRange(index, index + 1, [e]);
+                  plan = plan.copyWith(planData: newPD);
+                  setState(() {});
+                }),
+          ),
+          const SizedBox(width: 24),
+          Expanded(
+            flex: 3,
+            child: PlanInputWidget(
+                value: e.uldCount,
+                onChange: (v) {
+                  e = e.copyWith(uldCount: v);
+                  var newPD = plan.planData;
+                  newPD.replaceRange(index, index + 1, [e]);
+                  plan = plan.copyWith(planData: newPD);
+                  setState(() {});
+                }),
+          ),
+          const SizedBox(width: 24),
+          Expanded(
+            flex: 2,
+            child: Center(
+              child: Text("${(e.uldCount * plan.uldCap) + (e.cartCount * plan.cartCap)}", style: widget.headerStyles),
+            ),
+          ),
+          const SizedBox(width: 24),
+        ],
+      ),
+    );
+  }
+}
+
+class PlanItem2 extends StatefulWidget {
+  const PlanItem2({Key? key, required this.headerStyles, required this.plan}) : super(key: key);
+
+  final TextStyle headerStyles;
+  final ContainersPlan plan;
+
+  @override
+  State<PlanItem2> createState() => _PlanItem2State();
+}
+
+class _PlanItem2State extends State<PlanItem2> {
+  @override
+  void initState() {
+    plan = widget.plan;
+    super.initState();
+  }
+
+  late ContainersPlan plan;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+              flex: 3,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  DotButton(icon: Icons.picture_as_pdf, color: Colors.red, onPressed: null),
+                  const SizedBox(width: 24),
+                  Expanded(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(maxHeight: 60),
+                      child: Container(
+                          // height: 40,
+                          // width: 100,
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+                          child: GridView.builder(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3, // Change this value to 4 if needed
+                              crossAxisSpacing: 5,
+                              mainAxisSpacing: 2,
+                            ),
+                            itemCount: plan.planData.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              TagType type = BasicClass.getTagTypeByID(plan.planData[index].tagTypeId.first)!;
+                              if (type.label.isEmpty) return const SizedBox();
+                              return Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: type.getColor,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Text(
+                                  type.label,
+                                  style: TextStyle(
+                                    fontSize: 8,
+                                    fontWeight: FontWeight.bold,
+                                    color: type.getTextColor,
+                                  ),
+                                ),
+                              );
+                            },
+                          )
+
+                          // Row(
+                          //   children: [
+                          //     ...plan.planData.map((e) {
+                          //       TagType type = BasicClass.getTagTypeByID(e.tagTypeId.first)!;
+                          //       return  Container(
+                          //         alignment: Alignment.center,
+                          //         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                          //         decoration: BoxDecoration(color: type.getColor, borderRadius: BorderRadius.circular(5)),
+                          //         child: Text(
+                          //           type.label,
+                          //           style: TextStyle(
+                          //             fontSize: 12,
+                          //             fontWeight: FontWeight.bold,
+                          //             color: type.getTextColor,
+                          //           ),
+                          //         ),
+                          //       );
+                          //     }).toList()
+                          //   ],
+                          // ),
+                          ),
+                    ),
+                  ),
+                  const SizedBox(width: 24),
+                ],
+              )),
+          Expanded(
+            flex: 3,
+            child: PlanInputWidget(value: 0, onChange: (v) {}),
+          ),
+          const SizedBox(width: 24),
+          Expanded(
+            flex: 3,
+            child: PlanInputWidget(value: 0, onChange: (v) {}),
+          ),
+          const SizedBox(width: 24),
+          Expanded(
+            flex: 2,
+            child: Center(
+              child: Text("0", style: widget.headerStyles),
+            ),
+          ),
+          const SizedBox(width: 24),
+        ],
       ),
     );
   }

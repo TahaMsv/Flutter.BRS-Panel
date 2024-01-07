@@ -72,7 +72,7 @@ class ContainersPlan {
 }
 
 class PlanDatum {
-  final int tagTypeId;
+  final List<int> tagTypeId;
   final int cartCount;
   final int uldCount;
 
@@ -83,7 +83,7 @@ class PlanDatum {
   });
 
   PlanDatum copyWith({
-    int? tagTypeId,
+    List<int>? tagTypeId,   //todo
     int? cartCount,
     int? uldCount,
   }) =>
@@ -94,16 +94,20 @@ class PlanDatum {
       );
 
   factory PlanDatum.fromJson(Map<String, dynamic> json) => PlanDatum(
-        tagTypeId: json["TagTypeID"],
+        tagTypeId:  List<int>.from([json["TagTypeID"]].map((x) => x)),   //todo
         cartCount: json["CartCount"],
         uldCount: json["ULDCount"],
       );
 
   Map<String, dynamic> toJson() => {
-        "TagTypeID": tagTypeId,
+        "TagTypeID": tagTypeId.first,  //todo
         "CartCount": cartCount,
         "ULDCount": uldCount,
       };
+
+  factory PlanDatum.empty() {
+    return PlanDatum(tagTypeId: [], cartCount: 0,uldCount: 0);
+  }
 }
 
 class LastFligt {

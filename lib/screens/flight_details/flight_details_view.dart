@@ -333,7 +333,18 @@ class ContainerTileWidget extends StatelessWidget {
                 children: [
                   Stack(
                     alignment: Alignment.center,
-                    children: [Container(width: 45, height: 1, color: binLines ? MyColors.binGrey : Colors.transparent), con.getImg],
+                    children: [
+                      Container(width: 45, height: 1, color: binLines ? MyColors.binGrey : Colors.transparent),
+                      con.getImg,
+                      if (con.isClosed)
+                        Container(
+                          decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3), borderRadius: BorderRadius.circular(3)),
+                          width: 46,
+                          height: 46,
+                          alignment: Alignment.bottomCenter,
+                          child: const Text("Closed!", style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold)),
+                        )
+                    ],
                   ),
                   const Icon(Icons.circle, color: MyColors.binGrey, size: 8),
                   const SizedBox(width: 8),
