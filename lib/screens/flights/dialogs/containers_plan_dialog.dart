@@ -97,7 +97,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                 Expanded(
                   flex: 3,
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(maxHeight: 500),
+                    constraints: const BoxConstraints(maxHeight: 500),
                     child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -168,7 +168,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Expanded(flex: 9, child: SizedBox()),
+                              const Expanded(flex: 9, child: SizedBox()),
                               Expanded(
                                 flex: 2,
                                 child: Center(
@@ -525,10 +525,31 @@ class PlanItem2 extends StatefulWidget {
 }
 
 class _PlanItem2State extends State<PlanItem2> {
+  late List<PlanDatum> planData;
+  late List<bool> selected;
+  late bool isPDFEnable;
+  late int cartCount;
+  late int uldCount;
+
   @override
   void initState() {
+    planData = [];
+    isPDFEnable = false;
+    cartCount = uldCount = 0;
     plan = widget.plan;
+    planData = plan.planData.where((e) {
+      TagType type = BasicClass.getTagTypeByID(e.tagTypeId.first)!;
+      return type.label.isNotEmpty;
+    }).toList();
+    selected = List<bool>.filled(planData.length, false);
     super.initState();
+  }
+
+  void updateIsPDFEnable() {
+    setState(() {
+      isPDFEnable = (selected.where((element) => element == true).toList().length >= 2) && (cartCount > 0 || uldCount > 0);
+      print("isPDFEnable: ${isPDFEnable}");
+    });
   }
 
   late ContainersPlan plan;
@@ -544,67 +565,48 @@ class _PlanItem2State extends State<PlanItem2> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  DotButton(icon: Icons.picture_as_pdf, color: Colors.red, onPressed: null),
+                  DotButton(icon: Icons.picture_as_pdf, color: Colors.red, onPressed: isPDFEnable ? () {} : null),
                   const SizedBox(width: 24),
                   Expanded(
                     child: ConstrainedBox(
-                      constraints: BoxConstraints(maxHeight: 60),
+                      constraints: const BoxConstraints(maxHeight: 60),
                       child: Container(
-                          // height: 40,
-                          // width: 100,
                           alignment: Alignment.center,
                           padding: const EdgeInsets.symmetric(horizontal: 4),
                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
                           child: GridView.builder(
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3, // Change this value to 4 if needed
-                              crossAxisSpacing: 5,
-                              mainAxisSpacing: 2,
-                            ),
-                            itemCount: plan.planData.length,
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3, // Change this value to 4 if needed
+                                crossAxisSpacing: 5,
+                                mainAxisSpacing: 2),
+                            itemCount: planData.length,
                             itemBuilder: (BuildContext context, int index) {
-                              TagType type = BasicClass.getTagTypeByID(plan.planData[index].tagTypeId.first)!;
-                              if (type.label.isEmpty) return const SizedBox();
-                              return Container(
-                                alignment: Alignment.center,
-                                padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: type.getColor,
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Text(
-                                  type.label,
-                                  style: TextStyle(
-                                    fontSize: 8,
-                                    fontWeight: FontWeight.bold,
-                                    color: type.getTextColor,
+                              TagType type = BasicClass.getTagTypeByID(planData[index].tagTypeId.first)!;
+                              if (type.label.isEmpty) return null;
+                              return InkWell(
+                                onTap: () {
+                                  selected[index] = !selected[index];
+                                  updateIsPDFEnable();
+                                },
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: type.getColor.withOpacity(selected[index] ? 1 : 0.6),
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Text(
+                                    type.label,
+                                    style: TextStyle(
+                                      fontSize: 8,
+                                      fontWeight: FontWeight.bold,
+                                      color: type.getTextColor.withOpacity(selected[index] ? 1 : 0.6),
+                                    ),
                                   ),
                                 ),
                               );
                             },
-                          )
-
-                          // Row(
-                          //   children: [
-                          //     ...plan.planData.map((e) {
-                          //       TagType type = BasicClass.getTagTypeByID(e.tagTypeId.first)!;
-                          //       return  Container(
-                          //         alignment: Alignment.center,
-                          //         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                          //         decoration: BoxDecoration(color: type.getColor, borderRadius: BorderRadius.circular(5)),
-                          //         child: Text(
-                          //           type.label,
-                          //           style: TextStyle(
-                          //             fontSize: 12,
-                          //             fontWeight: FontWeight.bold,
-                          //             color: type.getTextColor,
-                          //           ),
-                          //         ),
-                          //       );
-                          //     }).toList()
-                          //   ],
-                          // ),
-                          ),
+                          )),
                     ),
                   ),
                   const SizedBox(width: 24),
@@ -612,18 +614,32 @@ class _PlanItem2State extends State<PlanItem2> {
               )),
           Expanded(
             flex: 3,
-            child: PlanInputWidget(value: 0, onChange: (v) {}),
+            child: PlanInputWidget(
+                value: cartCount,
+                onChange: (v) {
+                  setState(() {
+                    cartCount = v;
+                    updateIsPDFEnable();
+                  });
+                }),
           ),
           const SizedBox(width: 24),
           Expanded(
             flex: 3,
-            child: PlanInputWidget(value: 0, onChange: (v) {}),
+            child: PlanInputWidget(
+                value: uldCount,
+                onChange: (v) {
+                  setState(() {
+                    uldCount = v;
+                    updateIsPDFEnable();
+                  });
+                }),
           ),
           const SizedBox(width: 24),
           Expanded(
             flex: 2,
             child: Center(
-              child: Text("0", style: widget.headerStyles),
+              child: Text("${(uldCount * plan.uldCap) + (cartCount * plan.cartCap)}", style: widget.headerStyles),
             ),
           ),
           const SizedBox(width: 24),
