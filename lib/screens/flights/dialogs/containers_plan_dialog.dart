@@ -40,9 +40,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
 
   @override
   void initState() {
-    print("here43");
     print(widget.plan.toJson());
-    print("here43");
     plan = ContainersPlan.fromJson(widget.plan.toJson());
     print("Plan sectionID ${plan.sectionID}  Plan spot ${plan.spotID}");
     airportPositionSection = BasicClass.getAirportSectionByID(plan.sectionID);

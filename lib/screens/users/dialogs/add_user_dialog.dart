@@ -88,7 +88,7 @@ class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
                       Expanded(
                         flex: 2,
                         child: handlingList.isEmpty
-                            ? SizedBox()
+                            ? const SizedBox()
                             : MyDropDown<HandlingAccess>(
                                 width: 250,
                                 label: "Handling",

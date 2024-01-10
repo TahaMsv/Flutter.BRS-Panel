@@ -4,7 +4,6 @@ import '../../../core/abstracts/request_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/abstracts/usecase_abs.dart';
 import '../../../core/classes/history_log_class.dart';
-import '../../../core/classes/login_user_class.dart';
 import '../flight_summary_repository.dart';
 
 class FlightGetHistoryLogUseCase extends UseCase<FlightGetHistoryLogResponse,FlightGetHistoryLogRequest> {
@@ -12,10 +11,8 @@ class FlightGetHistoryLogUseCase extends UseCase<FlightGetHistoryLogResponse,Fli
 
   @override
   Future<Either<Failure, FlightGetHistoryLogResponse>> call({required FlightGetHistoryLogRequest request}) {
-
   if(request.validate()!=null) return Future(() =>Left(request.validate()!));
     FlightSummaryRepository repository = FlightSummaryRepository();
-
     return repository.flightGetHistoryLog(request);
   }
 

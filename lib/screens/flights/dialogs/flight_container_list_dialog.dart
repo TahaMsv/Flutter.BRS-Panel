@@ -295,7 +295,6 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                         )),
                                         // columnWidthMode: ColumnWidthMode.fill
                                         width: width * 0.8 * 0.2 * e.width,
-
                                       ),
                                     )
                                     .toList())
@@ -336,7 +335,6 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                         gridLinesVisibility: GridLinesVisibility.vertical,
                         shrinkWrapColumns: true,
                         allowSorting: true,
-
                         headerRowHeight: 35,
                         source: AssignedContainerDataSource(
                           cons: assignedList.where((element) => element.flightID == widget.flight.id).toList(),
