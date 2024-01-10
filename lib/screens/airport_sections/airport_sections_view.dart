@@ -76,7 +76,7 @@ class SectionsWidget extends ConsumerWidget {
         itemBuilder: (c, i) => i == sections.length
             ? AddItemWidget(label: "Add Section", onTap: () => controller.addSection(subs: sections))
             : ItemBoxWidget(
-                label: sections[i].label,
+                label: "${sections[i].label} (${sections[i].id})",
                 isSelected: selectedCategories.contains(sections[i]),
                 onTap: () => controller.onTapSection(sections[i]),
                 onEdit: () => controller.onEditSection(sections[i]),

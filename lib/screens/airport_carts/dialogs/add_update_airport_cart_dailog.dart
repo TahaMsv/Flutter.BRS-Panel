@@ -28,7 +28,7 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateAirportCartDialog>
 
   @override
   void initState() {
-    if(widget.editingCart!=null){
+    if (widget.editingCart != null) {
       codeC.text = widget.editingCart!.code;
       barcodeC.text = widget.editingCart!.barcode;
     }
@@ -51,13 +51,9 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateAirportCartDialog>
           Row(
             children: [
               const SizedBox(width: 18),
-              Text(editMode ? 'Update Airport Dialog' : "Add Airport Dialog", style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
+              Text(editMode ? 'Update Cart Dialog' : "Add Cart Dialog", style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
               const Spacer(),
-              IconButton(
-                  onPressed: () {
-                    navigationService.popDialog();
-                  },
-                  icon: const Icon(Icons.close))
+              IconButton(onPressed: () => navigationService.popDialog(), icon: const Icon(Icons.close))
             ],
           ),
           const Divider(height: 1),
@@ -65,10 +61,7 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateAirportCartDialog>
             padding: const EdgeInsets.all(18),
             child: Column(
               children: [
-                MyTextField(
-                  controller: codeC,
-                  label: "Code",
-                )
+                MyTextField(controller: codeC, label: "Code"),
               ],
             ),
           ),
@@ -86,24 +79,24 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateAirportCartDialog>
                 MyButton(
                   onPressed: () async {
                     final al = myAirportCartsController.ref.read(selectedAirportProvider);
-                    if(!editMode) {
+                    if (!editMode) {
                       final added = await myAirportCartsController.airportAddCart(codeC.text);
                       if (added != null) {
-                        navigationService.popDialog(onPop: (){
+                        navigationService.popDialog(onPop: () {
                           SuccessHandler.handle(ServerSuccess(code: 1, msg: "Cart Added Successfully"));
                         });
                       }
-                    }else{
-                      final updated = TagContainer(id: widget.editingCart!.id, typeId: 1, code: codeC.text, title: '', positionID: 2, sectionID: 2, flightID: null,classTypeID: 1, ocrPrefix: [],);
+                    } else {
+                      final updated = TagContainer(id: widget.editingCart!.id, typeId: 1, code: codeC.text, title: '', positionID: 2, sectionID: 2, flightID: null, classTypeID: 1, ocrPrefix: []);
                       final up = await myAirportCartsController.airportUpdateCart(updated);
                       if (up != null) {
-                        navigationService.popDialog(onPop: (){
+                        navigationService.popDialog(onPop: () {
                           SuccessHandler.handle(ServerSuccess(code: 1, msg: "Cart ${widget.editingCart!.id} Updated Successfully"));
                         });
                       }
                     }
                   },
-                  label: editMode?"Save":"Add",
+                  label: editMode ? "Save" : "Add",
                   color: theme.primaryColor,
                 ),
               ],

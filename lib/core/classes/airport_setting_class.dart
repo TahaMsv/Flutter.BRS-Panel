@@ -31,7 +31,7 @@ class AirportSetting {
         timeZone: json["TimeZone"],
         timeZoneDifference: json["TimeZoneDifference"],
         defaultSetting: List<Setting>.from(json["DefaultSetting"].map((x) => Setting.fromJson(x))),
-        handlingsOverride: List<HandlingsOverride>.from(json["HandlingsOverride"].map((x) => HandlingsOverride.fromJson(x))),
+        handlingsOverride: List<HandlingsOverride>.from((json["HandlingsOverride"] ?? []).map((x) => HandlingsOverride.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -45,7 +45,7 @@ class AirportSetting {
 }
 
 class Setting {
-  int id;
+  int? id;
   String key;
   String type;
   dynamic value;
@@ -73,7 +73,7 @@ class Setting {
 }
 
 class HandlingsOverride {
-  int handlingId;
+  int? handlingId;
   List<Setting> setting;
   List<AirlineOverride> airlineOverride;
 
@@ -83,10 +83,12 @@ class HandlingsOverride {
     required this.airlineOverride,
   });
 
+  factory HandlingsOverride.empty() => HandlingsOverride(handlingId: null, setting: [], airlineOverride: []);
+
   factory HandlingsOverride.fromJson(Map<String, dynamic> json) => HandlingsOverride(
         handlingId: json["HandlingID"],
         setting: List<Setting>.from(json["Setting"].map((x) => Setting.fromJson(x))),
-        airlineOverride: List<AirlineOverride>.from(json["AirlineOverride"].map((x) => AirlineOverride.fromJson(x))),
+        airlineOverride: List<AirlineOverride>.from((json["AirlineOverride"] ?? []).map((x) => AirlineOverride.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {

@@ -77,16 +77,13 @@ class AirportDataSource extends DataGridSource {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              //todo bring back sections again!!!
-              // MyButton(
-              //   height: 30,
-              //   label: "Sections",
-              //   fade: true,
-              //   onPressed: () async {
-              //     await airportsController.goSections(a);
-              //   },
-              // ),
-              // const SizedBox(width: 12),
+              MyButton(
+                height: 30,
+                label: "Sections",
+                fade: true,
+                onPressed: () async => await airportsController.goSections(a),
+              ),
+              const SizedBox(width: 12),
               MyButton(
                 height: 30,
                 // fontSize: 12,
@@ -94,15 +91,15 @@ class AirportDataSource extends DataGridSource {
                 fade: true,
                 onPressed: () async => await airportsController.goCarts(a),
               ),
-              // const SizedBox(width: 12),
-              // MyButton(
-              //   onPressed: () async => await airportsController.goSetting(a),
-              //   label: 'Setting',
-              //   fade: true,
-              //   height: 30,
-              //   width: 35,
-              //   child: const Icon(Icons.settings, size: 20),
-              // ),
+              const SizedBox(width: 12),
+              MyButton(
+                onPressed: () async => await airportsController.goSetting(a),
+                label: 'Setting',
+                fade: true,
+                height: 30,
+                width: 35,
+                child: const Icon(Icons.settings, size: 20),
+              ),
               const SizedBox(width: 12),
               MyButton(
                 onPressed: () async => await airportsController.openAddUpdateAirportDialog(airport: a),

@@ -12,9 +12,9 @@ extension FlightDataTableColumnDetails on AvailableContainerDataTableColumn {
   double get width {
     switch (this) {
       case AvailableContainerDataTableColumn.name:
-        return 0.70;
+        return 0.80;
       case AvailableContainerDataTableColumn.actions:
-        return 0.33;
+        return 0.24;
       case AvailableContainerDataTableColumn.id:
         return 0.22;
     }

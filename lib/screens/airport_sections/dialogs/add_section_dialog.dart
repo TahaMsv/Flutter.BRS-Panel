@@ -39,6 +39,7 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateSectionDialog> {
   int? selectedOffset;
   List<Section> sections = [];
   List<TextEditingController> textCs = [TextEditingController()];
+  List<int?> textCIDs = [null];
   bool forceGroundToTrue = false;
 
   @override
@@ -56,6 +57,7 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateSectionDialog> {
       bin = widget.section!.canHaveBin;
       spotRequired = widget.section!.spotRequired;
       textCs = widget.section!.spots.map((e) => TextEditingController(text: e.label)).toList();
+      textCIDs = widget.section!.spots.map((e) => e.id).toList();
       sections = widget.section!.sections;
     }
     forceGroundToTrue = controller.checkForceGround(widget.section);
@@ -285,7 +287,17 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateSectionDialog> {
                               padding: const EdgeInsets.only(bottom: 8, right: 10),
                               child: Row(
                                 children: [
-                                  if (textCs.length > 1) DotButton(color: MyColors.red, onPressed: () => setState(() => textCs.remove(e)), icon: Icons.remove) else const SizedBox(width: 30),
+                                  if (textCs.length > 1)
+                                    DotButton(
+                                        color: MyColors.red,
+                                        onPressed: () {
+                                          textCIDs.removeAt(textCs.indexOf(e));
+                                          textCs.remove(e);
+                                          setState(() {});
+                                        },
+                                        icon: Icons.remove)
+                                  else
+                                    const SizedBox(width: 30),
                                   Container(height: 30, width: 250, margin: const EdgeInsets.only(left: 10), child: MyTextField(label: "Required Spot", controller: e, required: true)),
                                 ],
                               ),
@@ -298,7 +310,11 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateSectionDialog> {
                 Padding(
                     padding: const EdgeInsets.only(top: 15),
                     child: DotButton(
-                      onPressed: () => setState(() => textCs.add(TextEditingController())),
+                      onPressed: () {
+                        textCs.add(TextEditingController());
+                        textCIDs.add(null);
+                        setState(() {});
+                      },
                       icon: Icons.add,
                     )),
             ],
@@ -331,7 +347,7 @@ class _AddUpdateAirportCartDialogState extends State<AddUpdateSectionDialog> {
                       canHaveContainer: con,
                       canHaveBin: bin,
                       spotRequired: spotRequired,
-                      spots: textCs.map((e) => SectionSpot(id: null, label: e.text)).toList(),
+                      spots: textCs.map((e) => SectionSpot(id: textCIDs[textCs.indexOf(e)], label: e.text)).toList(),
                       sections: sections,
                     ));
                   },

@@ -7,6 +7,7 @@ import 'interfaces/airport_setting_repository_interface.dart';
 import 'data_sources/airport_setting_local_ds.dart';
 import 'data_sources/airport_setting_remote_ds.dart';
 import 'usecase/airport_get_setting_usecase.dart';
+import 'usecase/airport_update_setting_usecase.dart';
 
 class AirportSettingRepository implements AirportSettingRepositoryInterface {
   final AirportSettingRemoteDataSource airportSettingRemoteDataSource = AirportSettingRemoteDataSource();
@@ -23,6 +24,21 @@ class AirportSettingRepository implements AirportSettingRepositoryInterface {
         settingResponse = await airportSettingRemoteDataSource.airportGetSetting(request: request);
       } else {
         settingResponse = await airportSettingLocalDataSource.airportGetSetting(request: request);
+      }
+      return Right(settingResponse);
+    } on AppException catch (e) {
+      return Left(ServerFailure.fromAppException(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, AirportUpdateSettingResponse>> airportUpdateSetting(AirportUpdateSettingRequest request) async {
+    try {
+      AirportUpdateSettingResponse settingResponse;
+      if (await networkInfo.isConnected) {
+        settingResponse = await airportSettingRemoteDataSource.airportUpdateSetting(request: request);
+      } else {
+        settingResponse = await airportSettingLocalDataSource.airportUpdateSetting(request: request);
       }
       return Right(settingResponse);
     } on AppException catch (e) {

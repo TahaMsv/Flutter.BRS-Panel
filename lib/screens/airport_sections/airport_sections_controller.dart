@@ -191,7 +191,6 @@ class AirportSectionsController extends MainController {
     List<Shoot> shootList = [];
     for (Section s in sc0) {
       for (Section sub in s.subSections) {
-        print(sub.label);
         if (sub.spots.isNotEmpty) {
           print("found!!!");
           Shoot shoot = Shoot(

@@ -153,7 +153,7 @@ class Section {
       };
 
   List<Section> get subSections {
-    List<Section> hier = [];
+    List<Section> hier = [copyWith()];
     if (sections.isEmpty) return hier;
     for (var s in sections) {
       hier = hier + s.subSections.map((e) => e.copyWith()).toList();

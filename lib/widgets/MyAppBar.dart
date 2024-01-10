@@ -31,10 +31,12 @@ class _MyAppBarState extends State<MyAppBar> {
     return Consumer(
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
         final router = ref.watch(routerProvider);
-        RouteNames? currentRoute = RouteNames.values.firstWhereOrNull((element) => element.path == router.location);
+        List<RouteNames> routeNames = RouteNames.values.where((e) => BasicClass.userSetting.isAdmin || e != RouteNames.users).toList();
+        if (!BasicClass.userSetting.isAdmin) routeNames.removeWhere((element) => false);
+        RouteNames? currentRoute = routeNames.firstWhereOrNull((element) => element.path == router.location);
         bool isSubroute = currentRoute == null;
         // print(router.location);
-        currentRoute ??= RouteNames.values.lastWhere((element) => router.location.contains("/${element.path}"));
+        currentRoute ??= routeNames.lastWhere((element) => router.location.contains("/${element.path}"));
         return Container(
           decoration: const BoxDecoration(color: MyColors.white1, border: Border(bottom: BorderSide(color: MyColors.lineColor))),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
@@ -58,8 +60,8 @@ class _MyAppBarState extends State<MyAppBar> {
                           },
                         ),
                         const SizedBox(width: 8),
-                        ...RouteNames.values.where((element) => router.location.split("/").contains(element.name)).map((e) {
-                          bool isLast = [...RouteNames.values].where((element) => router.location.split("/").contains(element.name)).toList().last.path == e.path;
+                        ...routeNames.where((element) => router.location.split("/").contains(element.name)).map((e) {
+                          bool isLast = [...routeNames].where((element) => router.location.split("/").contains(element.name)).toList().last.path == e.path;
                           return Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -107,7 +109,7 @@ class _MyAppBarState extends State<MyAppBar> {
                       ],
                     ),
                     Row(
-                      children: RouteNames.values.where((element) => element.isMainRoute).map(
+                      children: routeNames.where((element) => element.isMainRoute).map(
                         (e) {
                           bool selected = currentRoute == e;
                           // if (e.name == RouteNames.users.name && !BasicClass.userSetting.isAdmin) return Container();

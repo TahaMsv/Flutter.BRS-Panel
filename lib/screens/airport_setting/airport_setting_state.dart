@@ -12,3 +12,5 @@ class AirportSettingState extends ChangeNotifier {
 
 // final selectedAirportProvider = StateProvider<Airport?>((ref) => null);
 final settingProvider = StateProvider<AirportSetting?>((ref) => null);
+
+final updateDataProvider = StateProvider<AirportSetting?>((ref) => null);

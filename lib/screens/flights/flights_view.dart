@@ -116,11 +116,12 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                       builder: (BuildContext context, WidgetRef ref, Widget? child) {
                         final a = ref.watch(flightAirportFilterProvider.notifier);
                         return SizedBox(
-                          height: 35,
+                          height: 30,
                           child: MyFieldPicker<Airport>(
                             itemToString: (a) => "${a.code} (${a.code})",
                             label: 'Airport',
                             items: BasicClass.systemSetting.airportList,
+                            hasSearch: true,
                             onChange: (v) async {
                               a.state = v;
                               // await SessionStorage().setString(SsKeys.flightAirportFilterP, jsonEncode(v?.toJson()));
@@ -138,11 +139,12 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                       builder: (BuildContext context, WidgetRef ref, Widget? child) {
                         final a = ref.watch(flightAirlineFilterProvider.notifier);
                         return SizedBox(
-                          height: 35,
+                          height: 30,
                           child: MyFieldPicker<String>(
                             itemToString: (a) => a,
                             label: 'Airline',
                             items: BasicClass.airlineList,
+                            hasSearch: true,
                             onChange: (v) async {
                               a.state = v;
                               // await SessionStorage().setString(SsKeys.flightAirlineFilterP, v ?? "");
