@@ -156,13 +156,16 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                               index: index,
                               headerStyles: headerStyles,
                             );
-                          }).toList(),
+                          }),
                           ...planItem2Lists.map((e) {
-                            return PlanItem2(
-                              headerStyles: headerStyles,
-                              plan: plan,
-                            );
-                          }).toList(),
+                            int index = planItem2Lists.indexOf(e);
+                            print(index);
+                            print(planItem2Lists);
+                            return PlanItem2(headerStyles: headerStyles, plan: plan, planDatum: e, removeFunction: () => setState(() {
+                              print(index);
+                              planItem2Lists.removeAt(index);
+                            }));
+                          }),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -170,16 +173,11 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                               Expanded(
                                 flex: 2,
                                 child: Center(
-                                  child: MyButton(
-                                    label: "Add",
-                                    // disabled: state.validateAddFlight,
-                                    width: 70,
-                                    height: 30,
-                                    onPressed: () {
-                                      setState(() {
-                                        planItem2Lists.add(PlanDatum.empty());
-                                      });
-                                    },
+                                  child: IconButton(
+                                    iconSize: 30,
+                                    color: MyColors.lightIshBlue,
+                                    icon: const Icon(Icons.add_circle),
+                                    onPressed: () => setState(() => planItem2Lists.add(PlanDatum.empty())),
                                   ),
                                 ),
                               ),
@@ -513,10 +511,12 @@ class _PlanItemState extends State<PlanItem> {
 }
 
 class PlanItem2 extends StatefulWidget {
-  const PlanItem2({Key? key, required this.headerStyles, required this.plan}) : super(key: key);
+  const PlanItem2({Key? key, required this.headerStyles, required this.plan, required this.planDatum, required this.removeFunction}) : super(key: key);
 
   final TextStyle headerStyles;
   final ContainersPlan plan;
+  final PlanDatum planDatum;
+  final void Function() removeFunction;
 
   @override
   State<PlanItem2> createState() => _PlanItem2State();
@@ -544,10 +544,8 @@ class _PlanItem2State extends State<PlanItem2> {
   }
 
   void updateIsPDFEnable() {
-    setState(() {
-      isPDFEnable = (selected.where((element) => element == true).toList().length >= 2) && (cartCount > 0 || uldCount > 0);
-      print("isPDFEnable: ${isPDFEnable}");
-    });
+    isPDFEnable = (selected.where((element) => element == true).toList().length >= 2) && (cartCount > 0 || uldCount > 0);
+    setState(() {});
   }
 
   late ContainersPlan plan;
@@ -636,8 +634,16 @@ class _PlanItem2State extends State<PlanItem2> {
           const SizedBox(width: 24),
           Expanded(
             flex: 2,
-            child: Center(
-              child: Text("${(uldCount * plan.uldCap) + (cartCount * plan.cartCap)}", style: widget.headerStyles),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(width: 22),
+                Text("${(uldCount * plan.uldCap) + (cartCount * plan.cartCap)}", style: widget.headerStyles),
+                InkWell(
+                  onTap: widget.removeFunction,
+                  child: const Icon(Icons.remove_circle, color: MyColors.red, size: 22),
+                ),
+              ],
             ),
           ),
           const SizedBox(width: 24),

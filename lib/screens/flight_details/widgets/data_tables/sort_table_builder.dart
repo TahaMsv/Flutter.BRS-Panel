@@ -25,8 +25,6 @@ class SortTableBuilder extends StatelessWidget {
           List<TagContainer> secCons = cons.where((c) => c.sectionID == sec.id).toList();
           List<FlightTag> secTags = tags.where((t) => t.getContainerID == null && t.sectionID == sec.id).toList();
           int tagCount = secTags.length + tags.where((t) => secCons.any((c) => t.getContainerID == c.id)).toList().length;
-          print(sec.label);
-          print(secTags);
           return MyExpansionTile2(
             title: SectionTileWidget(label: sec.label, tagCount: tagCount),
             showLeadingIcon: true,

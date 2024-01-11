@@ -83,7 +83,7 @@ class PlanDatum {
   });
 
   PlanDatum copyWith({
-    List<int>? tagTypeId,   //todo
+    List<int>? tagTypeId,
     int? cartCount,
     int? uldCount,
   }) =>
