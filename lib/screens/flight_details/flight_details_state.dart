@@ -3,6 +3,7 @@ import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/screens/flight_details/flight_details_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:pdf/pdf.dart';
 
 import '../../core/classes/flight_class.dart';
 import '../../core/classes/login_user_class.dart';
@@ -13,6 +14,7 @@ class FlightDetailsState extends ChangeNotifier {
   void setState() => notifyListeners();
 
   bool showClearButton = false;
+
   ///bool loading = false;
 }
 
@@ -26,6 +28,8 @@ final tagSearchProvider = StateProvider<String>((ref) => "");
 final selectedPosInDetails = StateProvider<Position?>((ref) => null);
 
 final selectedFlightProvider = StateProvider<Flight?>((ref) => null);
+final pdfFormat = StateProvider<PdfPageFormat>((ref) => PdfPageFormat.a4);
+final isPrintSettingEnable = StateProvider<bool>((ref) => false);
 // final detailsProvider =StateNotifierProvider<FlightDetailsNotifier, FlightDetails?>((ref) => FlightDetailsNotifier(ref));
 // final futureFlightDetailsNotifierProvider = FutureProvider((ref)async{
 //   final details = await getIt<FlightDetailsController>().flightGetDetails(100);

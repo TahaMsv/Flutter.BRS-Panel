@@ -87,7 +87,7 @@ class FlightDetailsController extends MainController {
     // final doc = pw.Document();
     // print(bytes);
     // await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => doc.save(),);
-    await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => bytes);
+    await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => bytes,format: ref.read(pdfFormat.notifier).state);
   }
 
   openPDFFile(Uint8List bytes, String name) async {

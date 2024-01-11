@@ -21,6 +21,13 @@ class AirlinesController extends MainController {
     if (ulds != null) {
       nav.pushNamed(RouteNames.airlineUlds);
     }
+
+  }
+
+
+
+  Future<void> retrieveAirlinesScreenFromLocalStorknklage() async {
+   List<String> a = ref.read(airlineListProvider.notifier).state;
   }
 
   Future<void> retrieveAirlinesScreenFromLocalStorage() async {
