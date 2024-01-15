@@ -208,19 +208,24 @@ class FlightsController extends MainController {
     return plan;
   }
 
-  Future<void> flightGetPlanFile({required Flight flight, required TagType type}) async {
+  Future<void> flightGetPlanFile({required Flight flight, required List<int> tagTypeIds}) async {
     void da;
     FlightGetPlanFileUseCase flightGetPlanFileUsecase = FlightGetPlanFileUseCase();
-    FlightGetPlanFileRequest flightGetPlanFileRequest = FlightGetPlanFileRequest(flightID: flight.id, typeID: type.id);
+    FlightGetPlanFileRequest flightGetPlanFileRequest = FlightGetPlanFileRequest(flightID: flight.id, typeIDs: tagTypeIds);
     final fOrR = await flightGetPlanFileUsecase(request: flightGetPlanFileRequest);
 
-    fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightGetPlanFile(flight: flight, type: type)), (r) {
+    fOrR.fold((f) => FailureHandler.handle(f, retry: () => flightGetPlanFile(flight: flight, tagTypeIds: tagTypeIds)), (r) {
       final bytes = base64Decode(r.data);
+      String s = "";
+      for (var t in tagTypeIds) {
+        TagType? type = BasicClass.getTagTypeByID(t);
+        s = "$s ${type?.label ?? ""}";
+      }
       nav.dialog(PDFPreviewDialog(
         pdfFileBytes: bytes,
         con: null,
         pdfURL: null,
-        name: "Plan ${type.label}",
+        name: "Plan $s}",
       ));
     });
     return da;

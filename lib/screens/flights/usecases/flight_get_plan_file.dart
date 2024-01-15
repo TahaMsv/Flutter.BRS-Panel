@@ -19,9 +19,9 @@ class FlightGetPlanFileUseCase extends UseCase<FlightGetPlanFileResponse,FlightG
 }
 
 class FlightGetPlanFileRequest extends Request {
-  final int typeID;
+  final List<int> typeIDs;
   final int flightID;
-  FlightGetPlanFileRequest({required this.flightID,required this.typeID});
+  FlightGetPlanFileRequest({required this.flightID,required this.typeIDs});
 
   @override
   Map<String, dynamic> toJson() =>{
@@ -30,7 +30,7 @@ class FlightGetPlanFileRequest extends Request {
       "Token":token,
       "Request": {
         "FlightScheduleID" : flightID ,
-        "TagTypeId": typeID
+        "TagTypeId": typeIDs.first
       }
     }
   };

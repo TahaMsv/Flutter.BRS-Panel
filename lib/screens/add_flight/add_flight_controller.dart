@@ -30,26 +30,14 @@ class AddFlightController extends MainController {
     AddFlightRequest addFlightRequest = addFlightState.createAddFlightRequest();
     final fOrR = await addFlightUsecase(request: addFlightRequest);
     fOrR.fold((f) => FailureHandler.handle(f, retry: () => addFlight()), (r) {
-      flight = r.flights.first;
-      final flightList = ref.read(flightListProvider.notifier);
-      if (ref.read(flightDateProvider).format_yyyyMMdd == flight!.flightDate.format_yyyyMMdd) {
-        flightList.addFlight(flight!);
-        nav.goBack(
-            result: r,
-            onPop: () {
-              SuccessHandler.handle(
-                  ServerSuccess(code: 1, msg: "Done\nFlight ${flight!.flightNumber} Added Successfully"));
-            });
-      } else {
-        nav.goBack(
-            result: r,
-            onPop: () {
-              SuccessHandler.handle(ServerSuccess(
-                  code: 1,
-                  msg:
-                      "Done\nFlight ${flight!.flightNumber} Added Successfully on ${flight!.flightDate.format_ddMMMEEE}"));
-            });
+      if (r.flights.isNotEmpty) {
+        flight = r.flights.first;
+        final flightList = ref.read(flightListProvider.notifier);
+        if (ref.read(flightDateProvider).format_yyyyMMdd == flight!.flightDate.format_yyyyMMdd) {
+          flightList.addFlight(flight!);
+        }
       }
+      nav.goBack(result: r, onPop: () => SuccessHandler.handle(ServerSuccess(code: 1, msg: "Done\nFlight Added Successfully")));
     });
     return flight;
   }
