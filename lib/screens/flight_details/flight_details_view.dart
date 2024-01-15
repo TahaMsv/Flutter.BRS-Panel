@@ -198,6 +198,12 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
     List<TagContainer> bulks = widget.posList.map((e) => TagContainer.bulk(e.id)).toList(); /*.where((e) => filteredTag.any((f) => f.containerID == e.id))*/
     cons = cons + bulks.where((b) => (b.positionID == selectedPos.id)).toList(); /* && element.items.isNotEmpty */
     List<Bin> bins = widget.details.binList.toList(); /*.where((e) => filteredTag.any((c) => c.binID == e.id))*/
+    print(selectedPos.id);
+    print(selectedPos.title);
+    print(selectedPos.binRequired);
+    print(selectedPos.containerRequired);
+    print(selectedPos.transferFlightRequired);
+
     return Column(
       children: [
         Expanded(
@@ -250,9 +256,9 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
                     ],
                   ),
                 ),
-                selectedPos.binRequired
+                selectedPos.id == 3 || selectedPos.id == 4
                     ? LoadTableBuilder(fd: widget.details, bins: bins, cons: cons, tags: filteredTag)
-                    : selectedPos.containerRequired
+                    : selectedPos.id == 2 || selectedPos.id == 5 || selectedPos.id == 6
                         ? SortTableBuilder(fd: widget.details, cons: cons, tags: filteredTag)
                         : CheckinTableBuilder(fd: widget.details, tags: filteredTag),
               ],
