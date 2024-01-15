@@ -36,7 +36,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
   Spot? spot;
   AirportPositionSection? airportPositionSection;
 
-  List<PlanDatum> planItem2Lists = [];
+  // late List<PlanDatum> addedPlanData = [];
 
   @override
   void initState() {
@@ -45,7 +45,6 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
     print("Plan sectionID ${plan.sectionID}  Plan spot ${plan.spotID}");
     airportPositionSection = BasicClass.getAirportSectionByID(plan.sectionID);
     spot = (BasicClass.shootList.firstWhereOrNull((element) => element.id == plan.sectionID)?.spotList ?? []).firstWhereOrNull((e) => e.id == plan.spotID);
-    planItem2Lists = [];
     print(airportPositionSection?.id);
     print(spot?.id);
     super.initState();
@@ -146,26 +145,51 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                           ),
                           ...plan.planData.map((e) {
                             int index = plan.planData.indexOf(e);
-                            TagType type = BasicClass.getTagTypeByID(e.tagTypeId.first)!; //todo
+                            TagType type = BasicClass.getTagTypeByID(e.tagTypeId.first ?? 5)!; //todo
                             if (type.label.isEmpty) return const SizedBox();
-                            return PlanItem(
+                            return
+                                // e.tagTypeId.length == 1
+                                //   ?
+                                PlanItem(
                               e: e,
                               type: type,
                               flight: widget.flight,
-                              plan: plan,
                               index: index,
                               headerStyles: headerStyles,
+                              removeFunction: () => setState(() {
+                                print("index: $index");
+                                plan.planData.removeAt(index);
+                              }),
+                              isAddedPlanD: e.tagTypeId.length > 1,
                             );
+                            // : PlanItem2(
+                            //     headerStyles: headerStyles,
+                            //     plan: plan,
+                            //     planDatum: e,
+                            //     removeFunction: () => setState(() {
+                            //           print("index: $index");
+                            //           plan.planData.removeAt(index);
+                            //         }));
                           }),
-                          ...planItem2Lists.map((e) {
-                            int index = planItem2Lists.indexOf(e);
-                            print(index);
-                            print(planItem2Lists);
-                            return PlanItem2(headerStyles: headerStyles, plan: plan, planDatum: e, removeFunction: () => setState(() {
-                              print(index);
-                              planItem2Lists.removeAt(index);
-                            }));
-                          }),
+
+                          // ...addedPlanData.map((e) {
+                          //   int index = addedPlanData.indexOf(e);
+                          //   TagType type = BasicClass.getTagTypeByID(e.tagTypeId.first ?? 5)!; //todo
+                          //   return PlanItem(
+                          //     e: e,
+                          //     type: type,
+                          //     flight: widget.flight,
+                          //     plan: plan,
+                          //     index: index,
+                          //     headerStyles: headerStyles,
+                          //     removeFunction: () {
+                          //       print("index: $index");
+                          //       addedPlanData.removeWhere((element) => element == e);
+                          //       setState(() {});
+                          //     },
+                          //     isAddedPlanD: true,
+                          //   );
+                          // }),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -177,7 +201,23 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                                     iconSize: 30,
                                     color: MyColors.lightIshBlue,
                                     icon: const Icon(Icons.add_circle),
-                                    onPressed: () => setState(() => planItem2Lists.add(PlanDatum.empty())),
+                                    // onPressed: () => setState(() => planItem2Lists.add(PlanDatum.empty())),
+                                    onPressed: () => setState(() {
+                                      List<int> allTagTypesId = [];
+                                      plan.planData.where((e) {
+                                        // print(e.toJson().toString());
+                                        TagType type = BasicClass.getTagTypeByID(e.tagTypeId.first)!;
+                                        if (type.label.isNotEmpty && e.tagTypeId.length == 1) {
+                                          // print("here");
+                                          // print(type.label);
+                                          allTagTypesId.add(e.tagTypeId.first);
+                                        }
+                                        return type.label.isNotEmpty;
+                                      }).toList();
+                                      // print(allTagTypesId);
+                                      PlanDatum pd = PlanDatum(tagTypeId: allTagTypesId, cartCount: 0, uldCount: 0);
+                                      plan.planData.add(pd);
+                                    }),
                                   ),
                                 ),
                               ),
@@ -409,14 +449,24 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
 }
 
 class PlanItem extends StatefulWidget {
-  const PlanItem({Key? key, required this.e, required this.type, required this.flight, required this.plan, required this.index, required this.headerStyles}) : super(key: key);
+  const PlanItem(
+      {Key? key,
+      required this.e,
+      required this.type,
+      required this.flight,
+      required this.index,
+      required this.headerStyles,
+      required this.removeFunction,
+      required this.isAddedPlanD})
+      : super(key: key);
 
   final PlanDatum e;
   final TagType type;
   final Flight flight;
-  final ContainersPlan plan;
   final int index;
+  final bool isAddedPlanD;
   final TextStyle headerStyles;
+  final void Function() removeFunction;
 
   @override
   State<PlanItem> createState() => _PlanItemState();
@@ -427,14 +477,28 @@ class _PlanItemState extends State<PlanItem> {
   late TagType type;
   late ContainersPlan plan;
   late int index;
+  late List<bool> selected;
+  late bool isPDFEnable;
+  late bool isAddedPlanD;
 
   @override
   void initState() {
     e = widget.e;
     type = widget.type;
-    plan = widget.plan;
     index = widget.index;
+    isAddedPlanD = widget.isAddedPlanD;
+    isPDFEnable = false;
+    selected = List<bool>.filled(e.tagTypeId.length, false);
     super.initState();
+  }
+
+  void updateIsPDFEnable() {
+    if (!isAddedPlanD) {
+      isPDFEnable = (e.uldCount > 0 || e.cartCount > 0);
+    } else {
+      isPDFEnable = (selected.where((element) => element == true).toList().length >= 2) && (e.cartCount > 0 || e.uldCount > 0);
+    }
+    setState(() {});
   }
 
   @override
@@ -450,23 +514,64 @@ class _PlanItemState extends State<PlanItem> {
                   DotButton(
                     icon: Icons.picture_as_pdf,
                     color: Colors.red,
-                    onPressed: (e.uldCount == 0 && e.cartCount == 0) ? null : () async => await getIt<FlightsController>().flightGetPlanFile(flight: widget.flight, type: type),
+                    onPressed: isPDFEnable ? () async => await getIt<FlightsController>().flightGetPlanFile(flight: widget.flight, type: type) : null,
                   ),
                   const SizedBox(width: 24),
                   Expanded(
-                    child: Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                      decoration: BoxDecoration(color: type.getColor, borderRadius: BorderRadius.circular(5)),
-                      child: Text(
-                        type.label,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: type.getTextColor,
-                        ),
-                      ),
-                    ),
+                    child: isAddedPlanD
+                        ? ConstrainedBox(
+                            constraints: const BoxConstraints(maxHeight: 60),
+                            child: Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.symmetric(horizontal: 4),
+                                decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+                                child: GridView.builder(
+                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3, // Change this value to 4 if needed
+                                      crossAxisSpacing: 5,
+                                      mainAxisSpacing: 2),
+                                  itemCount: e.tagTypeId.length,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    TagType type = BasicClass.getTagTypeByID(e.tagTypeId[index])!;
+                                    if (type.label.isEmpty) return null;
+                                    return InkWell(
+                                      onTap: () {
+                                        selected[index] = !selected[index];
+                                        updateIsPDFEnable();
+                                      },
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+                                        decoration: BoxDecoration(
+                                          color: type.getColor.withOpacity(selected[index] ? 1 : 0.6),
+                                          borderRadius: BorderRadius.circular(5),
+                                        ),
+                                        child: Text(
+                                          type.label,
+                                          style: TextStyle(
+                                            fontSize: 8,
+                                            fontWeight: FontWeight.bold,
+                                            color: type.getTextColor.withOpacity(selected[index] ? 1 : 0.6),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                )),
+                          )
+                        : Container(
+                            alignment: Alignment.center,
+                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                            decoration: BoxDecoration(color: type.getColor, borderRadius: BorderRadius.circular(5)),
+                            child: Text(
+                              type.label,
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: type.getTextColor,
+                              ),
+                            ),
+                          ),
                   ),
                   const SizedBox(width: 24),
                 ],
@@ -480,6 +585,7 @@ class _PlanItemState extends State<PlanItem> {
                   var newPD = plan.planData;
                   newPD.replaceRange(index, index + 1, [e]);
                   plan = plan.copyWith(planData: newPD);
+                  updateIsPDFEnable();
                   setState(() {});
                 }),
           ),
@@ -493,158 +599,30 @@ class _PlanItemState extends State<PlanItem> {
                   var newPD = plan.planData;
                   newPD.replaceRange(index, index + 1, [e]);
                   plan = plan.copyWith(planData: newPD);
+                  updateIsPDFEnable();
                   setState(() {});
                 }),
           ),
           const SizedBox(width: 24),
           Expanded(
             flex: 2,
-            child: Center(
-              child: Text("${(e.uldCount * plan.uldCap) + (e.cartCount * plan.cartCap)}", style: widget.headerStyles),
-            ),
-          ),
-          const SizedBox(width: 24),
-        ],
-      ),
-    );
-  }
-}
-
-class PlanItem2 extends StatefulWidget {
-  const PlanItem2({Key? key, required this.headerStyles, required this.plan, required this.planDatum, required this.removeFunction}) : super(key: key);
-
-  final TextStyle headerStyles;
-  final ContainersPlan plan;
-  final PlanDatum planDatum;
-  final void Function() removeFunction;
-
-  @override
-  State<PlanItem2> createState() => _PlanItem2State();
-}
-
-class _PlanItem2State extends State<PlanItem2> {
-  late List<PlanDatum> planData;
-  late List<bool> selected;
-  late bool isPDFEnable;
-  late int cartCount;
-  late int uldCount;
-
-  @override
-  void initState() {
-    planData = [];
-    isPDFEnable = false;
-    cartCount = uldCount = 0;
-    plan = widget.plan;
-    planData = plan.planData.where((e) {
-      TagType type = BasicClass.getTagTypeByID(e.tagTypeId.first)!;
-      return type.label.isNotEmpty;
-    }).toList();
-    selected = List<bool>.filled(planData.length, false);
-    super.initState();
-  }
-
-  void updateIsPDFEnable() {
-    isPDFEnable = (selected.where((element) => element == true).toList().length >= 2) && (cartCount > 0 || uldCount > 0);
-    setState(() {});
-  }
-
-  late ContainersPlan plan;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Expanded(
-              flex: 3,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  DotButton(icon: Icons.picture_as_pdf, color: Colors.red, onPressed: isPDFEnable ? () {} : null),
-                  const SizedBox(width: 24),
-                  Expanded(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxHeight: 60),
-                      child: Container(
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
-                          child: GridView.builder(
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3, // Change this value to 4 if needed
-                                crossAxisSpacing: 5,
-                                mainAxisSpacing: 2),
-                            itemCount: planData.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              TagType type = BasicClass.getTagTypeByID(planData[index].tagTypeId.first)!;
-                              if (type.label.isEmpty) return null;
-                              return InkWell(
-                                onTap: () {
-                                  selected[index] = !selected[index];
-                                  updateIsPDFEnable();
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: type.getColor.withOpacity(selected[index] ? 1 : 0.6),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Text(
-                                    type.label,
-                                    style: TextStyle(
-                                      fontSize: 8,
-                                      fontWeight: FontWeight.bold,
-                                      color: type.getTextColor.withOpacity(selected[index] ? 1 : 0.6),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          )),
-                    ),
+            child: isAddedPlanD
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const SizedBox(width: 22),
+                      Text("${(e.uldCount * plan.uldCap) + (e.cartCount * plan.cartCap)}", style: widget.headerStyles),
+                      InkWell(
+                        onTap: () {
+                          widget.removeFunction();
+                        },
+                        child: const Icon(Icons.remove_circle, color: MyColors.red, size: 22),
+                      ),
+                    ],
+                  )
+                : Center(
+                    child: Text("${(e.uldCount * plan.uldCap) + (e.cartCount * plan.cartCap)}", style: widget.headerStyles),
                   ),
-                  const SizedBox(width: 24),
-                ],
-              )),
-          Expanded(
-            flex: 3,
-            child: PlanInputWidget(
-                value: cartCount,
-                onChange: (v) {
-                  setState(() {
-                    cartCount = v;
-                    updateIsPDFEnable();
-                  });
-                }),
-          ),
-          const SizedBox(width: 24),
-          Expanded(
-            flex: 3,
-            child: PlanInputWidget(
-                value: uldCount,
-                onChange: (v) {
-                  setState(() {
-                    uldCount = v;
-                    updateIsPDFEnable();
-                  });
-                }),
-          ),
-          const SizedBox(width: 24),
-          Expanded(
-            flex: 2,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const SizedBox(width: 22),
-                Text("${(uldCount * plan.uldCap) + (cartCount * plan.cartCap)}", style: widget.headerStyles),
-                InkWell(
-                  onTap: widget.removeFunction,
-                  child: const Icon(Icons.remove_circle, color: MyColors.red, size: 22),
-                ),
-              ],
-            ),
           ),
           const SizedBox(width: 24),
         ],
@@ -652,6 +630,149 @@ class _PlanItem2State extends State<PlanItem2> {
     );
   }
 }
+
+// class PlanItem2 extends StatefulWidget {
+//   const PlanItem2({Key? key, required this.headerStyles, required this.plan, required this.planDatum, required this.removeFunction}) : super(key: key);
+//
+//   final TextStyle headerStyles;
+//   final ContainersPlan plan;
+//   final PlanDatum planDatum;
+//   final void Function() removeFunction;
+//
+//   @override
+//   State<PlanItem2> createState() => _PlanItem2State();
+// }
+//
+// class _PlanItem2State extends State<PlanItem2> {
+//   late ContainersPlan plan;
+//   late PlanDatum planData;
+//   late List<bool> selected;
+//   late bool isPDFEnable;
+//   late int cartCount;
+//   late int uldCount;
+//
+//   @override
+//   void initState() {
+//     // planData = [];
+//     isPDFEnable = false;
+//     cartCount = uldCount = 0;
+//     plan = widget.plan;
+//     planData = widget.planDatum;
+//     // planData = plan.planData.where((e) {
+//     //   TagType type = BasicClass.getTagTypeByID(e.tagTypeId.first)!;
+//     //   return type.label.isNotEmpty;
+//     // }).toList();
+//     selected = List<bool>.filled(planData.tagTypeId.length, false);
+//     super.initState();
+//   }
+//
+//   void updateIsPDFEnable() {
+//     isPDFEnable = (selected.where((element) => element == true).toList().length >= 2) && (cartCount > 0 || uldCount > 0);
+//     setState(() {});
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       padding: const EdgeInsets.all(8.0),
+//       child: Row(
+//         children: [
+//           Expanded(
+//               flex: 3,
+//               child: Row(
+//                 crossAxisAlignment: CrossAxisAlignment.center,
+//                 children: [
+//                   DotButton(icon: Icons.picture_as_pdf, color: Colors.red, onPressed: isPDFEnable ? () {} : null),
+//                   const SizedBox(width: 24),
+//                   Expanded(
+//                     child: ConstrainedBox(
+//                       constraints: const BoxConstraints(maxHeight: 60),
+//                       child: Container(
+//                           alignment: Alignment.center,
+//                           padding: const EdgeInsets.symmetric(horizontal: 4),
+//                           decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+//                           child: GridView.builder(
+//                             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+//                                 crossAxisCount: 3, // Change this value to 4 if needed
+//                                 crossAxisSpacing: 5,
+//                                 mainAxisSpacing: 2),
+//                             itemCount: planData.tagTypeId.length,
+//                             itemBuilder: (BuildContext context, int index) {
+//                               TagType type = BasicClass.getTagTypeByID(planData.tagTypeId[index])!;
+//                               if (type.label.isEmpty) return null;
+//                               return InkWell(
+//                                 onTap: () {
+//                                   selected[index] = !selected[index];
+//                                   updateIsPDFEnable();
+//                                 },
+//                                 child: Container(
+//                                   alignment: Alignment.center,
+//                                   padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+//                                   decoration: BoxDecoration(
+//                                     color: type.getColor.withOpacity(selected[index] ? 1 : 0.6),
+//                                     borderRadius: BorderRadius.circular(5),
+//                                   ),
+//                                   child: Text(
+//                                     type.label,
+//                                     style: TextStyle(
+//                                       fontSize: 8,
+//                                       fontWeight: FontWeight.bold,
+//                                       color: type.getTextColor.withOpacity(selected[index] ? 1 : 0.6),
+//                                     ),
+//                                   ),
+//                                 ),
+//                               );
+//                             },
+//                           )),
+//                     ),
+//                   ),
+//                   const SizedBox(width: 24),
+//                 ],
+//               )),
+//           Expanded(
+//             flex: 3,
+//             child: PlanInputWidget(
+//                 value: cartCount,
+//                 onChange: (v) {
+//                   setState(() {
+//                     cartCount = v;
+//                     updateIsPDFEnable();
+//                   });
+//                 }),
+//           ),
+//           const SizedBox(width: 24),
+//           Expanded(
+//             flex: 3,
+//             child: PlanInputWidget(
+//                 value: uldCount,
+//                 onChange: (v) {
+//                   setState(() {
+//                     uldCount = v;
+//                     updateIsPDFEnable();
+//                   });
+//                 }),
+//           ),
+//           const SizedBox(width: 24),
+//           Expanded(
+//             flex: 2,
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 const SizedBox(width: 22),
+//                 Text("${(uldCount * plan.uldCap) + (cartCount * plan.cartCap)}", style: widget.headerStyles),
+//                 InkWell(
+//                   onTap: widget.removeFunction,
+//                   child: const Icon(Icons.remove_circle, color: MyColors.red, size: 22),
+//                 ),
+//               ],
+//             ),
+//           ),
+//           const SizedBox(width: 24),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class PlanInputWidget extends StatefulWidget {
   final bool canEdit;
