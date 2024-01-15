@@ -151,9 +151,11 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                                 // e.tagTypeId.length == 1
                                 //   ?
                                 PlanItem(
+                              key: ObjectKey('$index:${plan.planData[index]}'),
                               e: e,
                               type: type,
                               flight: widget.flight,
+                              plan: plan,
                               index: index,
                               headerStyles: headerStyles,
                               removeFunction: () => setState(() {
@@ -454,6 +456,7 @@ class PlanItem extends StatefulWidget {
       required this.e,
       required this.type,
       required this.flight,
+      required this.plan,
       required this.index,
       required this.headerStyles,
       required this.removeFunction,
@@ -463,6 +466,7 @@ class PlanItem extends StatefulWidget {
   final PlanDatum e;
   final TagType type;
   final Flight flight;
+  final ContainersPlan plan;
   final int index;
   final bool isAddedPlanD;
   final TextStyle headerStyles;
@@ -485,6 +489,7 @@ class _PlanItemState extends State<PlanItem> {
   void initState() {
     e = widget.e;
     type = widget.type;
+    plan = widget.plan;
     index = widget.index;
     isAddedPlanD = widget.isAddedPlanD;
     isPDFEnable = false;
