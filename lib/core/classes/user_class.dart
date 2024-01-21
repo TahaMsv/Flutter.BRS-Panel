@@ -18,6 +18,7 @@ class User {
     required this.isAdmin,
     required this.handlingID,
     required this.isHandlingAdmin,
+    required this.isSavePassword,
     required this.password,
     required this.accessType,
   });
@@ -35,6 +36,7 @@ class User {
   final bool tagOnlyDigit;
   final bool isAdmin;
   final bool isHandlingAdmin;
+  final bool isSavePassword;
   final int? handlingID;
   final int? accessType;
 
@@ -52,6 +54,7 @@ class User {
     bool? tagOnlyDigit,
     bool? isAdmin,
     bool? isHandlingAdmin,
+    bool? isSavePassword,
     int? handlingID,
     int? accessType,
   }) =>
@@ -70,6 +73,7 @@ class User {
         tagOnlyDigit: tagOnlyDigit ?? this.tagOnlyDigit,
         isAdmin: isAdmin ?? this.isAdmin,
         isHandlingAdmin: isHandlingAdmin ?? this.isHandlingAdmin,
+        isSavePassword: isSavePassword ?? this.isSavePassword,
         handlingID: handlingID ?? this.handlingID,
       );
 
@@ -89,6 +93,7 @@ class User {
         handlingID: json["HandlingID"] ?? 0,
         accessType: json["AccessType"] ?? 1,
         isHandlingAdmin: json["IsHandlingAdmin"] ?? false,
+    isSavePassword: json["IsSavePassword"] ?? false,
       );
 
   factory User.empty() => const User(
@@ -105,6 +110,7 @@ class User {
       tagOnlyDigit: true,
       isAdmin: false,
       isHandlingAdmin: false,
+      isSavePassword: false,
       accessType: 1,
       handlingID: null);
 
@@ -124,6 +130,7 @@ class User {
         "HandlingID": handlingID,
         "AccessType": accessType,
         "IsHandlingAdmin": isHandlingAdmin,
+        "IsSavePassword": isSavePassword,
       };
 
   String? encryptPassword() {

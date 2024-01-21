@@ -94,19 +94,19 @@ class PlanDatum {
       );
 
   factory PlanDatum.fromJson(Map<String, dynamic> json) => PlanDatum(
-        tagTypeId:  List<int>.from([json["TagTypeID"]].map((x) => x)),   //todo
+        tagTypeId: List<int>.from(json["TagTypeID"].map((x) => x)),
         cartCount: json["CartCount"],
         uldCount: json["ULDCount"],
       );
 
   Map<String, dynamic> toJson() => {
-        "TagTypeID": tagTypeId.first,  //todo
+        "TagTypeID": tagTypeId,
         "CartCount": cartCount,
         "ULDCount": uldCount,
       };
 
   factory PlanDatum.empty() {
-    return PlanDatum(tagTypeId: [], cartCount: 0,uldCount: 0);
+    return PlanDatum(tagTypeId: [], cartCount: 0, uldCount: 0);
   }
 }
 
@@ -141,7 +141,6 @@ class LastFligt {
   Map<String, dynamic> toJson() => {
         "AL": al,
         "FLNB": flnb,
-        "FlightDate":
-            "${flightDate.year.toString().padLeft(4, '0')}-${flightDate.month.toString().padLeft(2, '0')}-${flightDate.day.toString().padLeft(2, '0')}",
+        "FlightDate": "${flightDate.year.toString().padLeft(4, '0')}-${flightDate.month.toString().padLeft(2, '0')}-${flightDate.day.toString().padLeft(2, '0')}",
       };
 }

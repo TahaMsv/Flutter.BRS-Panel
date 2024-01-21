@@ -198,12 +198,6 @@ class _DetailsWidgetState extends ConsumerState<DetailsWidget> with SingleTicker
     List<TagContainer> bulks = widget.posList.map((e) => TagContainer.bulk(e.id)).toList(); /*.where((e) => filteredTag.any((f) => f.containerID == e.id))*/
     cons = cons + bulks.where((b) => (b.positionID == selectedPos.id)).toList(); /* && element.items.isNotEmpty */
     List<Bin> bins = widget.details.binList.toList(); /*.where((e) => filteredTag.any((c) => c.binID == e.id))*/
-    print(selectedPos.id);
-    print(selectedPos.title);
-    print(selectedPos.binRequired);
-    print(selectedPos.containerRequired);
-    print(selectedPos.transferFlightRequired);
-
     return Column(
       children: [
         Expanded(

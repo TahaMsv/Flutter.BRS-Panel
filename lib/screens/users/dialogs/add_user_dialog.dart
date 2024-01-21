@@ -36,6 +36,7 @@ class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
   HandlingAccess? selectedHandling;
   bool showPass = false;
   bool changePass = false;
+  bool savePass = false;
 
   @override
   void initState() {
@@ -48,6 +49,7 @@ class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
       alC.text = widget.user!.al;
       nameC.text = widget.user!.name;
       usernameC.text = widget.user!.username;
+      savePass = widget.user!.isSavePassword;
       selectedHandling = BasicClass.getHandlingByID(widget.user!.handlingID);
     }
     super.initState();
@@ -220,15 +222,13 @@ class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
                     ? Row(
                         children: [
                           const Text("Change Password"),
-                          CupertinoSwitch(
-                              value: changePass,
-                              onChanged: (v) {
-                                changePass = v;
-                                setState(() {});
-                              }),
+                          CupertinoSwitch(value: changePass, onChanged: (v) => setState(() => changePass = v)),
                         ],
                       )
                     : const SizedBox(),
+                const SizedBox(width: 20),
+                const Text("Save Password"),
+                CupertinoSwitch(value: savePass, onChanged: (v) => setState(() => savePass = v)),
                 const Spacer(),
                 MyButton(label: "Cancel", onPressed: nav.pop, color: MyColors.brownGrey5),
                 const SizedBox(width: 20),
@@ -250,6 +250,7 @@ class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
                       isAdmin: false,
                       handlingID: selectedHandling?.id,
                       isHandlingAdmin: false,
+                      isSavePassword: savePass,
                       accessType: userType.id,
                       password: passwordC.text.isEmpty ? null : passwordC.text,
                     );
