@@ -29,19 +29,24 @@ extension FlightDataTableColumnDetails on FlightDataTableColumn {
   double get width {
     switch (this) {
       case FlightDataTableColumn.flight:
-        return 0.13;
-      case FlightDataTableColumn.status:
-        return 0.43;
+        return 0.11;
+      case FlightDataTableC
+
+
+
+
+        olumn.status:
+        return 0.58;
       case FlightDataTableColumn.route:
-        return 0.08;
+        return 0.06;
       case FlightDataTableColumn.std:
-        return 0.08;
+        return 0.04;
       case FlightDataTableColumn.aircraft:
-        return 0.08;
+        return 0.06;
       case FlightDataTableColumn.register:
-        return 0.1;
+        return 0.07;
       case FlightDataTableColumn.actions:
-        return 0.1;
+        return 0.08;
     }
   }
 
@@ -178,9 +183,9 @@ class FlightDataSource extends DataGridSource {
           }
           if (dataGridCell.columnName == FlightDataTableColumn.actions.name) {
             return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              // padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   MyButton(
                     height: 30,
