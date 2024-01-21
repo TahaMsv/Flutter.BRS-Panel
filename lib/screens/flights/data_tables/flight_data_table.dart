@@ -1,4 +1,3 @@
-import 'package:brs_panel/core/classes/login_user_class.dart';
 import 'package:brs_panel/core/platform/spiners.dart';
 import 'package:brs_panel/core/util/basic_class.dart';
 import 'package:brs_panel/widgets/TagCountWidget.dart';

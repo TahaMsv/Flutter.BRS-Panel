@@ -27,7 +27,7 @@ class TagCountWidget extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.transparent,
               borderRadius: BorderRadius.circular(5),
-              border: Border.all(width: 2,color: pos.getColor),
+              border: Border.all(width: 2, color: pos.getColor),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -60,8 +60,31 @@ class TagCountWidget extends StatelessWidget {
           child: SizedBox(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
+              children: sections.where((element) => element.count != 0 && element.offset == 1).map((e) {
+                print("Offset ${BasicClass.getPositionSectionByOffset(e.offset)?.label}");
+                return Container(
+                  height: 18,
+                  margin: const EdgeInsets.only(left: 0),
+                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(5), border: Border.all(width: 1, color: Colors.white)),
+                  child: Center(
+                    child: Text(
+                      e.count.toString(),
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+        Container(
+          alignment: Alignment.topRight,
+          child: SizedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: sections
-                  .where((element) => element.count != 0 && element.offset == 1)
+                  .where((element) => element.count != 0 && element.offset == 2)
                   .map(
                     (e) => Container(
                       height: 18,
@@ -70,7 +93,7 @@ class TagCountWidget extends StatelessWidget {
                       decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(5), border: Border.all(width: 1, color: Colors.white)),
                       child: Center(
                         child: Text(
-                          e.count.toString(),
+                          e.value,
                           style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
                         ),
                       ),
@@ -81,49 +104,26 @@ class TagCountWidget extends StatelessWidget {
           ),
         ),
         Container(
-          alignment: Alignment.topRight,
-          child: SizedBox(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: sections.where((element) =>element.count!=0 &&  element.offset==2)
-                  .map(
-                    (e) => Container(
-                  height: 18,
-                  margin: const EdgeInsets.only(left: 0),
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(5), border: Border.all(width: 1, color: Colors.white)),
-                  child: Center(
-                    child: Text(
-                      e.value,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
-                    ),
-                  ),
-                ),
-              )
-                  .toList(),
-            ),
-          ),
-        ),
-        Container(
           alignment: Alignment.bottomLeft,
           child: SizedBox(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: sections.where((element) =>element.count!=0 && element.offset==3)
+              children: sections
+                  .where((element) => element.count != 0 && element.offset == 3)
                   .map(
                     (e) => Container(
-                  height: 18,
-                  margin: const EdgeInsets.only(left: 0),
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(5), border: Border.all(width: 1, color: Colors.white)),
-                  child: Center(
-                    child: Text(
-                      e.value,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                      height: 18,
+                      margin: const EdgeInsets.only(left: 0),
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(5), border: Border.all(width: 1, color: Colors.white)),
+                      child: Center(
+                        child: Text(
+                          e.value,
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              )
+                  )
                   .toList(),
             ),
           ),
@@ -133,21 +133,22 @@ class TagCountWidget extends StatelessWidget {
           child: SizedBox(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: sections.where((element) =>element.count!=0 && element.offset==4)
+              children: sections
+                  .where((element) => element.count != 0 && element.offset == 4)
                   .map(
                     (e) => Container(
-                  height: 18,
-                  margin: const EdgeInsets.only(left: 0),
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(5), border: Border.all(width: 1, color: Colors.white)),
-                  child: Center(
-                    child: Text(
-                      e.value,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                      height: 18,
+                      margin: const EdgeInsets.only(left: 0),
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(5), border: Border.all(width: 1, color: Colors.white)),
+                      child: Center(
+                        child: Text(
+                          e.value,
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              )
+                  )
                   .toList(),
             ),
           ),
@@ -157,21 +158,22 @@ class TagCountWidget extends StatelessWidget {
           child: SizedBox(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: sections.where((element) =>element.count!=0 && element.offset==6)
+              children: sections
+                  .where((element) => element.count != 0 && element.offset == 6)
                   .map(
                     (e) => Container(
-                  height: 18,
-                  margin: const EdgeInsets.only(left: 0),
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(5), border: Border.all(width: 1, color: Colors.white)),
-                  child: Center(
-                    child: Text(
-                      e.value,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                      height: 18,
+                      margin: const EdgeInsets.only(left: 0),
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(5), border: Border.all(width: 1, color: Colors.white)),
+                      child: Center(
+                        child: Text(
+                          e.value,
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              )
+                  )
                   .toList(),
             ),
           ),
@@ -181,26 +183,26 @@ class TagCountWidget extends StatelessWidget {
           child: SizedBox(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: sections.where((element) =>element.count!=0 && element.offset==5)
+              children: sections
+                  .where((element) => element.count != 0 && element.offset == 5)
                   .map(
                     (e) => Container(
-                  height: 18,
-                  margin: const EdgeInsets.only(left: 0),
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(5), border: Border.all(width: 1, color: Colors.white)),
-                  child: Center(
-                    child: Text(
-                      e.value,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                      height: 18,
+                      margin: const EdgeInsets.only(left: 0),
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(color: e.getColor, borderRadius: BorderRadius.circular(5), border: Border.all(width: 1, color: Colors.white)),
+                      child: Center(
+                        child: Text(
+                          e.value,
+                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              )
+                  )
                   .toList(),
             ),
           ),
         ),
-
       ],
     );
   }

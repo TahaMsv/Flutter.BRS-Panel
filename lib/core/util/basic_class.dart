@@ -149,6 +149,12 @@ class BasicClass {
     return BasicClass.systemSetting.handlingAccess.firstWhereOrNull((element) => element.id == handlingID);
   }
 
+  static AirportPositionSection? getPositionSectionByOffset(int offset) {
+    print(offset);
+    print(sections.map((e) => "${e.offset} ${e.label}"));
+    return getAllAirportSections1().firstWhereOrNull((s) => s.offset == offset);
+  }
+
   static setAirport(Airport ap) {
     instance._airport = ap;
   }

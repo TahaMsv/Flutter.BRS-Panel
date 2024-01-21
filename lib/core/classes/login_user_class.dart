@@ -873,12 +873,14 @@ class PositionSection {
   final int offset;
   final int count;
   final String color;
+  final String title;
 
   PositionSection({
     required this.title,
     required this.offset,
     required this.count,
     required this.color,
+    required this.title,
   });
 
   PositionSection copyWith({
@@ -886,12 +888,14 @@ class PositionSection {
     int? offset,
     int? count,
     String? color,
+    String? title,
   }) =>
       PositionSection(
         title: title ?? this.title,
         offset: offset ?? this.offset,
         count: count ?? this.count,
         color: color ?? this.color,
+        title: title ?? this.title,
       );
 
   factory PositionSection.fromJson(Map<String, dynamic> json) => PositionSection(
@@ -899,6 +903,7 @@ class PositionSection {
         offset: json["Offset"],
         count: json["Count"],
         color: json["Color"] ?? "0a1a82",
+        title: json["Title"] ?? "TST",
       );
 
   Color get getColor => HexColor(color);
@@ -910,6 +915,7 @@ class PositionSection {
         "Offset": offset,
         "Count": count,
         "Color": color,
+        "Title": title,
       };
 }
 
