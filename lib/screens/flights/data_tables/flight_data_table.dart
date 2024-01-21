@@ -15,43 +15,41 @@ import '../../../widgets/MyButton.dart';
 import '../flights_controller.dart';
 import '../flights_state.dart';
 
-enum FlightDataTableColumn {
-  flight,
-  status,
-  route,
-  std,
-  aircraft,
-  register,
-  actions,
-}
+const List<String> staticFlightDataTableColumn = [
+  "flight",
+  "route",
+  "std",
+  "aircraft",
+  "register",
+  "actions",
+];
 
-extension FlightDataTableColumnDetails on FlightDataTableColumn {
-  double get width {
-    switch (this) {
-      case FlightDataTableColumn.flight:
-        return 0.13;
-      case FlightDataTableColumn.status:
-        return 0.43;
-      case FlightDataTableColumn.route:
-        return 0.08;
-      case FlightDataTableColumn.std:
-        return 0.08;
-      case FlightDataTableColumn.aircraft:
-        return 0.08;
-      case FlightDataTableColumn.register:
-        return 0.1;
-      case FlightDataTableColumn.actions:
-        return 0.1;
-    }
-  }
+List<String> flightDataTableColumn = [
+  "flight",
+  "status",
+  "route",
+  "std",
+  "aircraft",
+  "register",
+  "actions",
+];
 
-  String get label {
-    switch (this) {
-      case FlightDataTableColumn.std:
-        return "STD";
-      default:
-        return name.capitalizeFirst!;
-    }
+double getFlightDataTableColumnFlex(String flightData) {
+  if (flightDataTableColumn[0] == flightData) {
+    return 0.11;
+  } else if (flightDataTableColumn[flightDataTableColumn.length - 1] == flightData) {
+    return 0.09;
+  } else if (flightDataTableColumn[flightDataTableColumn.length - 2] == flightData) {
+    return 0.07;
+  } else if (flightDataTableColumn[flightDataTableColumn.length - 3] == flightData) {
+    return 0.06;
+  } else if (flightDataTableColumn[flightDataTableColumn.length - 4] == flightData) {
+    return 0.04;
+  } else if (flightDataTableColumn[flightDataTableColumn.length - 5] == flightData) {
+    return 0.06;
+  } else {
+    int statusColumnCount = flightDataTableColumn.length - 6;
+    return (0.57 / statusColumnCount);
   }
 }
 
@@ -64,15 +62,18 @@ class FlightDataSource extends DataGridSource {
     _flights = flights
         .map<DataGridRow>(
           (e) => DataGridRow(
-            cells: [
-              DataGridCell<String>(columnName: FlightDataTableColumn.flight.name, value: e.flightNumber),
-              DataGridCell<int>(columnName: FlightDataTableColumn.status.name, value: 1),
-              DataGridCell<String>(columnName: FlightDataTableColumn.route.name, value: e.from),
-              DataGridCell<String>(columnName: FlightDataTableColumn.std.name, value: e.std),
-              DataGridCell<int>(columnName: FlightDataTableColumn.aircraft.name, value: e.getAircraft?.id),
-              DataGridCell<String>(columnName: FlightDataTableColumn.register.name, value: e.getAircraft?.registration),
-              DataGridCell<String>(columnName: FlightDataTableColumn.actions.name, value: ''),
-            ],
+            cells: flightDataTableColumn.map((e) => DataGridCell<String>(columnName: e, value: e)).toList(),
+            // [
+            //   DataGridCell<String>(columnName: flightDataTableColumn[0], value: e.flightNumber),
+            //   DataGridCell<int>(columnName: flightDataTableColumn, value: 1),
+            //   DataGridCell<int>(columnName: flightDataTableColumn, value: 1),
+            //   DataGridCell<int>(columnName: flightDataTableColumn, value: 1),
+            //   DataGridCell<String>(columnName: flightDataTableColumn.route.name, value: e.from),
+            //   DataGridCell<String>(columnName: flightDataTableColumn.std.name, value: e.std),
+            //   DataGridCell<int>(columnName: flightDataTableColumn.aircraft.name, value: e.getAircraft?.id),
+            //   DataGridCell<String>(columnName: flightDataTableColumn.register.name, value: e.getAircraft?.registration),
+            //   DataGridCell<String>(columnName: flightDataTableColumn.actions.name, value: ''),
+            // ],
           ),
         )
         .toList();
@@ -90,7 +91,7 @@ class FlightDataSource extends DataGridSource {
     return DataGridRowAdapter(
         color: index.isEven ? MyColors.evenRow : MyColors.oddRow,
         cells: row.getCells().map<Widget>((dataGridCell) {
-          if (dataGridCell.columnName == FlightDataTableColumn.flight.name) {
+          if (dataGridCell.columnName == flightDataTableColumn[0]) {
             return Row(
               children: [
                 const SizedBox(width: 12),
@@ -106,8 +107,7 @@ class FlightDataSource extends DataGridSource {
                   child: Container(
                     alignment: Alignment.center,
                     padding: EdgeInsets.zero,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5), color: f.isTest ? MyColors.red : Colors.transparent),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: f.isTest ? MyColors.red : Colors.transparent),
                     child: Text(
                       f.isTest ? "Test" : "",
                       style: const TextStyle(fontSize: 10, color: Colors.white),
@@ -118,65 +118,67 @@ class FlightDataSource extends DataGridSource {
               ],
             );
           }
-          if (dataGridCell.columnName == FlightDataTableColumn.route.name) {
+          if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 5]) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.centerLeft,
               child: Text('${f.from}-${f.to}'),
             );
           }
-          if (dataGridCell.columnName == FlightDataTableColumn.std.name) {
+          if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 4]) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.centerLeft,
               child: Text(f.std),
             );
           }
-          if (dataGridCell.columnName == FlightDataTableColumn.aircraft.name) {
+          if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 3]) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.centerLeft,
               child: Text("${f.getAircraft?.id ?? '-'}"),
             );
           }
-          if (dataGridCell.columnName == FlightDataTableColumn.register.name) {
+          if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 2]) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.centerLeft,
               child: Text(f.getAircraft?.registration ?? '-'),
             );
           }
-          if (dataGridCell.columnName == FlightDataTableColumn.status.name) {
+          if (dataGridCell.columnName == flightDataTableColumn[1]) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               // alignment: Alignment.center,
               child: Row(
                 children: [
-                  ...BasicClass.systemSetting.positions.map((p) {
-                    if (f.isArrival && [1, 2, 3].contains(p.id)) return const SizedBox();
-                    if (!f.isArrival && [4, 5, 6].contains(p.id)) return const SizedBox();
-                    return Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4),
-                        child: InkWell(
-                          onTap: () {
-                            flightsController.goDetails(f, selectedPos: p);
-                          },
-                          child: TagCountWidget(
-                            position: p,
-                            sections: f.positions.firstWhereOrNull((element) => element.id == p.id)?.sections ?? [],
-                            color: p.getColor,
-                            count: f.positions.firstWhereOrNull((element) => element.id == p.id)?.tagCount ?? 0,
-                          ),
-                        ),
-                      ),
-                    );
-                  }).toList(),
+                  Expanded(child: Container(color: Colors.green,)),
+                  // ...BasicClass.systemSetting.positions.map((p) {
+                  //   if (f.isArrival && [1, 2, 3].contains(p.id)) return const SizedBox();
+                  //   if (!f.isArrival && [4, 5, 6].contains(p.id)) return const SizedBox();
+                  //   return Expanded(
+                  //     child: Padding(
+                  //       padding: const EdgeInsets.symmetric(horizontal: 4),
+                  //       child: InkWell(
+                  //         onTap: () {
+                  //           flightsController.goDetails(f, selectedPos: p);
+                  //         },
+                  //         child: TagCountWidget(
+                  //           position: p,
+                  //           sections: f.positions.firstWhereOrNull((element) => element.id == p.id)?.sections ?? [],
+                  //           color: p.getColor,
+                  //           count: f.positions.firstWhereOrNull((element) => element.id == p.id)?.tagCount ?? 0,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   );
+                  // }).toList(),
                 ],
+
               ),
             );
           }
-          if (dataGridCell.columnName == FlightDataTableColumn.actions.name) {
+          if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 1]) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Row(
@@ -212,13 +214,9 @@ class FlightDataSource extends DataGridSource {
                         WidgetRef ref = getIt<WidgetRef>();
                         bool loading = ref.watch(flightActionHandlingProvider).contains(f.id);
                         if (loading) return;
-                        ref
-                            .read(flightActionHandlingProvider.notifier)
-                            .update((state) => (state + [f.id]).toSet().toList());
+                        ref.read(flightActionHandlingProvider.notifier).update((state) => (state + [f.id]).toSet().toList());
                         await flightsController.handleActions(value as MenuItem, f);
-                        ref
-                            .read(flightActionHandlingProvider.notifier)
-                            .update((state) => state.where((element) => element != f.id).toList());
+                        ref.read(flightActionHandlingProvider.notifier).update((state) => state.where((element) => element != f.id).toList());
                         // MenuItems.onChanged(navigator!.context, value! as MenuItem);
                       },
                       customButton: Consumer(

@@ -869,28 +869,33 @@ class ZplList {
 }
 
 class PositionSection {
+  final String title;
   final int offset;
   final int count;
   final String color;
 
   PositionSection({
+    required this.title,
     required this.offset,
     required this.count,
     required this.color,
   });
 
   PositionSection copyWith({
+    String? title,
     int? offset,
     int? count,
     String? color,
   }) =>
       PositionSection(
+        title: title ?? this.title,
         offset: offset ?? this.offset,
         count: count ?? this.count,
         color: color ?? this.color,
       );
 
   factory PositionSection.fromJson(Map<String, dynamic> json) => PositionSection(
+        title: json["Title"] ?? "TST",
         offset: json["Offset"],
         count: json["Count"],
         color: json["Color"] ?? "0a1a82",
@@ -901,6 +906,7 @@ class PositionSection {
   String get value => "$count";
 
   Map<String, dynamic> toJson() => {
+        "Title": title,
         "Offset": offset,
         "Count": count,
         "Color": color,

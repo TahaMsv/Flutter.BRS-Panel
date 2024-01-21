@@ -162,7 +162,7 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                       height: 35,
                       itemToString: (e) => e.toStr,
                       items: FlightTypeFilter.values,
-                      onChange: (FlightTypeFilter v) async{
+                      onChange: (FlightTypeFilter v) async {
                         ref.read(flightTypeFilterProvider.notifier).state = v;
                         // await SessionStorage().setString(SsKeys.flightTypeFilterP, v.toStr);
                       },
@@ -202,6 +202,17 @@ class FlightListWidget extends ConsumerWidget {
     final double width = MediaQuery.of(context).size.width;
     final FlightsState state = ref.watch(flightsProvider);
     final flightList = ref.watch(filteredFlightListProvider);
+    List<String> sections = [];
+    if (flightList.isNotEmpty) {
+      for (var p in flightList[0].positions) {
+        print(p.sections.map((s) => "${s.title} ${s.offset}").toList());
+        sections = sections + p.sections.map((s) => s.title).toList();
+      }
+    }
+    print(sections);
+    if (sections.isEmpty) sections = [""];
+    flightDataTableColumn = staticFlightDataTableColumn.map((e) => e).toList();
+    flightDataTableColumn.insertAll(1, sections);
     return Expanded(
       child: LoadingListView(
         loading: state.loadingFlights,
@@ -214,12 +225,12 @@ class FlightListWidget extends ConsumerWidget {
             allowSorting: true,
             headerRowHeight: 35,
             source: FlightDataSource(flights: flightList),
-            columns: FlightDataTableColumn.values
+            columns: flightDataTableColumn
                 .map((e) => GridColumn(
-                      columnName: e.name,
-                      label: Center(child: Text(e.label)),
-                      width: e.width * width,
-                      allowSorting: e.name.capitalizeFirst! != "Actions" && e.name.capitalizeFirst! != "Status",
+                      columnName: e,
+                      label: Center(child: Text(e)),
+                      width: getFlightDataTableColumnFlex(e) * width,
+                      // allowSorting: e.name.capitalizeFirst! != "Actions" && e.name.capitalizeFirst! != "Status",
                     ))
                 .toList()),
       ),
