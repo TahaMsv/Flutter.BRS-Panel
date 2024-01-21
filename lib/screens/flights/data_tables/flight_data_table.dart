@@ -1,12 +1,11 @@
 import 'package:brs_panel/core/platform/spiners.dart';
-import 'package:brs_panel/core/util/basic_class.dart';
-import 'package:brs_panel/widgets/TagCountWidget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../../core/classes/flight_class.dart';
+import '../../../core/classes/login_user_class.dart';
 import '../../../core/constants/ui.dart';
 import '../../../initialize.dart';
 import '../../../widgets/AirlineLogo.dart';
@@ -88,13 +87,10 @@ class FlightDataSource extends DataGridSource {
   DataGridRowAdapter? buildRow(DataGridRow row) {
     final int index = rows.indexOf(row);
     final Flight f = _dataList[index];
-
     List<PositionSection> sections = [];
     for (var p in f.positions) {
       sections = sections + p.sections;
     }
-    print(sections);
-
     return DataGridRowAdapter(
         color: index.isEven ? MyColors.evenRow : MyColors.oddRow,
         cells: row.getCells().map<Widget>((dataGridCell) {
