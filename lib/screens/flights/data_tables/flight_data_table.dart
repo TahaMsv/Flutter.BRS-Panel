@@ -30,12 +30,7 @@ extension FlightDataTableColumnDetails on FlightDataTableColumn {
     switch (this) {
       case FlightDataTableColumn.flight:
         return 0.11;
-      case FlightDataTableC
-
-
-
-
-        olumn.status:
+      case FlightDataTableColumn.status:
         return 0.58;
       case FlightDataTableColumn.route:
         return 0.06;
