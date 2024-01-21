@@ -96,7 +96,7 @@ class UserListWidget extends ConsumerWidget {
         child: SfDataGrid(
           headerGridLinesVisibility: GridLinesVisibility.both,
           selectionMode: SelectionMode.none,
-          sortingGestureType: SortingGestureType.doubleTap,
+          sortingGestureType: SortingGestureType.tap,
           allowSorting: true,
           headerRowHeight: 35,
           source: UserDataSource(users: userList),

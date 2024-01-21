@@ -150,7 +150,7 @@ class BsmListWidget extends ConsumerWidget {
               shrinkWrapColumns: true,
               // shrinkWrapRows: true,
               // shrinkWrapColumns: false,
-              sortingGestureType: SortingGestureType.doubleTap,
+              sortingGestureType: SortingGestureType.tap,
               gridLinesVisibility: GridLinesVisibility.vertical,
               allowSorting: true,
               rowHeight: 70,

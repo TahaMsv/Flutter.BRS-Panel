@@ -220,18 +220,20 @@ class FlightListWidget extends ConsumerWidget {
             headerGridLinesVisibility: GridLinesVisibility.both,
             selectionMode: SelectionMode.none,
             shrinkWrapColumns: true,
-            sortingGestureType: SortingGestureType.doubleTap,
+            sortingGestureType: SortingGestureType.tap,
             gridLinesVisibility: GridLinesVisibility.vertical,
             allowSorting: true,
             headerRowHeight: 35,
             source: FlightDataSource(flights: flightList),
             columns: flightDataTableColumn
-                .map((e) => GridColumn(
-                      columnName: e,
-                      label: Center(child: Text(e)),
-                      width: getFlightDataTableColumnFlex(e) * width,
-                      // allowSorting: e.name.capitalizeFirst! != "Actions" && e.name.capitalizeFirst! != "Status",
-                    ))
+                .map(
+                  (e) => GridColumn(
+                    columnName: e.capitalizeFirst!,
+                    label: Center(child: Text(e.capitalizeFirst!)),
+                    width: getFlightDataTableColumnFlex(e) * width,
+                    allowSorting: e.capitalizeFirst == "Flight" || e.capitalizeFirst == "Std",
+                  ),
+                )
                 .toList()),
       ),
     );

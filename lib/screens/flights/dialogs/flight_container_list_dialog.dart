@@ -245,7 +245,7 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                 headerGridLinesVisibility: GridLinesVisibility.both,
                                 selectionMode: SelectionMode.none,
                                 horizontalScrollPhysics: const NeverScrollableScrollPhysics(),
-                                sortingGestureType: SortingGestureType.doubleTap,
+                                sortingGestureType: SortingGestureType.tap,
                                 gridLinesVisibility: GridLinesVisibility.vertical,
                                 allowSorting: true,
                                 // shrinkWrapColumns: true,
