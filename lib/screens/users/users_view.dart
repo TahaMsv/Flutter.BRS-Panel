@@ -49,6 +49,7 @@ class _UsersPanelState extends ConsumerState<UsersPanel> {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       child: Row(
         children: [
+          DotButton(size: 35, onPressed: () => controller.addUpdateUser(null), icon: Icons.add, color: Colors.blueAccent),
           const SizedBox(width: 12),
           Expanded(
               flex: 2,
@@ -72,7 +73,6 @@ class _UsersPanelState extends ConsumerState<UsersPanel> {
             child: Row(
               children: [
                 const Spacer(),
-                DotButton(size: 35, onPressed: () => controller.addUpdateUser(null), icon: Icons.add, color: Colors.blueAccent),
               ],
             ),
           ),
