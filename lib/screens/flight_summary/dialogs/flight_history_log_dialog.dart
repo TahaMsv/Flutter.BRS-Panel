@@ -11,7 +11,8 @@ import '../../../widgets/MyExpansionTile.dart';
 class FlightHistoryLogDialog extends StatelessWidget {
   final HistoryLog logs;
   final NavigationService navigationService = getIt<NavigationService>();
-  FlightHistoryLogDialog({Key? key,required this.logs}) : super(key: key);
+
+  FlightHistoryLogDialog({Key? key, required this.logs}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,7 @@ class FlightHistoryLogDialog extends StatelessWidget {
           ),
           const Divider(height: 1),
           Container(
-            height: MediaQuery.of(context).size.height*0.7,
+            height: MediaQuery.of(context).size.height * 0.7,
             padding: const EdgeInsets.all(18),
             child: SingleChildScrollView(
               child: Column(
@@ -54,9 +55,9 @@ class FlightHistoryLogDialog extends StatelessWidget {
                     ),
                     children: logs.flightLogs
                         .map((e) => FlightLogWidget(
-                      log: e,
-                      index:  logs.flightLogs.indexOf(e),
-                    ))
+                              log: e,
+                              index: logs.flightLogs.indexOf(e),
+                            ))
                         .toList(),
                   ),
                   MyExpansionTile(
@@ -67,9 +68,9 @@ class FlightHistoryLogDialog extends StatelessWidget {
                     ),
                     children: logs.tagLogs
                         .map((e) => TagLogWidget(
-                      log: e,
-                      index:  logs.tagLogs.indexOf(e),
-                    ))
+                              log: e,
+                              index: logs.tagLogs.indexOf(e),
+                            ))
                         .toList(),
                   ),
                 ],
@@ -82,8 +83,8 @@ class FlightHistoryLogDialog extends StatelessWidget {
               children: [
                 //TextButton(onPressed: () {}, child: const Text("Add")),
                 const Spacer(),
-                 MyButton(
-                   onPressed: ()=>navigationService.popDialog(),
+                MyButton(
+                  onPressed: () => navigationService.popDialog(),
                   label: "Done",
                   color: theme.primaryColor,
                 ),
@@ -95,7 +96,6 @@ class FlightHistoryLogDialog extends StatelessWidget {
     );
   }
 }
-
 
 class FlightLogWidget extends StatelessWidget {
   final Log log;
@@ -114,43 +114,43 @@ class FlightLogWidget extends StatelessWidget {
       children: [
         index == 0
             ? Container(
-          height: 40,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            color: isOdd ? MyColors.white2 : MyColors.white3,
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(width: 12),
-              Expanded(
-                  flex: 2,
-                  child: Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      child: const Text(
-                        "Action Type",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ))),
-              const VerticalDivider(width: 24),
-              Expanded(
-                flex: 3,
-                  child: Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      child: const Text(
-                        "Description",
-                        style: headerTextStyle,
-                      ))),
-              const VerticalDivider(width: 24),
-              Expanded(child: Container(height: 40, alignment: Alignment.centerLeft, child: const Text("Time", style: headerTextStyle))),
-              const VerticalDivider(width: 24),
-              Expanded(child: Container(height: 40, alignment: Alignment.centerLeft, child: const Text("User", style: headerTextStyle))),
-              const VerticalDivider(width: 24),
-              const Expanded(flex: 3, child: SizedBox())
-            ],
-          ),
-        )
+                height: 40,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: isOdd ? MyColors.white2 : MyColors.white3,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(width: 12),
+                    Expanded(
+                        flex: 2,
+                        child: Container(
+                            height: 40,
+                            alignment: Alignment.centerLeft,
+                            child: const Text(
+                              "Action Type",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ))),
+                    const VerticalDivider(width: 24),
+                    Expanded(
+                        flex: 3,
+                        child: Container(
+                            height: 40,
+                            alignment: Alignment.centerLeft,
+                            child: const Text(
+                              "Description",
+                              style: headerTextStyle,
+                            ))),
+                    const VerticalDivider(width: 24),
+                    Expanded(child: Container(height: 40, alignment: Alignment.centerLeft, child: const Text("Time", style: headerTextStyle))),
+                    const VerticalDivider(width: 24),
+                    Expanded(child: Container(height: 40, alignment: Alignment.centerLeft, child: const Text("User", style: headerTextStyle))),
+                    const VerticalDivider(width: 24),
+                    const Expanded(flex: 3, child: SizedBox())
+                  ],
+                ),
+              )
             : const SizedBox(),
         InkWell(
           onTap: onTap,
@@ -169,7 +169,6 @@ class FlightLogWidget extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
                         const SizedBox(width: 12),
                         Container(
                             height: 40,
@@ -181,21 +180,14 @@ class FlightLogWidget extends StatelessWidget {
                       ],
                     )),
                 const VerticalDivider(width: 24),
-                Expanded(
-                  flex: 3,
-                    child: Container(
-                        height: 40,
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          log.description
-                        ))),
+                Expanded(flex: 3, child: Container(height: 40, alignment: Alignment.centerLeft, child: Text(log.description))),
                 const VerticalDivider(width: 24),
                 Expanded(
                     child: Container(
                         height: 40,
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          BasicClass.getTimeFromUTC(log.dateUtc)?.format_HHmmss??'',
+                          BasicClass.getTimeFromUTC(DateTime.tryParse(log.recordDatetimeUTC))?.format_HHmmss ?? '',
                         ))),
                 const VerticalDivider(width: 24),
                 Expanded(
@@ -215,6 +207,7 @@ class FlightLogWidget extends StatelessWidget {
     );
   }
 }
+
 class TagLogWidget extends StatelessWidget {
   final Log log;
   final int index;
@@ -228,47 +221,48 @@ class TagLogWidget extends StatelessWidget {
     bool isOdd = index % 2 != 0;
     const TextStyle headerTextStyle = TextStyle(fontWeight: FontWeight.w600, color: MyColors.black, fontSize: 14);
 
+    print("time: ${log.recordDatetimeUTC ?? ''}");
     return Column(
       children: [
         index == 0
             ? Container(
-          height: 40,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            color: isOdd ? MyColors.white2 : MyColors.white3,
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(width: 12),
-              Expanded(
-                  flex: 2,
-                  child: Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      child: const Text(
-                        "Action Type",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ))),
-              const VerticalDivider(width: 24),
-              Expanded(
-                flex: 3,
-                  child: Container(
-                      height: 40,
-                      alignment: Alignment.centerLeft,
-                      child: const Text(
-                        "Description",
-                        style: headerTextStyle,
-                      ))),
-              const VerticalDivider(width: 24),
-              Expanded(child: Container(height: 40, alignment: Alignment.centerLeft, child: const Text("Time", style: headerTextStyle))),
-              const VerticalDivider(width: 24),
-              Expanded(child: Container(height: 40, alignment: Alignment.centerLeft, child: const Text("User", style: headerTextStyle))),
-              const VerticalDivider(width: 24),
-              const Expanded(flex: 3, child: SizedBox())
-            ],
-          ),
-        )
+                height: 40,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  color: isOdd ? MyColors.white2 : MyColors.white3,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(width: 12),
+                    Expanded(
+                        flex: 2,
+                        child: Container(
+                            height: 40,
+                            alignment: Alignment.centerLeft,
+                            child: const Text(
+                              "Action Type",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ))),
+                    const VerticalDivider(width: 24),
+                    Expanded(
+                        flex: 3,
+                        child: Container(
+                            height: 40,
+                            alignment: Alignment.centerLeft,
+                            child: const Text(
+                              "Description",
+                              style: headerTextStyle,
+                            ))),
+                    const VerticalDivider(width: 24),
+                    Expanded(child: Container(height: 40, alignment: Alignment.centerLeft, child: const Text("Time", style: headerTextStyle))),
+                    const VerticalDivider(width: 24),
+                    Expanded(child: Container(height: 40, alignment: Alignment.centerLeft, child: const Text("User", style: headerTextStyle))),
+                    const VerticalDivider(width: 24),
+                    const Expanded(flex: 3, child: SizedBox())
+                  ],
+                ),
+              )
             : const SizedBox(),
         InkWell(
           onTap: onTap,
@@ -287,7 +281,6 @@ class TagLogWidget extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
                         const SizedBox(width: 12),
                         Container(
                             height: 40,
@@ -299,21 +292,14 @@ class TagLogWidget extends StatelessWidget {
                       ],
                     )),
                 const VerticalDivider(width: 24),
-                Expanded(
-                  flex: 3,
-                    child: Container(
-                        height: 40,
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          log.description
-                        ))),
+                Expanded(flex: 3, child: Container(height: 40, alignment: Alignment.centerLeft, child: Text(log.description))),
                 const VerticalDivider(width: 24),
                 Expanded(
                     child: Container(
                         height: 40,
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          BasicClass.getTimeFromUTC(log.dateUtc)?.format_HHmmss??'',
+                          BasicClass.getTimeFromUTC(DateTime.tryParse(log.recordDatetimeUTC))?.format_HHmmss ?? '',
                         ))),
                 const VerticalDivider(width: 24),
                 Expanded(

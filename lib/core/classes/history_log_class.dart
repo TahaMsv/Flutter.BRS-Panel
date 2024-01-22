@@ -51,8 +51,7 @@ class Log {
   final String? section;
   final int? exceptionId;
   final String description;
-  final DateTime dateUtc;
-  final String timeUtc;
+  final String recordDatetimeUTC;
   final int? flightScheduleId;
 
   Log({
@@ -67,8 +66,7 @@ class Log {
     required this.section,
     required this.exceptionId,
     required this.description,
-    required this.dateUtc,
-    required this.timeUtc,
+    required this.recordDatetimeUTC,
     this.flightScheduleId,
   });
 
@@ -84,7 +82,6 @@ class Log {
     String? section,
     int? exceptionId,
     String? description,
-    DateTime? dateUtc,
     String? timeUtc,
     int? flightScheduleId,
   }) =>
@@ -100,8 +97,7 @@ class Log {
         section: section ?? this.section,
         exceptionId: exceptionId ?? this.exceptionId,
         description: description ?? this.description,
-        dateUtc: dateUtc ?? this.dateUtc,
-        timeUtc: timeUtc ?? this.timeUtc,
+        recordDatetimeUTC: timeUtc ?? this.recordDatetimeUTC,
         flightScheduleId: flightScheduleId ?? this.flightScheduleId,
       );
 
@@ -117,8 +113,7 @@ class Log {
         section: json["Section"],
         exceptionId: json["ExceptionID"],
         description: json["Description"] ?? "",
-        dateUtc: json["DateUTC"] == null ? DateTime.now() : DateTime.parse(json["DateUTC"]),
-        timeUtc: json["TimeUTC"] ?? "",
+        recordDatetimeUTC: json["RecordDatetimeUTC"] ?? "",
         flightScheduleId: json["FlightScheduleID"],
       );
 
@@ -134,8 +129,7 @@ class Log {
         "Section": section,
         "ExceptionID": exceptionId,
         "Description": description,
-        "DateUTC": "${dateUtc.year.toString().padLeft(4, '0')}-${dateUtc.month.toString().padLeft(2, '0')}-${dateUtc.day.toString().padLeft(2, '0')}",
-        "TimeUTC": timeUtc,
+        "RecordDatetimeUTC": recordDatetimeUTC,
         "FlightScheduleID": flightScheduleId,
       };
 }

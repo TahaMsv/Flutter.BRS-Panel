@@ -39,9 +39,9 @@ double getFlightDataTableColumnFlex(String flightData) {
   } else if (flightDataTableColumn[flightDataTableColumn.length - 1] == flightData) {
     return 0.09;
   } else if (flightDataTableColumn[flightDataTableColumn.length - 2] == flightData) {
-    return 0.07;
+    return 0.08;
   } else if (flightDataTableColumn[flightDataTableColumn.length - 3] == flightData) {
-    return 0.06;
+    return 0.05;
   } else if (flightDataTableColumn[flightDataTableColumn.length - 4] == flightData) {
     return 0.04;
   } else if (flightDataTableColumn[flightDataTableColumn.length - 5] == flightData) {
@@ -88,6 +88,7 @@ class FlightDataSource extends DataGridSource {
     final int index = rows.indexOf(row);
     final Flight f = _dataList[index];
     List<PositionSection> sections = [];
+
     for (var p in f.positions) {
       sections = sections + p.sections;
     }
@@ -120,31 +121,36 @@ class FlightDataSource extends DataGridSource {
                 const SizedBox(width: 12),
               ],
             );
-          } else if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 5]) {
+          }
+          else if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 5]) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.centerLeft,
               child: Text('${f.from}-${f.to}'),
             );
-          } else if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 4]) {
+          }
+          else if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 4]) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.centerLeft,
               child: Text(f.std),
             );
-          } else if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 3]) {
+          }
+          else if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 3]) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.centerLeft,
               child: Text("${f.getAircraft?.id ?? '-'}"),
             );
-          } else if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 2]) {
+          }
+          else if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 2]) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.centerLeft,
               child: Text(f.getAircraft?.registration ?? '-'),
             );
-          } else if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 1]) {
+          }
+          else if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 1]) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Row(
