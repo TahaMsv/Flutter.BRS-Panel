@@ -106,11 +106,11 @@ class UserListWidget extends ConsumerWidget {
                       ),
                     ),
                     const ProfileDrawerElement(title: "Edit Profile", icon: Icons.person, index: 0),
-                    const ProfileDrawerElement(title: "Change Password", icon: AbomisIconPack.lock, index: 1),
-                    const ProfileDrawerElement(title: "Email Verification", icon: AbomisIconPack.email, index: 2),
-                    const ProfileDrawerElement(title: "Phone Verification", icon: Icons.phone_android_rounded, index: 3),
-                    const ProfileDrawerElement(title: "FAQ", icon: Icons.info_outline, index: 4),
-                    const ProfileDrawerElement(title: "Support", icon: Icons.call, isBottomDivider: true, index: 5),
+                    // const ProfileDrawerElement(title: "Change Password", icon: AbomisIconPack.lock, index: 1),
+                    // const ProfileDrawerElement(title: "Email Verification", icon: AbomisIconPack.email, index: 2),
+                    // const ProfileDrawerElement(title: "Phone Verification", icon: Icons.phone_android_rounded, index: 3),
+                    // const ProfileDrawerElement(title: "FAQ", icon: Icons.info_outline, index: 4),
+                    // const ProfileDrawerElement(title: "Support", icon: Icons.call, isBottomDivider: true, index: 5),
                   ],
                 ),
               ),
@@ -121,32 +121,45 @@ class UserListWidget extends ConsumerWidget {
                 child: state.editProfileDrawerIndex == 0
                     ? EditProfileWidget(controller: controller, avatarRadius: avatarRadius)
                     : state.editProfileDrawerIndex == 1
-                        ? Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 100.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                MyTextField(label: "Old Password", controller: oldPassC, labelStyle: const TextStyle(color: MyColors.brownGrey3)),
-                                const SizedBox(height: 30),
-                                MyTextField(label: "New Password", controller: newPassC, labelStyle: const TextStyle(color: MyColors.brownGrey3)),
-                                const SizedBox(height: 30),
-                                MyTextField(label: "Repeat Password", controller: repPassC, labelStyle: const TextStyle(color: MyColors.brownGrey3)),
-                                const SizedBox(height: 30),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Row(
+                                children: [
+                                  Icon(Icons.person_2),
+                                  SizedBox(width: 10),
+                                  Text("Change Password", style: TextStyles.styleBold16Black),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 100.0),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    MyButton(
-                                      onPressed: () async => await controller.changePassRequest(oldPassC.text, newPassC.text, repPassC.text),
-                                      label: 'Submit',
-                                      color: MyColors.darkMint,
-                                      child: const Row(
-                                        children: [Text('Submit', style: TextStyle(color: Colors.white, fontSize: 14)), SizedBox(width: 20), Icon(Icons.check, color: Colors.white)],
-                                      ),
+                                    MyTextField(label: "Old Password", controller: oldPassC, labelStyle: const TextStyle(color: MyColors.brownGrey3)),
+                                    const SizedBox(height: 30),
+                                    MyTextField(label: "New Password", controller: newPassC, labelStyle: const TextStyle(color: MyColors.brownGrey3)),
+                                    const SizedBox(height: 30),
+                                    MyTextField(label: "Repeat Password", controller: repPassC, labelStyle: const TextStyle(color: MyColors.brownGrey3)),
+                                    const SizedBox(height: 30),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        MyButton(
+                                          onPressed: () async => await controller.changePassRequest(oldPassC.text, newPassC.text, repPassC.text),
+                                          label: 'Submit',
+                                          color: MyColors.darkMint,
+                                          child: const Row(
+                                            children: [Text('Submit', style: TextStyle(color: Colors.white, fontSize: 14)), SizedBox(width: 20), Icon(Icons.check, color: Colors.white)],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
+                              ),
+                              SizedBox()
+                            ],
                           )
                         : Container(),
               ))
@@ -192,18 +205,20 @@ class EditProfileWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 20),
-            MyButton(
-              onPressed: () async {
-                await controller.setAvatar();
-              },
-              label: 'Change Photo',
-              fade: true,
-              child: const Row(children: [Icon(Icons.edit, size: 18), SizedBox(width: 3), Text("Change Photo")]),
-            ),
-            const SizedBox(width: 20),
-            TextButton(
-              child: const Row(children: [Icon(Icons.delete, size: 18, color: MyColors.red), SizedBox(width: 3), Text("Delete", style: TextStyle(color: MyColors.red))]),
-              onPressed: () {},
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextButton(
+                  onPressed: () async {
+                    await controller.setAvatar();
+                  },
+                  child: const Row(children: [Icon(Icons.edit, size: 18), SizedBox(width: 3), Text("Change Photo")]),
+                ),
+                TextButton(
+                  child: const Row(children: [Icon(Icons.delete, size: 18, color: MyColors.red), SizedBox(width: 3), Text("Delete", style: TextStyle(color: MyColors.red))]),
+                  onPressed: () {},
+                ),
+              ],
             ),
           ],
         ),
