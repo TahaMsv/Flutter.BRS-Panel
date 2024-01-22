@@ -193,6 +193,22 @@ class FlightsController extends MainController {
   flightEditContainersPlanDialog(Flight flight) async {
     ContainersPlan? plan = await flightGetContainersPlan(flight);
     if (plan == null) return;
+    var planData = plan.planData;
+    for (int i = planData.length - 1; i >= 0; i--) {
+      List<int> tagTypeIds = planData[i].tagTypeId;
+      if (tagTypeIds.length == 1 &&
+              (
+                      //removing empty!
+                      // (
+                      BasicClass.getTagTypeByID(tagTypeIds.first)?.label ?? "")
+                  .isEmpty //removing repetitive!
+          // ||  (planData.any((p) => p.tagTypeId.length == 1 && p.tagTypeId.first == tagTypeIds.first && p != planData[i])))
+          ) {
+        planData.removeAt(i);
+      }
+    }
+    planData.sort((a, b) => (a.planeID ?? 0).compareTo(b.planeID ?? 0));
+    plan = plan.copyWith(planData: planData);
     nav.dialog(FlightContainersPlanDialog(flight: flight, plan: plan)).then((value) {});
   }
 

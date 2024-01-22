@@ -61,7 +61,6 @@ class TagCountWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: sections.where((element) => element.count != 0 && element.offset == 1).map((e) {
-                print("Offset ${BasicClass.getPositionSectionByOffset(e.offset)?.label}");
                 return Container(
                   height: 18,
                   margin: const EdgeInsets.only(left: 0),

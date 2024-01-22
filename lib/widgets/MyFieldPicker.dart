@@ -77,7 +77,6 @@ class MyFieldPicker<T> extends StatelessWidget {
         child: Stack(
           children: [
             DropdownSearch<T>(
-
               enabled: !locked,
               clearButtonProps: ClearButtonProps(
                 padding: EdgeInsets.zero,
@@ -128,7 +127,10 @@ class MyFieldPicker<T> extends StatelessWidget {
                 ),
               ),
               items: items ?? [],
-
+              filterFn: (t, s) {
+                String temp = itemToString(t);
+                return temp.contains(s);
+              },
               popupProps: PopupProps.menu(
                 showSearchBox: hasSearch,
                 showSelectedItems: showSelected,

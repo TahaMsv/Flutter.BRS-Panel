@@ -72,41 +72,47 @@ class ContainersPlan {
 }
 
 class PlanDatum {
+  final int? planeID;
   final List<int> tagTypeId;
   final int cartCount;
   final int uldCount;
 
   PlanDatum({
+    required this.planeID,
     required this.tagTypeId,
     required this.cartCount,
     required this.uldCount,
   });
 
   PlanDatum copyWith({
+    int? planeID,
     List<int>? tagTypeId,
     int? cartCount,
     int? uldCount,
   }) =>
       PlanDatum(
+        planeID: planeID ?? this.planeID,
         tagTypeId: tagTypeId ?? this.tagTypeId,
         cartCount: cartCount ?? this.cartCount,
         uldCount: uldCount ?? this.uldCount,
       );
 
   factory PlanDatum.fromJson(Map<String, dynamic> json) => PlanDatum(
+        planeID: json["PlaneID"],
         tagTypeId: List<int>.from(json["TagTypeID"].map((x) => x)),
         cartCount: json["CartCount"],
         uldCount: json["ULDCount"],
       );
 
   Map<String, dynamic> toJson() => {
+        "PlaneID": planeID,
         "TagTypeID": tagTypeId,
         "CartCount": cartCount,
         "ULDCount": uldCount,
       };
 
   factory PlanDatum.empty() {
-    return PlanDatum(tagTypeId: [], cartCount: 0, uldCount: 0);
+    return PlanDatum(planeID: null, tagTypeId: [], cartCount: 0, uldCount: 0);
   }
 }
 

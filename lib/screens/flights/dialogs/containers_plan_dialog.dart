@@ -46,7 +46,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
     List<int> temp = [];
     plan.planData.where((e) {
       TagType type = BasicClass.getTagTypeByID(e.tagTypeId.first)!;
-      if (type.label.isNotEmpty && e.tagTypeId.length == 1) {
+      if (type.label.isNotEmpty && e.tagTypeId.length == 1 && !temp.contains(e.tagTypeId.first)) {
         temp.add(e.tagTypeId.first);
       }
       return type.label.isNotEmpty;
@@ -190,7 +190,7 @@ class _FlightContainersPlanDialogState extends State<FlightContainersPlanDialog>
                             plan.planData.map((e) {
                               int index = plan.planData.indexOf(e);
                               TagType? type = e.tagTypeId.isEmpty ? null : BasicClass.getTagTypeByID(e.tagTypeId.first);
-                              bool isAddedPlanD = index > 6;
+                              bool isAddedPlanD = index > 5;
                               bool isPDFEnable = updateIsPDFEnable(isAddedPlanD, e);
                               return PlanItem(
                                 data: e,

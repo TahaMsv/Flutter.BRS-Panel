@@ -323,7 +323,7 @@ class FlightTag {
         ),
       );
 
-  TagStatus? get exception => BasicClass.getTagStatusById(currentStatus);
+  TagStatus? get exception => BasicClass.getTagStatusByID(currentStatus);
 
   String get getAddress => BasicClass.getAirportSectionByID(sectionID)?.label ?? tagPositions.first.container?.code ?? (tagPositions.first.bin.isEmpty ? getSection.label : tagPositions.first.bin);
 

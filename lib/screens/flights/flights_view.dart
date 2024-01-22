@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:artemis_ui_kit/artemis_ui_kit.dart';
 import 'package:brs_panel/initialize.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
@@ -7,9 +6,7 @@ import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../core/classes/login_user_class.dart';
-import '../../core/constants/data_bases_keys.dart';
 import '../../core/constants/ui.dart';
-import '../../core/data_base/web_data_base.dart';
 import '../../core/enums/flight_type_filter_enum.dart';
 import '../../core/util/basic_class.dart';
 import '../../widgets/DotButton.dart';
@@ -118,7 +115,7 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                         return SizedBox(
                           height: 30,
                           child: MyFieldPicker<Airport>(
-                            itemToString: (a) => "${a.code} (${a.code})",
+                            itemToString: (a) => "${a.code} (${a.cityName.isEmpty ? a.code : a.cityName})",
                             label: 'Airport',
                             items: BasicClass.systemSetting.airportList,
                             hasSearch: true,

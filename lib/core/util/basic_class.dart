@@ -99,10 +99,6 @@ class BasicClass {
     return systemSetting.positions.firstWhereOrNull((e) => e.id == id);
   }
 
-  static TagStatus? getTagStatusById(int id) {
-    return systemSetting.statusList.firstWhereOrNull((e) => e.id == id);
-  }
-
   static List<AirportPositionSection> getAllAirportSections() {
     List<AirportPositionSection> secs = [];
     for (var s in sections) {
@@ -147,12 +143,6 @@ class BasicClass {
 
   static HandlingAccess? getHandlingByID(int? handlingID) {
     return BasicClass.systemSetting.handlingAccess.firstWhereOrNull((element) => element.id == handlingID);
-  }
-
-  static AirportPositionSection? getPositionSectionByOffset(int offset) {
-    print(offset);
-    print(sections.map((e) => "${e.offset} ${e.label}"));
-    return getAllAirportSections1().firstWhereOrNull((s) => s.offset == offset);
   }
 
   static setAirport(Airport ap) {
