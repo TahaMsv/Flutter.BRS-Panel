@@ -50,6 +50,7 @@ extension AirportCartDataTableColumnDetails on AirportCartDataTableColumn {
         return "Actions";
     }
   }
+
 }
 
 class AirportCartDataSource extends DataGridSource {
