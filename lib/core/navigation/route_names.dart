@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 enum RouteNames {
   login,
@@ -50,10 +51,38 @@ extension RouteNamesDetails on RouteNames {
     }
   }
 
+  String get appropriateName {
+    switch (this) {
+      case RouteNames.specialReports:
+        return "Special Reports";
+      case RouteNames.userSetting:
+        return "User Setting";
+      case RouteNames.addFlight:
+        return "Add Flight";
+      case RouteNames.flightDetails:
+        return "Flight Details";
+      case RouteNames.flightSummary:
+        return "Flight Summary";
+      case RouteNames.airlineUlds:
+        return "Airline Ulds";
+      case RouteNames.airportCarts:
+        return "Airport Carts";
+      case RouteNames.airportSections:
+        return "Airport Sections";
+      case RouteNames.airportSetting:
+        return "Airport Setting";
+      case RouteNames.barcodeGenerator:
+        return "Barcode Generator";
+      default:
+        return name.capitalizeFirst!;
+    }
+  }
+
   String get title {
     switch (this) {
       default:
-        return (name.characters.first.toUpperCase() + name.replaceFirst(name.characters.first, ""));
+        // return (name.characters.first.toUpperCase() + name.replaceFirst(name.characters.first, ""));
+        return appropriateName;
     }
   }
 
