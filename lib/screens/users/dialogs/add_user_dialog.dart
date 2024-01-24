@@ -3,11 +3,13 @@ import 'package:brs_panel/widgets/MyDropDown.dart';
 import 'package:brs_panel/widgets/MySegment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '../../../core/abstracts/failures_abs.dart';
 import '../../../core/classes/login_user_class.dart';
 import '../../../core/classes/user_class.dart';
 import '../../../core/constants/ui.dart';
 import '../../../core/navigation/navigation_service.dart';
 import '../../../core/util/basic_class.dart';
+import '../../../core/util/handlers/failure_handler.dart';
 import '../../../widgets/MyButton.dart';
 import '../../../widgets/MyTextField.dart';
 import '../users_controller.dart';
@@ -28,6 +30,7 @@ class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
   final TextEditingController nameC = TextEditingController();
   final TextEditingController usernameC = TextEditingController();
   final TextEditingController passwordC = TextEditingController();
+  final TextEditingController confirmPasswordC = TextEditingController();
   final TextEditingController alC = TextEditingController();
   final TextEditingController airportC = TextEditingController();
   late final List<Airport> airportList;
@@ -189,27 +192,39 @@ class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
                       Expanded(
                         child: SizedBox(
                           height: 48,
-                          child: MyTextField(
-                            label: "Username",
-                            controller: usernameC,
-                            locked: widget.user != null,
-                          ),
+                          child: MyTextField(label: "Username", controller: usernameC, locked: widget.user != null),
                         ),
                       ),
                       const SizedBox(width: 20),
                       Expanded(
-                        child: (!isEditing || changePass)
+                        child: !isEditing
                             ? SizedBox(
                                 height: 48,
-                                child: MyTextField(
-                                  label: isEditing ? 'New Password' : 'Password',
-                                  controller: passwordC,
-                                  isPassword: true,
-                                ))
+                                child: MyTextField(label: isEditing ? 'New Password' : 'Password', controller: passwordC, isPassword: true),
+                              )
                             : const SizedBox(),
                       ),
                     ],
                   ),
+                  const SizedBox(height: 20),
+                  if (isEditing && changePass)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 48,
+                            child: MyTextField(label: "New Password", controller: passwordC, isPassword: true),
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: SizedBox(
+                            height: 48,
+                            child: MyTextField(label: 'Confirm New Password', controller: confirmPasswordC, isPassword: true),
+                          ),
+                        ),
+                      ],
+                    ),
                 ],
               ),
             ),
@@ -254,6 +269,9 @@ class _AddUpdateUserDialogState extends State<AddUpdateUserDialog> {
                       accessType: userType.id,
                       password: passwordC.text.isEmpty ? null : passwordC.text,
                     );
+                    if (isEditing && changePass && passwordC.text != confirmPasswordC.text) {
+                      return FailureHandler.handle(ValidationFailure(code: -1, msg: "Passwords do not match! Please enter again.", traceMsg: ""));
+                    }
                     await controller.addUpdateUserRequest(user);
                   },
                 ),

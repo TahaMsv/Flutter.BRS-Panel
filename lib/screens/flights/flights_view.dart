@@ -202,11 +202,9 @@ class FlightListWidget extends ConsumerWidget {
     List<String> sections = [];
     if (flightList.isNotEmpty) {
       for (var p in flightList[0].positions) {
-        print(p.sections.map((s) => "${s.title} ${s.offset}").toList());
-        sections = sections + p.sections.map((s) => s.title).toList();
+        sections.add(p.title);
       }
     }
-    print(sections);
     if (sections.isEmpty) sections = [""];
     flightDataTableColumn = staticFlightDataTableColumn.map((e) => e).toList();
     flightDataTableColumn.insertAll(1, sections);

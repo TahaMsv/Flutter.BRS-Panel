@@ -419,11 +419,8 @@
 //     final flight = flightFromJson(jsonString);
 
 import 'package:brs_panel/core/util/basic_class.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import '../enums/flight_type_filter_enum.dart';
-import 'airport_class.dart';
 import 'login_user_class.dart';
 
 @immutable
@@ -611,6 +608,7 @@ class Flight {
 
 class PositionData {
   final int id;
+  final String title;
   final int tagCount;
   final int order;
   final int excTagCount;
@@ -618,6 +616,7 @@ class PositionData {
 
   PositionData({
     required this.id,
+    required this.title,
     required this.tagCount,
     required this.order,
     required this.excTagCount,
@@ -626,6 +625,7 @@ class PositionData {
 
   PositionData copyWith({
     int? id,
+    String? title,
     int? tagCount,
     int? order,
     int? excTagCount,
@@ -633,6 +633,7 @@ class PositionData {
   }) =>
       PositionData(
         id: id ?? this.id,
+        title: title ?? this.title,
         tagCount: tagCount ?? this.tagCount,
         order: order ?? this.order,
         excTagCount: excTagCount ?? this.excTagCount,
@@ -641,6 +642,7 @@ class PositionData {
 
   factory PositionData.fromJson(Map<String, dynamic> json) => PositionData(
         id: json["ID"],
+        title: json["Title"],
         tagCount: json["TagCount"],
         order: json["Order"],
         excTagCount: json["ExcTagCount"] ?? 1,
@@ -649,6 +651,7 @@ class PositionData {
 
   Map<String, dynamic> toJson() => {
         "ID": id,
+        "Title": title,
         "TagCount": tagCount,
         "Order": order,
         "ExcTagCount": excTagCount,

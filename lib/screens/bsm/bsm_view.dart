@@ -1,7 +1,6 @@
 import 'package:artemis_utils/artemis_utils.dart';
 import 'package:brs_panel/core/constants/ui.dart';
 import 'package:brs_panel/initialize.dart';
-import 'package:brs_panel/screens/bsm/data_tables/bsm_data_table.dart';
 import 'package:brs_panel/widgets/DotButton.dart';
 import 'package:brs_panel/widgets/MyAppBar.dart';
 import 'package:brs_panel/widgets/MyButton.dart';
@@ -9,14 +8,12 @@ import 'package:brs_panel/widgets/MyButtonPanel.dart';
 import 'package:brs_panel/widgets/MyTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../core/classes/bsm_result_class.dart';
-import '../../core/constants/data_bases_keys.dart';
-import '../../core/data_base/web_data_base.dart';
 import 'bsm_controller.dart';
 import 'bsm_state.dart';
+import 'data_tables/bsm_data_table.dart';
 
 class BsmView extends StatelessWidget {
   static final BsmController myBsmController = getIt<BsmController>();
@@ -76,7 +73,6 @@ class _BsmPanelWidgetState extends ConsumerState<BsmPanelWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final double width = MediaQuery.of(context).size.width;
     final BsmState state = ref.watch(bsmProvider);
     final bsmList = ref.watch(filteredBsmListProvider);
     final bsmDate = ref.watch(bsmDateProvider);
@@ -92,18 +88,10 @@ class _BsmPanelWidgetState extends ConsumerState<BsmPanelWidget> {
                   maxLines: null,
                   placeholder: "BSM Message",
                   controller: state.newBsmC,
-                  onChanged: (v) {
-                    setState(() {
-                      deleteBtnEnable = state.newBsmC.text.isNotEmpty;
-                    });
-                  },
+                  onChanged: (v) => setState(() => deleteBtnEnable = state.newBsmC.text.isNotEmpty),
                   suffixIcon: DotButton(
                     icon: Icons.delete,
-                    onPressed: deleteBtnEnable
-                        ? () {
-                            state.newBsmC.clear();
-                          }
-                        : null,
+                    onPressed: deleteBtnEnable ? () => state.newBsmC.clear() : null,
                   ),
                   // onChanged: (v) {
                   //   SessionStorage().setString(SsKeys.bsmMessage, v);
@@ -177,11 +165,7 @@ class BsmListWidget extends ConsumerWidget {
               source: BsmDataSource(bsm: bsmList),
               columns: BsmDataTableColumn.values
                   .map(
-                    (e) => GridColumn(
-                      columnName: e.name,
-                      label: Center(child: Text(e.label!)),
-                      width: e.width * width,
-                    ),
+                    (e) => GridColumn(columnName: e.name, label: Center(child: Text(e.label)), width: e.width * width),
                   )
                   .toList()),
     );

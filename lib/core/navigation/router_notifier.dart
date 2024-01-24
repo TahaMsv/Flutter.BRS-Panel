@@ -16,12 +16,10 @@ import '../../screens/add_flight/add_flight_view.dart';
 import '../../screens/airport_sections/airport_sections_view.dart';
 import '../../screens/airport_setting/airport_setting_view.dart';
 import '../../screens/home/home_view.dart';
-import '../../screens/login/login_controller.dart';
 import '../../screens/login/login_state.dart';
 import '../../screens/login/login_view.dart'; // final userProvider = StateProvider<User?>((ref) => null);
 import '../../screens/special_reports/special_reports_view.dart';
 import '../../screens/users/users_view.dart';
-import '../abstracts/controller_abs.dart';
 import 'route_names.dart';
 
 /// This notifier is meant to implement the [Listenable] our [GoRouter] needs.
@@ -58,7 +56,7 @@ class RouterNotifier extends AutoDisposeAsyncNotifier<void> implements Listenabl
     if (this.state.isLoading || this.state.hasError) return null;
 
     // final isSplash = state.location == RouteNames.splash.path;
-    final isSplash = false;
+    const isSplash = false;
 
     if (isSplash) {
       return isAuth ? RouteNames.home.path : RouteNames.login.path;
@@ -223,7 +221,7 @@ class RouterNotifier extends AutoDisposeAsyncNotifier<void> implements Listenabl
           path: RouteNames.barcodeGenerator.path,
 
           pageBuilder: (context, state) {
-            return NoTransitionPage<void>(key: state.pageKey, child: BarcodeGeneratorView());
+            return NoTransitionPage<void>(key: state.pageKey, child: const BarcodeGeneratorView());
           },
         ),
       ];

@@ -106,7 +106,7 @@ class UserListWidget extends ConsumerWidget {
                       ),
                     ),
                     const ProfileDrawerElement(title: "Edit Profile", icon: Icons.person, index: 0),
-                    // const ProfileDrawerElement(title: "Change Password", icon: AbomisIconPack.lock, index: 1),
+                    const ProfileDrawerElement(title: "Change Password", icon: AbomisIconPack.lock, index: 1),
                     // const ProfileDrawerElement(title: "Email Verification", icon: AbomisIconPack.email, index: 2),
                     // const ProfileDrawerElement(title: "Phone Verification", icon: Icons.phone_android_rounded, index: 3),
                     // const ProfileDrawerElement(title: "FAQ", icon: Icons.info_outline, index: 4),
@@ -135,12 +135,19 @@ class UserListWidget extends ConsumerWidget {
                                 padding: const EdgeInsets.symmetric(horizontal: 100.0),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    MyTextField(label: "Old Password", controller: oldPassC, labelStyle: const TextStyle(color: MyColors.brownGrey3)),
-                                    const SizedBox(height: 30),
-                                    MyTextField(label: "New Password", controller: newPassC, labelStyle: const TextStyle(color: MyColors.brownGrey3)),
-                                    const SizedBox(height: 30),
-                                    MyTextField(label: "Repeat Password", controller: repPassC, labelStyle: const TextStyle(color: MyColors.brownGrey3)),
+                                    const Text("Enter your password"),
+                                    const SizedBox(height: 5),
+                                    MyTextField(controller: oldPassC, labelStyle: const TextStyle(color: MyColors.brownGrey3), isPassword: true),
+                                    const SizedBox(height: 20),
+                                    const Text("Enter your new password"),
+                                    const SizedBox(height: 5),
+                                    MyTextField(controller: newPassC, labelStyle: const TextStyle(color: MyColors.brownGrey3), isPassword: true),
+                                    const SizedBox(height: 20),
+                                    const Text("Please re-enter your new password to confirm"),
+                                    const SizedBox(height: 5),
+                                    MyTextField(controller: repPassC, labelStyle: const TextStyle(color: MyColors.brownGrey3), isPassword: true),
                                     const SizedBox(height: 30),
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
@@ -158,7 +165,7 @@ class UserListWidget extends ConsumerWidget {
                                   ],
                                 ),
                               ),
-                              SizedBox()
+                              const SizedBox()
                             ],
                           )
                         : Container(),
@@ -172,11 +179,7 @@ class UserListWidget extends ConsumerWidget {
 }
 
 class EditProfileWidget extends StatelessWidget {
-  const EditProfileWidget({
-    super.key,
-    required this.controller,
-    required this.avatarRadius,
-  });
+  const EditProfileWidget({super.key, required this.controller, required this.avatarRadius});
 
   final UserSettingController controller;
   final double avatarRadius;

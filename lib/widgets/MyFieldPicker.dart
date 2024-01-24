@@ -129,7 +129,7 @@ class MyFieldPicker<T> extends StatelessWidget {
               items: items ?? [],
               filterFn: (t, s) {
                 String temp = itemToString(t);
-                return temp.contains(s);
+                return temp.toLowerCase().contains(s.toLowerCase());
               },
               popupProps: PopupProps.menu(
                 showSearchBox: hasSearch,

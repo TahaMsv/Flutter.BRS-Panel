@@ -33,122 +33,120 @@ class _AddFlightViewState extends State<AddFlightView> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: const MyAppBar(),
+        floatingActionButton: MyButton(
+          label: "Add Flight",
+          height: 30,
+          width: 150,
+          onPressed: AddFlightView.addFlightController.addFlight,
+        ),
         body: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const AddFlightPanel(),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 24.0),
-                child: Column(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24.0),
+            child: Column(
+              children: [
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        const Expanded(
-                          child: AddFlightStage(label: "Flight Dates", items: [
-                            SizedBox(width: 250, height: 40, child: AddFlightDateWidget(isFromDate: true)),
-                            SizedBox(width: 20),
-                            SizedBox(width: 260, child: AddFlightSetScheduleWidget()),
-                            SizedBox(width: 20),
-                          ]),
-                        ),
-                        Expanded(
-                          child: Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                            AddFlightState state = ref.watch(addFlightProvider);
-                            return MyAnimatedSwitcher(
-                              value: state.isSchedule,
-                              firstChild: const AddFlightStage(label: "End Date", items: [
-                                SizedBox(width: 250, height: 40, child: AddFlightDateWidget(isFromDate: false)),
-                                SizedBox(width: 300),
-                              ]),
-                              secondChild: const SizedBox(),
-                              direction: Axis.horizontal,
-                            );
-                          }),
-                        ),
-                      ],
+                    const Expanded(
+                      child: AddFlightStage(label: "Flight Dates", items: [
+                        SizedBox(width: 250, height: 40, child: AddFlightDateWidget(isFromDate: true)),
+                        SizedBox(width: 20),
+                        SizedBox(width: 260, child: AddFlightSetScheduleWidget()),
+                        SizedBox(width: 20),
+                      ]),
                     ),
-                    Consumer(
-                      builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                        List<WeekDays> days = WeekDays.values;
+                    Expanded(
+                      child: Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
                         AddFlightState state = ref.watch(addFlightProvider);
                         return MyAnimatedSwitcher(
                           value: state.isSchedule,
-                          firstChild: AddFlightStage(key: UniqueKey(), label: "Days", height: 100, items: <Widget>[
-                            const AddFlightDayElementWidget(id: 0, label: "All", b: true, hasTime: false),
-                            ...days
-                                .map((e) => AddFlightDayElementWidget(id: e.index + 1, label: e.labelMini, b: true))
-                                .toList()
+                          firstChild: const AddFlightStage(label: "End Date", items: [
+                            SizedBox(width: 250, height: 40, child: AddFlightDateWidget(isFromDate: false)),
+                            SizedBox(width: 300),
                           ]),
-                          secondChild: SizedBox(key: UniqueKey()),
+                          secondChild: const SizedBox(),
+                          direction: Axis.horizontal,
                         );
-                      },
-                    ),
-                    const SizedBox(height: 24),
-                    Row(
-                      children: [
-                        const Expanded(
-                          child: AddFlightStage(label: "Flight Number", items: [
-                            SizedBox(width: 180, height: 40, child: AddFlightFLNBWidget()),
-                          ]),
-                        ),
-                        Expanded(
-                          child: AddFlightStage(label: "Airline", items: [
-                            const SizedBox(width: 180, height: 40, child: AddFlightAirlineWidget()),
-                            const Spacer(),
-                            Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
-                              AddFlightState state = ref.watch(addFlightProvider);
-                              return MySwitchButton(
-                                  value: state.isTest,
-                                  onChange: (v) {
-                                    state.isTest = v;
-                                    state.setState();
-                                  },
-                                  label: ' Test Flight');
-                            }),
-                            const SizedBox(width: 24),
-                          ]),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-                    const AddFlightStage(label: "Aircraft", items: [
-                      SizedBox(width: 180, height: 40, child: AddFlightAirlineWidget()),
-                      SizedBox(width: 8),
-                      SizedBox(width: 300, height: 40, child: AddFlightAircraftWidget()),
-                    ]),
-                    const Row(
-                      children: [
-                        Expanded(
-                          child: AddFlightStage(label: "Departure", items: [
-                            SizedBox(width: 300, height: 40, child: AddFlightFromWidget()),
-                          ]),
-                        ),
-                        Expanded(
-                          child: AddFlightStage(label: "Arrival", items: [
-                            SizedBox(width: 300, height: 40, child: AddFlightToWidget()),
-                          ]),
-                        ),
-                      ],
-                    ),
-                    const Row(
-                      children: [
-                        Expanded(
-                          child: AddFlightStage(label: "STD", items: [
-                            SizedBox(width: 150, height: 40, child: AddFlightSTDWidget()),
-                          ]),
-                        ),
-                        Expanded(
-                          child: AddFlightStage(label: "STA", items: [
-                            SizedBox(width: 150, height: 40, child: AddFlightSTAWidget()),
-                          ]),
-                        ),
-                      ],
+                      }),
                     ),
                   ],
                 ),
-              )
-            ],
+                Consumer(
+                  builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                    List<WeekDays> days = WeekDays.values;
+                    AddFlightState state = ref.watch(addFlightProvider);
+                    return MyAnimatedSwitcher(
+                      value: state.isSchedule,
+                      firstChild: AddFlightStage(key: UniqueKey(), label: "Days", height: 100, items: <Widget>[
+                        const AddFlightDayElementWidget(id: 0, label: "All", b: true, hasTime: false),
+                        ...days.map((e) => AddFlightDayElementWidget(id: e.index + 1, label: e.labelMini, b: true)).toList()
+                      ]),
+                      secondChild: SizedBox(key: UniqueKey()),
+                    );
+                  },
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    const Expanded(
+                      child: AddFlightStage(label: "Flight Number", items: [
+                        SizedBox(width: 180, height: 40, child: AddFlightFLNBWidget()),
+                      ]),
+                    ),
+                    Expanded(
+                      child: AddFlightStage(label: "Airline", items: [
+                        const SizedBox(width: 180, height: 40, child: AddFlightAirlineWidget()),
+                        const Spacer(),
+                        Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
+                          AddFlightState state = ref.watch(addFlightProvider);
+                          return MySwitchButton(
+                              value: state.isTest,
+                              onChange: (v) {
+                                state.isTest = v;
+                                state.setState();
+                              },
+                              label: ' Test Flight');
+                        }),
+                        const SizedBox(width: 24),
+                      ]),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                const AddFlightStage(label: "Aircraft", items: [
+                  SizedBox(width: 180, height: 40, child: AddFlightAirlineWidget()),
+                  SizedBox(width: 8),
+                  SizedBox(width: 300, height: 40, child: AddFlightAircraftWidget()),
+                ]),
+                const Row(
+                  children: [
+                    Expanded(
+                      child: AddFlightStage(label: "Departure", items: [
+                        SizedBox(width: 300, height: 40, child: AddFlightFromWidget()),
+                      ]),
+                    ),
+                    Expanded(
+                      child: AddFlightStage(label: "Arrival", items: [
+                        SizedBox(width: 300, height: 40, child: AddFlightToWidget()),
+                      ]),
+                    ),
+                  ],
+                ),
+                const Row(
+                  children: [
+                    Expanded(
+                      child: AddFlightStage(label: "STD", items: [
+                        SizedBox(width: 150, height: 40, child: AddFlightSTDWidget()),
+                      ]),
+                    ),
+                    Expanded(
+                      child: AddFlightStage(label: "STA", items: [
+                        SizedBox(width: 150, height: 40, child: AddFlightSTAWidget()),
+                      ]),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ));
   }
@@ -167,12 +165,7 @@ class AddFlightStage extends StatelessWidget {
       decoration: BoxDecoration(border: Border.all(color: MyColors.lineColor2, width: 1)),
       child: Row(children: [
         Container(
-            width: 150,
-            height: height,
-            color: MyColors.evenRow2,
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.only(left: 10),
-            child: Text(label, style: const TextStyle(fontSize: 16))),
+            width: 150, height: height, color: MyColors.evenRow2, alignment: Alignment.centerLeft, padding: const EdgeInsets.only(left: 10), child: Text(label, style: const TextStyle(fontSize: 16))),
         const SizedBox(width: 16),
         ...items
       ]),
@@ -187,10 +180,7 @@ class AddFlightSetScheduleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     const double buttonSize = 120;
     return Container(
-      decoration: BoxDecoration(
-          color: MyColors.evenRow2,
-          borderRadius: BorderRadius.circular(4),
-          border: Border.all(color: MyColors.borderColor)),
+      decoration: BoxDecoration(color: MyColors.evenRow2, borderRadius: BorderRadius.circular(4), border: Border.all(color: MyColors.borderColor)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -208,13 +198,8 @@ class AddFlightSetScheduleWidget extends StatelessWidget {
                     width: buttonSize,
                     alignment: Alignment.center,
                     margin: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                        color: !state.isSchedule ? MyColors.lightIshBlue : Colors.transparent,
-                        borderRadius: BorderRadius.circular(4)),
-                    child: Text("Non Schedule",
-                        style: TextStyle(
-                            color: !state.isSchedule ? MyColors.white3 : MyColors.black,
-                            fontWeight: !state.isSchedule ? FontWeight.bold : FontWeight.normal))));
+                    decoration: BoxDecoration(color: !state.isSchedule ? MyColors.lightIshBlue : Colors.transparent, borderRadius: BorderRadius.circular(4)),
+                    child: Text("Non Schedule", style: TextStyle(color: !state.isSchedule ? MyColors.white3 : MyColors.black, fontWeight: !state.isSchedule ? FontWeight.bold : FontWeight.normal))));
           }),
           Consumer(builder: (BuildContext context, WidgetRef ref, Widget? child) {
             AddFlightState state = ref.watch(addFlightProvider);
@@ -230,13 +215,8 @@ class AddFlightSetScheduleWidget extends StatelessWidget {
                     width: buttonSize,
                     alignment: Alignment.center,
                     margin: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                        color: state.isSchedule ? MyColors.lightIshBlue : Colors.transparent,
-                        borderRadius: BorderRadius.circular(4)),
-                    child: Text("Schedule",
-                        style: TextStyle(
-                            color: state.isSchedule ? MyColors.white3 : MyColors.black,
-                            fontWeight: state.isSchedule ? FontWeight.bold : FontWeight.normal))));
+                    decoration: BoxDecoration(color: state.isSchedule ? MyColors.lightIshBlue : Colors.transparent, borderRadius: BorderRadius.circular(4)),
+                    child: Text("Schedule", style: TextStyle(color: state.isSchedule ? MyColors.white3 : MyColors.black, fontWeight: state.isSchedule ? FontWeight.bold : FontWeight.normal))));
           }),
         ],
       ),
@@ -365,16 +345,11 @@ class AddFlightDateWidget extends StatelessWidget {
                       !isFromDate ? state.toDate.format_ddMMMEEE : state.fromDate.format_ddMMMEEE,
                       style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: MyColors.black3),
                     ),
-                    leftAction: () =>
-                        !isFromDate ? myAddFlightController.setToDate(-1) : myAddFlightController.setFromDate(-1),
-                    rightAction: () =>
-                        !isFromDate ? myAddFlightController.setToDate(1) : myAddFlightController.setFromDate(1),
-                    centerAction: () =>
-                        !isFromDate ? myAddFlightController.setToDate(null) : myAddFlightController.setFromDate(null),
+                    leftAction: () => !isFromDate ? myAddFlightController.setToDate(-1) : myAddFlightController.setFromDate(-1),
+                    rightAction: () => !isFromDate ? myAddFlightController.setToDate(1) : myAddFlightController.setFromDate(1),
+                    centerAction: () => !isFromDate ? myAddFlightController.setToDate(null) : myAddFlightController.setFromDate(null),
                   ),
-                  state.isSchedule
-                      ? Text(!isFromDate ? "To Date" : "From Date", style: const TextStyle(fontSize: 10))
-                      : const SizedBox(),
+                  state.isSchedule ? Text(!isFromDate ? "To Date" : "From Date", style: const TextStyle(fontSize: 10)) : const SizedBox(),
                 ],
               ),
             ),
@@ -386,8 +361,7 @@ class AddFlightDateWidget extends StatelessWidget {
 }
 
 class AddFlightDayElementWidget extends StatelessWidget {
-  const AddFlightDayElementWidget(
-      {super.key, required this.id, required this.label, this.hasTime = true, required this.b});
+  const AddFlightDayElementWidget({super.key, required this.id, required this.label, this.hasTime = true, required this.b});
 
   static AddFlightController myAddFlightController = getIt<AddFlightController>();
   final int id;
@@ -409,9 +383,7 @@ class AddFlightDayElementWidget extends StatelessWidget {
             Row(
               children: [
                 MyCheckBox(
-                  value: id == 0
-                      ? WeekDays.values.every((w) => state.weekTimes.keys.contains("${w.index + 1}"))
-                      : state.weekTimes.keys.contains("$id") || state.weekTimes.keys.contains("$id"),
+                  value: id == 0 ? WeekDays.values.every((w) => state.weekTimes.keys.contains("${w.index + 1}")) : state.weekTimes.keys.contains("$id") || state.weekTimes.keys.contains("$id"),
                   onChanged: (v) {
                     //it's all!
                     if (id == 0) {
