@@ -3,6 +3,7 @@ import '../../core/classes/bsm_result_class.dart';
 import '../../core/constants/data_bases_keys.dart';
 import '../../core/data_base/web_data_base.dart';
 import '../../core/util/handlers/failure_handler.dart';
+import '../../core/util/pickers.dart';
 import 'bsm_state.dart';
 import 'usecases/add_bsm_usecase.dart';
 import 'usecases/bsm_list_usecase.dart';
@@ -43,6 +44,15 @@ class BsmController extends MainController {
       bsmList.setBsms(bsms);
     });
     return bsms;
+  }
+
+  Future<void> pickDate() async {
+    DateTime current = ref.read(bsmDateProvider);
+    final pickedDate = await Pickers.pickDate(nav.context, current);
+    if (pickedDate != null) {
+      ref.read(bsmDateProvider.notifier).state = pickedDate;
+      bsmList(pickedDate);
+    }
   }
 
   Future<BsmResult?> addBsm(String msg) async {

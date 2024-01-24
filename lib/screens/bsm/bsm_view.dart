@@ -129,7 +129,7 @@ class _BsmPanelWidgetState extends ConsumerState<BsmPanelWidget> {
                     ref.read(bsmDateProvider.notifier).update((state) => state.add(const Duration(days: 1)));
                     myBsmController.bsmList(ref.read(bsmDateProvider.notifier).state);
                   },
-                  centerAction: () {},
+                  centerAction: myBsmController.pickDate,
                   centerWidget: Text(bsmDate.format_ddMMMEEE),
                   leftWidget: const Icon(Icons.chevron_left),
                   rightWidget: const Icon(Icons.chevron_right),
