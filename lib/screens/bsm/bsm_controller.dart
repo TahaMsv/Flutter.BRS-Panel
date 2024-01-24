@@ -24,8 +24,8 @@ class BsmController extends MainController {
   }
 
   Future<List<BsmResult>> bsmList(DateTime dt) async {
-    final bsmDate = ref.read(bsmDateProvider.notifier);
-    bsmDate.state = dt;
+    // final bsmDate = ref.read(bsmDateProvider.notifier);
+    // bsmDate.state = dt;
     // await SessionStorage().setString(SsKeys.bsmDateP, dt.toIso8601String());
 
     List<BsmResult> bsms = [];
