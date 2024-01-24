@@ -261,31 +261,31 @@ class TagContainer {
 
   // bool isClosed;
   Map<String, dynamic> toJson() => {
-    "ID": id,
-    "FlightID": flightID,
-    "SpotID": spotID,
-    "BinID": binID,
-    "TypeID": typeId,
-    "TagCount": tagCount,
-    "ClassTypeID": classTypeID,
-    "ShootID": shootID,
-    "Title": title,
-    "Code": code,
-    "Dest": dest,
-    "From": from,
-    "Barcode": barcode,
-    "ClosedTime": closedTime,
-    "AL": al,
-    "FLNB": flnb,
-    "TagTypeIDs": tagTypeIds,
-    "DestList": destList.join(","),
-    "ClassList": classTypeList.join(","),
-    "To": dest,
-    "PositionID": positionID,
-    "BarcodePrefix": barcodePrefix,
-    "OCRPrefix": ocrPrefix,
-    // "IsClosed": isClosed
-  };
+        "ID": id,
+        "FlightID": flightID,
+        "SpotID": spotID,
+        "BinID": binID,
+        "TypeID": typeId,
+        "TagCount": tagCount,
+        "ClassTypeID": classTypeID,
+        "ShootID": shootID,
+        "Title": title,
+        "Code": code,
+        "Dest": dest,
+        "From": from,
+        "Barcode": barcode,
+        "ClosedTime": closedTime,
+        "AL": al,
+        "FLNB": flnb,
+        "TagTypeIDs": tagTypeIds,
+        "DestList": destList.join(","),
+        "ClassList": classTypeList.join(","),
+        "To": dest,
+        "PositionID": positionID,
+        "BarcodePrefix": barcodePrefix,
+        "OCRPrefix": ocrPrefix,
+        // "IsClosed": isClosed
+      };
 
   factory TagContainer.fromJson(Map<String, dynamic> json) => TagContainer(
         id: json["ID"],
@@ -473,6 +473,36 @@ class TagContainer {
                 .toList(),
       );
 
+  Widget allowedTagTypesWidgetMini2(List<FlightTag> items) {
+    Map<String, int> labelsCount = {};
+
+    for (var e in items) {
+      if (e.getType != null) {
+        if (labelsCount.containsKey(e.getType!.label)) {
+          labelsCount[e.getType!.label] = labelsCount[e.getType!.label]! + 1;
+        } else {
+          labelsCount[e.getType!.label] = 1;
+        }
+      }
+    }
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: allowedTagTypes.isEmpty
+          ? []
+          : allowedTagTypes
+              .where((element) => element.label.isNotEmpty && labelsCount.containsKey(element.label))
+              .map((e) => Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+                    decoration: BoxDecoration(color: e.getColor.withOpacity(1), borderRadius: BorderRadius.circular(2)),
+                    child: Text(
+                      e.label + ": ${labelsCount[e.label]}",
+                      style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: e.getTextColor),
+                    ),
+                  ))
+              .toList(),
+    );
+  }
+
   Color get getTypeColor => allowedTagTypes.isEmpty ? Colors.transparent : allowedTagTypes.first.getColor;
 
   Spot? get getSpot {
@@ -498,8 +528,6 @@ class TagContainer {
   get isClosed => (closedTime ?? '').isNotEmpty;
 
   Position? get getPosition => BasicClass.getPositionById(positionID);
-
-
 
   @override
   bool operator ==(Object other) {

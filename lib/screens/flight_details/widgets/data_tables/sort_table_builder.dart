@@ -44,6 +44,7 @@ class SortTableBuilder extends StatelessWidget {
                       title: ContainerTileWidget(isFirstSec: false, binLines: false, con: con, items: conTags, isLast: false, tagCount: conTags.length),
                       showLeadingIcon: true,
                       showIcon: false,
+                      initiallyExpanded: false,
                       childrenPadding: EdgeInsets.zero,
                       iconColor: MyColors.brownGrey5,
                       collapsedIconColor: MyColors.brownGrey5,

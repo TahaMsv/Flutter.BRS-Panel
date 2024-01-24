@@ -203,7 +203,7 @@ class FlightTag {
 
   TagStatus get getStatus => BasicClass.systemSetting.statusList.firstWhere((element) => element.id == currentStatus);
 
-  Widget get getStatusWidget => Container(
+  Widget getStatusWidget({int? count = null}) => Container(
         padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: getStatus.getColor.withOpacity(0.3)),
         child: Center(
@@ -215,7 +215,7 @@ class FlightTag {
                   text: TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
                 TextSpan(
                   // text: "${getType.label}",
-                  text: getStatus.title,
+                  text: getStatus.title + (count == null ? "" : ": $count"),
                   style: TextStyle(color: getStatus.getColor),
                 ),
               ])),

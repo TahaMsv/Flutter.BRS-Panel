@@ -107,7 +107,7 @@ class _TagDetailsDialogState extends ConsumerState<TagDetailsDialog> {
                           const SizedBox(width: 15),
                           SizedBox(height: 20, child: tag.getTypeWidget),
                           const SizedBox(width: 12),
-                          SizedBox(height: 25, child: tag.getStatusWidget),
+                          SizedBox(height: 25, child: tag.getStatusWidget()),
                           const SizedBox(width: 20),
                           SizedBox(height: 25, child: tag.getInboundWidget),
                           const SizedBox(width: 12),

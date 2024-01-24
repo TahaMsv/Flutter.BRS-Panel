@@ -350,7 +350,7 @@ class ContainerTileWidget extends StatelessWidget {
                   const SizedBox(width: 8),
                   Text("${con.title} ${con.code}"),
                   const SizedBox(width: 8),
-                  con.allowedTagTypesWidgetMini,
+                  con.allowedTagTypesWidgetMini2(items),
                   const Spacer(),
                   if (con.spotID != null) Text(con.getSpot?.label ?? "", style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                   const SizedBox(width: 24),
@@ -369,16 +369,16 @@ class ContainerTileWidget extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Container(
-                    height: 25,
-                    width: 100,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), border: Border.all(color: MyColors.black3.withOpacity(0.5))),
-                    child: Text(
-                      "Tags: $tagCount",
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  )
+                  // Container(
+                  //   height: 25,
+                  //   width: 100,
+                  //   alignment: Alignment.center,
+                  //   decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), border: Border.all(color: MyColors.black3.withOpacity(0.5))),
+                  //   child: Text(
+                  //     "Tags: $tagCount",
+                  //     style: const TextStyle(fontSize: 12),
+                  //   ),
+                  // )
                 ],
               ),
             ),
@@ -545,7 +545,7 @@ class TagWidget extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        tag.getStatusWidget,
+                        tag.getStatusWidget(),
                       ],
                     ),
                   ),
