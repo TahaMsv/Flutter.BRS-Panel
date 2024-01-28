@@ -109,7 +109,6 @@ class UserListWidget extends ConsumerWidget {
                               ],
                               color: MyColors.white1,
                               initialValue: 0,
-
                               onSelected: (value) async {
                                 switch (value) {
                                   case 1:
@@ -190,11 +189,17 @@ class UserListWidget extends ConsumerWidget {
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         MyButton(
-                                          onPressed: () async => await controller.changePassRequest(oldPassC.text, newPassC.text, repPassC.text),
+                                          width: 136,
+                                          onPressed: () {},
                                           label: 'Submit',
                                           color: MyColors.darkMint,
                                           child: const Row(
-                                            children: [Text('Submit', style: TextStyle(color: Colors.white, fontSize: 14)), SizedBox(width: 20), Icon(Icons.check, color: Colors.white)],
+                                            children: [
+                                              SizedBox(width: 13),
+                                              Text('Submit', style: TextStyles.styleWhite16Black),
+                                              SizedBox(width: 24),
+                                              Icon(Icons.check, color: Colors.white),
+                                            ],
                                           ),
                                         ),
                                       ],
@@ -242,14 +247,14 @@ class EditProfileWidget extends StatelessWidget {
             Expanded(child: MyTextField(label: "Access Level", labelStyle: TextStyle(color: MyColors.brownGrey3)))
           ],
         ),
-        const  SizedBox(height: 24),
+        const SizedBox(height: 24),
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Expanded(child: MyTextField(label: "Name", labelStyle: TextStyle(color: MyColors.brownGrey3))),
-           ],
+          ],
         ),
-        const  SizedBox(height: 24),
+        const SizedBox(height: 24),
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -258,7 +263,7 @@ class EditProfileWidget extends StatelessWidget {
             Expanded(child: MyTextField(label: "To City", labelStyle: TextStyle(color: MyColors.brownGrey3)))
           ],
         ),
-        const  SizedBox(height: 24),
+        const SizedBox(height: 24),
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -267,9 +272,9 @@ class EditProfileWidget extends StatelessWidget {
             Expanded(child: MyTextField(label: "Phone", labelStyle: TextStyle(color: MyColors.brownGrey3)))
           ],
         ),
-        const  SizedBox(height: 24),
+        const SizedBox(height: 24),
         const Divider(),
-        const  SizedBox(height: 24),
+        const SizedBox(height: 24),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -284,7 +289,7 @@ class EditProfileWidget extends StatelessWidget {
               label: 'Submit',
               color: MyColors.darkMint,
               child: const Row(
-                children: [ SizedBox(width: 13),Text('Submit', style: TextStyles.styleWhite16Black), SizedBox(width: 24), Icon(Icons.check, color: Colors.white)],
+                children: [SizedBox(width: 13), Text('Submit', style: TextStyles.styleWhite16Black), SizedBox(width: 24), Icon(Icons.check, color: Colors.white)],
               ),
             ),
           ],
@@ -324,7 +329,7 @@ class _ProfileDrawerElementState extends ConsumerState<ProfileDrawerElement> {
             color: bgColor,
             height: 55,
             child: Row(
-              children: [const SizedBox(width: 10), Icon(widget.icon, color: textColor, size: 16), const SizedBox(width: 10), Text(widget.title, style: TextStyle(color: textColor))],
+              children: [const SizedBox(width: 16), Icon(widget.icon, color: textColor, size: 16), const SizedBox(width: 12), Text(widget.title, style: TextStyle(color: textColor))],
             ),
           ),
           if (widget.isBottomDivider) const Divider(),

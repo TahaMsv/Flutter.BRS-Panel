@@ -1,3 +1,4 @@
+import 'package:brs_panel/screens/user_setting/usecases/delete_avatar_usecase.dart';
 import 'package:dartz/dartz.dart';
 import '../../core/abstracts/exception_abs.dart';
 import '../../core/abstracts/failures_abs.dart';
@@ -44,5 +45,11 @@ class UserSettingRepository implements UserSettingRepositoryInterface {
     } on AppException catch (e) {
       return Left(ServerFailure.fromAppException(e));
     }
+  }
+
+  @override
+  Future<Either<Failure, DeleteAvatarResponse>> deleteAvatar(DeleteAvatarRequest request) {
+    // TODO: implement deleteAvatar
+    throw UnimplementedError();
   }
 }

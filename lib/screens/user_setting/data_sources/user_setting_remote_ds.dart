@@ -1,3 +1,5 @@
+import 'package:brs_panel/screens/user_setting/usecases/delete_avatar_usecase.dart';
+
 import '../../../core/abstracts/exception_abs.dart';
 import '../../../core/abstracts/response_abs.dart';
 import '../../../core/constants/apis.dart';
@@ -34,5 +36,11 @@ class UserSettingRemoteDataSource implements UserSettingDataSourceInterface {
   Future<ChangePassResponse> changePass({required ChangePassRequest request}) async {
     Response res = await networkManager.post(request);
     return ChangePassResponse.fromResponse(res);
+  }
+
+  @override
+  Future<UploadAvatarResponse> deleteAvatar({required DeleteAvatarRequest request}) {
+    // TODO: implement deleteAvatar
+    throw UnimplementedError();
   }
 }

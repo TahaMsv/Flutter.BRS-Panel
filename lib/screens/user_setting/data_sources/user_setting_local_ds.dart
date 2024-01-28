@@ -1,3 +1,5 @@
+import 'package:brs_panel/screens/user_setting/usecases/delete_avatar_usecase.dart';
+
 import '../../../core/abstracts/local_data_base_abs.dart';
 import '../../../core/data_base/local_data_base.dart';
 import '../../../initialize.dart';
@@ -19,6 +21,11 @@ class UserSettingLocalDataSource implements UserSettingDataSourceInterface {
 
   @override
   Future<ChangePassResponse> changePass({required ChangePassRequest request}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<UploadAvatarResponse> deleteAvatar({required DeleteAvatarRequest request}) {
     throw UnimplementedError();
   }
 }
