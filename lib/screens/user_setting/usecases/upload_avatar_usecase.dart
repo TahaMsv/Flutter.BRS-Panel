@@ -20,19 +20,18 @@ class UploadAvatarUseCase extends UseCase<UploadAvatarResponse, UploadAvatarRequ
 class UploadAvatarRequest {
   UploadAvatarRequest({required this.imageValue, required this.imageName});
 
-  Uint8List imageValue;
+  Uint8List? imageValue;
   String imageName;
 
   Future<Map<String, dynamic>> toJson() async => {
         'ProjectName': "BRS",
         'UserID': BasicClass.username,
-        'File': NetworkManager().getImageFileFromString(imageValue, fileName: imageName)
+        'File': imageValue == null ? [] : NetworkManager().getImageFileFromString(imageValue!, fileName: imageName),
       };
 }
 
 class UploadAvatarResponse extends Response {
-  UploadAvatarResponse({required int status, required String message})
-      : super(status: status, message: message, body: null);
+  UploadAvatarResponse({required int status, required String message}) : super(status: status, message: message, body: null);
 
   factory UploadAvatarResponse.fromResponse(Response res) {
     return UploadAvatarResponse(status: res.status, message: res.message);

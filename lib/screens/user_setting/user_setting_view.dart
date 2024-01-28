@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../core/classes/login_user_class.dart';
 import '../../core/constants/abomis_pack_icons.dart';
+import '../../core/constants/apis.dart';
 import '../../core/constants/ui.dart';
 import '../../core/platform/cached_image.dart';
 import '../../core/util/basic_class.dart';
@@ -72,7 +73,7 @@ class UserListWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final UserSettingState state = ref.watch(userSettingProvider);
     LoginUser? u = ref.watch(userProvider);
-    double avatarRadius = 18;
+    double avatarRadius = 125;
     return Expanded(
       child: Center(
         child: Container(
@@ -86,24 +87,60 @@ class UserListWidget extends ConsumerWidget {
                 width: 250,
                 child: Column(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Column(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(avatarRadius * 5),
-                            child: Container(
-                              decoration: const BoxDecoration(color: Colors.blueAccent),
-                              width: avatarRadius * 5,
-                              height: avatarRadius * 5,
-                              child: CachedImage.showImage(BasicClass.profileUrl, iconSize: 50),
+                    Column(
+                      children: [
+                        const SizedBox(height: 31),
+                        Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(avatarRadius),
+                              child: Container(
+                                decoration: const BoxDecoration(color: Colors.blueAccent),
+                                width: avatarRadius,
+                                height: avatarRadius,
+                                child: CachedImage.showImage(BasicClass.profileUrl, iconSize: 50),
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 20),
-                          Text(u!.username, style: TextStyles.style16Black),
-                          const SizedBox(height: 20),
-                        ],
-                      ),
+                            PopupMenuButton<int>(
+                              itemBuilder: (context) => [
+                                const PopupMenuItem(height: 35, value: 1, child: Text("Change Photo", style: TextStyles.style13Black)),
+                                const PopupMenuItem(height: 35, value: 2, child: Text("Delete Photo", style: TextStyles.style13Black)),
+                              ],
+                              color: MyColors.white1,
+                              initialValue: 0,
+                              onSelected: (value) async {
+                                switch (value) {
+                                  case 1:
+                                    await controller.setAvatar();
+                                    break;
+                                  case 2:
+                                    await controller.deleteAvatar();
+                                    break;
+                                  default:
+                                    {
+                                      print("Invalid choice");
+                                    }
+                                    break;
+                                }
+                              },
+                              offset: const Offset(15, 20),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(31),
+                                child: Container(
+                                  decoration: const BoxDecoration(color: Colors.blueAccent),
+                                  width: 31,
+                                  height: 31,
+                                  child: const Icon(AbomisIconPack.camera, size: 15, color: MyColors.white1),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Text(u!.username, style: TextStyles.style16Black),
+                        const SizedBox(height: 19),
+                      ],
                     ),
                     const ProfileDrawerElement(title: "Edit Profile", icon: Icons.person, index: 0),
                     const ProfileDrawerElement(title: "Change Password", icon: AbomisIconPack.lock, index: 1),
@@ -119,7 +156,7 @@ class UserListWidget extends ConsumerWidget {
                   child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: state.editProfileDrawerIndex == 0
-                    ? EditProfileWidget(controller: controller, avatarRadius: avatarRadius)
+                    ? EditProfileWidget(controller: controller)
                     : state.editProfileDrawerIndex == 1
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -179,10 +216,9 @@ class UserListWidget extends ConsumerWidget {
 }
 
 class EditProfileWidget extends StatelessWidget {
-  const EditProfileWidget({super.key, required this.controller, required this.avatarRadius});
+  const EditProfileWidget({super.key, required this.controller});
 
   final UserSettingController controller;
-  final double avatarRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -196,36 +232,36 @@ class EditProfileWidget extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 30),
-        Row(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(avatarRadius * 3),
-              child: Container(
-                decoration: const BoxDecoration(color: Colors.blueAccent),
-                width: avatarRadius * 3,
-                height: avatarRadius * 3,
-                child: CachedImage.showImage(BasicClass.profileUrl, iconSize: 30),
-              ),
-            ),
-            const SizedBox(width: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextButton(
-                  onPressed: () async {
-                    await controller.setAvatar();
-                  },
-                  child: const Row(children: [Icon(Icons.edit, size: 18), SizedBox(width: 3), Text("Change Photo")]),
-                ),
-                TextButton(
-                  child: const Row(children: [Icon(Icons.delete, size: 18, color: MyColors.red), SizedBox(width: 3), Text("Delete", style: TextStyle(color: MyColors.red))]),
-                  onPressed: () {},
-                ),
-              ],
-            ),
-          ],
-        ),
-        const SizedBox(height: 30),
+        // Row(
+        //   children: [
+        //     ClipRRect(
+        //       borderRadius: BorderRadius.circular(avatarRadius * 3),
+        //       child: Container(
+        //         decoration: const BoxDecoration(color: Colors.blueAccent),
+        //         width: avatarRadius * 3,
+        //         height: avatarRadius * 3,
+        //         child: CachedImage.showImage(BasicClass.profileUrl, iconSize: 30),
+        //       ),
+        //     ),
+        //     const SizedBox(width: 20),
+        //     Column(
+        //       crossAxisAlignment: CrossAxisAlignment.start,
+        //       children: [
+        //         TextButton(
+        //           onPressed: () async {
+        //             await controller.setAvatar();
+        //           },
+        //           child: const Row(children: [Icon(Icons.edit, size: 18), SizedBox(width: 3), Text("Change Photo")]),
+        //         ),
+        //         TextButton(
+        //           child: const Row(children: [Icon(Icons.delete, size: 18, color: MyColors.red), SizedBox(width: 3), Text("Delete", style: TextStyle(color: MyColors.red))]),
+        //           onPressed: () {},
+        //         ),
+        //       ],
+        //     ),
+        //   ],
+        // ),
+        // const SizedBox(height: 30),
         const Divider(),
         const SizedBox(height: 20),
         const Row(
@@ -240,9 +276,9 @@ class EditProfileWidget extends StatelessWidget {
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Expanded(child: MyTextField(label: "First Name", labelStyle: TextStyle(color: MyColors.brownGrey3))),
-            SizedBox(width: 20),
-            Expanded(child: MyTextField(label: "Last Name", labelStyle: TextStyle(color: MyColors.brownGrey3)))
+            Expanded(child: MyTextField(label: "Name", labelStyle: TextStyle(color: MyColors.brownGrey3))),
+            // SizedBox(width: 20),
+            // Expanded(child: MyTextField(label: "Last Name", labelStyle: TextStyle(color: MyColors.brownGrey3)))
           ],
         ),
         const SizedBox(height: 20),
@@ -317,7 +353,7 @@ class _ProfileDrawerElementState extends ConsumerState<ProfileDrawerElement> {
           const Divider(),
           Container(
             color: bgColor,
-            height: 45,
+            height: 55,
             child: Row(
               children: [const SizedBox(width: 10), Icon(widget.icon, color: textColor, size: 16), const SizedBox(width: 10), Text(widget.title, style: TextStyle(color: textColor))],
             ),
