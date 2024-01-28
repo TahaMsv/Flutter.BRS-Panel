@@ -77,8 +77,8 @@ class UserListWidget extends ConsumerWidget {
     return Expanded(
       child: Center(
         child: Container(
-          height: 850,
-          width: 900,
+          height: 857,
+          width: 918,
           decoration: BoxDecoration(border: Border.all(color: MyColors.borderColor), borderRadius: BorderRadius.circular(10.0)),
           margin: const EdgeInsets.symmetric(vertical: 40),
           child: Row(
@@ -109,6 +109,7 @@ class UserListWidget extends ConsumerWidget {
                               ],
                               color: MyColors.white1,
                               initialValue: 0,
+
                               onSelected: (value) async {
                                 switch (value) {
                                   case 1:
@@ -153,7 +154,7 @@ class UserListWidget extends ConsumerWidget {
               const VerticalDivider(),
               Expanded(
                   child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(24.0),
                 child: state.editProfileDrawerIndex == 0
                     ? EditProfileWidget(controller: controller)
                     : state.editProfileDrawerIndex == 1
@@ -226,95 +227,64 @@ class EditProfileWidget extends StatelessWidget {
         const Row(
           children: [
             Icon(Icons.person_2),
-            SizedBox(width: 10),
-            Text("Edit Profile", style: TextStyles.styleBold16Black),
+            SizedBox(width: 12),
+            Text("Edit Profile", style: TextStyles.styleBold18Black),
           ],
         ),
-        const SizedBox(height: 30),
-        // Row(
-        //   children: [
-        //     ClipRRect(
-        //       borderRadius: BorderRadius.circular(avatarRadius * 3),
-        //       child: Container(
-        //         decoration: const BoxDecoration(color: Colors.blueAccent),
-        //         width: avatarRadius * 3,
-        //         height: avatarRadius * 3,
-        //         child: CachedImage.showImage(BasicClass.profileUrl, iconSize: 30),
-        //       ),
-        //     ),
-        //     const SizedBox(width: 20),
-        //     Column(
-        //       crossAxisAlignment: CrossAxisAlignment.start,
-        //       children: [
-        //         TextButton(
-        //           onPressed: () async {
-        //             await controller.setAvatar();
-        //           },
-        //           child: const Row(children: [Icon(Icons.edit, size: 18), SizedBox(width: 3), Text("Change Photo")]),
-        //         ),
-        //         TextButton(
-        //           child: const Row(children: [Icon(Icons.delete, size: 18, color: MyColors.red), SizedBox(width: 3), Text("Delete", style: TextStyle(color: MyColors.red))]),
-        //           onPressed: () {},
-        //         ),
-        //       ],
-        //     ),
-        //   ],
-        // ),
-        // const SizedBox(height: 30),
+        const SizedBox(height: 27),
         const Divider(),
-        const SizedBox(height: 20),
+        const SizedBox(height: 24),
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Expanded(child: MyTextField(label: "Username", labelStyle: TextStyle(color: MyColors.brownGrey3))),
-            SizedBox(width: 20),
+            SizedBox(width: 24),
             Expanded(child: MyTextField(label: "Access Level", labelStyle: TextStyle(color: MyColors.brownGrey3)))
           ],
         ),
-        const SizedBox(height: 20),
+        const  SizedBox(height: 24),
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Expanded(child: MyTextField(label: "Name", labelStyle: TextStyle(color: MyColors.brownGrey3))),
-            // SizedBox(width: 20),
-            // Expanded(child: MyTextField(label: "Last Name", labelStyle: TextStyle(color: MyColors.brownGrey3)))
-          ],
+           ],
         ),
-        const SizedBox(height: 20),
+        const  SizedBox(height: 24),
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Expanded(child: MyTextField(label: "Default Station", labelStyle: TextStyle(color: MyColors.brownGrey3))),
-            SizedBox(width: 20),
+            SizedBox(width: 24),
             Expanded(child: MyTextField(label: "To City", labelStyle: TextStyle(color: MyColors.brownGrey3)))
           ],
         ),
-        const SizedBox(height: 20),
+        const  SizedBox(height: 24),
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Expanded(child: MyTextField(label: "Email", labelStyle: TextStyle(color: MyColors.brownGrey3))),
-            SizedBox(width: 20),
+            SizedBox(width: 24),
             Expanded(child: MyTextField(label: "Phone", labelStyle: TextStyle(color: MyColors.brownGrey3)))
           ],
         ),
-        const SizedBox(height: 20),
+        const  SizedBox(height: 24),
         const Divider(),
-        const SizedBox(height: 20),
+        const  SizedBox(height: 24),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             TextButton(
               onPressed: () {},
-              child: const Text('Cancel', style: TextStyle(color: Colors.blue, fontSize: 17)),
+              child: const Text('Cancel', style: TextStyle(color: Colors.grey, fontSize: 17)),
             ),
             const SizedBox(width: 20),
             MyButton(
+              width: 136,
               onPressed: () {},
               label: 'Submit',
               color: MyColors.darkMint,
               child: const Row(
-                children: [Text('Submit', style: TextStyle(color: Colors.white, fontSize: 14)), SizedBox(width: 20), Icon(Icons.check, color: Colors.white)],
+                children: [ SizedBox(width: 13),Text('Submit', style: TextStyles.styleWhite16Black), SizedBox(width: 24), Icon(Icons.check, color: Colors.white)],
               ),
             ),
           ],
