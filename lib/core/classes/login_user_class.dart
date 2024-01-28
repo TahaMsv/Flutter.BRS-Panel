@@ -1507,6 +1507,7 @@ class TagType {
   final String color;
   final String textColor;
   final String? al;
+  final bool? hidden;
 
   TagType({
     required this.id,
@@ -1514,6 +1515,7 @@ class TagType {
     required this.color,
     required this.textColor,
     required this.al,
+    required this.hidden,
   });
 
   @override
@@ -1536,6 +1538,7 @@ class TagType {
     String? color,
     String? textColor,
     String? al,
+    bool? hidden,
   }) =>
       TagType(
         id: id ?? this.id,
@@ -1543,6 +1546,7 @@ class TagType {
         color: color ?? this.color,
         textColor: textColor ?? this.textColor,
         al: al ?? this.al,
+        hidden: hidden ?? this.hidden,
       );
 
   factory TagType.fromJson(Map<String, dynamic> json) => TagType(
@@ -1551,6 +1555,7 @@ class TagType {
         al: json["AL"],
         color: json["Color"] ?? '000000',
         textColor: json["TextColor"] ?? 'FFFFFF',
+        hidden: json["Hidden"] ?? false,
       );
 
   Map<String, dynamic> toJson() => {
@@ -1559,5 +1564,6 @@ class TagType {
         "Al": al,
         "Color": color,
         "TextColor": textColor,
+        "Hidden": hidden,
       };
 }

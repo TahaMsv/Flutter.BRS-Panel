@@ -181,7 +181,7 @@ class _FlightContainerListDialogState extends State<FlightContainerListDialog> {
                                 shrinkWrap: true,
                                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 2, crossAxisSpacing: 8, mainAxisSpacing: 8),
                                 children: BasicClass.systemSetting.tagTypeList
-                                    .where((element) => element.label.isNotEmpty)
+                                    .where((element) => element.label.isNotEmpty  && !element.hidden!)
                                     .map(
                                       (e) => SizedBox(
                                         width: double.infinity,
