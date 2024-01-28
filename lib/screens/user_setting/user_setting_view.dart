@@ -115,7 +115,6 @@ class UserListWidget extends ConsumerWidget {
                                     await controller.setAvatar();
                                     break;
                                   case 2:
-                                    await controller.deleteAvatar();
                                     break;
                                   default:
                                     {

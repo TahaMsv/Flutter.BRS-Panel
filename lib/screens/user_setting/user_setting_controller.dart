@@ -29,15 +29,6 @@ class UserSettingController extends MainController {
     }
   }
 
-  Future<void> deleteAvatar() async {
-    try {
-      return uploadAvatarRequest(null, "");
-    } catch (e) {
-      print("Here");
-      print(e.toString());
-    }
-  }
-
   void changeTimeZone(Airport a) {
     BasicClass.setAirport(a);
     // List<ListPickerItem<Airport>> items = BasicClass.systemSetting.airportList
@@ -54,20 +45,15 @@ class UserSettingController extends MainController {
 
   /// Requests ---------------------------------------------------------------------------------------------------------
 
-  Future<void> uploadAvatarRequest(Uint8List? imageValue, String imageName) async {
-    print("Here58");
+  Future<void> uploadAvatarRequest(Uint8List imageValue, String imageName) async {
     UploadAvatarRequest request = UploadAvatarRequest(imageValue: imageValue, imageName: imageName);
     UploadAvatarUseCase uploadAvatarUseCase = UploadAvatarUseCase();
     final fOrR = await uploadAvatarUseCase(request: request);
-    print("Here62");
     fOrR.fold((l) => FailureHandler.handle(l, retry: () => uploadAvatarRequest(imageValue, imageName)), (r) async {
-      print("Here64");
       CachedNetworkImage.evictFromCache(BasicClass.profileUrl);
-      print("Here67");
       Future.delayed(const Duration(milliseconds: 100), () {
         userSettingState.setState();
       });
-      print("Here70");
     });
   }
 

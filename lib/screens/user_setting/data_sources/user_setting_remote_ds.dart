@@ -19,15 +19,11 @@ class UserSettingRemoteDataSource implements UserSettingDataSourceInterface {
       var header = {"Api-Key": Apis.imageServiceToken};
       final res =
           await networkManager.dioPost(api: Apis.uploadProfileImage, request: await request.toJson(), header: header);
-      print("rem 22");
       Response response = Response(status: res.data["ResultCode"], message: res.data["ResultText"], body: null);
-      print("rem 24");
       if (response.status != 1) {
-        print("rem 26");
         throw ServerException(
             code: response.status, message: response.message, trace: StackTrace.fromString("uploadAvatar"));
       }
-      print("rem 29");
       return UploadAvatarResponse.fromResponse(response);
     } catch (e) {
       throw ServerException(message: "Failed Uploading Data", code: -1, trace: StackTrace.fromString("uploadAvatar"));
