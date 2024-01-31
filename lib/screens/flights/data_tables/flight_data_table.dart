@@ -24,27 +24,27 @@ const List<String> staticFlightDataTableColumn = [
 ];
 
 List<String> flightDataTableColumn = [
-  "flight",
+  staticFlightDataTableColumn[0],
   "status",
-  "route",
-  "std",
-  "aircraft",
-  "register",
-  "actions",
+  staticFlightDataTableColumn[1],
+  staticFlightDataTableColumn[2],
+  staticFlightDataTableColumn[3],
+  staticFlightDataTableColumn[4],
+  staticFlightDataTableColumn[5],
 ];
 
 double getFlightDataTableColumnFlex(String flightData) {
-  if (flightDataTableColumn[0] == flightData) {
+  if (staticFlightDataTableColumn[0] == flightData) {
     return 0.13;
-  } else if (flightDataTableColumn[flightDataTableColumn.length - 1] == flightData) {
+  } else if (staticFlightDataTableColumn[5] == flightData) {
     return 0.09;
-  } else if (flightDataTableColumn[flightDataTableColumn.length - 2] == flightData) {
+  } else if (staticFlightDataTableColumn[4] == flightData) {
     return 0.09;
-  } else if (flightDataTableColumn[flightDataTableColumn.length - 3] == flightData) {
+  } else if (staticFlightDataTableColumn[3] == flightData) {
     return 0.05;
-  } else if (flightDataTableColumn[flightDataTableColumn.length - 4] == flightData) {
+  } else if (staticFlightDataTableColumn[2] == flightData) {
     return 0.05;
-  } else if (flightDataTableColumn[flightDataTableColumn.length - 5] == flightData) {
+  } else if (staticFlightDataTableColumn[1] == flightData) {
     return 0.07;
   } else {
     int statusColumnCount = flightDataTableColumn.length - 6;
@@ -58,24 +58,18 @@ class FlightDataSource extends DataGridSource {
 
   FlightDataSource({required List<Flight> flights}) {
     _dataList = flights;
-    _flights = flights
-        .map<DataGridRow>(
-          (e) => DataGridRow(
-            cells: flightDataTableColumn.map((e) => DataGridCell<String>(columnName: e, value: e)).toList(),
-            // [
-            //   DataGridCell<String>(columnName: flightDataTableColumn[0], value: e.flightNumber),
-            //   DataGridCell<int>(columnName: flightDataTableColumn, value: 1),
-            //   DataGridCell<int>(columnName: flightDataTableColumn, value: 1),
-            //   DataGridCell<int>(columnName: flightDataTableColumn, value: 1),
-            //   DataGridCell<String>(columnName: flightDataTableColumn.route.name, value: e.from),
-            //   DataGridCell<String>(columnName: flightDataTableColumn.std.name, value: e.std),
-            //   DataGridCell<int>(columnName: flightDataTableColumn.aircraft.name, value: e.getAircraft?.id),
-            //   DataGridCell<String>(columnName: flightDataTableColumn.register.name, value: e.getAircraft?.registration),
-            //   DataGridCell<String>(columnName: flightDataTableColumn.actions.name, value: ''),
-            // ],
-          ),
-        )
-        .toList();
+    flights.sort((a, b) => (a.terminal ?? "").compareTo(b.terminal ?? ""));
+    List<String> terminals = [];
+    for (var f in flights) {
+      if (!terminals.contains(f.terminal ?? "")) terminals.add(f.terminal ?? "");
+    }
+    List<DataGridRow> rows = [];
+    for (var t in terminals) {
+      if(t.isNotEmpty) rows.add(DataGridRow(cells: flightDataTableColumn.map((e) => DataGridCell<String>(columnName: e, value: flightDataTableColumn.indexOf(e) == 5 ? t : "")).toList()));
+      rows.addAll(flights.where((f) => (f.terminal ?? "") == t).map<DataGridRow>((f) => DataGridRow(cells: flightDataTableColumn.map((e) => DataGridCell<Flight>(columnName: e, value: f)).toList())));
+    }
+    _flights = rows;
+    // _flights = flights.map<DataGridRow>((f) => DataGridRow(cells: flightDataTableColumn.map((e) => DataGridCell<Flight>(columnName: e, value: f)).toList())).toList();
   }
 
   List<DataGridRow> _flights = [];
@@ -85,19 +79,20 @@ class FlightDataSource extends DataGridSource {
 
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
+    List<DataGridCell> cells = row.getCells();
+    if (cells.any((c) => c.value is String)) {
+      return DataGridRowAdapter(color: Colors.black, cells: cells.map((c) => Center(child: Text(c.value, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)))).toList());
+    }
     final int index = rows.indexOf(row);
-    final Flight f = _dataList[index];
+    final Flight f = cells.first.value;
     return DataGridRowAdapter(
-        color: index.isEven ? MyColors.evenRow : MyColors.oddRow,
-        cells: row.getCells().map<Widget>((dataGridCell) {
-          if (dataGridCell.columnName == flightDataTableColumn[0]) {
+        color: index.isEven ? MyColors.evenRow4 : MyColors.oddRow,
+        cells: cells.map<Widget>((dataGridCell) {
+          if (dataGridCell.columnName == staticFlightDataTableColumn[0]) {
             return Row(
               children: [
                 const SizedBox(width: 12),
-                AirlineLogo(
-                  f.al,
-                  key: Key(f.al),
-                ),
+                AirlineLogo(f.al, key: Key(f.al)),
                 const SizedBox(width: 8),
                 Expanded(child: Text("$f")),
                 SizedBox(
@@ -116,31 +111,31 @@ class FlightDataSource extends DataGridSource {
                 const SizedBox(width: 12),
               ],
             );
-          } else if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 5]) {
+          } else if (dataGridCell.columnName == staticFlightDataTableColumn[1]) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.centerLeft,
               child: Text('${f.from}-${f.to}'),
             );
-          } else if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 4]) {
+          } else if (dataGridCell.columnName == staticFlightDataTableColumn[2]) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.centerLeft,
               child: Text(f.std),
             );
-          } else if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 3]) {
+          } else if (dataGridCell.columnName == staticFlightDataTableColumn[3]) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.centerLeft,
               child: Text("${f.getAircraft?.id ?? '-'}"),
             );
-          } else if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 2]) {
+          } else if (dataGridCell.columnName == staticFlightDataTableColumn[4]) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               alignment: Alignment.centerLeft,
               child: Text(f.getAircraft?.registration ?? '-'),
             );
-          } else if (dataGridCell.columnName == flightDataTableColumn[flightDataTableColumn.length - 1]) {
+          } else if (dataGridCell.columnName == staticFlightDataTableColumn[5]) {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Row(
@@ -227,7 +222,7 @@ class FlightDataSource extends DataGridSource {
             List<PositionSection> sections = f.positions.firstWhereOrNull((p) => p.title == dataGridCell.columnName)?.sections ?? [];
             return Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: sections.map((s) => SectionCountElement(count: s.count, color: s.getColor)).toList(),
+              children: sections.map((s) => SectionCountElement(name: s.title, count: s.count, color: s.getColor)).toList(),
             );
           }
         }).toList());
@@ -235,22 +230,23 @@ class FlightDataSource extends DataGridSource {
 }
 
 class SectionCountElement extends StatelessWidget {
-  const SectionCountElement({super.key, required this.count, required this.color});
+  const SectionCountElement({super.key, required this.name, required this.count, required this.color});
 
+  final String name;
   final Color color;
   final int count;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 25,
-      width: 25,
+      height: 33,
+      width: 35,
       margin: EdgeInsets.zero,
       alignment: Alignment.center,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), border: Border.all(width: 1, color: Colors.white), color: color),
       child: Text(
-        count.toString(),
-        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 10),
+        "$count",
+        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
       ),
     );
   }

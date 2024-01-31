@@ -1,7 +1,6 @@
-enum FlightTypeFilter {
-  departure,
-  arrival,
-}
+enum FlightTypeFilter { departure, arrival }
+
+enum FlightTestTypeFilter { test, actual, all }
 
 extension Str on FlightTypeFilter {
   String get toStr {

@@ -88,6 +88,8 @@ class MyColors {
   static const reserveGreen = Color.fromRGBO(176, 255, 223, 1);
   static const containerGreen = Color(0xffe1eae6); //rgb(225,234,230)
   static const containerGreen2 = Color(0xffCDDDD6); //rgb(205,221,214)
+  static const disabledContainerGreen = Color(0xffE1E1E1); //rgb(225,225,225)
+  static const disabledContainerGreen2 = Color(0xffD6D6D6); //rgb(214,214,214)
   static const binGrey = Color(0xff687A89); //rgb(104,122,137)
   static const binGrey2 = Color(0xff646E7D); //rgb(100,110,125)
   static const sectionGrey = Color(0xff3E3E3E); //rgb(62,62,62)
@@ -98,6 +100,7 @@ class MyColors {
   static const evenRow = Color(0xfff8f8f8); //rgb(248,248,248)
   static const evenRow2 = Color(0xfff7f7f7); //rgb(247,247,247)
   static const evenRow3 = Color(0xffECF1EF); //rgb(240,250,245)
+  static const evenRow4 = Color(0xfff1f1f1); //rgb(241,241,241)
   static const oddRow = Color(0xffffffff); //rgb(255,255,255)
   static const oddRow3 = Color(0xffE6EEEA); //rgb(230,238,234)
   static const indexColor = Color(0xff3b3b3b);

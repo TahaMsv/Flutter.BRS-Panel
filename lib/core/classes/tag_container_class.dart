@@ -210,6 +210,7 @@ import 'flight_details_class.dart';
 class TagContainer {
   TagContainer({
     required this.id,
+    required this.instanceID,
     required this.flightID,
     required this.typeId,
     required this.positionID,
@@ -229,6 +230,7 @@ class TagContainer {
     this.al,
     this.tagTypeIds,
     // this.isClosed = false,
+    this.isActive,
     this.destList = const [],
     this.classTypeList = const [],
     required this.ocrPrefix,
@@ -236,6 +238,7 @@ class TagContainer {
   });
 
   int? id;
+  int? instanceID;
   int? flightID;
   int? spotID;
   int? binID;
@@ -255,6 +258,7 @@ class TagContainer {
   String barcode;
   String? closedTime;
   int tagCount;
+  bool? isActive;
   List<String> ocrPrefix;
   List<String> destList;
   List<String> classTypeList;
@@ -262,6 +266,7 @@ class TagContainer {
   // bool isClosed;
   Map<String, dynamic> toJson() => {
         "ID": id,
+        "InstanceID": instanceID,
         "FlightID": flightID,
         "SpotID": spotID,
         "BinID": binID,
@@ -278,6 +283,7 @@ class TagContainer {
         "AL": al,
         "FLNB": flnb,
         "TagTypeIDs": tagTypeIds,
+        "IsActive": isActive,
         "DestList": destList.join(","),
         "ClassList": classTypeList.join(","),
         "To": dest,
@@ -289,6 +295,7 @@ class TagContainer {
 
   factory TagContainer.fromJson(Map<String, dynamic> json) => TagContainer(
         id: json["ID"],
+        instanceID: json["InstanceID"],
         flightID: json["FlightID"],
         binID: json["BinID"],
         sectionID: json["SectionID"] ?? 1,
@@ -308,6 +315,7 @@ class TagContainer {
         dest: json["Dest"] ?? json["To"] ?? "",
         from: json["From"] ?? "",
         // isClosed: json["IsClosed"] ?? false,
+        isActive: json["IsActive"],
         barcodePrefix: json["BarcodePrefix"] ?? "",
         // destList: ((json["DestList"] ?? "") as String).split(","),
         destList: [],
@@ -330,6 +338,7 @@ class TagContainer {
 
     return TagContainer(
       id: null,
+      instanceID: null,
       typeId: foundTypeID,
       classTypeID: 1,
       positionID: -1,
@@ -348,6 +357,7 @@ class TagContainer {
   factory TagContainer.empty() {
     return TagContainer(
       id: 1,
+      instanceID: 1,
       sectionID: BasicClass.getAllAirportSections().first.id,
       typeId: 1,
       classTypeID: 1,
@@ -366,6 +376,7 @@ class TagContainer {
   factory TagContainer.bulk(int? posId) {
     return TagContainer(
       id: -100,
+      instanceID: -100,
       typeId: 1,
       // flightID: null,
       // classTypeID: 1,
@@ -495,7 +506,7 @@ class TagContainer {
                     padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
                     decoration: BoxDecoration(color: e.getColor.withOpacity(1), borderRadius: BorderRadius.circular(2)),
                     child: Text(
-                      e.label + ": ${labelsCount[e.label]}",
+                      "${e.label}: ${labelsCount[e.label]}",
                       style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: e.getTextColor),
                     ),
                   ))
@@ -532,7 +543,8 @@ class TagContainer {
   @override
   bool operator ==(Object other) {
     // TODO: implement ==
-    return (other is TagContainer && other.id == id && id != null) || (other is TagContainer && other.typeId == typeId && other.code.toLowerCase() == code.toLowerCase());
+    return (other is TagContainer && other.instanceID == instanceID && instanceID != null) || (other is TagContainer && other.instanceID == null && instanceID == null && other.id == id);
+    // return (other is TagContainer && other.id == id && id != null) || (other is TagContainer && other.typeId == typeId && other.code.toLowerCase() == code.toLowerCase());
     // return (other is TagContainer && other.typeId == typeId && other.code.toLowerCase() == code.toLowerCase());
     // return super == other;
   }

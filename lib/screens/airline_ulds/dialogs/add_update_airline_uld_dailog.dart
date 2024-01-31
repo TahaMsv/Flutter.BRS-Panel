@@ -28,7 +28,7 @@ class _AddUpdateAirlineDialogDialogState extends State<AddUpdateAirlineDialogDia
 
   @override
   void initState() {
-    if(widget.editingUld!=null){
+    if (widget.editingUld != null) {
       codeC.text = widget.editingUld!.code;
       barcodeC.text = widget.editingUld!.barcode;
     }
@@ -39,7 +39,6 @@ class _AddUpdateAirlineDialogDialogState extends State<AddUpdateAirlineDialogDia
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
     bool editMode = widget.editingUld != null;
     return Dialog(
       insetPadding: EdgeInsets.symmetric(horizontal: width * 0.4),
@@ -86,24 +85,34 @@ class _AddUpdateAirlineDialogDialogState extends State<AddUpdateAirlineDialogDia
                 MyButton(
                   onPressed: () async {
                     final al = myAirlineUldsController.ref.read(selectedAirlineProvider);
-                    if(!editMode) {
+                    if (!editMode) {
                       final added = await myAirlineUldsController.airlineAddUld(al!, codeC.text, "AKE");
                       if (added != null) {
-                        navigationService.popDialog(onPop: (){
+                        navigationService.popDialog(onPop: () {
                           SuccessHandler.handle(ServerSuccess(code: 1, msg: "Uld Added Successfully"));
                         });
                       }
-                    }else{
-                      final updated = TagContainer(id: widget.editingUld!.id, typeId: 1, code: codeC.text, title: '', positionID: 1, sectionID: 2, flightID: null, classTypeID: 1, ocrPrefix: []);
+                    } else {
+                      final updated = TagContainer(
+                          id: widget.editingUld!.id,
+                          instanceID: widget.editingUld!.instanceID,
+                          typeId: 1,
+                          code: codeC.text,
+                          title: '',
+                          positionID: 1,
+                          sectionID: 2,
+                          flightID: null,
+                          classTypeID: 1,
+                          ocrPrefix: []);
                       final up = await myAirlineUldsController.airlineUpdateUld(updated);
                       if (up != null) {
-                        navigationService.popDialog(onPop: (){
+                        navigationService.popDialog(onPop: () {
                           SuccessHandler.handle(ServerSuccess(code: 1, msg: "Uld ${widget.editingUld!.id} Updated Successfully"));
                         });
                       }
                     }
                   },
-                  label: editMode?"Save":"Add",
+                  label: editMode ? "Save" : "Add",
                   color: theme.primaryColor,
                 ),
               ],

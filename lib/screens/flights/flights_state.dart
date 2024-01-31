@@ -21,18 +21,20 @@ final flightDateProvider = StateProvider<DateTime>((ref) => DateTime.now());
 final flightsShowFiltersProvider = StateProvider<bool>((ref) => true);
 final flightActionHandlingProvider = StateProvider<List<int>>((ref) => []);
 final flightTypeFilterProvider = StateProvider<FlightTypeFilter>((ref) => FlightTypeFilter.departure);
+final flightTestFilterProvider = StateProvider<FlightTestTypeFilter>((ref) => FlightTestTypeFilter.all);
 final flightAirportFilterProvider = StateProvider<Airport?>((ref) => null);
 final flightAirlineFilterProvider = StateProvider<String?>((ref) => null);
 
 final filteredFlightListProvider = Provider<List<Flight>>((ref) {
   final flights = ref.watch(flightListProvider);
   final typeFilter = ref.watch(flightTypeFilterProvider);
+  final testTypeFilter = ref.watch(flightTestFilterProvider);
   final alFilter = ref.watch(flightAirlineFilterProvider);
   final apFilter = ref.watch(flightAirportFilterProvider);
   final searchFilter = ref.watch(flightSearchProvider);
   return flights
       .where(
-        (f) => f.validateType(typeFilter) && f.validateSearch(searchFilter) && f.validateAirline(alFilter) && f.validateAirport(apFilter),
+        (f) => f.validateType(typeFilter) && f.validateSearch(searchFilter) && f.validateAirline(alFilter) && f.validateAirport(apFilter) && f.validateTestType(testTypeFilter),
       )
       .toList();
 });

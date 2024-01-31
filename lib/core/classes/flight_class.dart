@@ -443,6 +443,8 @@ class Flight {
   final int totalBagPCs;
   final int totalBagWeight;
   final bool isFinalized;
+  final String? terminal;
+  final String? containerTagCount;
   final List<PositionData> positions;
 
   const Flight({
@@ -464,6 +466,8 @@ class Flight {
     required this.totalBagPCs,
     required this.totalBagWeight,
     required this.isFinalized,
+    required this.terminal,
+    required this.containerTagCount,
     required this.positions,
   });
 
@@ -494,6 +498,8 @@ class Flight {
     int? totalBagPCs,
     int? totalBagWeight,
     bool? isFinalized,
+    String? terminal,
+    String? containerTagCount,
     List<PositionData>? positions,
   }) =>
       Flight(
@@ -515,6 +521,8 @@ class Flight {
         totalBagPCs: totalBagPCs ?? this.totalBagPCs,
         totalBagWeight: totalBagWeight ?? this.totalBagWeight,
         isFinalized: isFinalized ?? this.isFinalized,
+        terminal: terminal ?? this.terminal,
+        containerTagCount: containerTagCount ?? this.containerTagCount,
         positions: positions ?? this.positions,
       );
 
@@ -537,6 +545,8 @@ class Flight {
         totalBagPCs: json["TotalBagPCs"],
         totalBagWeight: json["TotalBagWeight"],
         isFinalized: json["IsFinalized"],
+        terminal: json["Terminal"],
+        containerTagCount: json["ContainerTagCount"],
         positions: List<PositionData>.from((json["Positions"] ?? []).map((x) => PositionData.fromJson(x))),
       );
 
@@ -559,11 +569,17 @@ class Flight {
         "TotalBagPCs": totalBagPCs,
         "TotalBagWeight": totalBagWeight,
         "IsFinalized": isFinalized,
+        "Terminal": terminal,
+        "ContainerTagCount": containerTagCount,
         "Positions": List<dynamic>.from(positions.map((x) => x.toJson())),
       };
 
   bool validateType(FlightTypeFilter typeFilter) {
     return flightType == typeFilter.index;
+  }
+
+  bool validateTestType(FlightTestTypeFilter typeFilter) {
+    return typeFilter == FlightTestTypeFilter.all || (typeFilter == FlightTestTypeFilter.test && isTest) || (typeFilter == FlightTestTypeFilter.actual && !isTest);
   }
 
   bool validateAirline(String? a) {
@@ -602,6 +618,8 @@ class Flight {
         totalBagPCs: 0,
         totalBagWeight: 0,
         isFinalized: false,
+        terminal: null,
+        containerTagCount: null,
         positions: const [],
       );
 }

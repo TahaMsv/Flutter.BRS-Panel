@@ -1,8 +1,6 @@
 import 'package:artemis_utils/artemis_utils.dart';
 import 'package:brs_panel/core/abstracts/local_data_base_abs.dart';
-import 'package:brs_panel/core/constants/assest.dart';
 import 'package:flutter/material.dart';
-
 import '../constants/abomis_pack_icons.dart';
 import '../util/basic_class.dart';
 import 'tag_container_class.dart';
@@ -183,12 +181,12 @@ class FlightTag {
   int? get getContainerID => tagPositions.first.container?.id;
 
   Widget get weight => dcsInfo == null
-      ? SizedBox()
+      ? const SizedBox()
       : Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('${dcsInfo!.weight}'),
-            Text(
+            const Text(
               "KG",
               style: TextStyle(fontSize: 8),
             )
@@ -203,8 +201,8 @@ class FlightTag {
 
   TagStatus get getStatus => BasicClass.systemSetting.statusList.firstWhere((element) => element.id == currentStatus);
 
-  Widget getStatusWidget({int? count = null}) => Container(
-        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+  Widget getStatusWidget({int? count}) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: getStatus.getColor.withOpacity(0.3)),
         child: Center(
           child: Row(
@@ -212,7 +210,7 @@ class FlightTag {
             children: [
               if (getStatus.getIcon != null) Icon(getStatus.getIcon, color: getStatus.getColor, size: 12),
               RichText(
-                  text: TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
+                  text: TextSpan(style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
                 TextSpan(
                   // text: "${getType.label}",
                   text: getStatus.title + (count == null ? "" : ": $count"),
@@ -287,17 +285,17 @@ class FlightTag {
 
   TagType? get getType {
     // print("looking for ${typeID} in ${BasicClass.settings.systemSettings.tagTypeList.map((e) => e.id).toList()}");
-    return typeID == null ? BasicClass.systemSetting.tagTypeList.first : BasicClass.systemSetting.tagTypeList.firstWhereOrNull((element) => element.id == typeID);
+    return BasicClass.systemSetting.tagTypeList.firstWhereOrNull((element) => element.id == typeID);
   }
 
   Widget get getTypeWidget => Container(
-        padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: getType?.getColor.withOpacity(1) ?? Colors.transparent),
         child: RichText(
-            text: TextSpan(style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
+            text: TextSpan(style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12), children: [
           TextSpan(
             // text: "${getType.label}",
-            text: "${getType?.label ?? ''}",
+            text: getType?.label ?? '',
             style: TextStyle(color: getType?.getTextColor),
           ),
         ])),
@@ -305,7 +303,7 @@ class FlightTag {
 
   Widget get getGateWidget => Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: Colors.green.withOpacity(0.3) ?? Colors.transparent),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(4), color: Colors.green.withOpacity(0.3)),
         child: Center(
           child: Row(
             children: [
@@ -652,7 +650,7 @@ class WrongTag {
       };
 
   validateSearch(String searched) {
-    return searched == "" || "$tagNumber".toLowerCase().contains(searched.toLowerCase());
+    return searched == "" || tagNumber.toLowerCase().contains(searched.toLowerCase());
   }
 }
 
@@ -874,7 +872,7 @@ class Bin {
       );
 
   factory Bin.empty() {
-    return Bin(bin: '', containerType: 1, binNumber: '', id: null, isDeleted: false, compartment: '', plannedCount: null, plannedWeight: null, sectionID: null);
+    return const Bin(bin: '', containerType: 1, binNumber: '', id: null, isDeleted: false, compartment: '', plannedCount: null, plannedWeight: null, sectionID: null);
   }
 
   Map<String, dynamic> toJson() => {

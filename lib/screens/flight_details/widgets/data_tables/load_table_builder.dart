@@ -61,7 +61,13 @@ class LoadTableBuilder extends StatelessWidget {
                         iconColor: MyColors.white3,
                         collapsedIconColor: MyColors.white3,
                         childrenPadding: EdgeInsets.zero,
-                        backgroundColor: indexC.isEven ? MyColors.containerGreen : MyColors.containerGreen2,
+                        backgroundColor: !(con.isActive ?? true)
+                            ? indexC.isEven
+                                ? MyColors.disabledContainerGreen
+                                : MyColors.disabledContainerGreen2
+                            : indexC.isEven
+                                ? MyColors.containerGreen
+                                : MyColors.containerGreen2,
                         children: conTags.map((tag) {
                           return TagWidget(
                             tag: tag,
@@ -92,7 +98,13 @@ class LoadTableBuilder extends StatelessWidget {
                   iconColor: MyColors.white3,
                   collapsedIconColor: MyColors.white3,
                   childrenPadding: EdgeInsets.zero,
-                  backgroundColor: indexC.isEven ? MyColors.containerGreen : MyColors.containerGreen2,
+                  backgroundColor: !(con.isActive ?? true)
+                      ? indexC.isEven
+                          ? MyColors.disabledContainerGreen
+                          : MyColors.disabledContainerGreen2
+                      : indexC.isEven
+                          ? MyColors.containerGreen
+                          : MyColors.containerGreen2,
                   children: conTags.map((tag) {
                     return TagWidget(
                       tag: tag,

@@ -48,7 +48,13 @@ class SortTableBuilder extends StatelessWidget {
                       childrenPadding: EdgeInsets.zero,
                       iconColor: MyColors.brownGrey5,
                       collapsedIconColor: MyColors.brownGrey5,
-                      backgroundColor: indexC.isEven ? MyColors.containerGreen : MyColors.containerGreen2,
+                      backgroundColor: !(con.isActive ?? true)
+                          ? indexC.isEven
+                              ? MyColors.disabledContainerGreen
+                              : MyColors.disabledContainerGreen2
+                          : indexC.isEven
+                              ? MyColors.containerGreen
+                              : MyColors.containerGreen2,
                       children: conTags.map((e) => TagWidget(tag: e, fd: fd, total: conTags.length, index: conTags.indexOf(e), hasBinLine: false, isLast: conTags.last == e)).toList(),
                     ),
                   ],

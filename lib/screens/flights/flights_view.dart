@@ -13,6 +13,7 @@ import '../../widgets/DotButton.dart';
 import '../../widgets/LoadingListView.dart';
 import '../../widgets/MyAnimatedSwitcher.dart';
 import '../../widgets/MyFieldPicker.dart';
+import '../../widgets/MyRadioButton.dart';
 import '../../widgets/MySegment.dart';
 import '../../widgets/MyTextField.dart';
 import 'data_tables/flight_data_table.dart';
@@ -58,6 +59,7 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
   Widget build(BuildContext context) {
     bool showFilter = ref.watch(flightsShowFiltersProvider);
     FlightTypeFilter flightTypeFilter = ref.watch(flightTypeFilterProvider);
+    FlightTestTypeFilter testTypeFilter = ref.watch(flightTestFilterProvider);
     return Container(
       color: MyColors.white1,
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
@@ -98,6 +100,12 @@ class _FlightsPanelState extends ConsumerState<FlightsPanel> {
                   );
                 },
               )),
+          const SizedBox(width: 12),
+          MyRadioButton(label: 'All', value: testTypeFilter == FlightTestTypeFilter.all, onChange: (b) => ref.read(flightTestFilterProvider.notifier).state = FlightTestTypeFilter.all),
+          const SizedBox(width: 12),
+          MyRadioButton(label: 'Test', value: testTypeFilter == FlightTestTypeFilter.test, onChange: (b) => ref.read(flightTestFilterProvider.notifier).state = FlightTestTypeFilter.test),
+          const SizedBox(width: 12),
+          MyRadioButton(label: 'Actual', value: testTypeFilter == FlightTestTypeFilter.actual, onChange: (b) => ref.read(flightTestFilterProvider.notifier).state = FlightTestTypeFilter.actual),
           const Expanded(flex: 1, child: SizedBox()),
           Expanded(
             flex: 5,
@@ -207,7 +215,7 @@ class FlightListWidget extends ConsumerWidget {
     }
     if (sections.isEmpty) sections = [""];
     flightDataTableColumn = staticFlightDataTableColumn.map((e) => e).toList();
-    flightDataTableColumn.insertAll(1, sections);
+    flightDataTableColumn.insertAll(5, sections);
     return Expanded(
       child: LoadingListView(
         loading: state.loadingFlights,

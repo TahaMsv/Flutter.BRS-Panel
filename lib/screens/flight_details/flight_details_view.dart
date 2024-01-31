@@ -351,6 +351,13 @@ class ContainerTileWidget extends StatelessWidget {
                   Text("${con.title} ${con.code}"),
                   const SizedBox(width: 8),
                   con.allowedTagTypesWidgetMini2(items),
+                  const SizedBox(width: 16),
+                  if (!(con.isActive ?? true))
+                    Container(
+                      padding: const EdgeInsets.all(5),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: MyColors.binGrey),
+                      child: const Text("Inactive", style: TextStyle(color: Colors.white)),
+                    ),
                   const Spacer(),
                   if (con.spotID != null) Text(con.getSpot?.label ?? "", style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                   const SizedBox(width: 24),
